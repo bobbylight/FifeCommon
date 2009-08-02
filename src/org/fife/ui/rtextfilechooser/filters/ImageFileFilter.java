@@ -1,0 +1,106 @@
+/*
+ * 11/14/2003
+ *
+ * ImageFileFilter - A FileFilter that filters everything except image files
+ * processed by Swing (*.jpg, *.gif, *.png and *.bmp (on 1.5+)).
+ * Copyright (C) 2003 Robert Futrell
+ * robert_futrell at users.sourceforge.net
+ * http://fifesoft.com
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+package org.fife.ui.rtextfilechooser.filters;
+
+import java.io.File;
+import java.util.ResourceBundle;
+import javax.swing.filechooser.FileFilter;
+
+
+/**
+ * A file filter for <code>JFileChooser</code>s that filters everything except
+ * image files supported by Swing (<code>*.gif</code>, <code>*.jpg</code>,
+ * <code>*.png</code>, and <code>*.bmp</code> (on 1.5+)).
+ *
+ * @author Robert Futrell
+ * @version 1.0
+ */
+public class ImageFileFilter extends FileFilter {
+
+	private String description;
+
+	private static final String MSG = "org.fife.ui.rtextfilechooser.filters.ImageFileFilter";
+
+
+	/**
+	 * Constructor.
+	 *
+	 */
+	public ImageFileFilter() {
+		ResourceBundle msg = ResourceBundle.getBundle(MSG);
+		description = msg.getString("Desc");
+	}
+
+
+	/**
+	 * Accepts all gif, jpg, and png image files.
+	 *
+	 * @param f The file to check.
+	 * @return Whether the file is an image file.
+	 */
+	public boolean accept(File f) {
+
+		// Accept the "file" if it is a directory.
+		if (f.isDirectory()) {
+			return true;
+		}
+
+		// Get the extension of the file.
+		String extension = null;
+		String s = f.getName();
+		int i = s.lastIndexOf('.');
+		if (i>0 && i<s.length()-1) {
+			extension = s.substring(i+1).toLowerCase();
+		}
+
+		return isValidExtension(extension);
+
+	}
+
+
+	/**
+	 * Returns the description of this file filter.
+	 *
+	 * @return The description.
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+
+	/**
+	 * Returns whether <code>ext</code> is a valid (supported) image file
+	 * extension.
+	 *
+	 * @param ext The extension to check.
+	 * @return Whether the extension is for a supported image file type.
+	 */
+	private static final boolean isValidExtension(String ext) {
+		return ext!=null &&
+			("gif".equals(ext) || "jpg".equals(ext) || "png".equals(ext) ||
+					"bmp".equals(ext));
+	}
+
+
+}

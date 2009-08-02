@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- 
+
+	This is the Ant build script for org.fife.* classes that might be
+	useful accross applications.  Here is a list of available targets:
+	
+		1. compile:          Compiles all org.fife classes into ${class-dir}.
+		2. make-common-jar:  Creates the jar file.
+
+	Author:   Robert Futrell
+	Version:  0.9
+	Date:     02jun2009
+
+-->
+
+
+<project name="Common" default="make-common-jar" basedir=".">
+
+	<description>org.fife.* common classes build file</description>
+
+
+	<!-- Set global properties for this build. -->
+	<property name="source-dir"       location="src"/>
+	<property name="class-dir"        location="ant-classes"/>
+	<property name="dist-dir"         location="dist"/>
+	<property name="debug"            value="true"/>
+	<property name="debuglevel"       value="lines,var,source"/>
+	<property name="java-level"       value="1.4"/>
+
+
+	<!-- Compiles all common org.fife classes.  -->
+	<target name="compile" description="Compile the source.">
+		<delete includeEmptyDirs="true" quiet="true" dir="${class-dir}"/>
+		<mkdir dir="${class-dir}"/>
+		<javac srcdir="${source-dir}" destdir="${class-dir}"
+			classpath="lib/rsyntaxtextarea.jar:lib/autocomplete.jar"
+			deprecation="yes" debug="${debug}" debuglevel="${debuglevel}"
+			source="${java-level}" target="${java-level}"/>
+	</target>
+
+
+	<!-- Build the jar.  -->
+	<target name="make-common-jar" depends="compile" description="Create the jar.">
+		<mkdir dir="${dist-dir}"/>
+		<jar destfile="${dist-dir}/fife.common.jar">
+			<fileset dir="${class-dir}"/>
+			<fileset dir="i18n"/>
+			<fileset dir="${source-dir}">
+				<include name="**/*.png"/>
+				<include name="**/*.gif"/>
+				<include name="**/*.jpg"/>
+			</fileset>
+			<fileset dir="extra">
+				<include name="com/apple/osxadapter/OSXAdapter.class"/>
+			</fileset>
+			<manifest>
+				<attribute name="Class-Path" value="rsyntaxtextarea.jar"/>
+			</manifest>
+		</jar>
+	</target>
+
+
+	<!-- Creates the JNI headers for the native methods. -->
+	<target name="create-jni-headers" description="Create JNI headers">
+		<javah destdir="." force="yes" classpath="${class-dir}">
+			<class name="org.fife.ui.rtextfilechooser.extras.Win32FileIOExtras"/>
+			<class name="org.fife.ui.rtextfilechooser.extras.x64FileIOExtras"/>
+		</javah>
+	</target>
+
+
+</project>

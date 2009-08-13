@@ -156,12 +156,6 @@ public class SplashScreen extends JWindow {
 		private String text;
 		private int textX, textY;
 
-		ProgressBar(int width,  String initialText, Color background,
-					Color foreground, Color textColor) {
-			this(width, initialText, background, foreground, foreground,
-				textColor);
-		}
-
 		ProgressBar(int width, String initialText, Color background,
 					Color foreground1, Color foreground2,
 					Color textColor) {

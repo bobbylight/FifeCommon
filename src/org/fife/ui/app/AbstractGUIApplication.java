@@ -1389,16 +1389,15 @@ public ClassLoader getLookAndFeelClassLoader() {
 
 			// Create the menu bar.
 			preMenuBarInit(prefs, splashScreen);
-SwingUtilities.invokeLater(new Runnable() { public void run() {
 			//long start = System.currentTimeMillis();
 			JMenuBar menuBar = createMenuBar(prefs);
 			// Must set orientation of menuBar separately as it's done later.
-			ComponentOrientation orientation = ComponentOrientation.
-								getOrientation(getLocale());
-			menuBar.applyComponentOrientation(orientation);
+			ComponentOrientation o = ComponentOrientation.
+										getOrientation(getLocale());
+			menuBar.applyComponentOrientation(o);
 			//System.err.println("createMenuBar: " + (System.currentTimeMillis()-start));
 			setJMenuBar(menuBar);
-}});
+
 			// Do the rest of the subclass's custom initialization.
 			preDisplayInit(prefs, splashScreen);
 

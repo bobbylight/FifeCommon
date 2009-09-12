@@ -450,8 +450,9 @@ public class UIUtil {
 			String osname = System.getProperty("os.name");
 			if (osname.toLowerCase().indexOf("windows")>-1) {
 				String osver = System.getProperty("os.version");
-				boolean isXP = osver.startsWith("5.1");
-				nonOpaqueTabbedPaneComponents = isXP ? 1 : 0;
+				boolean isXPorVista = osver.startsWith("5.1") ||
+								osver.startsWith("6.0");
+				nonOpaqueTabbedPaneComponents = isXPorVista ? 1 : 0;
 			}
 			else {
 				nonOpaqueTabbedPaneComponents = 0;

@@ -25,6 +25,8 @@ package org.fife.ui.rtextfilechooser;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
@@ -43,6 +45,7 @@ import org.fife.ui.MenuButton;
 import org.fife.ui.RScrollPane;
 import org.fife.ui.ResizableFrameContentPane;
 import org.fife.ui.UIUtil;
+import org.fife.ui.breadcrumbbar.BreadcrumbBar;
 import org.fife.ui.rtextfilechooser.extras.FileIOExtras;
 
 
@@ -57,19 +60,21 @@ import org.fife.ui.rtextfilechooser.extras.FileIOExtras;
  *   <li>Auto-completion of filenames.
  *   <li>Select files only, directories only, or both files and directories
  *   <li>Rename and delete files directly from the file chooser
- *   <li>Select the file encoding when opening/saving files
+ *   <li>Select the file encoding when opening/saving text files
  *   <li>Set the text color used to identify different file types
  *   <li>Previously-opened files can be displayed with a special style (e.g.
  *       underline, italic, etc.)
+ *   <li>Utilizes a "breadcrumb bar" component like that found in Windows
+ *       Vista for top-level directory navigation.
  * </ul>
  * This component has many of the features found in <code>JFileChooser</code>
  * and is designed to be a drop-in replacement for opening text files.
  *
  * @author Robert Futrell
- * @version 0.4
+ * @version 0.6
  */
 public class RTextFileChooser extends ResizableFrameContentPane
-								implements ActionListener {
+							implements ActionListener, PropertyChangeListener {
 
 	public static final int LIST_MODE				= 0;
 	public static final int DETAILS_MODE			= 1;
@@ -108,7 +113,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/*
 	 * The combo boxes themselves.
 	 */
-	private JComboBox lookInComboBox;
+	private BreadcrumbBar lookInBreadcrumbBar;
 	private FSATextField fileNameTextField;
 	private JComboBox filterComboBox;
 	private JComboBox encodingComboBox;
@@ -116,7 +121,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/*
 	 * Any renderers/listeners.
 	 */
-	private LookInComboCellRenderer lookInRenderer;
 	private TextFieldListener textFieldListener;
 
 	/*
@@ -448,12 +452,10 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		int horizStrutSize = 4;
 		Border empty3Border = BorderFactory.createEmptyBorder(3,3,3,3);
 
-		lookInComboBox = new JComboBox();
-		lookInRenderer = new LookInComboCellRenderer();
-		lookInRenderer.createCachedData(); // Depends on rootManager.
-		lookInComboBox.setRenderer(lookInRenderer);
+		lookInBreadcrumbBar = new BreadcrumbBar();
 		populateLookInComboBox();
-		lookInComboBox.addItemListener(itemListener);
+		lookInBreadcrumbBar.addPropertyChangeListener(
+									BreadcrumbBar.PROPERTY_LOCATION, this);
 
 		upOneLevelButton = new JButton(upFolderIcon);
 		upOneLevelButton.setActionCommand("UpOneLevel");
@@ -491,7 +493,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		favoritesButton.addPopupMenuListener(new FavoritesPopupListener());
 
 		topPanel.add(lookInLabel);
-		topPanel.add(lookInComboBox);
+		topPanel.add(lookInBreadcrumbBar);
 		topPanel.add(Box.createHorizontalStrut(horizStrutSize));
 		topPanel.add(upOneLevelButton);
 		topPanel.add(Box.createHorizontalStrut(horizStrutSize));
@@ -907,7 +909,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		dialog.setContentPane(this);
 		JRootPane rootPane = dialog.getRootPane();
 		rootPane.setDefaultButton(acceptButton);
- 
+
 		if (JDialog.isDefaultLookAndFeelDecorated()) {
 			boolean supportsWindowDecorations = 
 				UIManager.getLookAndFeel().getSupportsWindowDecorations();
@@ -1252,16 +1254,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		String[] array = new String[favoriteList.size()];
 		array = (String[])favoriteList.toArray(array);
 		return array;
-	}
-
-
-	/**
-	 * Returns this file chooser.  Used by the inner classes below.
-	 *
-	 * @return This file chooser.
-	 */
-	private final RTextFileChooser getFileChooser() {
-		return this;
 	}
 
 
@@ -1876,38 +1868,22 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * directory.
 	 */
 	private void populateLookInComboBox() {
+		lookInBreadcrumbBar.setShownLocation(currentDirectory);
+	}
 
-		// Add all of the roots.
-		lookInComboBox.removeAllItems();
-		RootManager rm = RootManager.getInstance();
-		int j = 1;
-		for (Iterator i=rm.iterator(); i.hasNext(); ) {
 
-			File root = (File)i.next();
+	/**
+	 * Called when a property we're listening to changes.
+	 *
+	 * @param e The event.
+	 */
+	public void propertyChange(PropertyChangeEvent e) {
 
-			lookInComboBox.addItem(root);
+		String name = e.getPropertyName();
 
-			// If the "current directory" is under this root, add all
-			// dirs in the path leading up to it.
-			File currentDirectoryRoot = rm.getRootForFile(currentDirectory);
-			if (currentDirectoryRoot.equals(root)) {
-				File temp = currentDirectory;
-				// We check for null also because, for example, in Windows,
-				// the "Desktop" folder is considered a root (and has no
-				// parent), but our loop finds the "root" to be C:\.
-				while (temp!=null && !temp.equals(currentDirectoryRoot)) {
-					lookInComboBox.insertItemAt(temp, j);
-					temp = temp.getParentFile();
-				}
-			}
-
-			j++;
-
+		if (BreadcrumbBar.PROPERTY_LOCATION.equals(name)) {
+			setCurrentDirectory(lookInBreadcrumbBar.getShownLocation());
 		}
-
-		lookInComboBox.setSelectedItem(currentDirectory);
-
-		lookInRenderer.recalculateDepths();
 
 	}
 
@@ -2968,38 +2944,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	/**
-	 * An icon with space in front of it; used by the "Look in" combo box.
-	 */
-	private static class DepthIcon implements Icon {
-
-		Icon icon = null;
-		int depth = 0;
-
-		public DepthIcon(int depth) {
-			this.depth = depth;
-		}
-
-		public void paintIcon(Component c, Graphics g, int x, int y) {
-			if (c.getComponentOrientation().isLeftToRight()) {
-				icon.paintIcon(c, g, x+depth, y);
-			}
-			else {
-				icon.paintIcon(c, g, x, y);
-			}
-		}
-
-		public int getIconWidth() {
-			return icon.getIconWidth() + depth;
-		}
-
-		public int getIconHeight() {
-			return icon.getIconHeight();
-		}
-
-	}
-
-
-	/**
 	 * Populates the "Favorites" popup menu when the "Favorites" menu
 	 * button is clicked.
 	 */
@@ -3106,86 +3050,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	/**
-	 * The renderer for the "Look in" combo box.
-	 */
-	private class LookInComboCellRenderer extends DefaultListCellRenderer {
-
-		private int[] depths;
-		// We cache root names/icons as iconManager's cache gets cleared
-		// with every display/hide of the file chooser, but we don't want to
-		// incur the pain of slow "A:\" name/image grabs on Windows.
-		private HashMap cachedRootIcons = new HashMap();
-		private HashMap cachedRootNames = new HashMap();
-
-		private static final int DEPTH_INCREMENT = 10;
-
-		public Component getListCellRendererComponent(JList list, Object value,
-								int index, boolean isSelected,
-								boolean cellHasFocus)
-		{
-
-			super.getListCellRendererComponent(list, value, index,
-										isSelected, cellHasFocus);
-
-			if (value == null) {
-				setText("");
-				return this;
-			}
-			File directory = (File)value;
-			String name = (String)cachedRootNames.get(directory);
-			if (name==null)
-				name = getFileChooser().getName(directory); // Costly on some OS's.
-			setText(name);
-			DepthIcon depthIcon = new DepthIcon(depths==null || index<0 ||
-										index>=depths.length ?
-												0 : depths[index]);
-			Icon icon = (Icon)cachedRootIcons.get(directory);
-			if (icon==null)
-				icon = iconManager.getIcon(directory);
-			depthIcon.icon = icon;
-			setIcon(depthIcon);
-
-			return this;
-
-		}
-
-		public void recalculateDepths() {
-			int num = lookInComboBox.getItemCount();
-			depths = new int[num];
-			depths[0] = 0;
-			for (int i=num-1; i>0; i--) {
-				depths[i] = 0;
-				File file = (File)lookInComboBox.getItemAt(i);
-				if (!RootManager.getInstance().isRoot(file)) {
-					int j = i;
-					while (j>0 &&
-							((File)lookInComboBox.getItemAt(j-1)).equals(file.getParentFile())) {
-						depths[i] += DEPTH_INCREMENT;
-						file = (File)lookInComboBox.getItemAt(--j);
-					}
-				}
-			}
-		}
-
-		public void createCachedData() {
-			RootManager rm = RootManager.getInstance();
-			for (Iterator i=rm.iterator(); i.hasNext(); ) {
-				File root = (File)i.next();
-				// We cheat for the A:\ drive on Windows; otherwise, we may
-				// get a "drive not ready" dialog from Java if no disk is
-				// in the drive...
-				if (root.getAbsolutePath().equals("A:\\"))
-					cachedRootNames.put(root, "3\u00BD Floppy (A:)");
-				else
-					cachedRootNames.put(root, getFileChooser().getName(root));
-				cachedRootIcons.put(root, iconManager.getIcon(root));
-			}
-		}
-
-	}
-
-
-	/**
 	 * Action that handles refreshing the files displayed.
 	 */
 	private class RefreshAction extends AbstractAction {
@@ -3268,13 +3132,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 			Object source = e.getSource();
 
-			// If they selected something from the "Look in" combo box...
-			if (source==lookInComboBox && e.getStateChange()==ItemEvent.SELECTED) {
-				setCurrentDirectory((File)e.getItem());
-			}
-
 			// If they selected a new file filter...
-			else if (source==filterComboBox && e.getStateChange()==ItemEvent.SELECTED) {
+			if (source==filterComboBox && e.getStateChange()==ItemEvent.SELECTED) {
 				currentFileFilter = (FileFilter)e.getItem();
 				refreshView();
 			}
@@ -3295,7 +3154,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * the combo box doesn't "eat" its first Enter press, as well as other
 	 * stuff.
 	 */
-	class TextFieldListener extends FocusAdapter implements DocumentListener {
+	private class TextFieldListener extends FocusAdapter
+									implements DocumentListener {
 
 		public void changedUpdate(DocumentEvent e) {
 		}

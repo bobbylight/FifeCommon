@@ -169,6 +169,20 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	}
 
 
+	public Dimension getPreferredScrollableViewportSize() {
+		// All rows are equal height for our table
+		int rowHeight = getRowHeight();
+		Dimension d = super.getPreferredScrollableViewportSize();
+		if (d==null) {
+			d = new Dimension(480, rowHeight*8);
+		}
+		else {
+			d.height = rowHeight * 8;
+		}
+		return d;
+	}
+
+
 	/**
 	 * Returns the row in which the specified file resides in this table
 	 * view.
@@ -196,6 +210,18 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 		return -1;
 
+	}
+
+
+	/**
+	 * Overridden to ensure the table completely fills the JViewport it is
+	 * sitting in.  Note in Java 6 this could be taken care of by the method
+	 * JTable#setFillsViewportHeight(boolean).
+	 */
+	public boolean getScrollableTracksViewportHeight() {
+		Component parent = getParent();
+		return parent instanceof JViewport ?
+			parent.getHeight()>getPreferredSize().height : false;
 	}
 
 

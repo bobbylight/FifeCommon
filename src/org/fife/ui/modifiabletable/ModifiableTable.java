@@ -23,12 +23,14 @@
 package org.fife.ui.modifiabletable;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 import java.util.Vector;
 import javax.swing.BorderFactory;
+import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -265,7 +267,19 @@ public class ModifiableTable extends JPanel {
 									Object[] columnNames) {
 		if (columnNames!=null)
 			model.setColumnIdentifiers(columnNames);
-		JTable table = new JTable(model);
+		JTable table = new JTable(model) {
+			/**
+			 * Overridden to ensure the table completely fills the JViewport it
+			 * is sitting in.  Note in Java 6 this could be taken care of by the
+			 * method JTable#setFillsViewportHeight(boolean).
+			 */
+			public boolean getScrollableTracksViewportHeight() {
+				Component parent = getParent();
+				return parent instanceof JViewport ?
+					parent.getHeight()>getPreferredSize().height : false;
+			}
+		};
+		table.setShowGrid(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getSelectionModel().addListSelectionListener(listener);
 		return table;

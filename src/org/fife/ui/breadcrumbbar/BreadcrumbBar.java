@@ -1,3 +1,25 @@
+/*
+ * 09/26/2009
+ *
+ * BreadcrumbBar.java - A breadcrumb bar for browsing a file system.
+ * Copyright (C) 2009 Robert Futrell
+ * robert_futrell at users.sourceforge.net
+ * http://fifesoft.com
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 package org.fife.ui.breadcrumbbar;
 
 import java.awt.BorderLayout;
@@ -40,7 +62,7 @@ public class BreadcrumbBar extends JComponent {
 	private File shownLocation;
 	private JLabel iconLabel;
 	private JPanel buttonPanel;
-	private AbstractButton backButton;
+	private JToggleButton backButton;
 	private Listener listener;
 	private FileSystemView fsv = FileSystemView.getFileSystemView();
 	private Icon horizArrowIcon;
@@ -122,7 +144,7 @@ setBorder(UIManager.getBorder("TextField.border"));
 	}
 
 
-	private AbstractButton createBackButton() {
+	private JToggleButton createBackButton() {
 		Icon backIcon = getBackIcon();
 		JToggleButton b = new JToggleButton(backIcon);
 		b.setUI(new BreadcrumbBarToggleButtonUI());
@@ -289,6 +311,29 @@ tb.addChangeListener(new ChangeListener() {
 	}
 
 
+	private static class BreadcrumbPopupMenuListener
+					implements PopupMenuListener {
+
+		private JToggleButton source;
+
+		public BreadcrumbPopupMenuListener(JToggleButton source) {
+			this.source = source;
+		}
+
+		public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+		}
+
+		public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			source.setSelected(false);
+		}
+
+		public void popupMenuCanceled(PopupMenuEvent e) {
+			source.setSelected(false);
+		}
+
+	}
+
+
 	private static class ButtonBorder extends BasicBorders.MarginBorder {
 
 		public ButtonBorder() {
@@ -336,6 +381,7 @@ tb.addChangeListener(new ChangeListener() {
 						File loc = (File)b.getClientProperty(PROPERTY_LOCATION);
 						addItemsFor(loc.getParentFile(), popup);
 						popup.applyComponentOrientation(b.getComponentOrientation());
+						popup.addPopupMenuListener(new BreadcrumbPopupMenuListener(backButton));
 						displayRelativeTo(popup, backButton);
 						break;
 					}
@@ -347,20 +393,7 @@ tb.addChangeListener(new ChangeListener() {
 				ScrollableJPopupMenu popup = new ScrollableJPopupMenu();
 				addItemsFor((File)tb.getClientProperty(PROPERTY_LOCATION), popup);
 				popup.applyComponentOrientation(getComponentOrientation());
-				popup.addPopupMenuListener(new PopupMenuListener() {
-					
-					public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-					}
-					
-					public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-						tb.setSelected(false);
-					}
-					
-					public void popupMenuCanceled(PopupMenuEvent e) {
-						tb.setSelected(false);
-					}
-
-				});
+				popup.addPopupMenuListener(new BreadcrumbPopupMenuListener(tb));
 				displayRelativeTo(popup, tb);
 			}
 

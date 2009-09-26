@@ -274,23 +274,27 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private int retVal;
 
 	/**
+	 * The default directory for the file chooser.
+	 */
+	private static final File DEFAULT_START_DIRECTORY =
+									new File(System.getProperty("user.dir"));
+
+	/**
 	 * The encoding used for writing "Favorites" files.
 	 */
 	private static final String FAVORITES_ENCODING	= "UTF-8";
 
 
 	/**
-	 * Creates a new <code>RTextFileChooser</code> defaulting to
-	 * <code>LIST_MODE</code> and the user's home directory.
+	 * Creates a new <code>RTextFileChooser</code>.
 	 */
 	public RTextFileChooser() {
-		this(LIST_MODE);
+		this(DEFAULT_START_DIRECTORY);
 	}
 
 
 	/**
-	 * Creates a new <code>RTextFileChooser</code> defaulting to
-	 * <code>LIST_MODE</code> and the user's home directory.
+	 * Creates a new <code>RTextFileChooser</code>.
 	 *
 	 * @param showEncodingCombo Whether the encoding combo box should be
 	 *        visible.  This should be <code>true</code> if this is a chooser
@@ -298,42 +302,27 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 *        binary files.
 	 */
 	public RTextFileChooser(boolean showEncodingCombo) {
-		this(showEncodingCombo, LIST_MODE,
-				new File(System.getProperty("user.dir")));
-	}
-
-
-	/**
-	 * Creates a new <code>RTextFileChooser</code> defaulting to
-	 * <code>LIST_MODE</code>.
-	 *
-	 * @param mode Either <code>LIST_MODE</code> or <code>DETAILS_MODE</code>.
-	 */
-	public RTextFileChooser(int mode) {
-		this(mode, System.getProperty("user.dir"));
-	}
-
-
-	/**
-	 * Creates a new <code>RTextFileChooser</code> defaulting to
-	 * <code>LIST_MODE</code>.
-	 *
-	 * @param mode Either <code>LIST_MODE</code> or <code>DETAILS_MODE</code>.
-	 * @param startDirectory The directory for the file chooser to "start" in.
-	 */
-	public RTextFileChooser(int mode, String startDirectory) {
-		this(mode, new File(startDirectory));
+		this(showEncodingCombo, DEFAULT_START_DIRECTORY);
 	}
 
 
 	/**
 	 * Creates a new <code>RTextFileChooser</code>.
 	 *
-	 * @param mode Either <code>LIST_MODE</code> or <code>DETAILS_MODE</code>.
 	 * @param startDirectory The directory for the file chooser to "start" in.
 	 */
-	public RTextFileChooser(int mode, File startDirectory) {
-		this(true, mode, startDirectory);
+	public RTextFileChooser(String startDirectory) {
+		this(new File(startDirectory));
+	}
+
+
+	/**
+	 * Creates a new <code>RTextFileChooser</code>.
+	 *
+	 * @param startDirectory The directory for the file chooser to "start" in.
+	 */
+	public RTextFileChooser(File startDirectory) {
+		this(true, startDirectory);
 	}
 
 	/**
@@ -343,11 +332,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 *        visible.  This should be <code>true</code> if this is a chooser
 	 *        for text files, and <code>false</code> if it is a chooser for
 	 *        binary files.
-	 * @param mode Either <code>LIST_MODE</code> or <code>DETAILS_MODE</code>.
 	 * @param startDirectory The directory for the file chooser to "start" in.
 	 */
-	public RTextFileChooser(boolean showEncodingCombo,
-						int mode, File startDirectory) {
+	public RTextFileChooser(boolean showEncodingCombo, File startDirectory) {
 
 		this.showEncodingCombo = showEncodingCombo;
 
@@ -357,10 +344,10 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		itemListener = new RTextFileChooserItemListener();
 
 		// Get the "current directory" for the file chooser.
-		if (startDirectory.isDirectory())
-			currentDirectory = startDirectory;
-		else
-			currentDirectory = new File(System.getProperty("user.dir"));
+		if (startDirectory==null || !startDirectory.isDirectory()) {
+			startDirectory = DEFAULT_START_DIRECTORY;
+		}
+		currentDirectory = startDirectory;
 
 		// Read and set the user's preferences for the file chooser.
 		// We need to do this after all components are added above.
@@ -374,10 +361,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		setAutoCompleteFileNames(prefs.autoCompleteFileNames);
 		setStyleOpenFiles(prefs.styleOpenFiles);
 		setOpenFilesStyle(prefs.openFilesStyle);
-		prefs = null;
-
 		// Do NOT call setViewMode() yet, as we can do without its overhead.
-		this.mode = mode;
+		this.mode = prefs.viewMode;
+
 		guiInitialized = false;
 
 
@@ -509,6 +495,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		textFieldListener = new TextFieldListener();
 
 		// Initialize either the list view or the details (table) view.
+		installDetailsViewStrings();
 		setViewModeImpl(mode);
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
@@ -1654,6 +1641,18 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	/**
+	 * Returns the view mode.
+	 *
+	 * @return One of {@link #LIST_MODE}, {@link #DETAILS_MODE}, or
+	 *         {@link #ICONS_MODE}.
+	 * @see #setViewMode(int)
+	 */
+	public int getViewMode() {
+		return mode;
+	}
+
+
+	/**
 	 * Creates and installs keyboard actions for this file chooser dialog,
 	 * such as "F2" => Rename file.
 	 *
@@ -1691,6 +1690,21 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		inputMap.put(ks, "OnRefresh");
 		actionMap.put("OnRefresh", refreshAction);
 
+	}
+
+
+	/**
+	 * Install strings needed specifically by the "Details View."  This
+	 * is done separately from the rest of the strings due to poor design.
+	 */
+	private void installDetailsViewStrings() {
+		ResourceBundle msg = ResourceBundle.getBundle(
+								"org.fife.ui.rtextfilechooser.FileChooser");
+		nameString = msg.getString("Name");
+		sizeString = msg.getString("Size");
+		typeString = msg.getString("Type");
+		statusString = msg.getString("Status");
+		lastModifiedString = msg.getString("LastModified");
 	}
 
 
@@ -1748,12 +1762,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		directoryText = msg.getString("Directory"); // "Directory"
 		fileText = msg.getString("File"); // "File"
-
-		nameString = msg.getString("Name");
-		sizeString = msg.getString("Size");
-		typeString = msg.getString("Type");
-		statusString = msg.getString("Status");
-		lastModifiedString = msg.getString("LastModified");
 
 		readString = msg.getString("Read");
 		writeString = msg.getString("Write");
@@ -2506,7 +2514,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/**
 	 * Sets the view mode.
 	 *
-	 * @param mode Either <code>LIST_MODE</code> or <code>DETAILS_MODE</code>.
+	 * @param mode One of {@link #LIST_MODE}, {@link #DETAILS_MODE}, or
+	 *        {@link #ICONS_MODE}.
+	 * @see #getViewMode()
 	 */
 	public void setViewMode(int mode) {
 		if (this.mode!=mode) {
@@ -2539,6 +2549,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			int verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS;
 
 			switch (mode) {
+				default: // Invalid mode specified
 				case LIST_MODE:
 					view = new ListView(this);
 					verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_NEVER;
@@ -2549,7 +2560,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 							lastModifiedString);
 					horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED;
 					break;
-				default: // ICONS_MODE:
+				case ICONS_MODE:
 					view = new IconsView(this);
 					horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED;
 			}
@@ -2592,7 +2603,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * <code>showSaveDialog</code> since much of what they do is the same.
 	 *
 	 * @param parent The parent of this open/save dialog.
-	 * @param dialogType Either <code>OPEN</code> or <code>SAVE</code>.
+	 * @param dialogType Either {@link #OPEN} or {@link #SAVE}.
 	 */
 	protected int showDialogImpl(Frame parent, int dialogType) {
 
@@ -2820,13 +2831,14 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		favoritesButton.setBorder(empty3Border);
 
 		// Do some special stuff if we're in details mode.
-		// NOTE:  This is a bad hack to get around the fact that FileExplorerTableModel
-		// doesn't do too well with LnF changes... I can't quite figure out
-		// how any JTable works correctly with a LnF changes (the JTableHeader
-		// doesn't seem to know how to change its renderer back to a Basic one
-		// after being in the Windows LnF, but somehow it does).  Anyway, for
-		// the case of using a FileExplorerTableModel, it doesn't work, so we
-		// simply create a new JTable to get around it.
+		// NOTE:  This is a bad hack to get around the fact that
+		// FileExplorerTableModel doesn't do too well with LnF changes... I
+		// can't quite figure out how any JTable works correctly with a LnF
+		// changes (the JTableHeader doesn't seem to know how to change its
+		// renderer back to a Basic one after being in the Windows LnF, but
+		// somehow it does).  Anyway, for the case of using a
+		// FileExplorerTableModel, it doesn't work, so we simply create a new
+		// JTable to get around it.
 		// FIXME:  Find out why this doesn't work...
 		if (mode==DETAILS_MODE) {
 			view.removeAllListeners();

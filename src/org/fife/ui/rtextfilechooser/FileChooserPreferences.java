@@ -47,6 +47,7 @@ class FileChooserPreferences {
 	public HashMap customColors;
 	public boolean styleOpenFiles;
 	public int openFilesStyle;
+	public int viewMode;
 
 	private static final String FTI_PREFIX				= "fti_";
 	private static final String AUTO_COMPLETE_KEY		= "autoComplete";
@@ -56,6 +57,7 @@ class FileChooserPreferences {
 	private static final String OPEN_FILES_STYLE_KEY		= "openFilesStyle";
 	private static final String SHOW_HIDDEN_FILES_KEY		= "showhiddenfiles";
 	private static final String STYLE_OPEN_FILES_KEY		= "styleOpenFiles";
+	private static final String VIEW_MODE_KEY				= "viewMode";
 
 	private static final Color DEFAULT_HIDDEN_FILE_COLOR	= new Color(192,192,192);
 	private static final Color DEFAULT_COLOR			= Color.BLACK;
@@ -91,6 +93,7 @@ class FileChooserPreferences {
 		prefs.autoCompleteFileNames = chooser.getAutoCompleteFileNames();
 		prefs.styleOpenFiles = chooser.getStyleOpenFiles();
 		prefs.openFilesStyle = chooser.getOpenFilesStyle();
+		prefs.viewMode = chooser.getViewMode();
 		return prefs;
 	}
 
@@ -134,6 +137,8 @@ class FileChooserPreferences {
 						STYLE_OPEN_FILES_KEY, fprefs.styleOpenFiles);
 			fprefs.openFilesStyle	= prefs.getInt(
 						OPEN_FILES_STYLE_KEY, fprefs.openFilesStyle);
+			fprefs.viewMode = prefs.getInt(
+						VIEW_MODE_KEY, fprefs.viewMode);
 
 		} catch (RuntimeException re) {
 			throw re; // Keep FindBugs happy.
@@ -230,6 +235,7 @@ class FileChooserPreferences {
 		prefs.putBoolean(AUTO_COMPLETE_KEY, fcp.autoCompleteFileNames);
 		prefs.putBoolean(STYLE_OPEN_FILES_KEY,  fcp.styleOpenFiles);
 		prefs.putInt(OPEN_FILES_STYLE_KEY, fcp.openFilesStyle);
+		prefs.putInt(VIEW_MODE_KEY, fcp.viewMode);
 
 	}
 
@@ -246,6 +252,7 @@ class FileChooserPreferences {
 		customColors = null;
 		styleOpenFiles = true;
 		openFilesStyle = RTextFileChooser.STYLE_UNDERLINE;
+		viewMode = RTextFileChooser.LIST_MODE;
 	}
 
 

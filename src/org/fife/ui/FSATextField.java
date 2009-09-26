@@ -2,7 +2,7 @@
  * 08/09/2004
  *
  * FSATextField.java - A "File System-Aware" text field that keeps a drop-down
- * list popuplated with files matching the text typed in by the user.
+ * list populated with files matching the text typed in by the user.
  * Copyright (C) 2004 Robert Futrell
  * robert_futrell at users.sourceforge.net
  * http://fifesoft.com
@@ -37,22 +37,10 @@ import javax.swing.text.*;
  * A "File System-Aware" text field.  When the user is typing into this text
  * field, it automagically locates all files that begin with the text typed in,
  * and populates a text field-style list with file choices.  This is similar to
- * the text field found in the "Run" dialog in Microsoft Windows.<p>
- * When using this component, you MUST set the parent window (i.e., the
- * window that contains this text field) so that the drop-down file menu
- * properly disappears/resizes, etc.  For example:<p>
- * <code>
- *   public class MyDialog extends JDialog {
- *      ...
- *      public MyDialog() {
- *         FSATextField textField = new FSATextField();
- *         fsaTextField.discoverParentWindow();
- *         ...
- *         getContentPane().add(fsaTextField);
- * </code></p>
+ * the text field found in the "Run" dialog in Microsoft Windows.
  *
  * @author Robert Futrell
- * @version 0.4
+ * @version 0.5
  */
 public class FSATextField extends JTextField implements ComponentListener,
 						DocumentListener, ListSelectionListener {
@@ -81,7 +69,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 	private String dirName;
 
 	/**
-	 * Whether the next matching filename is auto-inerted when the drop-down
+	 * Whether the next matching filename is auto-inserted when the drop-down
 	 * list is visible.  This property is only honored when this text field
 	 * is "file system aware."
 	 */
@@ -189,6 +177,15 @@ public class FSATextField extends JTextField implements ComponentListener,
 
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public void addNotify() {
+		super.addNotify();
+		discoverParentWindow();
+	}
+
+
+	/**
 	 * Fills in the remainder of the next "matching" file name into this text
 	 * field.  The next "matching" file is the first file displayed in the
 	 * drop-down list.  This effect is similar to that seen in Microsoft
@@ -285,17 +282,11 @@ public class FSATextField extends JTextField implements ComponentListener,
 	/**
 	 * Sets the parent window of this text field (i.e., the window this text
 	 * field is in).  This needs to be set prior to the window being shown
-	 * so that the file list can properly hide itself when necessary.<p>
+	 * so that the file list can properly hide itself when necessary.
 	 *
-	 * If you are adding this text field to a panel, and you're not yet sure
-	 * who is the parent window, you can wrap this call in a
-	 * <code>Runnable</code> and run it via
-	 * <code>SwingUtilities.invokeLater()</code>.
-	 *
-	 * @return Whether a parent window was found.  If you use this component
-	 *         correctly, this should always return <code>true</code>.
+	 * @return Whether a parent window was found.
 	 */
-	public boolean discoverParentWindow() {
+	private boolean discoverParentWindow() {
 
 		// Get rid of old popup window if it exists.  We must create a new
 		// one, as if the user has called discoverParentWindow(), they
@@ -308,20 +299,17 @@ public class FSATextField extends JTextField implements ComponentListener,
 			popupWindow = null;
 		}
 
-		if (this.parent!=null) {
+		if (parent!=null) {
 			parent.removeComponentListener(this);
-		}
-		Component parent = this.getParent();
-		while (parent!=null) {
-			if (parent instanceof Window) {
-				this.parent = (Window)parent;
-				this.parent.addComponentListener(this);
-				return true;
-			}
-			parent = parent.getParent();
+			parent = null;
 		}
 
-		return false;
+		parent = SwingUtilities.getWindowAncestor(this);
+		if (parent!=null) {
+			parent.addComponentListener(this);
+		}
+
+		return parent!=null;
 
 	}
 
@@ -374,8 +362,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 		boolean ignoreCase = false;
 		if (os!=null) {
 			os = os.toLowerCase();
-			ignoreCase =	os.indexOf("windows")>-1   ||
-						os.indexOf("mac os x")>-1;
+			ignoreCase = os.indexOf("windows")>-1 || os.indexOf("mac os x")>-1;
 		}
 		return ignoreCase;
 	}
@@ -452,8 +439,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 			}
 		});
 
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0),
-												"OnPageUp");
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0),"OnPageUp");
 		actionMap.put("OnPageUp", new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				if (popupWindow!=null && popupWindow.isVisible()) {
@@ -487,8 +473,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 						if (obj != null) {
 							Action action = am.get(obj);
 							if (action != null) {
-								action.actionPerformed(
-									new ActionEvent(
+								action.actionPerformed(new ActionEvent(
 										root, e.getID(),
 										e.getActionCommand(),
 										e.getWhen(),
@@ -509,8 +494,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 					setPopupVisible(false);
 					return;
 				}
-				JRootPane root = SwingUtilities.getRootPane(
-											FSATextField.this);
+				JRootPane root = SwingUtilities.getRootPane(FSATextField.this);
 				if (root != null) {
 					InputMap im = root.getInputMap(
 								JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -521,8 +505,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 						if (obj != null) {
 							Action action = am.get(obj);
 							if (action != null) {
-								action.actionPerformed(
-									new ActionEvent(
+								action.actionPerformed(new ActionEvent(
 										root, e.getID(),
 										e.getActionCommand(),
 										e.getWhen(),
@@ -545,7 +528,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 		InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		ActionMap actionMap = getActionMap();
 
-		// Tab and Shift+Tab are tradionally focus-shifting keys.  Swing will
+		// Tab and Shift+Tab are traditionally focus-shifting keys.  Swing will
 		// not allow us to override the action associated with Tab since it
 		// is a focus event, and focus events occur before apps are notified
 		// of the keypress or focus event.  So to "override" the Tab key's
@@ -651,6 +634,15 @@ public class FSATextField extends JTextField implements ComponentListener,
 	 */
 	public void removeAllItems() {
 		fileListModel.removeAllElements();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void removeNotify() {
+		discoverParentWindow();
+		super.removeNotify();
 	}
 
 
@@ -761,7 +753,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 
 
 	/**
-	 * Sets the cell renderer for the dropdown file list.
+	 * Sets the cell renderer for the drop-down file list.
 	 *
 	 * @param renderer The cell renderer to use.
 	 */
@@ -819,7 +811,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 
 
 	/**
-	 * Updates the text field's dropdown list to contain files matching
+	 * Updates the text field's drop-down list to contain files matching
 	 * the characters typed by the user into the text field's text field.
 	 *
 	 * @return The text currently entered into the text field if the popup
@@ -974,7 +966,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 
 
 	/**
-	 * Runnable queued on the EDT to run whenever the dropdown list's
+	 * Runnable queued on the EDT to run whenever the drop-down list's
 	 * selection changes.  It is safe to reuse this runnable object because
 	 * it's only ever executed on the EDT, so it'll only ever be run one
 	 * at a time.

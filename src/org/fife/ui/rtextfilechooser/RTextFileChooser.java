@@ -2647,7 +2647,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		// Create a dialog to wrap this file chooser component in.
 		dialog = createDialog(parent);
-		fileNameTextField.discoverParentWindow();
 
 		// Set up buttons/text, etc. to be appropriate to opening...
 		// FIXME:  Update me to set ALL strings!

@@ -181,7 +181,13 @@ public class FSATextField extends JTextField implements ComponentListener,
 	 */
 	public void addNotify() {
 		super.addNotify();
-		discoverParentWindow();
+		// Not sure why, but we have to do this later, else this text field's
+		// size is reported as 0 and the popup's width is calculated wrong.
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				discoverParentWindow();
+			}
+		});
 	}
 
 
@@ -222,6 +228,31 @@ public class FSATextField extends JTextField implements ComponentListener,
 	 * Since it is a plain document, this is never called.
 	 */
 	public void changedUpdate(DocumentEvent e) {
+	}
+
+
+	/**
+	 * Removes any listeners from the "old" parent window when this text
+	 * field is removed from a view hierarchy.
+	 */
+	private void cleanupOldParentWindow() {
+
+		// Get rid of old popup window if it exists.  We must create a new
+		// one, as if the user has called discoverParentWindow(), they
+		// have probably re-parented this text field, so we must in turn
+		// "re-parent" our popup.
+		if (popupWindow!=null) {
+			//popupWindow.remove(contentPane);
+			popupWindow.setContentPane(new JPanel());
+			popupWindow.dispose();
+			popupWindow = null;
+		}
+
+		if (parent!=null) {
+			parent.removeComponentListener(this);
+			parent = null;
+		}
+
 	}
 
 
@@ -273,6 +304,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 
 		popupWindow.setFocusableWindowState(false);
 		popupWindow.setContentPane(contentPane);
+		popupWindow.applyComponentOrientation(getComponentOrientation());
 
 		return popupWindow;
 
@@ -284,29 +316,25 @@ public class FSATextField extends JTextField implements ComponentListener,
 	 * field is in).  This needs to be set prior to the window being shown
 	 * so that the file list can properly hide itself when necessary.
 	 *
-	 * @return Whether a parent window was found.
+	 * @return Whether a parent window was found (should always be
+	 *         <code>true</code>).
 	 */
 	private boolean discoverParentWindow() {
-
-		// Get rid of old popup window if it exists.  We must create a new
-		// one, as if the user has called discoverParentWindow(), they
-		// have probably re-parented this text field, so we must in turn
-		// "re-parent" our popup.
-		if (popupWindow!=null) {
-			//popupWindow.remove(contentPane);
-			popupWindow.setContentPane(new JPanel());
-			popupWindow.dispose();
-			popupWindow = null;
-		}
-
-		if (parent!=null) {
-			parent.removeComponentListener(this);
-			parent = null;
-		}
 
 		parent = SwingUtilities.getWindowAncestor(this);
 		if (parent!=null) {
 			parent.addComponentListener(this);
+			// Initial sizing not done if a new FSATextField is added to an
+			// already-displaying window (a la RTextFileChooser).
+			if (parent.isVisible()) {
+				updatePopupWindowDimensions();
+			}
+			else {
+System.out.println("DEBUG: Parent is not visible");
+			}
+		}
+		else {
+System.out.println("DEBUG: *** parent is null");
 		}
 
 		return parent!=null;
@@ -461,8 +489,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 				// default binding.
 				if (popupWindow!=null && popupWindow.isVisible())
 					setPopupVisible(false);
-				JRootPane root = SwingUtilities.getRootPane(
-											FSATextField.this);
+				JRootPane root = SwingUtilities.getRootPane(FSATextField.this);
 				if (root != null) {
 					InputMap im = root.getInputMap(
 								JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -641,8 +668,8 @@ public class FSATextField extends JTextField implements ComponentListener,
 	 * {@inheritDoc}
 	 */
 	public void removeNotify() {
-		discoverParentWindow();
 		super.removeNotify();
+		cleanupOldParentWindow();
 	}
 
 
@@ -773,6 +800,20 @@ public class FSATextField extends JTextField implements ComponentListener,
 				popupWindow = createPopupWindow();
 			}
 			popupWindow.pack();
+			// For some reason, when adding an FSATextField to an
+			// already-visible window, the popupWindow.pack() call always
+			// results in a 0-width window the first time through.  This seems
+			// to be because, even though we call
+			// addNotify() -> invokeLater() -> discoverParentWindow() ->
+			// updatePopupWindowDimensions(), in the last call in that chain,
+			// getSize() returns [0, 0].  I'm not sure why this is, since the
+			// component is realized and visible by that point.  But to take
+			// care of that case, we do one last check here.  Any other time,
+			// this conditional is not met.
+			if (popupWindow.getWidth()!=getWidth()) {
+				updatePopupWindowDimensions();
+				popupWindow.pack();
+			}
 			Rectangle bounds = getBounds();
 			Point loc = getLocation();
 			loc.x = 0;		// Why must we do this?

@@ -39,7 +39,7 @@ public class BreadcrumbBarTest extends JFrame implements PropertyChangeListener{
 
 		BreadcrumbBar bb = new BreadcrumbBar();
 		bb.addPropertyChangeListener(BreadcrumbBar.PROPERTY_LOCATION, this);
-bb.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+		//bb.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
 		JPanel cp = new JPanel(new BorderLayout());
 		cp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));

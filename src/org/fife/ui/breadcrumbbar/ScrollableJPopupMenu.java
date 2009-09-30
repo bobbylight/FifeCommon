@@ -30,13 +30,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.Timer;
+import javax.swing.UIManager;
 
 
 /**
@@ -65,8 +70,10 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 
 	private int visibleRowCount;
 	private List children;
-	JMenuItem previousItem = new JMenuItem("    ^");
-	JMenuItem nextItem = new JMenuItem("    v");
+	JMenuItem previousItem;
+	JMenuItem nextItem;
+	private static Icon upIcon;
+	private static Icon downIcon;
 	private Timer previousTimer = new Timer(DELAY, new MenuScrollAction(-1));
 	private Timer nextTimer = new Timer(DELAY, new MenuScrollAction(1));
 	private int firstItemIndex;
@@ -95,8 +102,10 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 		visibleRowCount = rowCount;
 		children = new ArrayList(rowCount);
 		MenuMouseAdapter adapter = new MenuMouseAdapter();
+		previousItem = new ArrowMenuItem(upIcon);
 		previousItem.putClientProperty(PROPERTY_TIMER, previousTimer);
 		previousItem.addMouseListener(adapter);
+		nextItem = new ArrowMenuItem(downIcon);
 		nextItem.putClientProperty(PROPERTY_TIMER, nextTimer);
 		nextItem.addMouseListener(adapter);
 		refresh();
@@ -175,7 +184,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 			int w = super.getPreferredSize().width;
 			removeAll();
 
-			firstItemIndex = Math.min(itemCount - visibleRowCount, firstItemIndex);
+			firstItemIndex = Math.min(itemCount-visibleRowCount, firstItemIndex);
 			firstItemIndex = Math.max(0, firstItemIndex);
 
 			previousItem.setEnabled(firstItemIndex > 0);
@@ -189,6 +198,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 			size.width = w;
 			setSize(size);
 			revalidate();
+			repaint(); // Needed to refresh arrow menu items
 
 		}
 
@@ -209,6 +219,33 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 			refresh();
 		}
 		super.setVisible(visible);
+	}
+
+
+	private static class ArrowMenuItem extends JMenuItem {
+
+		public ArrowMenuItem(javax.swing.Icon icon) {
+			super(icon);
+		}
+
+		public void setUI(javax.swing.plaf.MenuItemUI ui) {
+			super.setUI(new javax.swing.plaf.basic.BasicMenuItemUI() {
+				public void paintMenuItem(java.awt.Graphics g, javax.swing.JComponent c,
+						javax.swing.Icon checkIcon, javax.swing.Icon arrowIcon,
+						java.awt.Color bg, java.awt.Color fg, int defaultTextIconGap) {
+					JMenuItem mi = (JMenuItem)c;
+					if (bg==null) { // Nimbus doesn't set a selection bg color
+						bg = UIManager.getColor("nimbusSelectionBackground");
+					}
+					paintBackground(g, mi, bg);
+					javax.swing.Icon icon = mi.getModel().isEnabled() ?
+												getIcon() : getDisabledIcon();
+					int x = (getWidth()-icon.getIconWidth())/2;
+					icon.paintIcon(c, g, x, 0);
+				}
+			});
+		}
+
 	}
 
 
@@ -241,6 +278,32 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 			refresh();
 		}
 
+	}
+
+
+	/*
+	 * Load the icons shared among all scrollable popup menus.
+	 */
+	static {
+		ClassLoader cl = ScrollableJPopupMenu.class.getClassLoader();
+		URL url = cl.getResource("org/fife/ui/breadcrumbbar/up.png");
+		if (url==null) { // In Eclipse
+			try {
+				url = new URL("file:///src/org/fife/ui/breadcrumbbar/up.png");
+			} catch (MalformedURLException mue) { // Never happens
+				mue.printStackTrace();
+			}
+		}
+		upIcon = new ImageIcon(url);
+		url = cl.getResource("org/fife/ui/breadcrumbbar/down.png");
+		if (url==null) { // In Eclipse
+			try {
+				url = new URL("file:///src/org/fife/ui/breadcrumbbar/down.png");
+			} catch (MalformedURLException mue) { // Never happens
+				mue.printStackTrace();
+			}
+		}
+		downIcon = new ImageIcon(url);
 	}
 
 

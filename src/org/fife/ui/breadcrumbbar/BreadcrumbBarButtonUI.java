@@ -42,9 +42,11 @@ class BreadcrumbBarButtonUI extends BasicButtonUI {
 
 	protected void installDefaults(AbstractButton b) {
 		super.installDefaults(b);
-		b.setMargin(new Insets(5, 5, 5, 5));
+		b.setMargin(new Insets(5, 4, 5, 4));
+		b.setBorder(new ButtonBorder());
 		b.setRolloverEnabled(true); // Not true by default
 		b.setFocusable(false); // Prevent JRootPane default button issues
+		b.setOpaque(false);
 	}
    
 
@@ -52,7 +54,7 @@ class BreadcrumbBarButtonUI extends BasicButtonUI {
 
 		AbstractButton b = (AbstractButton)c;
 		ButtonModel model = b.getModel();
-		if (Boolean.TRUE==b.getClientProperty("arrowSelected")) {
+		if (Boolean.TRUE==b.getClientProperty(BreadcrumbBar.ARROW_SELECTED)) {
 			Color c1 = new Color(194, 228, 246);
 			Color c2 = new Color(146, 204, 235);
 			g.setColor(c1);
@@ -60,7 +62,7 @@ class BreadcrumbBarButtonUI extends BasicButtonUI {
 			g.setColor(c2);
 			g.fillRect(0,b.getHeight()/2, b.getWidth(),b.getHeight()/2);
 		}
-		else if (Boolean.TRUE==b.getClientProperty("arrowActivated")) {
+		else if (Boolean.TRUE==b.getClientProperty(BreadcrumbBar.ARROW_ACTIVATED)) {
 			Color c1 = new Color(240,240,240);
 			Color c2 = new Color(212,212,212);
 			g.setColor(c1);

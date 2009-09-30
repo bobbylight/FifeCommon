@@ -42,9 +42,11 @@ public class BreadcrumbBarToggleButtonUI extends BasicToggleButtonUI {
 
 	protected void installDefaults(AbstractButton b) {
 		super.installDefaults(b);
-		b.setMargin(new Insets(5, 5, 5, 5));
+		b.setMargin(new Insets(5, 3, 5, 3));
 		b.setRolloverEnabled(true); // Not true by default.
 		b.setFocusable(false); // Prevent JRootPane default button issues
+		b.setBorder(new ButtonBorder());
+		b.setOpaque(false);
 	}
    
 

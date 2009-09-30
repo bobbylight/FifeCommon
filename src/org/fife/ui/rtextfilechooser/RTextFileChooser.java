@@ -2673,6 +2673,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		else
 			adjustSizeIfNecessary(); // If there was no last time, make sure it isn't too big.
 		dialog.setLocationRelativeTo(parent);
+		lookInBreadcrumbBar.setMode(BreadcrumbBar.BREADCRUMB_MODE);
 		fileNameTextField.requestFocusInWindow();
 
 		try {
@@ -2818,6 +2819,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		if (!guiInitialized) {
 			return;
 		}
+
+		super.updateUI();
 
 		if (popupMenu!=null) {
 			SwingUtilities.updateComponentTreeUI(popupMenu);

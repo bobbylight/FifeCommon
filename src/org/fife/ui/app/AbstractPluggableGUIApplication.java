@@ -167,7 +167,7 @@ public abstract class AbstractPluggableGUIApplication
 
 
 	/**
-	 * Workaround for an apparant javac bug - I could not simply make
+	 * Workaround for an apparent javac bug - I could not simply make
 	 * <code>pluginOptionsDialog</code> protected and call
 	 * <code>pluginOptionsDialog.pack()</code> in a subclass without getting
 	 * a compiler warning about "Method pack is not public and cannot be

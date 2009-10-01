@@ -46,23 +46,24 @@ import org.fife.ui.RScrollPane;
 import org.fife.ui.ResizableFrameContentPane;
 import org.fife.ui.UIUtil;
 import org.fife.ui.breadcrumbbar.BreadcrumbBar;
-import org.fife.ui.rtextfilechooser.extras.FileIOExtras;
 
 
 /**
  * A powerful, flexible text file chooser.  Its UI is similar to the Windows LnF
  * <code>JFileChooser</code>, but it is not affected by Look-and-Feel changes.
- * Designed for opening text files, this file chooser has the following
- * features:
+ * This file chooser has the following features:
  * <ul>
  *   <li>List/Details/Icon views
- *   <li>A "Favorite Directories" list
- *   <li>Auto-completion of filenames.
+ *   <li>A "Favorite Directories" list, which can be serialized and reloaded
+ *   <li>Auto-completion of filenames
  *   <li>Select files only, directories only, or both files and directories
- *   <li>Rename and delete files directly from the file chooser
- *   <li>Select the file encoding when opening/saving text files
+ *   <li>Rename and delete files directly from the file chooser (with Recycle
+ *       Bin support on Windows)
+ *   <li>Drag-and-drop support to copy files from a directory (cannot drop into
+ *       the directory viewed just yet)
+ *   <li>Select the file encoding when opening/saving text files (optional)
  *   <li>Set the text color used to identify different file types
- *   <li>Previously-opened files can be displayed with a special style (e.g.
+ *   <li>Currently-open files can be displayed with a special style (e.g.
  *       underline, italic, etc.)
  *   <li>Utilizes a "breadcrumb bar" component like that found in Windows
  *       Vista for top-level directory navigation.
@@ -71,7 +72,7 @@ import org.fife.ui.rtextfilechooser.extras.FileIOExtras;
  * and is designed to be a drop-in replacement for opening text files.
  *
  * @author Robert Futrell
- * @version 0.6
+ * @version 0.7
  */
 public class RTextFileChooser extends ResizableFrameContentPane
 							implements ActionListener, PropertyChangeListener {
@@ -100,23 +101,11 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 	private FileSystemView fileSystemView;
 	private ItemListener itemListener;
-	private JPanel topPanel;
 
-	/*
-	 * Labels for the various combo boxes.
-	 */
-	private JLabel lookInLabel;
-	private JLabel fileNameLabel;
-	private JLabel filterLabel;
-	private JLabel encodingLabel;
-
-	/*
-	 * The combo boxes themselves.
-	 */
 	private BreadcrumbBar lookInBreadcrumbBar;
 	private FSATextField fileNameTextField;
-	private JComboBox filterComboBox;
-	private JComboBox encodingComboBox;
+	private JComboBox filterCombo;
+	private JComboBox encodingCombo;
 
 	/*
 	 * Any renderers/listeners.
@@ -131,37 +120,22 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private MenuButton viewButton;
 	private MenuButton favoritesButton;
 
-	/*
-	 * The menu items in the "view" menu button.
-	 */
-	private JRadioButtonMenuItem listMenuItem;
-	private JRadioButtonMenuItem detailsMenuItem;
-	private JRadioButtonMenuItem iconsMenuItem;
-
-	/*
-	 * The menu items in the "Favorites" menu button.
-	 */
-	private JMenuItem addToFavoritesItem;
-
-	/*
-	 * The accept and cancel buttons.
-	 */
 	private JButton acceptButton;
 	private JButton cancelButton;
 
-	/*
-	 * The main view (both list and table).
+	/**
+	 * The "view" of the current directory (either list, details or icons).
 	 */
 	protected RTextFileChooserView view;
 	private RScrollPane viewScrollPane;
 
-	/*
-	 * The right-click popup menu.
+	/**
+	 * The context menu used by views.
 	 */
 	private JPopupMenu popupMenu;
 
-	/*
-	 * The "glob" (wildcard) filter.
+	/**
+	 * The "glob" (wildcard) filter that shows all files.
 	 */
 	private WildcardFileFilter globFilter;
 
@@ -187,18 +161,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private String openDialogTitleText;
 	private String openButtonToolTipText;
 	private int openButtonMnemonic;
-	private String cancelButtonText;
-	private String cancelButtonToolTipText;
-	private int cancelButtonMnemonic;
 	private String newFolderPrompt;
 	private String errorNewDirPrompt;
-	private String errorDialogTitle;
-	private String newNamePrompt;
-	private String renameFailText;
-	private String renameErrorMessage;
-	private String deleteConfirmPrompt;
-	private String deleteMultipleConfirmPrompt;
-	private String deleteFailText;
+	String errorDialogTitle;
 	private String directoryText;
 	private String fileText;
 	private String nameString;
@@ -206,24 +171,18 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private String typeString;
 	private String statusString;
 	private String lastModifiedString;
-	String readString;
-	String writeString;
-	String readWriteString;
 	private String openString;
-	private String renameString;
-	private String deleteString;
-	private String upOneLevelString;
-	private String refreshString;
-	private String addToFavoritesString;
 	private String noFavoritesDefinedString;
 	private String favoriteDNERemoveString;
 
 	/*
 	 * Dialog actions.
 	 */
-	private DeleteAction deleteAction;
-	private RefreshAction refreshAction;
-	private RenameAction renameAction;
+	private Actions.CopyAction copyAction;
+	private Actions.DeleteAction deleteAction;
+	private Actions.RefreshAction refreshAction;
+	private Actions.RenameAction renameAction;
+	private Actions.UpOneLevelAction upOneLevelAction;
 
 	/*
 	 * Internal stuff.
@@ -284,6 +243,11 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 */
 	private static final String FAVORITES_ENCODING	= "UTF-8";
 
+	/**
+	 * The resource bundle for file choosers.
+	 */
+	private static final ResourceBundle msg = ResourceBundle.getBundle(
+									"org.fife.ui.rtextfilechooser.FileChooser");
 
 	/**
 	 * Creates a new <code>RTextFileChooser</code>.
@@ -424,16 +388,17 @@ public class RTextFileChooser extends ResizableFrameContentPane
 									getOrientation(getLocale());
 		boolean ltr = o.isLeftToRight();
 
-		// Get the icons for all stuff below.
+		// Get the icons and actions for all stuff below.
+		createActions();
 		getIcons();
 
 		setLayout(new BorderLayout());
 		setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
-		topPanel = new JPanel();
+		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.LINE_AXIS));
 
-		lookInLabel = new JLabel();
+		JLabel lookInLabel = new JLabel(getString("LookInLabel"));
 
 		int horizStrutSize = 4;
 		Border empty3Border = BorderFactory.createEmptyBorder(3,3,3,3);
@@ -443,39 +408,42 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		lookInBreadcrumbBar.addPropertyChangeListener(
 									BreadcrumbBar.PROPERTY_LOCATION, this);
 
-		upOneLevelButton = new JButton(upFolderIcon);
-		upOneLevelButton.setActionCommand("UpOneLevel");
-		upOneLevelButton.addActionListener(this);
+		upOneLevelButton = new JButton(upOneLevelAction);
+		upOneLevelButton.setText(null); // Remove text from action.
+		upOneLevelButton.setIcon(upFolderIcon);
+		upOneLevelButton.setToolTipText(getString("UpOneLevelTTT"));
 		upOneLevelButton.setBorder(empty3Border);
 		newFolderButton = new JButton(newFolderIcon);
+		newFolderButton.setToolTipText(getString("NewFolderTTT"));
 		newFolderButton.setActionCommand("CreateNewDirectory");
 		newFolderButton.addActionListener(this);
 		newFolderButton.setBorder(empty3Border);
 
 		viewButton = new MenuButton(listViewIcon);
 		viewButton.setBorder(empty3Border);
-		listMenuItem = new JRadioButtonMenuItem("List", listViewIcon, mode==LIST_MODE);
-		listMenuItem.setActionCommand("ListButton");
-		listMenuItem.addActionListener(this);
-		viewButton.addMenuItem(listMenuItem);
+		JMenuItem  rbItem = new JRadioButtonMenuItem(getString("ListViewTTT"), listViewIcon, mode==LIST_MODE);
+		rbItem.setActionCommand("ListButton");
+		rbItem.addActionListener(this);
+		viewButton.addMenuItem(rbItem);
 		ButtonGroup bg = new ButtonGroup();
-		bg.add(listMenuItem);
-		detailsMenuItem = new JRadioButtonMenuItem("Details", detailsViewIcon, mode==DETAILS_MODE);
-		detailsMenuItem.setActionCommand("DetailsButton");
-		detailsMenuItem.addActionListener(this);
-		viewButton.addMenuItem(detailsMenuItem);
-		bg.add(detailsMenuItem);
-		iconsMenuItem = new JRadioButtonMenuItem("Icons", iconsViewIcon, mode==ICONS_MODE);
-		iconsMenuItem.setActionCommand("IconsButton");
-		iconsMenuItem.addActionListener(this);
-		viewButton.addMenuItem(iconsMenuItem);
-		bg.add(iconsMenuItem);
+		bg.add(rbItem);
+		rbItem = new JRadioButtonMenuItem(getString("DetailsViewTTT"), detailsViewIcon, mode==DETAILS_MODE);
+		rbItem.setActionCommand("DetailsButton");
+		rbItem.addActionListener(this);
+		viewButton.addMenuItem(rbItem);
+		bg.add(rbItem);
+		rbItem = new JRadioButtonMenuItem(getString("IconsViewTTT"), iconsViewIcon, mode==ICONS_MODE);
+		rbItem.setActionCommand("IconsButton");
+		rbItem.addActionListener(this);
+		viewButton.addMenuItem(rbItem);
+		bg.add(rbItem);
 
 		favoritesButton = new MenuButton(favoritesIcon);
+		favoritesButton.setToolTipText(getString("FavoritesTTT"));
 		favoritesButton.setBorder(empty3Border);
 		favoritesButton.addSeparator();
-		addToFavoritesItem = new JMenuItem(new AddToFavoritesAction());
-		favoritesButton.addMenuItem(addToFavoritesItem);
+		JMenuItem item  = new JMenuItem(new Actions.AddToFavoritesAction(this));
+		favoritesButton.addMenuItem(item);
 		favoritesButton.addPopupMenuListener(new FavoritesPopupListener());
 
 		topPanel.add(lookInLabel);
@@ -507,9 +475,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		// Create a panel for the bottom stuff.
 		JPanel bottomPanel = new JPanel(new SpringLayout());
 
-		fileNameLabel = new JLabel();
-		filterLabel = new JLabel();
-		encodingLabel = new JLabel();
+		JLabel fileNameLabel = new JLabel(getString("FileNameLabel"));
+		JLabel filterLabel = new JLabel(getString("FilterLabel"));
+		JLabel encodingLabel = new JLabel(getString("EncodingLabel"));
 
 		fileNameTextField = new FSATextField(false, currentDirectory);
 
@@ -523,19 +491,19 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		fileNameTextField.getDocument().addDocumentListener(textFieldListener);
 		fileNameLabel.setLabelFor(fileNameTextField);
 
-		filterComboBox = new JComboBox();
-		filterComboBox.setMaximumRowCount(12);
-		filterComboBox.setRenderer(new FileFilterComboRenderer());
-		filterLabel.setLabelFor(filterComboBox);
-		filterComboBox.addItemListener(itemListener);
+		filterCombo = new JComboBox();
+		filterCombo.setMaximumRowCount(12);
+		filterCombo.setRenderer(new FileFilterComboRenderer());
+		filterLabel.setLabelFor(filterCombo);
+		filterCombo.addItemListener(itemListener);
 
 		int bottomPanelRowCount = 2;
 		if (showEncodingCombo) {
-			encodingComboBox = new JComboBox();
-			UIUtil.fixComboOrientation(encodingComboBox);
-			encodingComboBox.setMaximumRowCount(12);
-			encodingLabel.setLabelFor(encodingComboBox);
-			encodingComboBox.addItemListener(itemListener);
+			encodingCombo = new JComboBox();
+			UIUtil.fixComboOrientation(encodingCombo);
+			encodingCombo.setMaximumRowCount(12);
+			encodingLabel.setLabelFor(encodingCombo);
+			encodingCombo.addItemListener(itemListener);
 			bottomPanelRowCount++;
 		}
 
@@ -543,19 +511,19 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			bottomPanel.add(fileNameLabel);
 			bottomPanel.add(fileNameTextField);
 			bottomPanel.add(filterLabel);
-			bottomPanel.add(filterComboBox);
+			bottomPanel.add(filterCombo);
 			if (showEncodingCombo) {
 				bottomPanel.add(encodingLabel);
-				bottomPanel.add(encodingComboBox);
+				bottomPanel.add(encodingCombo);
 			}
 		}
 		else {
 			bottomPanel.add(fileNameTextField);
 			bottomPanel.add(fileNameLabel);
-			bottomPanel.add(filterComboBox);
+			bottomPanel.add(filterCombo);
 			bottomPanel.add(filterLabel);
 			if (showEncodingCombo) {
-				bottomPanel.add(encodingComboBox);
+				bottomPanel.add(encodingCombo);
 				bottomPanel.add(encodingLabel);
 			}
 		}
@@ -567,7 +535,12 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		acceptButton.addActionListener(this);
 		temp.add(acceptButton);
 
-		cancelButton = new JButton();
+		String cancelText = UIManager.getString("FileChooser.cancelButtonText");
+		int cancelMnemonic = getMnemonic("FileChooser.cancelButtonMnemonic");
+		String cancelToolTip = UIManager.getString("FileChooser.cancelButtonToolTipText");
+		cancelButton = new JButton(cancelText);
+		cancelButton.setMnemonic(cancelMnemonic);
+		cancelButton.setToolTipText(cancelToolTip);
 		cancelButton.setActionCommand("CancelButtonPressed");
 		cancelButton.addActionListener(this);
 		temp.add(cancelButton);
@@ -602,7 +575,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		installStrings();
 		applyComponentOrientation(o);
 		guiInitialized = true;
-		createActions();
 
 		// We must call this AFTER guiInitialized is set to true, so that
 		// the encoding combo displays the correct encoding.
@@ -624,10 +596,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		else if ("CancelButtonPressed".equals(actionCommand)) {
 			cancelSelection();
-		}
-
-		else if ("UpOneLevel".equals(actionCommand)) {
-			setCurrentDirectory(currentDirectory.getParentFile());
 		}
 
 		else if ("CreateNewDirectory".equals(actionCommand)) {
@@ -875,9 +843,11 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * Creates actions for keystrokes in a file chooser dialog.
 	 */
 	private void createActions() {
-		renameAction = new RenameAction();
-		deleteAction = new DeleteAction();
-		refreshAction = new RefreshAction();
+		renameAction = new Actions.RenameAction(this);
+		copyAction = new Actions.CopyAction(this);
+		deleteAction = new Actions.DeleteAction(this);
+		refreshAction = new Actions.RefreshAction(this);
+		upOneLevelAction = new Actions.UpOneLevelAction(this);
 	}
 
 
@@ -935,11 +905,12 @@ public class RTextFileChooser extends ResizableFrameContentPane
 				boolean filesSelected = count>0;
 				((JMenuItem)getComponent(0)).setEnabled(filesSelected);
 				((JMenuItem)getComponent(1)).setEnabled(filesSelected);
-				((JMenuItem)getComponent(2)).setEnabled(filesSelected);
+				((JMenuItem)getComponent(3)).setEnabled(filesSelected);
+				((JMenuItem)getComponent(4)).setEnabled(filesSelected);
 
 				// Only enable the "Up one level" item if we can actually
 				// go up a level.
-				JMenuItem upOneLevel = (JMenuItem)getComponent(4);
+				JMenuItem upOneLevel = (JMenuItem)getComponent(6);
 				upOneLevel.setEnabled(upOneLevelButton.isEnabled());
 
 				super.show(c, x,y);
@@ -955,14 +926,17 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		menuItem = new JMenuItem(renameAction);
 		popupMenu.add(menuItem);
 
+		popupMenu.addSeparator();
+
+		menuItem = new JMenuItem(copyAction);
+		popupMenu.add(menuItem);
+
 		menuItem = new JMenuItem(deleteAction);
 		popupMenu.add(menuItem);
 
 		popupMenu.addSeparator();
 
-		menuItem = new JMenuItem(upOneLevelString);
-		menuItem.setActionCommand("UpOneLevel");
-		menuItem.addActionListener(this);
+		menuItem = new JMenuItem(upOneLevelAction);
 		popupMenu.add(menuItem);
 
 		popupMenu.addSeparator();
@@ -1002,6 +976,19 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		if (!currentDirectory.isDirectory()) {
 			currentDirectory = new File(System.getProperty("user.dir"));
 		}
+	}
+
+
+	/**
+	 * Focuses the "file name" text field.
+	 *
+	 * @param clear Whether the field's contents should be cleared.
+	 */
+	void focusFileNameField(boolean clear) {
+		if (clear) {
+			fileNameTextField.setText(null);
+		}
+		fileNameTextField.requestFocusInWindow();
 	}
 
 
@@ -1548,7 +1535,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 */
 	public String getName(File f) {
 		String name = fileSystemView.getSystemDisplayName(f);
-		if (name==null || name.equals(""))
+		if (name==null || "".equals(name))
 			name = f.getAbsolutePath();
 		return name;
 	}
@@ -1574,9 +1561,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * returned.
 	 *
 	 * @return The file selected by the user.
-	 * @see #getSelectedFiles
-	 * @see #setSelectedFile
-	 * @see #setSelectedFiles
+	 * @see #getSelectedFiles()
+	 * @see #setSelectedFile(File)
+	 * @see #setSelectedFiles(File[])
 	 */
 	public File getSelectedFile() {
 		return selectedFiles[0];
@@ -1601,10 +1588,21 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * chooser.
 	 *
 	 * @return Whether hidden files are displayed.
-	 * @see #setShowHiddenFiles
+	 * @see #setShowHiddenFiles(boolean)
 	 */
 	public boolean getShowHiddenFiles() {
 		return showHiddenFiles;
+	}
+
+
+	/**
+	 * Returns the localized text for a given key.
+	 *
+	 * @param key The key.
+	 * @return the localized text.
+	 */
+	public String getString(String key) {
+		return msg.getString(key);
 	}
 
 
@@ -1630,13 +1628,22 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @param file The file for which to get the tool tip.
 	 * @return The tool tip.
 	 */
-	final String getToolTipFor(File file) {
-
+	String getToolTipFor(File file) {
 		return "<html><body>&nbsp;" + nameString + file.getName() +
 			"<br>&nbsp;" + lastModifiedString +
 			Utilities.getLastModifiedString(file.lastModified()) +
 			"<br>&nbsp;" + sizeString + getFileSizeStringFor(file) +
 			"</body></html>";
+	}
+
+
+	/**
+	 * Returns the view used by this file chooser.
+	 *
+	 * @return The view.
+	 */
+	RTextFileChooserView getView() {
+		return view;
 	}
 
 
@@ -1685,6 +1692,11 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		inputMap.put(ks, "OnDelete");
 		actionMap.put("OnDelete", deleteAction);
 
+		// Have Backspace go "up one level."
+		ks = (KeyStroke)upOneLevelAction.getValue(Action.ACCELERATOR_KEY);
+		inputMap.put(ks, "OnBackspace");
+		actionMap.put("OnBackspace", upOneLevelAction);
+
 		// Have F5 refresh the displayed files.
 		ks = (KeyStroke)refreshAction.getValue(Action.ACCELERATOR_KEY);
 		inputMap.put(ks, "OnRefresh");
@@ -1698,13 +1710,11 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * is done separately from the rest of the strings due to poor design.
 	 */
 	private void installDetailsViewStrings() {
-		ResourceBundle msg = ResourceBundle.getBundle(
-								"org.fife.ui.rtextfilechooser.FileChooser");
-		nameString = msg.getString("Name");
-		sizeString = msg.getString("Size");
-		typeString = msg.getString("Type");
-		statusString = msg.getString("Status");
-		lastModifiedString = msg.getString("LastModified");
+		nameString = getString("Name");
+		sizeString = getString("Size");
+		typeString = getString("Type");
+		statusString = getString("Status");
+		lastModifiedString = getString("LastModified");
 	}
 
 
@@ -1713,70 +1723,37 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 */
 	protected void installStrings() {
 
-		ResourceBundle msg = ResourceBundle.getBundle(
-							"org.fife.ui.rtextfilechooser.FileChooser");
-
 		saveButtonText   = UIManager.getString("FileChooser.saveButtonText");
 		openButtonText   = UIManager.getString("FileChooser.openButtonText");
 		saveDialogTitleText = UIManager.getString("FileChooser.saveDialogTitleText");
 		openDialogTitleText = UIManager.getString("FileChooser.openDialogTitleText");
-		cancelButtonText = UIManager.getString("FileChooser.cancelButtonText");
 
 		saveButtonMnemonic   = getMnemonic("FileChooser.saveButtonMnemonic");
 		openButtonMnemonic   = getMnemonic("FileChooser.openButtonMnemonic");
-		cancelButtonMnemonic = getMnemonic("FileChooser.cancelButtonMnemonic");
 
 		saveButtonToolTipText   = UIManager.getString("FileChooser.saveButtonToolTipText");
 		openButtonToolTipText   = UIManager.getString("FileChooser.openButtonToolTipText");
-		cancelButtonToolTipText = UIManager.getString("FileChooser.cancelButtonToolTipText");
-
-		lookInLabel.setText(msg.getString("LookInLabel"));
-		upOneLevelButton.setToolTipText(msg.getString("UpOneLevelTTT"));
-		newFolderButton.setToolTipText(msg.getString("NewFolderTTT"));
-		listMenuItem.setText(msg.getString("ListViewTTT"));
-		detailsMenuItem.setText(msg.getString("DetailsViewTTT"));
-		iconsMenuItem.setText(msg.getString("IconsViewTTT"));
-		favoritesButton.setToolTipText(msg.getString("FavoritesTTT"));
-		fileNameLabel.setText(msg.getString("FileNameLabel"));
-		filterLabel.setText(msg.getString("FilterLabel"));
-		encodingLabel.setText(msg.getString("EncodingLabel"));
 
 		// Populate the combo box with all available encodings.
-		if (encodingComboBox!=null) {
+		if (encodingCombo!=null) {
 			Map availcs = Charset.availableCharsets();
 			Set keys = availcs.keySet();
 			for (Iterator i=keys.iterator(); i.hasNext(); ) {
-				encodingComboBox.addItem(i.next());
+				encodingCombo.addItem(i.next());
 			}
 		}
 
-		newFolderPrompt = msg.getString("NewFolderPrompt");
-		errorNewDirPrompt = msg.getString("ErrorNewDirPrompt");
-		errorDialogTitle = msg.getString("Error");
-		newNamePrompt = msg.getString("NewNamePrompt");
-		renameFailText = msg.getString("RenameFailText");
-		renameErrorMessage = msg.getString("RenameErrorMessage");
-		deleteConfirmPrompt = msg.getString("DeleteConfirmPrompt");
-		deleteMultipleConfirmPrompt = msg.getString("DeleteMultipleConfirmPrompt");
-		deleteFailText = msg.getString("DeleteFailText");
+		newFolderPrompt = getString("NewFolderPrompt");
+		errorNewDirPrompt = getString("ErrorNewDirPrompt");
+		errorDialogTitle = getString("Error");
 
-		directoryText = msg.getString("Directory"); // "Directory"
-		fileText = msg.getString("File"); // "File"
+		directoryText = getString("Directory"); // "Directory"
+		fileText = getString("File"); // "File"
 
-		readString = msg.getString("Read");
-		writeString = msg.getString("Write");
-		readWriteString = msg.getString("ReadWrite");
+		openString = getString("PopupMenu.Open");
 
-		openString = msg.getString("PopupMenu.Open");
-		renameString = msg.getString("PopupMenu.Rename");
-		deleteString = msg.getString("PopupMenu.Delete");
-		upOneLevelString = msg.getString("PopupMenu.UpOneLevel");
-		refreshString = msg.getString("PopupMenu.Refresh");
-
-		addToFavoritesString = msg.getString("AddToFavorites");
-		addToFavoritesItem.setText(addToFavoritesString);
-		noFavoritesDefinedString = msg.getString("NoFavoritesDefined");
-		favoriteDNERemoveString = msg.getString("FavoriteDoesNotExistRemoveIt");
+		noFavoritesDefinedString = getString("NoFavoritesDefined");
+		favoriteDNERemoveString = getString("FavoriteDoesNotExistRemoveIt");
 
 	}
 
@@ -1864,10 +1841,10 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * known by this file dialog.
 	 */
 	private void populatefilterComboBox() {
-		filterComboBox.removeAllItems();
+		filterCombo.removeAllItems();
 		int max = fileFilters.size();
 		for (int i=0; i<max; i++)
-			filterComboBox.addItem(fileFilters.get(i));
+			filterCombo.addItem(fileFilters.get(i));
 	}
 
 
@@ -1902,17 +1879,17 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 */
 	protected void refreshEncodingComboBox() {
 
-		if (!guiInitialized || encodingComboBox==null) {
+		if (!guiInitialized || encodingCombo==null) {
 			return;
 		}
 
 		Charset cs1 = Charset.forName(encoding);
-		int count = encodingComboBox.getItemCount();
+		int count = encodingCombo.getItemCount();
 		for (int i=0; i<count; i++) {
-			String item = (String)encodingComboBox.getItemAt(i);
+			String item = (String)encodingCombo.getItemAt(i);
 			Charset cs2 = Charset.forName(item);
 			if (cs1.equals(cs2)) {
-				encodingComboBox.setSelectedIndex(i);
+				encodingCombo.setSelectedIndex(i);
 				return;
 			}
 		}
@@ -1921,10 +1898,10 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		String defaultEncoding = getDefaultEncoding();
 		cs1 = Charset.forName(defaultEncoding);
 		for (int i=0; i<count; i++) {
-			String item = (String)encodingComboBox.getItemAt(i);
+			String item = (String)encodingCombo.getItemAt(i);
 			Charset cs2 = Charset.forName(item);
 			if (cs1.equals(cs2)) {
-				encodingComboBox.setSelectedIndex(i);
+				encodingCombo.setSelectedIndex(i);
 				return;
 			}
 		}
@@ -1935,7 +1912,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/**
 	 * Refreshes either the list view or table view, whichever is visible.
 	 */
-	private final void refreshView() {
+	final void refreshView() {
 		refreshView(false);
 	}
 
@@ -2163,7 +2140,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 			// Enable/disable the "Up one level" button appropriately.
 			File parentFile = currentDirectory.getParentFile();
-			upOneLevelButton.setEnabled(parentFile!=null &&
+			upOneLevelAction.setEnabled(parentFile!=null &&
 						parentFile.isDirectory() && parentFile.canRead());
 
 			// Enable the "Create new folder" button iff we can write to
@@ -2277,7 +2254,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			return;
 		}
 
-		filterComboBox.setSelectedItem(filter);
+		filterCombo.setSelectedItem(filter);
 
 		if (filter != null) {
 			if (isMultiSelectionEnabled() && selectedFiles!=null &&
@@ -2662,9 +2639,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			acceptButton.setMnemonic(openButtonMnemonic);
 			acceptButton.setToolTipText(openButtonToolTipText);
 		}
-		cancelButton.setText(cancelButtonText);
-		cancelButton.setMnemonic(cancelButtonMnemonic);
-		cancelButton.setToolTipText(cancelButtonToolTipText);
 
 		// Display the dialog.
 		dialog.pack();
@@ -2852,112 +2826,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	/**
-	 * Action that handles adding the currently-viewed directory to the
-	 * file chooser "favorites."
-	 */
-	private class AddToFavoritesAction extends AbstractAction {
-
-		public AddToFavoritesAction() {
-			putValue(Action.NAME, addToFavoritesString);
-		}
-
-		public void actionPerformed(ActionEvent e) {
-			File dir = getCurrentDirectory();
-			addToFavorites(dir.getAbsolutePath());
-			fileNameTextField.requestFocusInWindow();
-		}
-
-	}
-
-	/**
-	 * Action that handles deleting a file.
-	 */
-	private class DeleteAction extends AbstractAction {
-
-		public DeleteAction() {
-			putValue(Action.NAME, deleteString);
-			putValue(Action.ACCELERATOR_KEY,
-					KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
-		}
-
-		public void actionPerformed(ActionEvent e) {
-
-			// Get the selected files.  If there are no selected files (i.e.,
-			// they pressed "delete" when no files were selected), beep.
-			File[] files = view.getSelectedFiles();
-			if (files==null || files.length==0) {
-				UIManager.getLookAndFeel().provideErrorFeedback(
-										RTextFileChooser.this);
-				return;
-			}
-
-			FileIOExtras extras = FileIOExtras.getInstance();
-			if (extras!=null) {
-				handleDeleteNative(files, extras);
-			}
-			else {
-				handleDeleteViaJava(files);
-			}
-
-		}
-
-		private void handleDeleteNative(File[] files, FileIOExtras extras) {
-			if (extras.moveToRecycleBin(files, true, true)) {
-				refresh();
-			}
-			else {
-				UIManager.getLookAndFeel().provideErrorFeedback(
-										RTextFileChooser.this);
-			}
-		}
-
-		private void handleDeleteViaJava(File[] files) {
-
-			// Prompt to confirm the file deletion.
-			int count = files.length;
-			int choice;
-			if (count==1) {
-				String fileName = files[0].getName();
-				choice = JOptionPane.showConfirmDialog(
-								RTextFileChooser.this,
-								deleteConfirmPrompt + fileName + "?");
-			}
-			else { // count>1
-				choice = JOptionPane.showConfirmDialog(
-								RTextFileChooser.this,
-								deleteMultipleConfirmPrompt);
-			}
-
-			// If they chose "yes," delete the files.
-			if (choice==JOptionPane.YES_OPTION) {
-				for (int i=0; i<count; i++) {
-					if (!files[i].delete()) {
-						Object[] arguments = { files[i].getName() };
-						String msg = MessageFormat.format(deleteFailText,
-													arguments);
-						JOptionPane.showMessageDialog(
-										RTextFileChooser.this,
-										msg, errorDialogTitle,
-										JOptionPane.ERROR_MESSAGE);
-					}
-				}
-				refresh();
-			}
-
-		}
-
-		private void refresh() {
-			refreshView();
-			// file name field contained names of file(s) to delete, so
-			// clear them out.
-			fileNameTextField.setText(null);
-			fileNameTextField.requestFocusInWindow();
-		}
-
-	}
-
-
-	/**
 	 * Populates the "Favorites" popup menu when the "Favorites" menu
 	 * button is clicked.
 	 */
@@ -3064,74 +2932,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	/**
-	 * Action that handles refreshing the files displayed.
-	 */
-	private class RefreshAction extends AbstractAction {
-
-		public RefreshAction() {
-			putValue(Action.NAME, refreshString);
-			putValue(Action.ACCELERATOR_KEY,
-					KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
-		}
-
-		public void actionPerformed(ActionEvent e) {
-			refreshView();
-		}
-
-	}
-
-
-	/**
-	 * Action that handles renaming of a file.
-	 */
-	private class RenameAction extends AbstractAction {
-
-		public RenameAction() {
-			putValue(Action.NAME, renameString);
-			putValue(Action.ACCELERATOR_KEY,
-					KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
-		}
-
-		public void actionPerformed(ActionEvent e) {
-
-			File file = view.getSelectedFile();
-			if (file==null) {
-				UIManager.getLookAndFeel().provideErrorFeedback(
-										RTextFileChooser.this);
-				return;
-			}
-
-			String oldName = file.getName();
-			String newName = JOptionPane.showInputDialog(
-							RTextFileChooser.this,
-							newNamePrompt + oldName + ":", oldName);
-			if (newName!=null && !newName.equals(oldName)) {
-				try {
-					// If they have a separator char in the name, assume
-					// they've typed a full path.  Otherwise, just rename
-					// it and place it in the same directory.
-					if (newName.indexOf(File.separatorChar)==-1) {
-						newName = currentDirectory.getCanonicalPath() +
-											File.separatorChar + newName;
-					}
-					File newFile = new File(newName);
-					if (!file.renameTo(newFile)) {
-						throw new Exception(renameFailText);
-					}
-					refreshView();
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(RTextFileChooser.this,
-						renameErrorMessage + e2,
-						errorDialogTitle, JOptionPane.ERROR_MESSAGE);
-				}
-			}
-
-		}
-
-	}
-
-
-	/**
 	 * The item listener for all combo boxes on the file chooser.
 	 */
 	private class RTextFileChooserItemListener implements ItemListener {
@@ -3147,12 +2947,12 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			Object source = e.getSource();
 
 			// If they selected a new file filter...
-			if (source==filterComboBox && e.getStateChange()==ItemEvent.SELECTED) {
+			if (source==filterCombo && e.getStateChange()==ItemEvent.SELECTED) {
 				currentFileFilter = (FileFilter)e.getItem();
 				refreshView();
 			}
 
-			else if (source==encodingComboBox && e.getStateChange()==ItemEvent.SELECTED) {
+			else if (source==encodingCombo && e.getStateChange()==ItemEvent.SELECTED) {
 				setEncoding((String)e.getItem());
 			}
 

@@ -55,6 +55,10 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	private MouseListener mouseListener;
 	private SelectionListener selectionListener;
 
+	private String readStr;
+	private String writeStr;
+	private String readWriteStr;
+
 	private static final int MAX_NAME_COLUMN_SIZE		= 150;
 
 
@@ -73,6 +77,11 @@ class DetailsView extends JTable implements RTextFileChooserView {
 					String lastModifiedString) {
 
 		this.chooser = chooser;
+
+		readStr = chooser.getString("Read");
+		writeStr = chooser.getString("Write");
+		readWriteStr = chooser.getString("ReadWrite");
+
 
 		// Create the table model, then wrap it in a sorter model.
 		DetailsViewModel dvm = new DetailsViewModel(nameString, sizeString,
@@ -485,12 +494,12 @@ class DetailsView extends JTable implements RTextFileChooserView {
 			String status = "";
 			if (canRead) {
 				if (canWrite)
-					status = chooser.readWriteString;
+					status = readWriteStr;
 				else
-					status = chooser.readString;
+					status = readStr;
 			}
 			else if (canWrite)
-				status = chooser.writeString;
+				status = writeStr;
 			Vector tempVector = new Vector(5);//tempVector.clear();
 			tempVector.add(0, file);
 //			tempVector.add(isDirectory ? "" : length);

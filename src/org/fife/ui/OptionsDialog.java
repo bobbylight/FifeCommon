@@ -119,6 +119,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 			}
 		};
 		optionTree.setSelectionModel(new RTreeSelectionModel());
+		optionTree.setCellRenderer(new OptionTreeCellRenderer());
 		optionTree.setShowsRootHandles(true);
 		optionTree.setRootVisible(false);
 		//optionTree.setSelectionRow(0); // Must call this later.
@@ -548,9 +549,36 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		// Give the "top" component on the panel focus, just to make
 		// things a little nicer.
 		JComponent topComponent = panel.getTopJComponent();
-		topComponent.requestFocusInWindow();
-		if (topComponent instanceof JTextComponent) {
-			((JTextComponent)topComponent).selectAll();
+		if (topComponent!=null) { // Should always be true
+			topComponent.requestFocusInWindow();
+			if (topComponent instanceof JTextComponent) {
+				((JTextComponent)topComponent).selectAll();
+			}
+		}
+
+	}
+
+
+	/**
+	 * Renderer for the tree view.
+	 */
+	private static class OptionTreeCellRenderer extends DefaultTreeCellRenderer{
+
+		public Component getTreeCellRendererComponent(JTree tree, Object value,
+						boolean sel, boolean expanded, boolean leaf, int row,
+						boolean focused) {
+			super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf,
+												row, focused);
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
+			Object obj = node.getUserObject();
+			if (obj instanceof OptionsDialogPanel) {
+				OptionsDialogPanel panel = (OptionsDialogPanel)obj;
+				setIcon(panel.getIcon());
+			}
+			else {
+				setIcon(null);
+			}
+			return this;
 		}
 
 	}

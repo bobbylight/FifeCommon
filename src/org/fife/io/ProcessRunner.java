@@ -10,6 +10,7 @@
 package org.fife.io;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import java.io.IOException;
  */
 public class ProcessRunner implements Runnable {
 
+	private File dir;
 	private String[] commandLine;
 	private String stdout;
 	private String stderr;
@@ -72,6 +74,19 @@ public class ProcessRunner implements Runnable {
 												append('\"');
 		}
 		return sb.toString();
+	}
+
+
+	/**
+	 * Returns the directory to run the process in.
+	 *
+	 * @return The directory the process will run in.  If this is
+	 *         <code>null</code>, then the process will run in the same
+	 *         directory as this Java process.
+	 * @see #setDirectory(File)
+	 */
+	public File getDirectory() {
+		return dir;
 	}
 
 
@@ -133,7 +148,8 @@ public class ProcessRunner implements Runnable {
 
 		try {
 
-			proc = Runtime.getRuntime().exec(commandLine);
+			String[] envp = null; // Inherit environment variables.
+			proc = Runtime.getRuntime().exec(commandLine, envp, dir);
 
 			// Create threads to read the stdout and stderr of the external
 			// process.  If we do not do it this way, the process may
@@ -181,6 +197,17 @@ public class ProcessRunner implements Runnable {
 			}
 		}
 
+	}
+
+
+	/**
+	 * Sets the directory to run the process in.
+	 *
+	 * @param dir The directory.
+	 * @see #getDirectory()
+	 */
+	public void setDirectory(File dir) {
+		this.dir = dir;
 	}
 
 

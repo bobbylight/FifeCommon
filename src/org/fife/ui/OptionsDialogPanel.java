@@ -54,6 +54,11 @@ public abstract class OptionsDialogPanel extends JPanel {
 	private String name;
 
 	/**
+	 * The icon to use for this options panel in the options dialog, if any.
+	 */
+	private Icon icon;
+
+	/**
 	 * Whether or not this panel has any unsaved changes.  The Options panel
 	 * should set this whenever an Option value is changed by the user, but
 	 * it doesn't have to clear it (this is done by the parent
@@ -178,11 +183,11 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 * Returns the icon to display for this options panel, if any.
 	 *
 	 * @return The icon for this options dialog panel, or <code>null</code>
-	 *         if there isn't one.  The default implementation returns
-	 *         <code>null</code>.
+	 *         if there isn't one.
+	 * @see #setIcon(Icon)
 	 */
 	public Icon getIcon() {
-		return null;
+		return icon;
 	}
 
 
@@ -241,6 +246,17 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 */
 	public boolean hasUnsavedChanges() {
 		return hasUnsavedChanges;
+	}
+
+
+	/**
+	 * Sets the icon to use for this option panel in the dialog.
+	 *
+	 * @param icon The icon to use, or <code>null</code> for none.
+	 * @see #getIcon()
+	 */
+	public void setIcon(Icon icon) {
+		this.icon = icon;
 	}
 
 

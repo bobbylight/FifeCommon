@@ -34,7 +34,7 @@
 		<delete includeEmptyDirs="true" quiet="true" dir="${class-dir}"/>
 		<mkdir dir="${class-dir}"/>
 		<javac srcdir="${source-dir}" destdir="${class-dir}"
-			classpath="lib/rsyntaxtextarea.jar:lib/autocomplete.jar"
+			classpath="extra:lib/rsyntaxtextarea.jar:lib/autocomplete.jar"
 			deprecation="yes" debug="${debug}" debuglevel="${debuglevel}"
 			source="${java-level}" target="${java-level}"/>
 	</target>
@@ -52,7 +52,7 @@
 				<include name="**/*.jpg"/>
 			</fileset>
 			<fileset dir="extra">
-				<include name="com/apple/osxadapter/OSXAdapter.class"/>
+				<include name="com/apple/osxadapter/*.class"/>
 			</fileset>
 			<manifest>
 				<attribute name="Class-Path" value="rsyntaxtextarea.jar"/>

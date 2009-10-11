@@ -64,6 +64,8 @@ import org.fife.ui.SplashScreen;
 import org.fife.ui.StatusBar;
 import org.fife.help.HelpDialog;
 
+import com.apple.osxadapter.NativeMacApp;
+
 
 /**
  * A basic, generic GUI application.  Your Swing application can
@@ -90,7 +92,7 @@ import org.fife.help.HelpDialog;
  * @see org.fife.ui.app.AbstractPluggableGUIApplication
  */
 public abstract class AbstractGUIApplication extends JFrame
-										implements GUIApplication {
+							implements GUIApplication, NativeMacApp {
 
 	/**
 	 * This property is fired whenever the status bar changes.
@@ -977,8 +979,7 @@ public ClassLoader getLookAndFeelClassLoader() {
 			try {
 				Class osxAdapter = Class.forName(
 									"com.apple.osxadapter.OSXAdapter");
-				
-				Class[] defArgs = { this.getClass() };
+				Class[] defArgs = { NativeMacApp.class };
 				Method registerMethod = osxAdapter.getDeclaredMethod(
 								"registerMacOSXApplication", defArgs);
 				if (registerMethod != null) {

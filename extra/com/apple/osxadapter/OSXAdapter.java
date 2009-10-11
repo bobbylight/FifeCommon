@@ -65,9 +65,9 @@ public class OSXAdapter extends ApplicationAdapter {
 	private static com.apple.eawt.Application theApplication;
 
 	// reference to the app where the existing quit, about, prefs code is
-	private org.fife.rtext.RText mainApp;
+	private NativeMacApp mainApp;
 	
-	private OSXAdapter (org.fife.rtext.RText inApp) {
+	private OSXAdapter (NativeMacApp inApp) {
 		mainApp = inApp;
 	}
 	
@@ -138,7 +138,7 @@ public class OSXAdapter extends ApplicationAdapter {
 	// The main entry-point for this functionality.  This is the only method
 	// that needs to be called at runtime, and it can easily be done using
 	// reflection (see MyApp.java) 
-	public static void registerMacOSXApplication(org.fife.rtext.RText inApp) {
+	public static void registerMacOSXApplication(NativeMacApp inApp) {
 		if (theApplication == null) {
 			theApplication = new com.apple.eawt.Application();
 		}			

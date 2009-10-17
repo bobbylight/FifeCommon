@@ -252,8 +252,9 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 				// As an added bonus, if it's a text field, (which it
 				// usually (always?) will be), select the text so they
 				// can easily delete it.
-				if (result.component instanceof JTextComponent)
+				if (result.component instanceof JTextComponent) {
 					((JTextComponent)result.component).selectAll();
+				}
 				result.component.requestFocusInWindow();
 				JOptionPane.showMessageDialog(this, result.errorMessage,
 								"Error", JOptionPane.ERROR_MESSAGE);

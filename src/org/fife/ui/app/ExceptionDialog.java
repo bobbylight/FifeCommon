@@ -31,6 +31,9 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
@@ -39,17 +42,18 @@ import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.text.JTextComponent;
 
+import org.fife.ui.EscapableDialog;
 import org.fife.ui.RButton;
 import org.fife.ui.ResizableFrameContentPane;
 import org.fife.ui.RScrollPane;
+import org.fife.ui.SelectableLabel;
 import org.fife.ui.UIUtil;
 
 
@@ -58,14 +62,17 @@ import org.fife.ui.UIUtil;
  * caught.
  *
  * @author Robert Futrell
- * @version 0.1
+ * @version 0.3
  */
-public class ExceptionDialog extends JDialog implements ActionListener {
+public class ExceptionDialog extends EscapableDialog implements ActionListener {
 
-	private JEditorPane descArea;
+	private SelectableLabel descArea;
 	private DetailsButton detailsButton;
 	private JPanel textPanel;
 	private String desc;
+
+	private static final int MIN_HEIGHT				= 150;
+	private static final int MAX_WIDTH				= 600;
 
 	// Don't use a tab as tab==8 space by default => too much space!
 	private static final String TRACE_STEP_BEGINNING	= "    at ";
@@ -130,23 +137,6 @@ public class ExceptionDialog extends JDialog implements ActionListener {
 
 
 	/**
-	 * Returns an editor pane to use for the description text.
-	 *
-	 * @return The editor pane.
-	 */
-	private JEditorPane createDescArea() {
-		JEditorPane descArea = new JEditorPane();
-//		descArea.setContentType("text/html");
-		descArea.setBorder(null);
-		descArea.setEditable(false);
-		descArea.setOpaque(false);
-		descArea.setBackground(new Color(0, 0, 0, 0)); // Needed for Nimbus
-		descArea.setFont(UIManager.getFont("Label.font"));
-		return descArea;
-	}
-
-
-	/**
 	 * Returns the text component to use to display the exception.  By
 	 * default, this method returns an instance of <code>JTextArea</code>.
 	 * You can override this method to return a different type of text
@@ -195,13 +185,13 @@ public class ExceptionDialog extends JDialog implements ActionListener {
 
 		JPanel contentPane =new ResizableFrameContentPane(new BorderLayout());
 
-		JPanel temp = new JPanel(new BorderLayout());
+		JPanel topPanel = new JPanel(new BorderLayout());
 		Icon icon = UIManager.getIcon("OptionPane.errorIcon");
 		if (icon!=null) {
 			JLabel iconLabel = new JLabel(icon);
-			temp.add(iconLabel, BorderLayout.LINE_START);
+			topPanel.add(iconLabel, BorderLayout.LINE_START);
 		}
-		descArea = createDescArea();
+		descArea = new SelectableLabel();
 		String descFormat = msg.getString("DescriptionFormat");
 		desc = t.getMessage();
 		if (desc==null) {
@@ -212,15 +202,12 @@ public class ExceptionDialog extends JDialog implements ActionListener {
 		JPanel temp2 = new JPanel(new BorderLayout());
 		temp2.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 		temp2.add(descArea);
-		temp.add(temp2);
+		topPanel.add(temp2);
 		detailsButton = new DetailsButton(msg.getString("Details"));
 		detailsButton.setActionCommand("ToggleDetails");
 		detailsButton.addActionListener(this);
-		temp2 = new JPanel(new BorderLayout());
-		temp2.add(detailsButton, BorderLayout.SOUTH);
-		temp.add(temp2, BorderLayout.LINE_END);
-		temp.setBorder(UIUtil.getEmpty5Border());
-		contentPane.add(temp, BorderLayout.NORTH);
+		topPanel.setBorder(UIUtil.getEmpty5Border());
+		contentPane.add(topPanel, BorderLayout.NORTH);
 
 		JTextComponent textArea = createTextComponent();
 		String stackTraceText = getStackTraceText(t);
@@ -245,7 +232,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
 		textPanel.add(new RScrollPane(textArea));
 		//contentPane.add(textPanel);
 
-		JPanel buttonPanel = new JPanel();
+		JPanel buttonPanel = new JPanel(new GridLayout(1,2, 5,5));
 		RButton okButton = new RButton(msg.getString("Close"));
 		okButton.setMnemonic(msg.getString("CloseMnemonic").charAt(0));
 		okButton.addActionListener(new ActionListener() {
@@ -254,15 +241,40 @@ public class ExceptionDialog extends JDialog implements ActionListener {
 			}
 		});
 		buttonPanel.add(okButton);
-		contentPane.add(buttonPanel, BorderLayout.SOUTH);
+		buttonPanel.add(detailsButton);
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.add(buttonPanel);
+		contentPane.add(bottomPanel, BorderLayout.SOUTH);
 
 		setContentPane(contentPane);
 		getRootPane().setDefaultButton(okButton);
 		applyComponentOrientation(orientation);
-		contentPane.setPreferredSize(
-			new Dimension(400, contentPane.getPreferredSize().height));
 		pack();
 		setModal(true);
+
+	}
+
+
+	/**
+	 * Workaround for the fact that, if our SelectableLabel (e.g. JEditorPane)
+	 * is displaying a long line of HTML, the preferred size returned will be
+	 * way too long.  Make us a reasonable width and guess at a height that
+	 * will likely hold all of the text, while still not looking way too tall.
+	 */
+	public void pack() {
+
+		super.pack();
+
+System.out.println("*** " + getWidth() + ", " + getPreferredSize().width);
+		if (getWidth()>MAX_WIDTH && getHeight()<200) {
+System.out.println("Here!!!");
+			setSize(MAX_WIDTH, 200);
+		}
+
+		// Keep one-liner errors from creating a dialog that is "too thin."
+		if (getHeight()<MIN_HEIGHT) {
+			setSize(getWidth(), MIN_HEIGHT);
+		}
 
 	}
 
@@ -274,13 +286,6 @@ public class ExceptionDialog extends JDialog implements ActionListener {
 	 *        <code>null</code>.
 	 */
 	public void setDescription(String desc) {
-		this.desc = desc;
-		if (desc!=null && desc.startsWith("<html>")) {
-			descArea.setContentType("text/html");
-		}
-		else {
-			descArea.setContentType("text/plain");
-		}
 		descArea.setText(desc);
 		// NOTE: Why must we reset cp's preferred size to keep pack()
 		// actually working here?
@@ -288,6 +293,20 @@ public class ExceptionDialog extends JDialog implements ActionListener {
 		JPanel cp = (JPanel)getContentPane(); // Okay cast since we made it
 		cp.setPreferredSize(null);
 		pack(); // Resize for new message
+	}
+
+
+	public void setVisible(final boolean visible) {
+		if (visible) {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					ExceptionDialog.super.setVisible(visible);
+				}
+			});
+		}
+		else {
+			super.setVisible(visible);
+		}
 	}
 
 
@@ -312,38 +331,50 @@ public class ExceptionDialog extends JDialog implements ActionListener {
 		private int[] x2;
 		private int[] y2;
 
+		private static final int WIDTH		= 10;
+		private static final int HEIGHT		= 10;
+
 		public ArrowIcon() {
-			x = new int[] { 6, 0, 11 };
-			y = new int[] { 0, 11, 11 };
+			x = new int[] { WIDTH/2, 0, WIDTH };
+			y = new int[] { 0, HEIGHT, HEIGHT };
 			x2 = new int[3];
 			y2 = new int[3];
 		}
 
 		public int getIconWidth() {
-			return 12;
+			return WIDTH;
 		}
 
 		public int getIconHeight() {
-			return 12;
+			return HEIGHT;
 		}
 
 		public void paintIcon(Component c, Graphics g, int x, int y) {
-			g.setColor(UIManager.getColor("Button.foreground"));
+			Graphics2D g2d = (Graphics2D)g;
+			Object old = g2d.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+								RenderingHints.VALUE_ANTIALIAS_ON);
+			Color fg = UIManager.getColor("Button.foreground");
+			if (fg==null) { // Not guaranteed to be set in UIDefaults
+				fg = Color.black;
+			}
+			g2d.setColor(fg);
 			for (int i=0; i<3; i++) {
 				x2[i] = this.x[i] + x;
 				y2[i] = this.y[i] + y;
 			}
-			g.fillPolygon(x2,y2, 3);
+			g2d.fillPolygon(x2,y2, 3);
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, old);
 		}
 
 		public void toggle() {
-			if (x[0]==6) {
-				x[0] = 0; x[1] = 11; x[2] = 6;
-				y[0] = 0; y[1] = 0; y[2] = 11;
+			if (x[0]==(getIconWidth())/2) {
+				x[0] = 0; x[1] = getIconWidth(); x[2] = getIconWidth()/2;
+				y[0] = 0; y[1] = 0; y[2] = getIconHeight();
 			}
 			else {
-				x[0] = 6; x[1] = 0; x[2] = 11;
-				y[0] = 0; y[1] = 11; y[2] = 11;
+				x[0] = getIconWidth()/2; x[1] = 0; x[2] = getIconWidth();
+				y[0] = 0; y[1] = getIconHeight(); y[2] = y[1];
 			}
 		}
 

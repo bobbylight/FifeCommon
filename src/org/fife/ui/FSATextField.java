@@ -121,6 +121,18 @@ public class FSATextField extends JTextField implements ComponentListener,
 
 
 	/**
+	 * Creates a new FSATextField that previews both files and directories,
+	 * and whose current directory is the program's current directory.
+	 *
+	 * @param cols The number of columns to display in this text field.
+	 */
+	public FSATextField(int cols) {
+		this();
+		setColumns(cols);
+	}
+
+
+	/**
 	 * Creates a new FSATextField.
 	 *
 	 * @param directoriesOnly Whether this text field should preview only

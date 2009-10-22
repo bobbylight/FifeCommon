@@ -1,7 +1,7 @@
 /*
  * 07/12/2004
  *
- * FileExplorerTableModel.java - A table model that simulates the funcationality
+ * FileExplorerTableModel.java - A table model that simulates the functionality
  * found in the table used in Windows' "details view" in Windows Explorer.
  * Copyright (C) 2004 Robert Futrell
  * robert_futrell at users.sourceforge.net
@@ -23,16 +23,31 @@
  */
 package org.fife.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.List;
-
-import javax.swing.*;
+import javax.swing.Icon;
+import javax.swing.JLabel;
+import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.plaf.UIResource;
-import javax.swing.table.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 
 /**
@@ -43,10 +58,20 @@ import javax.swing.table.*;
  * This model currently allows the user to sort by column, and colors the cells
  * of elements in sorted-by columns slightly darker than normal, to signify that
  * the table is sorted by that row.  Future enhancements include a right-click
- * popup menu for the table header that allows you to add or remove columns.
+ * popup menu for the table header that allows you to add or remove columns.<p>
+ *
+ * NOTE: If you use this table model in an application that allows the user
+ * to change the LaF at runtime, you will get NullPointerExceptions when the
+ * user changes from the Windows LaF to another LaF, such as Metal.  This is
+ * due to Sun bug 6429812.  This bug is still open as of 6u18.  You'll have to
+ * implement a workaround for when the LaF changes if you want to use this
+ * class in an application that allows runtime LaF changes.
+ * See <a href="http://bugs.sun.com/view_bug.do?bug_id=6429812">6429812</a>
+ * for more information.  As an alternative, you can probably use Swing's
+ * built-in table sorting support, if you only support Java 6 and up.
  *
  * @author Robert Futrell
- * @version 0.1
+ * @version 0.4
  */
 public class FileExplorerTableModel extends AbstractTableModel {
 
@@ -87,7 +112,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	private int[] modelToView;
 
 	private JTableHeader tableHeader;
-	private MouseListener mouseListener;
+	private MouseHandler mouseListener;
 	private TableModelListener tableModelListener;
 	private Map columnComparators = new HashMap();
 	private List sortingColumns = new ArrayList();
@@ -343,7 +368,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 			TableCellRenderer defaultRenderer = this.tableHeader.getDefaultRenderer();
 			if (defaultRenderer instanceof SortableHeaderRenderer) {
 				SortableHeaderRenderer shr = (SortableHeaderRenderer)defaultRenderer;
-				this.tableHeader.setDefaultRenderer(shr.tableCellRenderer);
+				this.tableHeader.setDefaultRenderer(shr.delegate);
 				shr = null;
 			}
 		}
@@ -438,7 +463,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 
 			Color color = c == null ? Color.GRAY : c.getBackground();             
 
-			// In a compound sort, make each succesive triangle 20% 
+			// In a compound sort, make each successive triangle 20% 
 			// smaller than the previous one. 
 			int dx = (int)(size/2.0*Math.pow(0.8, priority));
 			int dy = descending ? dx : -dx;
@@ -548,17 +573,19 @@ public class FileExplorerTableModel extends AbstractTableModel {
 				JTableHeader h = (JTableHeader) e.getSource();
 				TableColumnModel columnModel = h.getColumnModel();
 				int viewColumn = columnModel.getColumnIndexAtX(e.getX());
-				int column = columnModel.getColumn(viewColumn).getModelIndex();
-				if (column != -1) {
-					int status = getSortingStatus(column);
-					if (!e.isControlDown()) {
-						cancelSorting();
+				if (viewColumn>-1) {
+					int column = columnModel.getColumn(viewColumn).getModelIndex();
+					if (column != -1) {
+						int status = getSortingStatus(column);
+						if (!e.isControlDown()) {
+							cancelSorting();
+						}
+						// Cycle the sorting states through {NOT_SORTED, ASCENDING, DESCENDING} or 
+						// {NOT_SORTED, DESCENDING, ASCENDING} depending on whether shift is pressed. 
+						status = status + (e.isShiftDown() ? -1 : 1);
+						status = (status + 4) % 3 - 1; // signed mod, returning {-1, 0, 1}
+						setSortingStatus(column, status);
 					}
-					// Cycle the sorting states through {NOT_SORTED, ASCENDING, DESCENDING} or 
-					// {NOT_SORTED, DESCENDING, ASCENDING} depending on whether shift is pressed. 
-					status = status + (e.isShiftDown() ? -1 : 1);
-					status = (status + 4) % 3 - 1; // signed mod, returning {-1, 0, 1}
-					setSortingStatus(column, status);
 				}
 			}
 /*
@@ -582,10 +609,14 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	 */
 	public class SortableHeaderRenderer implements TableCellRenderer, UIResource {
 
-		private TableCellRenderer tableCellRenderer;
+		private TableCellRenderer delegate;
 
 		public SortableHeaderRenderer(TableCellRenderer tableCellRenderer) {
-			this.tableCellRenderer = tableCellRenderer;
+			this.delegate = tableCellRenderer;
+		}
+
+		public TableCellRenderer getDelegateRenderer() {
+			return delegate;
 		}
 
 		public Component getTableCellRendererComponent(JTable table, 
@@ -595,7 +626,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 											int row, 
 											int column)
 		{
-			Component c = tableCellRenderer.getTableCellRendererComponent(table, 
+			Component c = delegate.getTableCellRendererComponent(table, 
 									value, isSelected, hasFocus, row, column);
 			if (c instanceof JLabel) {
 				JLabel l = (JLabel) c;
@@ -613,8 +644,8 @@ public class FileExplorerTableModel extends AbstractTableModel {
 		 * @param o The new orientation.
 		 */
 		public void applyComponentOrientation(ComponentOrientation o) {
-			if (tableCellRenderer instanceof Component) {
-				((Component)tableCellRenderer).applyComponentOrientation(o);
+			if (delegate instanceof Component) {
+				((Component)delegate).applyComponentOrientation(o);
 			}
 		}
 

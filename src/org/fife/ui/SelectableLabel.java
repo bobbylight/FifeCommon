@@ -28,6 +28,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.UIManager;
 import javax.swing.plaf.TextUI;
+import javax.swing.text.html.HTMLDocument;
 
 
 /**
@@ -103,6 +104,7 @@ public class SelectableLabel extends JEditorPane {
 	public void setText(String text) {
 		if (text!=null && text.startsWith("<html>")) {
 			setContentType("text/html");
+			updateDefaultHtmlFont();
 		}
 		else {
 			setContentType("text/plain");
@@ -118,6 +120,32 @@ public class SelectableLabel extends JEditorPane {
 	public void setUI(TextUI ui) {
 		super.setUI(ui);
 		labelize();
+		if (getDocument() instanceof HTMLDocument) {
+			updateDefaultHtmlFont();
+		}
+	}
+
+
+	/**
+	 * Add a CSS rule to force body tags to use the default label font
+	 * instead of the value in javax.swing.text.html.default.css.  This was
+	 * adapted from:
+	 * http://explodingpixels.wordpress.com/2008/10/28/make-jeditorpane-use-the-system-font/
+	 */
+	private void updateDefaultHtmlFont() {
+
+		Font font = UIManager.getFont("Label.font");
+		// This property is defined by all standard LaFs, even Nimbus (!), but
+		// you never know what crazy LaFs there are...
+		if (font==null) {
+			font = new JLabel().getFont();
+		}
+
+		String bodyRule = "body { font-family: " + font.getFamily() +
+						",verdana,arial,helvetica; " +
+						"font-size: " + font.getSize() + "pt; }";
+		((HTMLDocument)getDocument()).getStyleSheet().addRule(bodyRule);
+
 	}
 
 

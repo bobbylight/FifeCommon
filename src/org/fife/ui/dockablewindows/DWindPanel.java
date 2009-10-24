@@ -44,8 +44,8 @@ class DWindPanel extends JPanel {
 	private JTabbedPane tabbedPane;
 	private TitlePanel titlePanel;
 
-	private static final Color titlePanelBG1	= new Color(40,93,220);
-	private static final Color titlePanelBG2	= new Color(200,200,255);
+	private static final Color titlePanelBG1	= new Color(153,180,209);//40,93,220);
+	private static final Color titlePanelBG2	= new Color(225,233,241);//200,200,255);
 
 
 	/**
@@ -53,15 +53,7 @@ class DWindPanel extends JPanel {
 	 */
 	public DWindPanel() {
 		setLayout(new BorderLayout());
-		//tabbedPane = new JTabbedPane();
-		tabbedPane = new JTabbedPane(JTabbedPane.BOTTOM) {
-			public void setUI(TabbedPaneUI ui) {
-				// Keep using tabbed pane ui so laf stays the same,
-				// but need to set a new one to pick up new tabbed
-				// pane colors, fonts, etc.
-				super.setUI(new DockedWindowTabbedPaneUI());
-			}
-		};
+		tabbedPane = new DockedTabbedPane();
 		add(tabbedPane);
 		titlePanel = new TitlePanel("Hello world");
 		tabbedPane.addChangeListener(titlePanel);
@@ -151,6 +143,50 @@ class DWindPanel extends JPanel {
 
 
 	/**
+	 * The tabbed pane use to switch between multiple grouped docked windows.
+	 */
+	private static class DockedTabbedPane extends JTabbedPane {
+
+		public DockedTabbedPane() {
+			super(BOTTOM);
+		}
+
+		protected void paintComponent(Graphics g) {
+			// As of Java 6, still no way for custom LaF's to pick up on
+			// Swing's (i.e. the OS's) default AA settings without
+			// subclassing components.
+			Graphics2D g2d = (Graphics2D)g;
+			RenderingHints.Key key = RenderingHints.KEY_TEXT_ANTIALIASING;
+			Object old = g2d.getRenderingHint(key);
+			g2d.setRenderingHint(key, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			super.paintComponent(g);
+			g2d.setRenderingHint(key, old);
+		}
+
+		public void setUI(TabbedPaneUI ui) {
+			if (!(getUI() instanceof DockedWindowTabbedPaneUI)) {
+				// Keep using tabbed pane ui so laf stays the same, but need to
+				// set a new one to pick up new tabbed pane colors, fonts, etc.
+				super.setUI(new DockedWindowTabbedPaneUI());
+			}
+			else {
+				// At a minimum, set the font of the tabbed pane to what it
+				// should be, as different LaFs have different default fonts
+				// (for example, Metal's default font is bold, for some reason,
+				// while Windows XP's is Tahoma.  Usually though it's "Sans
+				// Serif").
+				Font font = UIManager.getFont("TabbedPane.font");
+				System.out.println("... font==" + font.getFamily());
+				if (font!=null) {
+					setFont(font);
+				}
+			}
+		}
+
+	}
+
+
+	/**
 	 * Panel that displays the currently-active dockable windows' title.
 	 */
 	private class TitlePanel extends JPanel implements ChangeListener {
@@ -161,7 +197,7 @@ class DWindPanel extends JPanel {
 			super(new BorderLayout());
 			setBorder(BorderFactory.createEmptyBorder(0,5,0,5));
 			label = new JLabel(title);
-			label.setForeground(Color.WHITE);
+//			label.setForeground(Color.WHITE);
 			add(label);
 		}
 
@@ -182,13 +218,20 @@ class DWindPanel extends JPanel {
 			super.paintComponent(g);
 			Graphics2D g2d = (Graphics2D)g;
 			GradientPaint paint = new GradientPaint(
-							0,0, titlePanelBG1,
-							getWidth(),0, titlePanelBG2);
+//							0,0, titlePanelBG1,
+//							getWidth(),0, titlePanelBG2);
+0,0, titlePanelBG2,
+0,getHeight(),titlePanelBG1);
 			Paint oldPaint = g2d.getPaint();
 			g2d.setPaint(paint);
 			Rectangle bounds = getBounds();
 			g2d.fillRect(0,0, bounds.width,bounds.height);
 			g2d.setPaint(oldPaint);
+g2d.setColor(DockableWindowUtil.getDockableWindowBorderColor());
+g2d.drawLine(0,0, bounds.width-1,0);
+g2d.drawLine(0,0, 0,bounds.height-1);
+g2d.drawLine(bounds.width-1,0, bounds.width-1,bounds.height-1);
+g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 		}
 
 		public void setTitle(String title) {

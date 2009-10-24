@@ -57,5 +57,4 @@ public interface DockableWindowConstants {
 	 */
 	public static final int FLOATING	= 4;
 
-
 }

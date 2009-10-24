@@ -29,9 +29,12 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.LayoutManager;
+import java.awt.Paint;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +49,8 @@ import javax.swing.text.View;
 
 /**
  * The UI for tabbed panes holding dockable windows in a
- * <code>DockableWindowPanel</code>.  This UI is designed to
- * resemble tabbed panes in Microsoft Visual Studio .NET.
+ * {@link DockableWindowPanel}.  This UI is designed to resemble tabbed panes
+ * in Microsoft Visual Studio 2008.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -56,14 +59,34 @@ import javax.swing.text.View;
  */
 class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 
+	/**
+	 * A list of the (possibly) cropped titles for each tab.
+	 */
 	private List croppedTitlesList;
+
+	private GradientPaint unselectedTabGradient;
+
+	private static final int SELECTED_TAB_BOOST				= 3;
 
 
 	/**
-	 * Cosntructor.
+	 * Constructor.
 	 */
 	public DockedWindowTabbedPaneUI() {
 		croppedTitlesList = new ArrayList();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected int calculateTabHeight(int tabPlacement, int tabIndex,
+									int fontHeight) {
+		int height = super.calculateTabHeight(tabPlacement,tabIndex,fontHeight);
+		if (tabPane.getSelectedIndex()==tabIndex) {
+			height += SELECTED_TAB_BOOST;
+		}
+		return height;
 	}
 
 
@@ -106,35 +129,23 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 
 
 	/**
-	 * Returns the insets for a tab.  Overridden to handle the case where
-	 * the current LookAndFeel doesn't extend BasicLookAndFeel (and so
-	 * some properties that BasicTabbedPaneUI that rely on aren't set).
-	 *
-	 * @param tabPlacement
-	 * @param tabIndex
-	 */
-	protected Insets getTabInsets(int tabPlacement, int tabIndex) {
-		// Happens when LAF is set to something other than a subclass of 
-		// BasicLookAndFeel (e.g. GTK, Synth, Nimbus).  In that case, it's
-		// possible that the LAF doesn't set some properties set in
-		// BasicLookAndFeel that BasicTabbedPaneUI (and hence its subclasses)
-		// assume are set.  See:
-		// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6634504
-		if (tabInsets==null) {
-			tabInsets = new Insets(0, 0, 0, 0);
-		}
-		return tabInsets;
-	}
-
-
-	/**
 	 * Caches insets, colors, fonts, etc.  This method is overridden so we
 	 * can set custom values for insets.
 	 */
 	protected void installDefaults() {
+
+		// Nimbus sets this value to false, but we need it to be true, so that
+		// our custom tabs get painted.  The private field
+		// BasicTabbedPaneUI#tabsOpaque gets set to this value, and it is used
+		// to determine whether to paint the tabs' backgrounds.
+		UIManager.put("TabbedPane.tabsOpaque", Boolean.TRUE);
+
 		super.installDefaults();
-		contentBorderInsets = new Insets(0,0,2,0);
+
+		tabInsets = new Insets(2,2,2,2);
+		contentBorderInsets = new Insets(1,1,4,1);
 		tabAreaInsets = new Insets(2, 4, 0, 4);
+
 	}
 
 
@@ -180,8 +191,9 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 		int croppedCount = croppedTitlesList.size();
 		int tabCount = tabPane.getTabCount();
 		if (croppedCount<tabCount) {
-			for (int i=croppedCount; i<tabCount; i++)
+			for (int i=croppedCount; i<tabCount; i++) {
 				croppedTitlesList.add("");
+			}
 		}
 		croppedTitlesList.set(tabIndex, croppedTitle);
 
@@ -200,34 +212,62 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 									int selectedIndex, 
 									int x, int y, int w, int h) {
 
-		//g.setColor(UIManager.getColor("TabbedPane.shadow"));
-		g.setColor(UIManager.getColor("TabbedPane.foreground"));
-		y = y+h-1;
-		if ((selectedIndex<0)) {
-			g.drawLine(x+1,y, x+w-2,y);
+		// Top line, touching bottom of contents
+		g.setColor(DockableWindowUtil.getDockableWindowBorderColor());
+		y = y + h - contentBorderInsets.bottom;
+		g.drawLine(x,y, x+w-1,y);
+
+		// Space between contents and tabs
+		g.setColor(UIManager.getColor("TabbedPane.highlight"));
+		g.fillRect(x+1, y+1, w-1, contentBorderInsets.bottom-1);
+
+		// Bottom line, touching the tabs
+		g.setColor(DockableWindowUtil.getDockableWindowBorderColor());
+		y += contentBorderInsets.bottom - 1;
+		if ((selectedIndex<0)) { // No tab selected (never happens?)
+			g.drawLine(x,y, x+w-1,y);
 		}
 		else {
 			// Break line to show visual connection to selected tab
 			Rectangle selRect = getTabBounds(selectedIndex, calcRect);
-			g.drawLine(x+1,y, selRect.x,y);
-			if (selRect.x+selRect.width-1 < x+w-2)
-				g.drawLine(selRect.x+selRect.width-1,y, x+w-2,y);
+			int x2 = selRect.x - 2;
+			if (selectedIndex==0) {
+				x2++;
+			}
+			g.drawLine(x,y, x2,y);
+			if (selRect.x+selRect.width < x+w-2) {
+				g.drawLine(selRect.x+selRect.width,y, x+w-1,y);
+			}
 		}
+
 	}
 
 
 	protected void paintContentBorderLeftEdge(Graphics g, int tabPlacement,
 										int selectedIndex, 
 										int x, int y, int w, int h) {
+		g.setColor(DockableWindowUtil.getDockableWindowBorderColor());
+//		g.drawLine(x, y, x, y+h-1);
+int y2 = y + h - 1;// - contentBorderInsets.bottom;
+g.drawLine(x,y, x,y2);
 	}
 
 
 	protected void paintContentBorderRightEdge(Graphics g, int tabPlacement,
 										int selectedIndex, 
 										int x, int y, int w, int h) {
+		g.setColor(DockableWindowUtil.getDockableWindowBorderColor());
+//		g.drawLine(x+w-1, y, x+w-1, y+h-1);
+int y2 = y + h - 1;// - contentBorderInsets.bottom;
+g.drawLine(x+w-1,y, x+w-1,y2);
 	}
 
-
+    protected void paintTab(Graphics g, int tabPlacement,
+            Rectangle[] rects, int tabIndex, 
+            Rectangle iconRect, Rectangle textRect) {
+    	super.paintTab(g, tabPlacement, rects, tabIndex, iconRect, textRect);
+    }
+ 
 	/**
 	 * Paints the background of a tab.
 	 */
@@ -238,6 +278,20 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 			//g.setColor(UIManager.getColor("Panel.background"));
 			g.fillRect(x,y, w,h);
 		}
+		else {
+			Graphics2D g2d = (Graphics2D)g;
+			Paint old = g2d.getPaint();
+			if (unselectedTabGradient==null ||
+					y!=unselectedTabGradient.getPoint1().getY()) {
+				// Re-create gradient when user resizes tabbed pane
+				unselectedTabGradient = new GradientPaint(
+						0,y, Color.LIGHT_GRAY,
+						0,y+h/2, UIManager.getColor("TabbedPane.highlight"));
+			}
+			g2d.setPaint(unselectedTabGradient);
+			g2d.fillRect(x, y, w, h);
+			g2d.setPaint(old);
+		}
 	}
 
 
@@ -246,22 +300,47 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 	 */
 	protected void paintTabBorder(Graphics g, int tabPlacement, int tabIndex,
 						int x, int y, int w, int h, boolean isSelected) {
+
 		// NOTE: We assume the tab placement is JTabbedPane.BOTTOM.
 		//g.setColor(UIManager.getColor("TabbedPane.shadow"));
 		int x2 = x + w - 1;
-		if (isSelected) {
-			g.setColor(UIManager.getColor("TabbedPane.foreground"));
-			int y2 = y + h - 1;
-			g.drawLine(x,y2, x2,y2);
-			g.drawLine(x2,y2, x2,y);
+		g.setColor(DockableWindowUtil.getDockableWindowBorderColor());
+
+		// Draw the bottom and right of the border.
+		int y2 = y + h - 1;
+		g.drawLine(x,y2, x2,y2);
+		g.drawLine(x2,y2, x2,y);
+
+		// Only draw the left if we're the first tab.
+		if (tabIndex==0) {
+			g.drawLine(x,y, x,y2);
 		}
-		else if (tabPane.getSelectedIndex()!=tabIndex+1) {
-			g.setColor(UIManager.getColor("TabbedPane.shadow"));
-			if (!tabPane.getComponentOrientation().isLeftToRight()) {
-				x2 = x; // RTL languages show tab "edge" on other side.
+
+		if (!isSelected) {
+
+			// Draw the "rest" of the left side of the selected tab, if we're
+			// the tab to its left (since no tab but tab 0 draws its left-hand
+			// side).
+			int selectedIndex = tabPane.getSelectedIndex();
+			if (tabIndex==selectedIndex-1) {
+				g.drawLine(x2,y2, x2,y+maxTabHeight-1);
 			}
-			g.drawLine(x2,y+2, x2,y+h-3);
+
+			// Draw a highlight beside one of our sides, to make things look
+			// a little nicer (mimics VS 2008).
+			g.setColor(UIManager.getColor("TabbedPane.highlight"));
+			if (tabIndex<tabPane.getSelectedIndex()) {
+				x = x2 - 1;
+			}
+			else {
+				if (tabIndex==0) {
+					x++;
+				}
+			}
+			g.drawLine(x,y, x,y2-1);
+
 		}
+
 	}
 
 
@@ -272,22 +351,34 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 						Font font, FontMetrics metrics, int tabIndex,
 						String title, Rectangle textRect, 
 						boolean isSelected) {
+
 		// Get our (probably) cropped title; don't use the uncropped one.
 		title = (String)croppedTitlesList.get(tabIndex);
 		g.setFont(font);
+
 		Color fg = tabPane.getForegroundAt(tabIndex);
-//		if (isSelected && (fg instanceof UIResource)) {
-if (isSelected) {
-			Color selectedFG = UIManager.getColor(
-								"TabbedPane.selectedForeground");
-			if (selectedFG != null)
-				fg = selectedFG;
+		if (isSelected) {
+			fg = UIManager.getColor("Label.foreground");
+			if (fg==null) {
+				fg = UIManager.getColor("textText");
+				if (fg==null) {
+					fg = java.awt.SystemColor.textText;
+				}
+			}
 		}
-else {
-	fg = UIManager.getColor("TabbedPane.shadow");
-}
+		else {
+			fg = UIManager.getColor("Label.disabledForeground");
+			if (fg==null) {
+				fg = UIManager.getColor("textInactiveText");
+				if (fg==null) {
+					fg = Color.GRAY;
+				}
+			}
+		}
+
 		g.setColor(fg);
 		g.drawString(title, textRect.x, textRect.y+metrics.getAscent());
+
 	} 
 
 
@@ -355,7 +446,6 @@ else {
 						contentInsets.left - contentInsets.right;
 					ch = bounds.height - insets.top - insets.bottom - th -
 						contentInsets.top - contentInsets.bottom;
-
 					for (int i=0; i < numChildren; i++) {
 						Component child = tabPane.getComponent(i);
 						child.setBounds(cx, cy, cw, ch);
@@ -376,6 +466,7 @@ else {
 		protected void calculateTabRects(int tabPlacement, int tabCount) {
 
 			FontMetrics metrics = getFontMetrics();
+			int fontHeight = metrics.getHeight();
 			Dimension size = tabPane.getSize();
 			Insets insets = tabPane.getInsets(); 
 			Insets tabAreaInsets = getTabAreaInsets(tabPlacement);
@@ -423,7 +514,7 @@ else {
 					rect.width = calculateTabWidth(tabPlacement, i, metrics);
 					maxTabWidth = Math.max(maxTabWidth, rect.width);
 					rect.y = y;
-					rect.height = maxTabHeight;
+					rect.height = calculateTabHeight(tabPlacement, i, fontHeight);
 				}
 			}
 
@@ -436,7 +527,7 @@ else {
 					rect.x = x + i*maxTabWidth;
 					rect.y = y;
 					rect.width = maxTabWidth;
-					rect.height = maxTabHeight;
+					rect.height = calculateTabHeight(tabPlacement, i, fontHeight);
 				}
 			}
 

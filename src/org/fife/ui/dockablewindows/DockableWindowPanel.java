@@ -29,6 +29,9 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.plaf.SplitPaneUI;
+
+import org.fife.ui.CleanSplitPaneUI;
 
 
 /**
@@ -76,6 +79,8 @@ public class DockableWindowPanel extends JPanel
 		ComponentOrientation orientation = ComponentOrientation.
 									getOrientation(getLocale());
 		applyComponentOrientation(orientation);
+
+		setBorder(BorderFactory.createEmptyBorder(0,3,2,3));
 
 	}
 
@@ -459,7 +464,11 @@ public class DockableWindowPanel extends JPanel
 						break;
 				}
 				remove(0); // Remove the original contents.
-				splitPane = new JSplitPane(split, true, comp1, comp2);
+				splitPane = new JSplitPane(split, true, comp1, comp2) {
+					public void setUI(SplitPaneUI ui) {
+						super.setUI(new CleanSplitPaneUI());
+					}
+				};
 				splitPane.setResizeWeight(resizeWeight);
 				splitPane.setDividerLocation(dividerLocation);
 				splitPane.applyComponentOrientation(getComponentOrientation());

@@ -75,7 +75,7 @@ import org.fife.ui.breadcrumbbar.BreadcrumbBar;
  * @version 0.7
  */
 public class RTextFileChooser extends ResizableFrameContentPane
-							implements ActionListener, PropertyChangeListener {
+			implements ActionListener, PropertyChangeListener, FileSelector {
 
 	public static final int LIST_MODE				= 0;
 	public static final int DETAILS_MODE			= 1;
@@ -178,6 +178,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/*
 	 * Dialog actions.
 	 */
+	private Actions.SystemOpenAction systemEditAction;
+	private Actions.SystemOpenAction systemViewAction;
 	private Actions.CopyAction copyAction;
 	private Actions.DeleteAction deleteAction;
 	private Actions.RefreshAction refreshAction;
@@ -242,6 +244,11 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * The encoding used for writing "Favorites" files.
 	 */
 	private static final String FAVORITES_ENCODING	= "UTF-8";
+
+	/**
+	 * Whether we're running in a Java 6 or higher JVM.
+	 */
+	private static final boolean IS_JAVA_6_PLUS;
 
 	/**
 	 * The resource bundle for file choosers.
@@ -843,11 +850,26 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * Creates actions for keystrokes in a file chooser dialog.
 	 */
 	private void createActions() {
+
+		// We need to use the view's "selected files" for the edit/view actions.
+		// Since our view can change, we wrap it in this class.
+		FileSelector selector = new FileSelector() {
+			public File getSelectedFile() {
+				return getView().getSelectedFile();
+			}
+			public File[] getSelectedFiles() {
+				return getView().getSelectedFiles();
+			}
+		};
+
+		systemEditAction = new Actions.SystemOpenAction(selector, "edit");
+		systemViewAction = new Actions.SystemOpenAction(selector, "open");
 		renameAction = new Actions.RenameAction(this);
 		copyAction = new Actions.CopyAction(this);
 		deleteAction = new Actions.DeleteAction(this);
 		refreshAction = new Actions.RefreshAction(this);
 		upOneLevelAction = new Actions.UpOneLevelAction(this);
+
 	}
 
 
@@ -904,13 +926,15 @@ public class RTextFileChooser extends ResizableFrameContentPane
 				int count = view.getSelectedFiles().length;
 				boolean filesSelected = count>0;
 				((JMenuItem)getComponent(0)).setEnabled(filesSelected);
-				((JMenuItem)getComponent(1)).setEnabled(filesSelected);
-				((JMenuItem)getComponent(3)).setEnabled(filesSelected);
+				((JMenuItem)getComponent(1)).setEnabled(
+										IS_JAVA_6_PLUS && filesSelected);
+				((JMenuItem)getComponent(2)).setEnabled(filesSelected);
 				((JMenuItem)getComponent(4)).setEnabled(filesSelected);
+				((JMenuItem)getComponent(5)).setEnabled(filesSelected);
 
 				// Only enable the "Up one level" item if we can actually
 				// go up a level.
-				JMenuItem upOneLevel = (JMenuItem)getComponent(6);
+				JMenuItem upOneLevel = (JMenuItem)getComponent(7);
 				upOneLevel.setEnabled(upOneLevelButton.isEnabled());
 
 				super.show(c, x,y);
@@ -922,6 +946,13 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		menuItem.setActionCommand("PopupOpen");
 		menuItem.addActionListener(this);
 		popupMenu.add(menuItem);
+
+		JMenu subMenu = new JMenu(msg.getString("PopupMenu.OpenIn"));
+		popupMenu.add(subMenu);
+		menuItem = new JMenuItem(systemEditAction);
+		subMenu.add(menuItem);
+		menuItem = new JMenuItem(systemViewAction);
+		subMenu.add(menuItem);
 
 		menuItem = new JMenuItem(renameAction);
 		popupMenu.add(menuItem);
@@ -2822,6 +2853,13 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			setViewMode(DETAILS_MODE);
 		}
 
+	}
+
+
+	static {
+		// Some actions only work with Java 6+.
+		String ver = System.getProperty("java.specification.version");
+		IS_JAVA_6_PLUS = !ver.startsWith("1.4") && !ver.startsWith("1.5");
 	}
 
 

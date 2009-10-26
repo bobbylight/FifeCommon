@@ -62,7 +62,7 @@ import org.fife.ui.ToolTipTree;
  * @author Robert Futrell
  * @version 0.8
  */
-public class FileSystemTree extends ToolTipTree {
+public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 	public static final String EXPANDED_PROPERTY		= "FileSystemTree.treeExpanded";
 	public static final String WILL_EXPAND_PROPERTY	= "FileSystemTree.treeWillExpand";
@@ -76,9 +76,19 @@ public class FileSystemTree extends ToolTipTree {
 	private HashMap rootNameCache;				// Cache of root names.
 	private FileSystemView fileSystemView;
 	protected FileChooserIconManager iconManager;
+
 	protected JPopupMenu popup;
+	private JMenu openInMenu;
+	private Actions.SystemOpenAction systemEditAction;
+	private Actions.SystemOpenAction systemViewAction;
 	private RefreshAction refreshAction;
+
 	private FileSystemTreeRenderer cellRenderer;
+
+	/**
+	 * Whether we're running in a Java 6 or higher JVM.
+	 */
+	private static final boolean IS_JAVA_6_PLUS;
 
 	private static final String BUNDLE_NAME =
 						"org.fife.ui.rtextfilechooser.FileSystemTree";
@@ -177,9 +187,16 @@ public class FileSystemTree extends ToolTipTree {
 	 */
 	protected void configurePopupMenuActions() {
 
+		File selectedFile = getSelectedFile();
+
+		openInMenu.setEnabled(IS_JAVA_6_PLUS && selectedFile!=null);
+		if (IS_JAVA_6_PLUS) {
+			systemEditAction.setEnabled(selectedFile!=null);
+			systemViewAction.setEnabled(selectedFile!=null);
+		}
+
 		// Only have the "Refresh" menu item enabled if a directory
 		// item is selected.
-		File selectedFile = getSelectedFile();
 		boolean enable = selectedFile!=null && selectedFile.isDirectory();
 		refreshAction.setEnabled(enable);
 
@@ -194,13 +211,28 @@ public class FileSystemTree extends ToolTipTree {
 	 * @return The popup menu for this file system tree.
 	 */
 	protected JPopupMenu createPopupMenu() {
+
 		JPopupMenu popup = new JPopupMenu();
 		ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME);
+
+		openInMenu = new JMenu(bundle.getString("PopupMenu.OpenIn"));
+		if (IS_JAVA_6_PLUS) {
+			systemEditAction = new Actions.SystemOpenAction(this, "edit");
+			openInMenu.add(systemEditAction);
+			systemViewAction = new Actions.SystemOpenAction(this, "open");
+			openInMenu.add(systemViewAction);
+		}
+		popup.add(openInMenu);
+
+		popup.addSeparator();
+
 		refreshAction = new RefreshAction(bundle);
 		JMenuItem item = new JMenuItem(refreshAction);
 		popup.add(item);
+
 		popup.applyComponentOrientation(getComponentOrientation());
 		return popup;
+
 	}
 
 
@@ -433,6 +465,23 @@ public class FileSystemTree extends ToolTipTree {
 
 
 	/**
+	 * Returns any selected files.  This will always be either a zero-length
+	 * array, or an array containing only the value returned from
+	 * {@link #getSelectedFile()}, since this component only allows selection
+	 * of one file at a time.
+	 *
+	 * @return The selected files.
+	 */
+	public File[] getSelectedFiles() {
+		File file = getSelectedFile();
+		if (file!=null) {
+			return new File[] { file };
+		}
+		return new File[0];
+	}
+
+
+	/**
 	 * Returns the name of the file currently selected by the user.
 	 *
 	 * @return The name of the file currently selected, or <code>null</code>
@@ -565,6 +614,13 @@ public class FileSystemTree extends ToolTipTree {
 			cellRenderer = new FileSystemTreeRenderer();
 			setCellRenderer(cellRenderer);
 		}
+	}
+
+
+	static {
+		// Some actions only work with Java 6+.
+		String ver = System.getProperty("java.specification.version");
+		IS_JAVA_6_PLUS = !ver.startsWith("1.4") && !ver.startsWith("1.5");
 	}
 
 

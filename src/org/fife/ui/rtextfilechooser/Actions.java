@@ -26,9 +26,12 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
@@ -73,7 +76,7 @@ interface Actions {
 
 		public CopyAction(RTextFileChooser chooser) {
 			super(chooser);
-			putValue(Action.NAME, chooser.getString("PopupMenu.Copy"));
+			putValue(Action.NAME, getString("Copy"));
 			int mod = chooser.getToolkit().getMenuShortcutKeyMask();
 			putValue(Action.ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_C, mod));
@@ -106,7 +109,7 @@ interface Actions {
 
 		public DeleteAction(RTextFileChooser chooser) {
 			super(chooser);
-			putValue(Action.NAME, chooser.getString("PopupMenu.Delete"));
+			putValue(Action.NAME, getString("Delete"));
 			putValue(Action.ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 		}
@@ -189,9 +192,14 @@ interface Actions {
 	static abstract class FileChooserAction extends AbstractAction {
 
 		protected RTextFileChooser chooser;
+		private static ResourceBundle msg = ResourceBundle.getBundle("org.fife.ui.rtextfilechooser.FileChooserPopup");
 
 		public FileChooserAction(RTextFileChooser chooser) {
 			this.chooser = chooser;
+		}
+
+		protected String getString(String key) {
+			return msg.getString(key);
 		}
 
 	}
@@ -204,7 +212,7 @@ interface Actions {
 
 		public RefreshAction(RTextFileChooser chooser) {
 			super(chooser);
-			putValue(Action.NAME, chooser.getString("PopupMenu.Refresh"));
+			putValue(Action.NAME, getString("Refresh"));
 			putValue(Action.ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
 		}
@@ -223,7 +231,7 @@ interface Actions {
 
 		public RenameAction(RTextFileChooser chooser) {
 			super(chooser);
-			putValue(Action.NAME, chooser.getString("PopupMenu.Rename"));
+			putValue(Action.NAME, getString("Rename"));
 			putValue(Action.ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 		}
@@ -266,13 +274,94 @@ interface Actions {
 
 
 	/**
+	 * Opens a file with the default system editor or viewer.  Only works when
+	 * using Java 6.
+	 */
+	/*
+	 * NOTE: This method is a FileChooserAction only so we can use its
+	 * ResourceBundle.  This is somewhat of a hack.
+	 */
+	static class SystemOpenAction extends FileChooserAction {
+
+		private FileSelector chooser;
+		private String methodName;
+
+		public SystemOpenAction(FileSelector chooser, String methodName) {
+
+			super(null);
+			this.chooser = chooser;
+			this.methodName = methodName;
+
+			String name = null;
+			if ("edit".equals(methodName)) {
+				name = "SystemOpenEditor";
+			}
+			else {
+				name = "SystemOpenViewer";
+			}
+			putValue(Action.NAME, getString(name));
+
+		}
+
+		public void actionPerformed(ActionEvent e) {
+
+			File file = chooser.getSelectedFile();
+			if (file==null) {
+				UIManager.getLookAndFeel().provideErrorFeedback(null);
+				return;
+			}
+
+			Object desktop = getDesktop();
+			if (desktop!=null) {
+				try {
+					Method m = desktop.getClass().getDeclaredMethod(
+								methodName, new Class[] { File.class });
+					m.invoke(desktop, new Object[] { file });
+				} catch (RuntimeException re) {
+					throw re; // Keep FindBugs happy
+				} catch (Exception ex) {
+					UIManager.getLookAndFeel().provideErrorFeedback(null);
+				}
+			}
+
+		}
+
+		private Object getDesktop() {
+
+			try {
+
+				Class desktopClazz = Class.forName("java.awt.Desktop");
+				Method m = desktopClazz.
+					getDeclaredMethod("isDesktopSupported", null);
+
+				boolean supported = ((Boolean)m.invoke(null, null)).
+											booleanValue();
+				if (supported) {
+					m = desktopClazz.getDeclaredMethod("getDesktop", null);
+					return m.invoke(null, null);
+				}
+
+			} catch (RuntimeException re) {
+				throw re; // Keep FindBugs happy
+			} catch (Exception e) {
+				UIManager.getLookAndFeel().provideErrorFeedback(null);
+			}
+
+			return null;
+
+		}
+
+	}
+
+
+	/**
 	 * Action that makes the file chooser display one directory "higher."
 	 */
 	static class UpOneLevelAction extends FileChooserAction {
 
 		public UpOneLevelAction(RTextFileChooser chooser) {
 			super(chooser);
-			putValue(Action.NAME, chooser.getString("PopupMenu.UpOneLevel"));
+			putValue(Action.NAME, getString("UpOneLevel"));
 			putValue(Action.ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0));
 		}

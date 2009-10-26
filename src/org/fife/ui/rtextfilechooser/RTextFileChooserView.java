@@ -37,7 +37,7 @@ import java.util.Vector;
  * @author Robert Futrell
  * @version 0.1
  */
-interface RTextFileChooserView {
+interface RTextFileChooserView extends FileSelector {
 
 
 	/**
@@ -76,23 +76,6 @@ interface RTextFileChooserView {
 	 *         one???  This may very-well be view-dependent).
 	 */
 	public File getFileAtPoint(Point p);
-
-
-	/**
-	 * Gets the selected file, for use when a single file is selected.
-	 *
-	 * @return The selected file, or <code>null</code> if no file is
-	 *         selected.
-	 */
-	public File getSelectedFile();
-
-
-	/**
-	 * Returns all selected files in this view.
-	 *
-	 * @return An array of all selected files.
-	 */
-	public File[] getSelectedFiles();
 
 
 	/**

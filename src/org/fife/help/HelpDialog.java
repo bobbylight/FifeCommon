@@ -497,7 +497,8 @@ public class HelpDialog extends JFrame implements ActionListener {
 			guiApp.displayException(this, ex);
 			return;
 		}
-		root = initializeFromXMLFile(doc);
+
+		root = initializeFromXMLFile(doc.getDocumentElement());
 
 	}
 
@@ -730,6 +731,110 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 
 	/**
+	 * Handles a {@link #PAGE} node.
+	 *
+	 * @param node The node to parse.
+	 * @return The tree node to add.
+	 */
+	private DefaultMutableTreeNode handleNodePage(Node node) {
+
+		NamedNodeMap attributes = node.getAttributes();
+		if (attributes==null || attributes.getLength()!=2)
+			return null;
+
+		String name = null;
+		String file = null;
+		for (int i=0; i<2; i++) {
+			Node node2 = attributes.item(i);
+			String v = node2.getNodeValue();
+			if (node2.getNodeName().equals(NAME))
+				name = treeBundle.getString(v);
+			else if (node2.getNodeName().equals(PAGE_VALUE))
+				file = baseDir + v;
+		}
+
+		if (name==null || file==null)
+			return null;
+
+		HelpTreeNode tempNode = new HelpTreeNode(name, file);
+
+		return new DefaultMutableTreeNode(tempNode);
+
+	}
+
+
+	/**
+	 * Handles an {@link #INDEXITEMS} node.
+	 *
+	 * @param node The node.
+	 * @return The tree node to add.
+	 */
+	private DefaultMutableTreeNode handleNodeIndexItems(Node node) {
+
+		NodeList childNodes = node.getChildNodes();
+
+		if (childNodes!=null) {
+			int length = childNodes.getLength();
+			// Cache to avoid all of the text (whitespace)
+			// elements.
+			ArrayList elements = new ArrayList(length/2);
+			for (int i=0; i<length; i++) {
+				Node node2 = childNodes.item(i);
+				if (node2.getNodeType()==Node.TEXT_NODE)
+					continue; // Whitespace between elements.
+				NamedNodeMap attributes = node2.getAttributes();
+				if (attributes==null || attributes.getLength()!=1)
+					return null;
+				node2 = attributes.item(0);
+				if (!validateAttributeNode(node2, NAME))
+					continue;
+				String name = node2.getNodeValue();
+				elements.add(name);
+			}
+			int size = elements.size();
+			indexElements = new String[size];
+			for (int i=0; i<size; i++) {
+				indexElements[i] = (String)elements.get(i);
+			}
+		}
+
+		return null;
+
+	}
+
+
+	/**
+	 * Parses {@link #PROPERTIES_FILE} nodes.
+	 *
+	 * @param node The node.
+	 * @return <code>null</code> always.
+	 */
+	private DefaultMutableTreeNode handleNodePropertiesFile(Node node) {
+
+		NamedNodeMap attributes = node.getAttributes();
+		if (attributes==null || attributes.getLength()!=1)
+			return null;
+
+		Node node2 = attributes.item(0);
+		if (!validateAttributeNode(node2, NAME))
+			return null;
+
+		String name = node2.getNodeValue();
+		try {
+			treeBundle = new PropertyResourceBundle(
+					new FileInputStream(baseDir + name));
+		} catch (Exception e) {
+			// Keep guiApp as owner as this dialog isn't yet displayable
+			guiApp.displayException(e);
+			return null;
+		}
+
+		return null;
+
+	}
+
+
+	/**
 	 * Used in parsing an XML document containing a macro.  This method
 	 * initializes the help tree and index, as well as sets the "root
 	 * visible" property of the help tree.
@@ -739,207 +844,128 @@ public class HelpDialog extends JFrame implements ActionListener {
 	 */
 	private DefaultMutableTreeNode initializeFromXMLFile(Node node) {
 
-		/*
-		 * This method expects the XML document to be in the following format:
-		 *
-		 * <?xml version="1.0" encoding="UTF-8" ?>
-		 * ...
-		 */
-
-		if (node==null)
+		if (node==null) {
 			return null;
+		}
+
 		int type = node.getNodeType();
+		if (type==Node.ELEMENT_NODE) { // We only handle elements
 
-		switch (type) {
+			String nodeName = node.getNodeName();
 
-			// Handle document nodes.
-			case Node.DOCUMENT_NODE:
-				return initializeFromXMLFile(((org.w3c.dom.Document)node).
-											getDocumentElement());
+			// This is the root of the entire XML file.  What we do
+			// here is loop through its children (which should be an
+			// IndexList element, a PropertiesFile element and a
+			// RootNode element).
+			if (nodeName.equals(ROOT_ELEMENT)) {
+				NodeList childNodes = node.getChildNodes();
+				if (childNodes!=null) {
+					int length = childNodes.getLength();
+					for (int i=0; i<length; i++) {
+						initializeFromXMLFile(childNodes.item(i));
+					}
+				}
+				treeBundle = null; // To help GC.
+				return root;
+			}
 
-			// Handle element nodes.
-			case Node.ELEMENT_NODE:
-				String nodeName = node.getNodeName();
+			// The first element in the XML file should tell where the
+			// properties file is that maps tree node keys to their
+			// corresponding (localized) strings.
+			else if (nodeName.equals(PROPERTIES_FILE)) {
+				return handleNodePropertiesFile(node);
+			}
 
-				// This is the root of the entire XML file.  What we do
-				// here is loop through its children (which should be an
-				// IndexList element, a PropertiesFile element and a
-				// RootNode element).
-				if (nodeName.equals(ROOT_ELEMENT)) {
-					NodeList childNodes = node.getChildNodes();
-					if (childNodes!=null) {
-						int length = childNodes.getLength();
-						for (int i=0; i<length; i++) {
+			// This is the "RootNode" element in the XML file; that is,
+			// the node that details the tree structure for the help.
+			else if (nodeName.equals(TREE_ROOT_NODE)) {
+
+				NamedNodeMap attributes = node.getAttributes();
+				if (attributes==null || attributes.getLength()<2)
+					return null;
+				String name = null;
+				String file = null;
+				int count = attributes.getLength();
+				for (int i=0; i<count; i++) {
+					Node node2 = attributes.item(i);
+					String v = node2.getNodeValue();
+					if (node2.getNodeName().equals(NAME))
+						name = treeBundle.getString(v);
+					else if (node2.getNodeName().equals(VISIBLE))
+						rootVisible = new Boolean(v).booleanValue();
+					else if (node2.getNodeName().equals(PAGE_VALUE))
+						file = baseDir + v;
+				}
+				if (name==null)
+					return null; // "name" attribute is required.
+				HelpTreeNode helpRoot = file==null ?
+								new HelpTreeNode(name) :
+								new HelpTreeNode(name, file);
+
+				// Set our global root.
+				root = new DefaultMutableTreeNode(helpRoot);
+
+				NodeList childNodes = node.getChildNodes();
+				if (childNodes!=null) {
+					int length = childNodes.getLength();
+					for (int i=0; i<length; i++) {
+						DefaultMutableTreeNode dmtn =
 							initializeFromXMLFile(childNodes.item(i));
-						}
+						// null could mean properties file or error.
+						if (dmtn!=null)
+							root.add(dmtn);
 					}
-					treeBundle = null; // To help GC.
-					return root;
 				}
+				return root;
+			}
 
-				// The first element in the XML file should tell where the
-				// properties file is that maps tree node keys to their
-				// corresponding (localized) strings.
-				else if (nodeName.equals(PROPERTIES_FILE)) {
-					NamedNodeMap attributes = node.getAttributes();
-					if (attributes==null || attributes.getLength()!=1)
-						return null;
-					Node node2 = attributes.item(0);
-					if (!validateAttributeNode(node2, NAME))
-						return null;
-					String name = node2.getNodeValue();
-					try {
-						treeBundle = new PropertyResourceBundle(
-								new FileInputStream(baseDir + name));
-					} catch (Exception e) {
-						// Keep guiApp as owner as this dialog isn't
-						// displayable yet.
-						guiApp.displayException(e);
-						return null;
-					}
+			// This represents a "Node" structure; that is, a node in
+			// the tree help structure that contains child nodes.
+			else if (nodeName.equals(TREE_NODE)) {
+				NamedNodeMap attributes = node.getAttributes();
+				if (attributes==null || attributes.getLength()<1)
 					return null;
+				String name = null;
+				String file = null;
+				int count = attributes.getLength();
+				for (int i=0; i<count; i++) {
+					Node node2 = attributes.item(i);
+					String v = node2.getNodeValue();
+					if (node2.getNodeName().equals(NAME))
+						name = treeBundle.getString(v);
+					else if (node2.getNodeName().equals(PAGE_VALUE))
+						file = baseDir + v;
 				}
-
-				// This is the "RootNode" element in the XML file; that is,
-				// the node that details the tree structure for the help.
-				else if (nodeName.equals(TREE_ROOT_NODE)) {
-
-					NamedNodeMap attributes = node.getAttributes();
-					if (attributes==null || attributes.getLength()<2)
-						return null;
-					String name = null;
-					String file = null;
-					int count = attributes.getLength();
-					for (int i=0; i<count; i++) {
-						Node node2 = attributes.item(i);
-						String v = node2.getNodeValue();
-						if (node2.getNodeName().equals(NAME))
-							name = treeBundle.getString(v);
-						else if (node2.getNodeName().equals(VISIBLE))
-							rootVisible = new Boolean(v).booleanValue();
-						else if (node2.getNodeName().equals(PAGE_VALUE))
-							file = baseDir + v;
+				HelpTreeNode tempNode = file==null ?
+								new HelpTreeNode(name) :
+								new HelpTreeNode(name, file);
+				DefaultMutableTreeNode dmtn = new
+								DefaultMutableTreeNode(tempNode);
+				NodeList childNodes = node.getChildNodes();
+				if (childNodes!=null) {
+					int length = childNodes.getLength();
+					for (int i=0; i<length; i++) {
+						DefaultMutableTreeNode newNode =
+							initializeFromXMLFile(childNodes.item(i));
+						if (newNode!=null)
+							dmtn.add(newNode);
 					}
-					if (name==null)
-						return null; // "name" attribute is required.
-					HelpTreeNode helpRoot = file==null ?
-									new HelpTreeNode(name) :
-									new HelpTreeNode(name, file);
-
-					// Set our global root.
-					root = new DefaultMutableTreeNode(helpRoot);
-
-					NodeList childNodes = node.getChildNodes();
-					if (childNodes!=null) {
-						int length = childNodes.getLength();
-						for (int i=0; i<length; i++) {
-							DefaultMutableTreeNode dmtn =
-								initializeFromXMLFile(childNodes.item(i));
-							// null could mean properties file or error.
-							if (dmtn!=null)
-								root.add(dmtn);
-						}
-					}
-					return root;
 				}
+				return dmtn;
+			}
 
-				// This represents a "Node" structure; that is, a node in
-				// the tree help structure that contains child nodes.
-				else if (nodeName.equals(TREE_NODE)) {
-					NamedNodeMap attributes = node.getAttributes();
-					if (attributes==null || attributes.getLength()<1)
-						return null;
-					String name = null;
-					String file = null;
-					int count = attributes.getLength();
-					for (int i=0; i<count; i++) {
-						Node node2 = attributes.item(i);
-						String v = node2.getNodeValue();
-						if (node2.getNodeName().equals(NAME))
-							name = treeBundle.getString(v);
-						else if (node2.getNodeName().equals(PAGE_VALUE))
-							file = baseDir + v;
-					}
-					HelpTreeNode tempNode = file==null ?
-									new HelpTreeNode(name) :
-									new HelpTreeNode(name, file);
-					DefaultMutableTreeNode dmtn = new
-									DefaultMutableTreeNode(tempNode);
-					NodeList childNodes = node.getChildNodes();
-					if (childNodes!=null) {
-						int length = childNodes.getLength();
-						for (int i=0; i<length; i++) {
-							DefaultMutableTreeNode newNode =
-								initializeFromXMLFile(childNodes.item(i));
-							if (newNode!=null)
-								dmtn.add(newNode);
-						}
-					}
-					return dmtn;
-				}
+			// This is a "leaf" in the tree node structure; that is,
+			// an actual help HTML page.
+			else if (nodeName.equals(PAGE)) {
+				return handleNodePage(node);
+			}
 
-				// This is a "leaf" in the tree node structure; that is,
-				// an actual help HTML page.
-				else if (nodeName.equals(PAGE)) {
-					NamedNodeMap attributes = node.getAttributes();
-					if (attributes==null || attributes.getLength()!=2)
-						return null;
-					String name = null;
-					String file = null;
-					for (int i=0; i<2; i++) {
-						Node node2 = attributes.item(i);
-						String v = node2.getNodeValue();
-						if (node2.getNodeName().equals(NAME))
-							name = treeBundle.getString(v);
-						else if (node2.getNodeName().equals(PAGE_VALUE))
-							file = baseDir + v;
-					}
-					if (name==null || file==null)
-						return null;
-					HelpTreeNode tempNode = new HelpTreeNode(name, file);
-					return new DefaultMutableTreeNode(tempNode);
-				}
+			// This is the list of words to put in the index.
+			else if (nodeName.equals(INDEXITEMS)) {
+				return handleNodeIndexItems(node);
+			}
 
-				// This is the list of words to put in the index.
-				else if (nodeName.equals(INDEXITEMS)) {
-					NodeList childNodes = node.getChildNodes();
-					if (childNodes!=null) {
-						int length = childNodes.getLength();
-						// Cache to avoid all of the text (whitespace)
-						// elements.
-						ArrayList elements = new ArrayList(length/2);
-						for (int i=0; i<length; i++) {
-							Node node2 = childNodes.item(i);
-							if (node2.getNodeType()==Node.TEXT_NODE)
-								continue; // Whitespace between elements.
-							NamedNodeMap attributes = node2.getAttributes();
-							if (attributes==null || attributes.getLength()!=1)
-								return null;
-							node2 = attributes.item(0);
-							if (!validateAttributeNode(node2, NAME))
-								continue;
-							String name = node2.getNodeValue();
-							elements.add(name);
-						}
-						int size = elements.size();
-						indexElements = new String[size];
-						for (int i=0; i<size; i++) {
-							indexElements[i] = (String)elements.get(i);
-						}
-					}
-					return null;
-				}
-
-				throw new InternalError("Should never get here (nodename=='" + nodeName + "')");
-
-			case Node.TEXT_NODE:
-				// Whitespace node - discard.
-				break;
-
-			// An error occurred?
-			default:
-				System.err.println("... ERROR!!!");
-				break;
+			throw new InternalError("Should never get here (nodename=='" + nodeName + "')");
 
 		}
 

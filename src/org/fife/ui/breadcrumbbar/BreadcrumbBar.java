@@ -320,6 +320,9 @@ tb.addChangeListener(new ChangeListener() {
 		if (name.length()==0) { // some roots, like A:\, if drive is empty
 			name = dir.getAbsolutePath();
 		}
+		if (name.length()==0) { // Root directory "/", on OS X at least...
+			name = "/";
+		}
 		return name;
 	}
 

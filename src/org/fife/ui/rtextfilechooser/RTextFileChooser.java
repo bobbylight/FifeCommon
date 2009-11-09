@@ -876,14 +876,17 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/**
 	 * Creates a dialog for the given parent frame.
 	 *
-	 * @param parent The frame that is to be the parent of the created dialog.
+	 * @param parent The window that is to be the parent of the created dialog.
 	 * @return The dialog.
 	 */
-	protected JDialog createDialog(Frame parent) throws HeadlessException {
+	protected JDialog createDialog(Window parent) throws HeadlessException {
 
-		Frame frame = parent!=null ? parent : JOptionPane.getRootFrame();
+		Window wind = parent!=null ? parent : JOptionPane.getRootFrame();
 
-		JDialog dialog = new JDialog(frame, true);	
+		// NOTE: In 1.6, they (finally) added a JDialog(Window, boolean)
+		// constructor that we could use instead of this silly conditional.
+		JDialog dialog = (wind instanceof Frame) ?
+			new JDialog((Frame)wind, true) : new JDialog((JDialog)wind, true);
 
 		dialog.setContentPane(this);
 		JRootPane rootPane = dialog.getRootPane();
@@ -2613,7 +2616,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @param parent The parent of this open/save dialog.
 	 * @param dialogType Either {@link #OPEN} or {@link #SAVE}.
 	 */
-	protected int showDialogImpl(Frame parent, int dialogType) {
+	protected int showDialogImpl(Window parent, int dialogType) {
 
 		initializeGUIComponents(); // Creates GUI, if necessary.
 
@@ -2715,7 +2718,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @return One of <code>APPROVE_OPTION</code>, <code>CANCEL_OPTION</code>,
 	 *         or <code>ERROR_OPTION</code>.
 	 */
-	public int showOpenDialog(Frame parent) {
+	public int showOpenDialog(Window parent) {
 		return showDialogImpl(parent, OPEN);
 	}
 
@@ -2727,7 +2730,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @return One of <code>APPROVE_OPTION</code>, <code>CANCEL_OPTION</code>,
 	 *         or <code>ERROR_OPTION</code>.
 	 */
-	public int showSaveDialog(Frame parent) {
+	public int showSaveDialog(Window parent) {
 		return showDialogImpl(parent, SAVE);
 	}
 

@@ -26,6 +26,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Container;
+import java.awt.LayoutManager;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -228,13 +229,29 @@ public class UIUtil {
 
 	/**
 	 * Returns an opaque panel so we get the cool gradient effect on Windows
-	 * XP.
+	 * XP and Vista.
 	 *
 	 * @return A panel to add to a <code>JTabbedPane</code>.
-	 * @see #createTabbedPaneButton
+	 * @see #createTabbedPaneButton(String)
 	 */
 	public static JPanel createTabbedPanePanel() {
 		JPanel panel = new JPanel();
+		if (getUseNonOpaqueTabbedPaneComponents())
+			panel.setOpaque(false);
+		return panel;
+	}
+
+
+	/**
+	 * Returns an opaque panel so we get the cool gradient effect on Windows
+	 * XP and Vista.
+	 *
+	 * @param layout The layout for the panel.
+	 * @return A panel to add to a <code>JTabbedPane</code>.
+	 * @see #createTabbedPaneButton(String)
+	 */
+	public static JPanel createTabbedPanePanel(LayoutManager layout) {
+		JPanel panel = new JPanel(layout);
 		if (getUseNonOpaqueTabbedPaneComponents())
 			panel.setOpaque(false);
 		return panel;

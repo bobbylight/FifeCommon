@@ -595,7 +595,8 @@ public ClassLoader getLookAndFeelClassLoader() {
 
 
 	/**
-	 * Returns the actions of this GUI application as an array.
+	 * Returns the actions of this GUI application as an array.  This array
+	 * is unique, so you can sort it, etc.
 	 *
 	 * @return The actions.  <code>null</code> is returned if the action
 	 *         map has not yet been initialized.

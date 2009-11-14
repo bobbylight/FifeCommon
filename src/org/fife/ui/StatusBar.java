@@ -292,12 +292,12 @@ public class StatusBar extends StatusBarPanel implements MouseListener {
 		Component c = e.getComponent();
 		String description = null;
 
-		// First check to see if we have a button with an action whose description is
-		// defined.
+		// First check to see if we have a button with an action whose
+		// description is defined.
 		if (c instanceof AbstractButton) {
 			Action a = ((AbstractButton)c).getAction();
 			if (a!=null)
-				description = (String)a.getValue(Action.LONG_DESCRIPTION);
+				description = (String)a.getValue(Action.SHORT_DESCRIPTION);
 		}
 
 		// Otherwise, check the accessible context of the component.

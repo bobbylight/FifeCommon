@@ -1127,28 +1127,35 @@ public ClassLoader getLookAndFeelClassLoader() {
 		}
 
 		MenuSelectionManager.defaultManager().addChangeListener(
-				new ChangeListener() {
-					public void stateChanged(ChangeEvent e) {
-						if (statusBar==null) {
-							return;
-						}
-						String msg = statusBar.getDefaultStatusMessage();
-						MenuElement[] path = MenuSelectionManager.
-										defaultManager().getSelectedPath();
-						if (path.length>0) {
-							Component c = path[path.length-1].getComponent();
-							if (c instanceof JMenuItem) {
-								JMenuItem item = (JMenuItem)c;
+			new ChangeListener() {
+				public void stateChanged(ChangeEvent e) {
+					if (statusBar==null) {
+						return;
+					}
+					String msg = statusBar.getDefaultStatusMessage();
+					MenuElement[] path = MenuSelectionManager.
+									defaultManager().getSelectedPath();
+					if (path.length>0) {
+						Component c = path[path.length-1].getComponent();
+						if (c instanceof JMenuItem) {
+							JMenuItem item = (JMenuItem)c;
+							Action a = item.getAction();
+							if (a!=null) {
+								msg = (String)a.getValue(
+												Action.SHORT_DESCRIPTION);
+							}
+							else {
 								String text = item.getAccessibleContext().
-												getAccessibleDescription();
+											getAccessibleDescription();
 								if (text!=null) {
 									msg = text;
 								}
 							}
 						}
-						statusBar.setStatusMessage(msg);
 					}
+					statusBar.setStatusMessage(msg);
 				}
+			}
 		);
 
 	}

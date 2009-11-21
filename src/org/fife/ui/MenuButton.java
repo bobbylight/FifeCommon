@@ -247,7 +247,12 @@ public class MenuButton extends JButton {
 
 		private int _paintArrowIcon(Component c, Graphics g, int x, int y) {
 			y = (c.getHeight()-arrowIcon.getIconHeight())/2;
-			arrowIcon.paintIcon(c, g, x,y);
+			Graphics2D g2d = (Graphics2D)g;
+			Object old = g2d.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+								RenderingHints.VALUE_ANTIALIAS_ON);
+			arrowIcon.paintIcon(c, g2d, x,y);
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, old);
 			return x + arrowIcon.getIconWidth() + SPACING;
 		}
 

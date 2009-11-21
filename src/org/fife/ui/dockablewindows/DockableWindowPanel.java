@@ -325,8 +325,9 @@ public class DockableWindowPanel extends JPanel
 		//	return true;
 		// See if window is docked on one of our 4 sides.
 		for (int p=0; p<4; p++) {
-			if (panels[p].removeDockableWindow(window))
+			if (panels[p].removeDockableWindow(window)) {
 				return true;
+			}
 		}
 		// If it wasn't, see if it was a floating dockable window.
 		int numFloating = floatingWindows==null ? 0 :floatingWindows.length;

@@ -23,6 +23,7 @@
  */
 package org.fife.ui.dockablewindows;
 
+import java.awt.LayoutManager;
 import javax.swing.Icon;
 import javax.swing.JPanel;
 
@@ -35,8 +36,7 @@ import javax.swing.JPanel;
  * @version 0.5
  * @see org.fife.ui.dockablewindows.DockableWindowPanel
  */
-public abstract class DockableWindow extends JPanel
-								implements DockableWindowConstants {
+public class DockableWindow extends JPanel implements DockableWindowConstants {
 
 	/**
 	 * Property meaning the dockable window has changed its "active" state;
@@ -61,12 +61,58 @@ public abstract class DockableWindow extends JPanel
 	 */
 	private String dockableWindowName;
 
+	/**
+	 * The icon for this window.
+	 */
+	private Icon icon;
+
+
+	/**
+	 * Constructor.
+	 */
+	public DockableWindow() {
+	}
+
+
+	/**
+	 * Constructor.
+	 *
+	 * @param layout The layout for this window's contents.
+	 */
+	public DockableWindow(LayoutManager layout) {
+		super(layout);
+	}
+
+
+	/**
+	 * Constructor.
+	 *
+	 * @param name The name of this dockable window.
+	 * @see #getDockableWindowName()
+	 */
+	public DockableWindow(String name) {
+		setDockableWindowName(name);
+	}
+
+
+	/**
+	 * Constructor.
+	 *
+	 * @param name The name of this dockable window.
+	 * @param layout The layout for this window's contents.
+	 * @see #getDockableWindowName()
+	 */
+	public DockableWindow(String name, LayoutManager layout) {
+		super(layout);
+		setDockableWindowName(name);
+	}
+
 
 	/**
 	 * Adds a listener to this dockable window.
 	 *
 	 * @param l The listener to add.
-	 * @see #removeDockableWindowListener
+	 * @see #removeDockableWindowListener(DockableWindowListener)
 	 */
 	public void addDockableWindowListener(DockableWindowListener l) {
 		listenerList.add(DockableWindowListener.class, l);
@@ -125,8 +171,11 @@ public abstract class DockableWindow extends JPanel
 	 *
 	 * @return The icon for this dockable window.  This value may be
 	 *         <code>null</code> to represent no icon.
+	 * @see #seIcon(Icon)
 	 */
-	public abstract Icon getIcon();
+	public Icon getIcon() {
+		return icon;
+	}
 
 
 	/**
@@ -203,6 +252,18 @@ public abstract class DockableWindow extends JPanel
 	public void setDockableWindowName(String name) {
 		dockableWindowName = name;
 		// TODO: Dynamically update tabs, etc.
+	}
+
+
+	/**
+	 * Sets the icon for this dockable window.
+	 *
+	 * @param icon The icon.
+	 * @see #getIcon()
+	 */
+	public void setIcon(Icon icon) {
+		this.icon = icon;
+		// TODO: Update parent UI
 	}
 
 

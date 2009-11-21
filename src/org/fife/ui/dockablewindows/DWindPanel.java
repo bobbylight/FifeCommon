@@ -89,7 +89,7 @@ class DWindPanel extends JPanel {
 		int count = tabbedPane.getTabCount();
 		for (int i=0; i<count; i++) {
 			Component c = tabbedPane.getComponentAt(i);
-			if (c.equals(window)) {
+			if (c==window) {
 				return i;
 			}
 		}
@@ -176,7 +176,7 @@ class DWindPanel extends JPanel {
 				// while Windows XP's is Tahoma.  Usually though it's "Sans
 				// Serif").
 				Font font = UIManager.getFont("TabbedPane.font");
-				System.out.println("... font==" + font.getFamily());
+				//System.out.println("... font==" + font.getFamily());
 				if (font!=null) {
 					setFont(font);
 				}

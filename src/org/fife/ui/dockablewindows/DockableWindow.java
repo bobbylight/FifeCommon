@@ -171,7 +171,7 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	 *
 	 * @return The icon for this dockable window.  This value may be
 	 *         <code>null</code> to represent no icon.
-	 * @see #seIcon(Icon)
+	 * @see #setIcon(Icon)
 	 */
 	public Icon getIcon() {
 		return icon;

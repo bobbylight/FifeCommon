@@ -2614,7 +2614,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * <code>showSaveDialog</code> since much of what they do is the same.
 	 *
 	 * @param parent The parent of this open/save dialog.
-	 * @param dialogType Either {@link #OPEN} or {@link #SAVE}.
+	 * @param dialogType Either <code>OPEN</code> or <code>CLOSE</code>.
 	 */
 	protected int showDialogImpl(Window parent, int dialogType) {
 

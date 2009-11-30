@@ -210,6 +210,9 @@ tb.addChangeListener(new ChangeListener() {
 			if (name.length()==0 && fsv.isDrive(loc)) {
 				name = loc.getAbsolutePath(); // Was "", on Windows at least
 			}
+			if (name.length()==0) { // Root directory "/", on OS X at least...
+				name = "/";
+			}
 			b = new BreadcrumbBarButton(name);
 		}
 		b.putClientProperty(PROPERTY_LOCATION, loc);

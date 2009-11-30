@@ -66,7 +66,7 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 
 	private GradientPaint unselectedTabGradient;
 
-	private static final int SELECTED_TAB_BOOST				= 3;
+	private static final int SELECTED_TAB_BOOST				= 1;
 
 
 	/**

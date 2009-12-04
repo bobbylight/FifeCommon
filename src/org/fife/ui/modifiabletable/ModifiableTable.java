@@ -27,6 +27,8 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ResourceBundle;
 import java.util.Vector;
 import javax.swing.BorderFactory;
@@ -34,6 +36,7 @@ import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.UIManager;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -282,6 +285,7 @@ public class ModifiableTable extends JPanel {
 		table.setShowGrid(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getSelectionModel().addListSelectionListener(listener);
+		table.addMouseListener(listener);
 		return table;
 	}
 
@@ -377,18 +381,23 @@ public class ModifiableTable extends JPanel {
 	protected void modifyRow() {
 		if (rowHandler!=null) {
 			int selectedRow = table.getSelectedRow();
-			Object[] oldData = getContentsOfRow(selectedRow);
-			Object[] newData = rowHandler.getNewRowInfo(oldData);
-			if (newData!=null) {
-				int columnCount = table.getColumnCount();
-				for (int i=0; i<columnCount; i++) {
-					// Call model's setValueAt(), not table's, so that if
-					// they've moved columns around it's still okay.
-					table.getModel().
-							setValueAt(newData[i], selectedRow, i);
+			if (selectedRow>-1) { // Should always be true
+				Object[] oldData = getContentsOfRow(selectedRow);
+				Object[] newData = rowHandler.getNewRowInfo(oldData);
+				if (newData!=null) {
+					int columnCount = table.getColumnCount();
+					for (int i=0; i<columnCount; i++) {
+						// Call model's setValueAt(), not table's, so that if
+						// they've moved columns around it's still okay.
+						table.getModel().
+								setValueAt(newData[i], selectedRow, i);
+					}
+					fireModifiableTableEvent(
+							ModifiableTableChangeEvent.MODIFIED, selectedRow);
 				}
-				fireModifiableTableEvent(
-						ModifiableTableChangeEvent.MODIFIED, selectedRow);
+			}
+			else {
+				UIManager.getLookAndFeel().provideErrorFeedback(table);
 			}
 		}
 	}
@@ -459,7 +468,8 @@ public class ModifiableTable extends JPanel {
 	/**
 	 * Listens for events in this modifiable table.
 	 */
-	class Listener implements ActionListener, ListSelectionListener {
+	class Listener extends MouseAdapter implements ActionListener,
+							ListSelectionListener {
 
 		public Listener() {
 		}
@@ -473,6 +483,12 @@ public class ModifiableTable extends JPanel {
 				removeRow();
 			}
 			else if (MODIFY_COMMAND.equals(actionCommand)) {
+				modifyRow();
+			}
+		}
+
+		public void mouseClicked(MouseEvent e) {
+			if (e.getClickCount()==2 && e.getButton()==MouseEvent.BUTTON1) {
 				modifyRow();
 			}
 		}

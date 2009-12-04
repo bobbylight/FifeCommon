@@ -182,7 +182,7 @@ public class PluginClassLoader extends ClassLoader {
 
 		if (count>0) {
 
-			Object[] objs = new Object[] { app };
+			final Object[] objs = new Object[] { app };
 			Class[] params = new Class[] {
 									AbstractPluggableGUIApplication.class };
 
@@ -194,15 +194,16 @@ public class PluginClassLoader extends ClassLoader {
 					// Class ended in "Plugin.class", but if it's not actually
 					// a subclass of Plugin, then we have an error.
 					if (Plugin.class.isAssignableFrom(c)) {
-						Constructor cnst = c.getConstructor(params);
-						final Plugin p = (Plugin)cnst.newInstance(objs);
-						// Although we're on the EDT, do the GUI stuff later
-						// to speed up the main application's loading (i.e.,
-						// make the main window appear faster).
+						final Constructor cnst = c.getConstructor(params);
 						SwingUtilities.invokeLater(new Runnable() {
 							public void run() {
 								try {
+									Plugin p = (Plugin)cnst.newInstance(objs);
 									app.addPlugin(p);
+								} catch (InvocationTargetException ite) {
+									Throwable e = ite.getTargetException();
+									e.printStackTrace();
+									app.displayException(e);
 								} catch (Exception e) {
 									e.printStackTrace();
 									app.displayException(e);
@@ -216,10 +217,7 @@ public class PluginClassLoader extends ClassLoader {
 							"'Plugin' that does not extend class Plugin: " +
 							className);
 					}
-				} catch (InvocationTargetException ite) {
-					Throwable e = ite.getTargetException();
-					e.printStackTrace();
-					app.displayException(e);
+					Thread.sleep(500); // Space the Runnables out a little
 				} catch (Exception e) {
 					e.printStackTrace();
 					app.displayException(e);

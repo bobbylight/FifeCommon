@@ -153,6 +153,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/*
 	 * Strings used by the file chooser.
 	 */
+	private String customTitle;
 	private String saveButtonText;
 	private String saveDialogTitleText;
 	private String saveButtonToolTipText;
@@ -510,7 +511,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			UIUtil.fixComboOrientation(encodingCombo);
 			encodingCombo.setMaximumRowCount(12);
 			encodingLabel.setLabelFor(encodingCombo);
-			encodingCombo.addItemListener(itemListener);
 			bottomPanelRowCount++;
 		}
 
@@ -585,7 +585,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		// We must call this AFTER guiInitialized is set to true, so that
 		// the encoding combo displays the correct encoding.
-		setEncoding(RTextFileChooser.getDefaultEncoding());
+		refreshEncodingComboBox();//setEncoding(encoding);
 
 	}
 
@@ -1118,6 +1118,18 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 */
 	public HashMap getCustomColorsMap() {
 		return customColors;
+	}
+
+
+	/**
+	 * Returns the custom title to use for this file chooser.
+	 *
+	 * @return The custom title, or <code>null</code> if default values for
+	 *         "Open" and "Save" dialogs should be used.
+	 * @see #setCustomTitle(String)
+	 */
+	public String getCustomTitle() {
+		return customTitle;
 	}
 
 
@@ -1755,7 +1767,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/**
 	 * Gets the strings used on the various file chooser widgets.
 	 */
-	protected void installStrings() {
+	private void installStrings() {
 
 		saveButtonText   = UIManager.getString("FileChooser.saveButtonText");
 		openButtonText   = UIManager.getString("FileChooser.openButtonText");
@@ -1775,6 +1787,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			for (Iterator i=keys.iterator(); i.hasNext(); ) {
 				encodingCombo.addItem(i.next());
 			}
+			encodingCombo.addItemListener(itemListener);
 		}
 
 		newFolderPrompt = getString("NewFolderPrompt");
@@ -2218,6 +2231,20 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	/**
+	 * Returns the title to use for this file chooser, whether it is an open
+	 * dialog or a save dialog.
+	 *
+	 * @param title The new title.  If this is <code>null</code>, a default
+	 *        title will be used appropriately (e.g. a localized version of
+	 *        "Open" or "Save").
+	 * @see #getCustomTitle()
+	 */
+	public void setCustomTitle(String title) {
+		customTitle = title;
+	}
+
+
+	/**
 	 * Sets the color used for unknown file types.
 	 *
 	 * @param color The color.
@@ -2233,11 +2260,16 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 *
 	 * @param encoding The desired encoding.  If this value is invalid or
 	 *        not supported by this OS, a system default is used.
-	 * @see #getEncoding
+	 * @see #getEncoding()
 	 */
 	public void setEncoding(String encoding) {
-		this.encoding = encoding==null ? getDefaultEncoding() : encoding;
-		refreshEncodingComboBox();
+		if (encoding==null) {
+			encoding = getDefaultEncoding();
+		}
+		if (!encoding.equals(this.encoding)) {
+			this.encoding = encoding;
+			refreshEncodingComboBox();
+		}
 	}
 
 
@@ -2662,13 +2694,13 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		// Set up buttons/text, etc. to be appropriate to opening...
 		// FIXME:  Update me to set ALL strings!
 		if (dialogType==SAVE) {
-			dialog.setTitle(saveDialogTitleText);
+			dialog.setTitle(customTitle!=null ? customTitle : saveDialogTitleText);
 			acceptButton.setText(saveButtonText);
 			acceptButton.setMnemonic(saveButtonMnemonic);
 			acceptButton.setToolTipText(saveButtonToolTipText);
 		}
 		else { // OPEN
-			dialog.setTitle(openDialogTitleText);
+			dialog.setTitle(customTitle!=null ? customTitle : openDialogTitleText);
 			acceptButton.setText(openButtonText);
 			acceptButton.setMnemonic(openButtonMnemonic);
 			acceptButton.setToolTipText(openButtonToolTipText);

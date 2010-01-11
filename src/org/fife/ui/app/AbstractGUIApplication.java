@@ -60,6 +60,7 @@ import javax.swing.event.ChangeListener;
 
 import org.fife.ui.AboutDialog;
 import org.fife.ui.CustomizableToolBar;
+import org.fife.ui.OptionsDialog;
 import org.fife.ui.SplashScreen;
 import org.fife.ui.StatusBar;
 import org.fife.help.HelpDialog;
@@ -714,6 +715,18 @@ public ClassLoader getLookAndFeelClassLoader() {
 	 * @return An array of information on JAR files containing Look and Feels.
 	 */
 	protected ExtendedLookAndFeelInfo[] get3rdPartyLookAndFeelInfo() {
+		return null;
+	}
+
+
+	/**
+	 * Returns this application's Options dialog.
+	 *
+	 * @return The options dialog, or <code>null</code> if this application
+	 *         doesn't have one.  The default implementation returns
+	 *         <code>null</code>.
+	 */
+	public OptionsDialog getOptionsDialog() {
 		return null;
 	}
 

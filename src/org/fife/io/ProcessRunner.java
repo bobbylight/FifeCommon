@@ -14,6 +14,12 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -27,6 +33,8 @@ public class ProcessRunner implements Runnable {
 
 	private File dir;
 	private String[] commandLine;
+	private Map envVars;
+	private boolean appendEnv;
 	private String stdout;
 	private String stderr;
 	private ProcessRunnerOutputListener outputListener;
@@ -46,6 +54,7 @@ public class ProcessRunner implements Runnable {
 	 */
 	public ProcessRunner(String[] commandLine) {
 		setCommandLine(commandLine);
+		appendEnv = true;
 	}
 
 
@@ -56,6 +65,67 @@ public class ProcessRunner implements Runnable {
 		stdout = stderr = null;
 		rc = Integer.MIN_VALUE;
 		lastError = null;
+	}
+
+
+	/**
+	 * Creates an array of "name=value" elements, suitable for
+	 * <code>Runtime.getRuntime().exec()</code>.
+	 *
+	 * @return The array of environment variables.
+	 */
+	private String[] createEnvVarArray() {
+
+		Map env = new HashMap();
+
+		// If we want to append our environment to that of the parent process...
+		if (appendEnv) {
+
+			// This class works with Java 1.4+, but System.getenv() was only
+			// added in Java 5, so we take extra care here.
+			Class clazz = System.class;
+			try {
+				Method getenv = clazz.getMethod("getenv", null);
+				Map parentEnv = (Map)getenv.invoke(clazz, null);
+				env.putAll(parentEnv);
+			} catch (RuntimeException re) {
+				throw re;
+			} catch (Exception e) {
+				e.printStackTrace();
+				// TODO: Use "cmd /c env" and "/bin/sh -c env" as fallbacks
+			}
+		}
+
+		// If we have any environment variables to append...
+		if (this.envVars!=null) {
+			env.putAll(this.envVars);
+		}
+
+		// Create an array of "name=value" elements.
+		List temp = new ArrayList(env.size());
+		for (Iterator i=env.entrySet().iterator(); i.hasNext(); ) {
+			Map.Entry entry = (Map.Entry)i.next();
+			temp.add(entry.getKey() + "=" + entry.getValue());
+		}
+		String[] envp = new String[temp.size()];
+		envp = (String[])temp.toArray(envp);
+
+		return envp;
+
+	}
+
+
+	/**
+	 * Returns whether any extra environment variables defined for this process
+	 * to run with should be appended to the parent process's environment (as
+	 * opposed to overwriting it).
+	 *
+	 * @return Whether to append the parent process's environment.
+	 * @see #getEnvironmentVars()
+	 * @see #setEnvironmentVars(Map, boolean)
+	 */
+	public boolean getAppendEnvironmentVars() {
+		return appendEnv;
 	}
 
 
@@ -87,6 +157,23 @@ public class ProcessRunner implements Runnable {
 	 */
 	public File getDirectory() {
 		return dir;
+	}
+
+
+	/**
+	 * Returns any extra environment variables defined for this process to run
+	 * with.
+	 *
+	 * @return The environment variables.
+	 * @see #getAppendEnvironmentVars()
+	 * @see #setEnvironmentVars(Map, boolean)
+	 */
+	public Map getEnvironmentVars() {
+		Map temp = new HashMap();
+		if (envVars!=null) {
+			temp.putAll(envVars);
+		}
+		return temp;
 	}
 
 
@@ -148,7 +235,7 @@ public class ProcessRunner implements Runnable {
 
 		try {
 
-			String[] envp = null; // Inherit environment variables.
+			String[] envp = createEnvVarArray();
 			proc = Runtime.getRuntime().exec(commandLine, envp, dir);
 
 			// Create threads to read the stdout and stderr of the external
@@ -231,6 +318,20 @@ public class ProcessRunner implements Runnable {
 		this.commandLine = new String[size];
 		System.arraycopy(commandLine,0, this.commandLine,0, size);
 		clearLastOutput(); // No output from this new command line yet.
+	}
+
+
+	/**
+	 * Sets the environment variables to be set for this process.
+	 *
+	 * @param vars The environment variables.  This may be <code>null</code> if
+	 *        none are to be set.
+	 * @param append Whether this should be appended to the parent process's
+	 *        environment.  If this is <code>false</code>, then the contents of
+	 *        <code>vars</code> will be the only environment variables set.
+	 */
+	public void setEnvironmentVars(Map vars, boolean append) {
+		
 	}
 
 

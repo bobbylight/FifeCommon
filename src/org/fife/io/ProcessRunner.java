@@ -94,6 +94,7 @@ public class ProcessRunner implements Runnable {
 				e.printStackTrace();
 				// TODO: Use "cmd /c env" and "/bin/sh -c env" as fallbacks
 			}
+
 		}
 
 		// If we have any environment variables to append...
@@ -237,7 +238,7 @@ public class ProcessRunner implements Runnable {
 
 			String[] envp = createEnvVarArray();
 			proc = Runtime.getRuntime().exec(commandLine, envp, dir);
-
+System.out.println("... ... pr debug: appendEnv == " + appendEnv);
 			// Create threads to read the stdout and stderr of the external
 			// process.  If we do not do it this way, the process may
 			// deadlock.
@@ -329,9 +330,17 @@ public class ProcessRunner implements Runnable {
 	 * @param append Whether this should be appended to the parent process's
 	 *        environment.  If this is <code>false</code>, then the contents of
 	 *        <code>vars</code> will be the only environment variables set.
+	 * @see #getEnvironmentVars()
 	 */
 	public void setEnvironmentVars(Map vars, boolean append) {
-		
+		appendEnv = append;
+		if (envVars!=null) {
+			envVars.clear();
+		}
+		else {
+			envVars = new HashMap();
+		}
+		envVars.putAll(vars);
 	}
 
 

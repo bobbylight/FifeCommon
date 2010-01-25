@@ -453,6 +453,95 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 
 
 	/**
+	 * Selects the options panel with the specified name.
+	 *
+	 * @param name The name of the panel.
+	 * @return Whether the panel was selected.  This will only be
+	 *         <code>false</code> if <code>name</code> is not the name of an
+	 *         options panel added to this dialog.
+	 */
+	public boolean setSelectedOptionsPanel(String name) {
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode)optionTree.
+														getModel().getRoot();
+		return setSelectedOptionsPanelImpl(name, root);
+	}
+
+
+	/**
+	 * Makes the specified panel visible.
+	 *
+	 * @param panel The panel to make visible.
+	 * @param selectInTree Whether the tree node should be selected as well.
+	 *        This is here so this method can be called in response to a tree
+	 *        node being clicked, as well as other times (when the tree needs
+	 *        to be updated as well as the panel).
+	 */
+	private void setSelectedOptionsPanel(OptionsDialogPanel panel,
+											boolean selectInTree) {
+
+		if (selectInTree) {
+			// Select the proper node in the tree. It must be visible for this
+			// to work, so we first expand all nodes.
+			UIUtil.expandAllNodes(optionTree);
+			for (int i=0; i<optionTree.getRowCount(); i++) {
+				TreePath path = optionTree.getPathForRow(i);
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+											path.getLastPathComponent();
+				if (node!=null) {
+					Object obj = node.getUserObject();
+					if (obj==panel) {
+						optionTree.setSelectionPath(path);
+						break;
+					}
+				}
+			}
+		}
+
+		currentOptionPanelLayout.show(currentOptionPanel, panel.getName());
+
+		titledPanel.setTitle(panel.getName());
+		titledPanel.setIcon(panel.getIcon());
+
+		// Give the "top" component on the panel focus, just to make
+		// things a little nicer.
+		JComponent topComponent = panel.getTopJComponent();
+		if (topComponent!=null) { // Should always be true
+			topComponent.requestFocusInWindow();
+			if (topComponent instanceof JTextComponent) {
+				((JTextComponent)topComponent).selectAll();
+			}
+		}
+
+	}
+
+
+	private boolean setSelectedOptionsPanelImpl(String name,
+									DefaultMutableTreeNode node) {
+
+		// Be careful and check for nulls as we support branch nodes not
+		// actually containing an option panel.
+		Object obj = node.getUserObject();
+		if (obj instanceof OptionsDialogPanel) {
+			OptionsDialogPanel panel = (OptionsDialogPanel)obj;
+			if (name.equals(panel.getName())) {
+				setSelectedOptionsPanel(panel, true);
+				return true;
+			}
+		}
+
+		for (Enumeration e=node.children(); e.hasMoreElements(); ) {
+			node = (DefaultMutableTreeNode)e.nextElement();
+			if (setSelectedOptionsPanelImpl(name, node)) {
+				return true;
+			}
+		}
+
+		return false;
+
+	}
+
+
+	/**
 	 * Sets the visible option panel to the one specified.
 	 *
 	 * @param panel The panel to display.
@@ -542,20 +631,8 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		if (!(obj instanceof OptionsDialogPanel))
 			return;
 		OptionsDialogPanel panel = (OptionsDialogPanel)obj;
-		currentOptionPanelLayout.show(currentOptionPanel, panel.getName());
 
-		titledPanel.setTitle(panel.getName());
-		titledPanel.setIcon(panel.getIcon());
-
-		// Give the "top" component on the panel focus, just to make
-		// things a little nicer.
-		JComponent topComponent = panel.getTopJComponent();
-		if (topComponent!=null) { // Should always be true
-			topComponent.requestFocusInWindow();
-			if (topComponent instanceof JTextComponent) {
-				((JTextComponent)topComponent).selectAll();
-			}
-		}
+		setSelectedOptionsPanel(panel, false);
 
 	}
 

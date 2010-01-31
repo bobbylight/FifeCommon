@@ -54,7 +54,7 @@ import org.fife.ui.UIUtil;
  * Basically, the caller provides the table model for the data, along
  * with a "handler" that is called when adding/editing/removing data
  * from the model.  When you want to retrieve the data back from the
- * table, you can get it via {@link #getDataVector}.
+ * table, you can get it via {@link #getDataVector()}.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -72,6 +72,16 @@ public class ModifiableTable extends JPanel {
 	public static final String BOTTOM			= BorderLayout.SOUTH;
 	public static final String LEFT			= BorderLayout.WEST;
 	public static final String RIGHT			= BorderLayout.EAST;
+
+	/**
+	 * If this system property is set to <code>true</code>, then the panels
+	 * created containing the buttons ("Add", "Modify", "Remove", etc.) will
+	 * be non-opaque.  This is useful on OS's such as Windows XP and Vista,
+	 * where tabbed panes have a gradient background.  By default this is
+	 * <code>false</code> in case it messes up some other LookAndFeel.
+	 */
+	public static final String PROPERTY_PANELS_NON_OPAQUE =
+										"ModifiableTable.nonOpaquePanels";
 
 	private JTable table;
 	private RButton addButton;
@@ -146,6 +156,10 @@ public class ModifiableTable extends JPanel {
 	public ModifiableTable(DefaultTableModel model, Object[] columnNames, 
 						String buttonLocation, int buttons) {
 
+		if (Boolean.getBoolean(PROPERTY_PANELS_NON_OPAQUE)) {
+			setOpaque(false);
+		}
+
 		listener = new Listener();
 		this.table = createTable(model, columnNames);
 		listenerList = new EventListenerList();
@@ -201,8 +215,17 @@ public class ModifiableTable extends JPanel {
 	protected JPanel createButtonPanel(String buttonLocation, int buttons) {
 
 		// Get panel and spacing ready.
-		JPanel panel = new JPanel();
-		JPanel buttonPanel = new JPanel(new BorderLayout());
+		JPanel panel = null;
+		JPanel buttonPanel = null;
+
+		if (Boolean.getBoolean(PROPERTY_PANELS_NON_OPAQUE)) {
+			panel = UIUtil.createTabbedPanePanel();
+			buttonPanel = UIUtil.createTabbedPanePanel(new BorderLayout());
+		}
+		else {
+			panel = new JPanel();
+			buttonPanel = new JPanel(new BorderLayout());
+		}
 		String buttonLoc2 = null;
 		if (RIGHT.equals(buttonLocation)) {
 			panel.setLayout(new GridLayout(3,1, 5,5));

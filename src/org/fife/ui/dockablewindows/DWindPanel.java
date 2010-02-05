@@ -124,6 +124,53 @@ class DWindPanel extends JPanel {
 
 
 	/**
+	 * Returns the dockable window at the specified index.
+	 *
+	 * @param index The index.
+	 * @return The dockable window.
+	 */
+	public DockableWindow getDockableWindowAt(int index) {
+		return (DockableWindow)tabbedPane.getComponentAt(index);
+	}
+
+
+	/**
+	 * Refreshes the name of the specified dockable window tab.  This will
+	 * also refresh the text in the title bar (since a dockable window's title
+	 * defaults to its name if none is specified) if necessary.
+	 *
+	 * @param index The index of the dockable window to refresh.
+	 * @see #refreshTabTitle(int)
+	 */
+	public void refreshTabName(int index) {
+		if (index>=0 && index<tabbedPane.getTabCount()) {
+			DockableWindow w = (DockableWindow)tabbedPane.getComponentAt(index);
+			String name = w.getDockableWindowName();
+			tabbedPane.setTitleAt(index, name);
+			refreshTabTitle(index);
+		}
+	}
+
+
+	/**
+	 * Refreshes a dockable window tab's title.  All this does is check whether
+	 * a dockable window is the selected one, and if it is, ensures that the
+	 * title in the title pane is displaying the dockable window's current
+	 * title.
+	 *
+	 * @param index The index of the dockable window to refresh.
+	 * @see #refreshTabName(int)
+	 */
+	public void refreshTabTitle(int index) {
+		if (index==tabbedPane.getSelectedIndex()) {
+			DockableWindow w = (DockableWindow)tabbedPane.getComponentAt(index);
+			String title = w.getDockableWindowTitle();
+			titlePanel.setTitle(title);
+		}
+	}
+
+
+	/**
 	 * Removes the specified dockable window from this tabbed pane.
 	 *
 	 * @param window The dockable window.
@@ -241,7 +288,8 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 		public void stateChanged(ChangeEvent e) {
 			int index = tabbedPane.getSelectedIndex();
 			if (index>-1) {
-				setTitle(tabbedPane.getTitleAt(index));
+				DockableWindow w = getDockableWindowAt(index);
+				setTitle(w.getDockableWindowTitle());
 			}
 		}
 

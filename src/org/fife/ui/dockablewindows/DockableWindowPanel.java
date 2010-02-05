@@ -48,7 +48,7 @@ public class DockableWindowPanel extends JPanel
 	public static final int LARGE_ON_SIDES	= 0;
 	public static final int LARGE_ON_TOP_AND_BOTTOM	= 1;
 	private ContentPanel[] panels;
-	private JFrame[] floatingWindows;
+	private FloatingWindow[] floatingWindows;
 	private int dockingStyle;
 	protected List windowList;
 	private int[] panelToLocationMap = { 0, 2, 1, 3,
@@ -111,10 +111,10 @@ public class DockableWindowPanel extends JPanel
 
 			case FLOATING:
 				if (floatingWindows==null) {
-					floatingWindows = new JFrame[1];
+					floatingWindows = new FloatingWindow[1];
 				}
 				else {
-					JFrame[] temp = new JFrame[floatingWindows.length+1];
+					FloatingWindow[] temp = new FloatingWindow[floatingWindows.length+1];
 					System.arraycopy(floatingWindows,0, temp,0, floatingWindows.length);
 					floatingWindows = temp;
 				}
@@ -162,6 +162,7 @@ public class DockableWindowPanel extends JPanel
 	 * Adds this panel as a listener to the specified dockable window.
 	 *
 	 * @param window The dockable window.
+	 * @see #removeListeners(DockableWindow)
 	 */
 	private void addListeners(DockableWindow window) {
 		window.addDockableWindowListener(this);
@@ -175,15 +176,12 @@ public class DockableWindowPanel extends JPanel
 	 * @param window The dockable window.
 	 * @return A frame in which to place the dockable window.
 	 */
-	private JFrame createFloatingWindowFrame(DockableWindow window) {
-		JFrame temp = new JFrame(window.getDockableWindowName());
+	private FloatingWindow createFloatingWindowFrame(DockableWindow window) {
+		FloatingWindow temp = new FloatingWindow(window);
 		Window parentWind = SwingUtilities.getWindowAncestor(this);
 		if (parentWind instanceof JFrame) {
 			temp.setIconImage(((JFrame)parentWind).getIconImage());
 		}
-		JPanel contentPane = new JPanel(new GridLayout(1,1));
-		contentPane.add(window);
-		temp.setContentPane(contentPane);
 		temp.pack();
 		return temp;
 	}
@@ -266,19 +264,58 @@ public class DockableWindowPanel extends JPanel
 	 */
 	public void propertyChange(PropertyChangeEvent e) {
 
-		String propertyName = e.getPropertyName();
+		String name = e.getPropertyName();
+		DockableWindow w = (DockableWindow)e.getSource();
 
-		if (propertyName.equals(DockableWindow.ACTIVE_PROPERTY)) {
-			DockableWindow w = (DockableWindow)e.getSource();
-			if (!windowList.contains(w))
+		if (DockableWindow.ACTIVE_PROPERTY.equals(name)) {
+			if (!windowList.contains(w)) {
 				throw new InternalError("Dockable window list does not " +
 					"contain window: " + w);
+			}
 			//boolean active = w.isActive();
-			// FIXME:  Add window properly.  Removing, then readding
+			// FIXME:  Add window properly.  Removing, then re-adding
 			// the window is an inefficient yet simple way to ensure
 			// that the window becomes active/inactive as appropriate.
 			removeDockableWindow(w);
 			addDockableWindow(w);
+		}
+
+		else if (DockableWindow.NAME_PROPERTY.equals(name)) {
+			boolean found = false;
+			for (int i=0; i<panels.length; i++) {
+				int index = panels[i].containsDockableWindow(w);
+				if (index>-1) {
+					panels[i].windowPanel.refreshTabName(index);
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				for (int i=0; i<floatingWindows.length; i++) {
+					if (w==floatingWindows[i].getDockableWindow()) {
+						floatingWindows[i].refreshTitle(); // In case it changed too
+					}
+				}
+			}
+		}
+
+		else if (DockableWindow.TITLE_PROPERTY.equals(name)) {
+			boolean found = false;
+			for (int i=0; i<panels.length; i++) {
+				int index = panels[i].containsDockableWindow(w);
+				if (index>-1) {
+					panels[i].windowPanel.refreshTabTitle(index);
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				for (int i=0; i<floatingWindows.length; i++) {
+					if (w==floatingWindows[i].getDockableWindow()) {
+						floatingWindows[i].refreshTitle(); // In case it changed too
+					}
+				}
+			}
 		}
 
 	}
@@ -332,12 +369,12 @@ public class DockableWindowPanel extends JPanel
 		// If it wasn't, see if it was a floating dockable window.
 		int numFloating = floatingWindows==null ? 0 :floatingWindows.length;
 		for (int p=0; p<numFloating; p++) {
-			Component possibleWindow = floatingWindows[p].getContentPane().getComponent(0);
-			if (possibleWindow.equals(window)) {
+			DockableWindow possible = floatingWindows[p].getDockableWindow();
+			if (possible==window) {
 				floatingWindows[p].remove(0);
 				floatingWindows[p].setVisible(false);
 				floatingWindows[p].dispose();
-				JFrame[] temp = new JFrame[numFloating-1];
+				FloatingWindow[] temp = new FloatingWindow[numFloating-1];
 				System.arraycopy(floatingWindows,0, temp,0, p);
 				System.arraycopy(floatingWindows,p+1, temp,p, numFloating-p-1);
 				floatingWindows = temp;
@@ -367,7 +404,7 @@ public class DockableWindowPanel extends JPanel
 	 * Removes this panel as a listener of the specified dockable window.
 	 *
 	 * @param window The dockable window.
-	 * @see #addListeners
+	 * @see #addListeners(DockableWindow)
 	 */
 	private void removeListeners(DockableWindow window) {
 		window.removeDockableWindowListener(this);
@@ -481,25 +518,13 @@ public class DockableWindowPanel extends JPanel
 			return windowPanel.addDockableWindow(window);
 		}
 
-		public boolean containsDockableWindow(DockableWindow window) {
-			return (windowPanel!=null &&
-					windowPanel.containsDockableWindow(window)>-1);
+		public int containsDockableWindow(DockableWindow window) {
+			return windowPanel==null ? -1 :
+					windowPanel.containsDockableWindow(window);
 		}
 
 		public int getDividerLocation() {
 			return splitPane!=null ? splitPane.getDividerLocation() : -1;
-		}
-
-		public int getDockableWindowCount() {
-			return windowPanel==null?0:windowPanel.getDockableWindowCount();
-		}
-
-		public int getDockableWindowsLocation() {
-			return dockableWindowsLocation;
-		}
-
-		public DockableWindow[] getDockableWindows(){ 
-			return windowPanel==null ? null:windowPanel.getDockableWindows();
 		}
 
 		// Returns the non-dockable window content this panel contains.
@@ -517,10 +542,6 @@ public class DockableWindowPanel extends JPanel
 			}
 			// We never actually get here.
 			throw new InternalError("Invalid state in getRegularContent");
-		}
-
-		public boolean getSplit() {
-			return splitPane!=null;
 		}
 
 		public boolean removeDockableWindow(DockableWindow window) {

@@ -238,14 +238,16 @@ public class ProcessRunner implements Runnable {
 
 			String[] envp = createEnvVarArray();
 			proc = Runtime.getRuntime().exec(commandLine, envp, dir);
-System.out.println("... ... pr debug: appendEnv == " + appendEnv);
+
 			// Create threads to read the stdout and stderr of the external
 			// process.  If we do not do it this way, the process may
 			// deadlock.
 			InputStream errStream = proc.getErrorStream();
 			InputStream outStream = proc.getInputStream();
-			stdoutThread = new StreamReaderThread(outStream, outputListener, true);
-			stderrThread = new StreamReaderThread(errStream, outputListener, false);
+			stdoutThread = new StreamReaderThread(proc, outStream,
+													outputListener, true);
+			stderrThread = new StreamReaderThread(proc, errStream,
+													outputListener, false);
 			stdoutThread.start();
 			stderrThread.start();
 
@@ -283,6 +285,10 @@ System.out.println("... ... pr debug: appendEnv == " + appendEnv);
 			if (proc!=null) {
 				proc.destroy();
 			}
+		}
+
+		if (outputListener!=null) {
+			outputListener.processCompleted(proc, rc, lastError);
 		}
 
 	}
@@ -370,6 +376,7 @@ System.out.println("... ... pr debug: appendEnv == " + appendEnv);
 	 */
 	static class StreamReaderThread extends Thread {
 
+		private Process p;
 		private BufferedReader r;
 		private StringBuffer buffer;
 		private ProcessRunnerOutputListener listener;
@@ -378,15 +385,17 @@ System.out.println("... ... pr debug: appendEnv == " + appendEnv);
 		/**
 		 * Constructor.
 		 * 
+		 * @param p The running process.
 		 * @param in The stream (stdout or stderr) to read from.
 		 * @param listener A listener to send notification to as
 		 *        output is read.  This can be <code>null</code>.
 		 * @param isStdout Whether this thread is reading stdout (as
 		 *        opposed to stderr).
 		 */
-		public StreamReaderThread(InputStream in,
+		public StreamReaderThread(Process p, InputStream in,
 							ProcessRunnerOutputListener listener,
 							boolean isStdout) {
+			this.p = p;
 			r = new BufferedReader(new InputStreamReader(in));
 			this.buffer = new StringBuffer();
 			this.listener = listener;
@@ -412,7 +421,7 @@ System.out.println("... ... pr debug: appendEnv == " + appendEnv);
 				while ((line=r.readLine())!=null) {
 					buffer.append(line).append('\n');
 					if (listener!=null) {
-						listener.outputWritten(line, isStdout);
+						listener.outputWritten(p, line, isStdout);
 					}
 				}
 			} catch (IOException ioe) {

@@ -45,6 +45,16 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	public static final String ACTIVE_PROPERTY	= "DockableWindowActive";
 
 	/**
+	 * Property fired when a dockable window's name changes.
+	 */
+	public static final String NAME_PROPERTY	= "DockableWindowName";
+
+	/**
+	 * Property fired when a dockable window's title changes.
+	 */
+	public static final String TITLE_PROPERTY	= "DockableWindowTitle";
+
+	/**
 	 * The position of the dockable window with respect to the main
 	 * application window.  One of <code>TOP</code>, <code>LEFT</code>,
 	 * <code>BOTTOM</code>, <code>RIGHT</code>, or <code>FLOATING</code>.
@@ -60,6 +70,12 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	 * The "name" of this dockable window (displayed in tabs, etc.).
 	 */
 	private String dockableWindowName;
+
+	/**
+	 * The "title" of this dockable window (displayed in the title bar).
+	 * If this is <code>null</code>, the name will be displayed instead.
+	 */
+	private String dockableWindowTitle;
 
 	/**
 	 * The icon for this window.
@@ -159,9 +175,26 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	 *
 	 * @return The name of this dockable window.
 	 * @see #setDockableWindowName(String)
+	 * @see #getDockableWindowTitle()
 	 */
 	public String getDockableWindowName() {
 		return dockableWindowName;
+	}
+
+
+	/**
+	 * Returns the title of this dockable window.  The is displayed in the top
+	 * colored area of the dockable window tabbed pane, or as the title in
+	 * the floating window if this dockable window is floating.
+	 *
+	 * @return The title of this dockable window.  If no value has been set,
+	 *         this will be the name of this dockable window.
+	 * @see #setDockableWindowTitle(String)
+	 * @see #getDockableWindowName()
+	 */
+	public String getDockableWindowTitle() {
+		return dockableWindowTitle!=null ? dockableWindowTitle :
+					getDockableWindowName();
 	}
 
 
@@ -243,15 +276,42 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 
 
 	/**
-	 * Returns the name of this dockable window.  The name is
-	 * displayed on tabs, etc.
+	 * Sets the name of this dockable window.  The name is displayed on tabs,
+	 * etc.  This method fires a property change event of type
+	 * {@link #NAME_PROPERTY}.
 	 *
 	 * @param name The name of this dockable window.
 	 * @see #getDockableWindowName()
+	 * @see #setDockableWindowTitle(String)
 	 */
 	public void setDockableWindowName(String name) {
-		dockableWindowName = name;
-		// TODO: Dynamically update tabs, etc.
+		if ((name==null && dockableWindowName!=null) ||
+				(name!=null && !name.equals(dockableWindowName))) {
+			String old = dockableWindowName;
+			dockableWindowName = name;
+			firePropertyChange(NAME_PROPERTY, old, dockableWindowName);
+		}
+	}
+
+
+	/**
+	 * Sets the title of this dockable window.  The is displayed in the top
+	 * colored area of the dockable window tabbed pane, or as the title in
+	 * the floating window if this dockable window is floating.  This method
+	 * fires a property change event of type {@link #TITLE_PROPERTY}.
+	 *
+	 * @param title The title of this dockable window.  If this is
+	 *        <code>null</code>, the name of this window will be used.
+	 * @see #getDockableWindowTitle()
+	 * @see #setDockableWindowName(String)
+	 */
+	public void setDockableWindowTitle(String title) {
+		if ((title==null && dockableWindowTitle!=null) ||
+				(title!=null && !title.equals(dockableWindowTitle))) {
+			String old = dockableWindowTitle;
+			dockableWindowTitle = title;
+			firePropertyChange(TITLE_PROPERTY, old, dockableWindowTitle);
+		}
 	}
 
 
@@ -275,7 +335,7 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	 * @param newPos One of <code>TOP</code>, <code>LEFT</code>,
 	 *        <code>BOTTOM</code>, <code>RIGHT</code>, or
 	 *        <code>FLOATING</code>.
-	 * @see #getPosition
+	 * @see #getPosition()
 	 */
 	public void setPosition(int newPos) {
 		if (newPos!=position && isValidPosition(newPos)) {

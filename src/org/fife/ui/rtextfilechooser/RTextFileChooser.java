@@ -1739,9 +1739,14 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		actionMap.put("OnDelete", deleteAction);
 
 		// Have Backspace go "up one level."
-		ks = (KeyStroke)upOneLevelAction.getValue(Action.ACCELERATOR_KEY);
-		inputMap.put(ks, "OnBackspace");
-		actionMap.put("OnBackspace", upOneLevelAction);
+		// This causes problems on OS X (action occurs even it back space is
+		// done in a text field - text field processes the key stroke, then the
+		// dialog does too!).
+		if (System.getProperty("os.name").toLowerCase().indexOf("os x")==1) {
+			ks = (KeyStroke)upOneLevelAction.getValue(Action.ACCELERATOR_KEY);
+			inputMap.put(ks, "OnBackspace");
+			actionMap.put("OnBackspace", upOneLevelAction);
+		}
 
 		// Have F5 refresh the displayed files.
 		ks = (KeyStroke)refreshAction.getValue(Action.ACCELERATOR_KEY);

@@ -23,7 +23,6 @@
 package org.fife.ui.app;
 
 import javax.swing.Icon;
-import javax.swing.JMenu;
 
 
 /**
@@ -52,19 +51,6 @@ public interface Plugin {
 
 
 	/**
-	 * Returns whether this plugin wants its menu added to an application's
-	 * "Plugins" menu.  Some plugins might not want to do this; for example,
-	 * {@link org.fife.ui.app.MenuPlugin}s have their own menu and do not
-	 * want to be a submenu under "Plugins".
-	 *
-	 * @return Whether or not this plugin should have its menu put under
-	 *         the "Plugins" menu.
-	 * @see #getPluginMenu()
-	 */
-	public boolean getAddToPluginMenu();
-
-
-	/**
 	 * Returns an options panel for use in an Options dialog.  This panel
 	 * should contain all options pertaining to this plugin.
 	 *
@@ -89,14 +75,6 @@ public interface Plugin {
 	 *         to represent no icon.
 	 */
 	public Icon getPluginIcon();
-
-
-	/**
-	 * Returns the menu for this plugin.
-	 *
-	 * @return The menu for this plugin.
-	 */
-	public JMenu getPluginMenu();
 
 
 	/**

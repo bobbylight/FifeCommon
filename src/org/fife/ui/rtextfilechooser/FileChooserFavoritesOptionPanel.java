@@ -462,10 +462,6 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 			}
 		}
 
-		public boolean isCellEditable(int row, int column) {
-			return false;
-		}
-
 		public void setChooserFavorites(RTextFileChooser chooser) {
 			chooser.clearFavorites();
 			for (int i=0; i<getRowCount(); i++) {

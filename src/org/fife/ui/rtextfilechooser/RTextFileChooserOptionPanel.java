@@ -416,20 +416,8 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 
 		private static final long serialVersionUID = 1L;
 
-		private String[] columnNames;
-
 		public ColorTableModel(String extensionHeader, String colorHeader) {
-			columnNames = new String[2];
-			columnNames[0] = extensionHeader;
-			columnNames[1] = colorHeader;
-		}
-
-		public int getColumnCount() {
-			return columnNames.length;
-		}
-
-		public String getColumnName(int column) {
-			return columnNames[column];
+			super(new Object[] { extensionHeader, colorHeader }, 0);
 		}
 
 		public void initCustomColorTable(RTextFileChooser chooser) {
@@ -451,10 +439,6 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 					addRow(v);
 				}
 			}
-		}
-
-		public boolean isCellEditable(int row, int column) {
-			return false;
 		}
 
 	}

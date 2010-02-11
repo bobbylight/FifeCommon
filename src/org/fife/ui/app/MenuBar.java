@@ -22,6 +22,8 @@
  */
 package org.fife.ui.app;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import javax.swing.Action;
@@ -41,6 +43,12 @@ import javax.swing.KeyStroke;
 public class MenuBar extends JMenuBar {
 
 	private static final String MNEMONIC_SUFFIX	= ".Mnemonic";
+
+	/**
+	 * Registry of "named" menus, so you can grab a specific menu without
+	 * knowing the order of menus in this menu bar.
+	 */
+	private Map namedMenus;
 
 
 	/**
@@ -231,6 +239,39 @@ public class MenuBar extends JMenuBar {
 	 */
 	protected int getExtraMenuInsertionIndex() {
 		return getMenuCount()-1;
+	}
+
+
+	/**
+	 * Returns the menu registered with the specified name.
+	 *
+	 * @param name The name.
+	 * @return The menu, or <code>null</code> if no menu was registered with
+	 *         that name.
+	 * @see #registerMenuByName(String, JMenu)
+	 */
+	public JMenu getMenuByName(String name) {
+		return namedMenus!=null ? (JMenu)namedMenus.get(name) : null;
+	}
+
+
+	/**
+	 * Associates a name with a menu.  This allows applications to easily
+	 * grab specific menus in this menu bar, without knowing the order of
+	 * the menus.
+	 *
+	 * @param name The name.  This cannot be <code>null</code>.
+	 * @param menu The menu.
+	 * @see #getMenuByName(String)
+	 */
+	public void registerMenuByName(String name, JMenu menu) {
+		if (name==null) { // HashMap permits null.
+			throw new NullPointerException("menu name cannot be null");
+		}
+		if (namedMenus==null) {
+			namedMenus = new HashMap();
+		}
+		namedMenus.put(name, menu);
 	}
 
 

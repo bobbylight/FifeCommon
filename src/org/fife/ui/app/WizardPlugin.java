@@ -38,8 +38,7 @@ import javax.swing.ImageIcon;
  * @see org.fife.ui.app.Plugin
  * @see org.fife.ui.app.GUIApplication
  */
-public abstract class WizardPlugin implements Plugin,
-							GUIApplicationConstants {
+public abstract class WizardPlugin implements Plugin, GUIApplicationConstants {
 
 	public static final int CANCEL	= 0;
 	public static final int SUCCESSFUL	= 1;
@@ -84,21 +83,6 @@ public abstract class WizardPlugin implements Plugin,
 	 * panels.
 	 */
 	protected abstract void createPanels();
-
-
-	/**
-	 * Returns whether this plugin wants its menu added to an application's
-	 * "Plugins" menu.  The default implementation returns <code>true</code>.
-	 * Override this method if you don't want this plugin's menu under the
-	 * Plugins menu.
-	 *
-	 * @return Whether or not this plugin should have its menu put under
-	 *         the "Plugins" menu.
-	 * @see org.fife.ui.app.Plugin#getPluginMenu()
-	 */
-	public boolean getAddToPluginMenu() {
-		return true;
-	}
 
 
 	/**

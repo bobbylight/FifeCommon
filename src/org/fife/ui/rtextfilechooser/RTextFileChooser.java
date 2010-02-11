@@ -1935,6 +1935,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			return;
 		}
 
+		if (encoding==null) {
+			encoding = getDefaultEncoding();
+		}
 		Charset cs1 = Charset.forName(encoding);
 		int count = encodingCombo.getItemCount();
 		for (int i=0; i<count; i++) {

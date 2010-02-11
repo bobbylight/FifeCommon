@@ -304,6 +304,9 @@ public class ModifiableTable extends JPanel {
 				return parent instanceof JViewport ?
 					parent.getHeight()>getPreferredSize().height : false;
 			}
+			public boolean isCellEditable(int row, int col) {
+				return false;
+			}
 		};
 		table.setShowGrid(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

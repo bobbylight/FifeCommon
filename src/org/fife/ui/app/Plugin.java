@@ -107,10 +107,7 @@ public interface Plugin {
 
 	/**
 	 * Called when the GUI application is shutting down.  When this method is
-	 * called, the <code>Plugin</code> should save any properties via the
-	 * Java Preferences API.
-	 *
-	 * @see PluginPreferences
+	 * called, the <code>Plugin</code> should save any preferences.
 	 */
 	public void savePreferences();
 

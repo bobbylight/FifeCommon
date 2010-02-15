@@ -1,7 +1,7 @@
 /*
  * 12/28/2004
  *
- * GUIPlugin.java - A GUI plugin for an AbstractPluggableGUIApplication.
+ * GUIPlugin.java - A plugin that includes 1 or more dockable windows.
  * Copyright (C) 2004 Robert Futrell
  * robert_futrell at users.sourceforge.net
  * http://fifesoft.com
@@ -22,71 +22,72 @@
  */
 package org.fife.ui.app;
 
-import javax.swing.Icon;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.fife.ui.dockablewindows.DockableWindow;
 
 
 /**
- * A plugin that is a panel either docked to one of the four sides of
- * a GUI application's window, or in a floating window.
+ * A plugin thats includes one or more dockable windows.
  *
  * @author Robert Futrell
- * @version 0.7
+ * @version 0.8
  * @see org.fife.ui.app.Plugin
  * @see org.fife.ui.app.AbstractPluggableGUIApplication
  * @see org.fife.ui.dockablewindows.DockableWindow
  */
-public abstract class GUIPlugin extends DockableWindow implements Plugin,
-										GUIApplicationConstants {
+public abstract class GUIPlugin implements Plugin, GUIApplicationConstants {
+
+	/**
+	 * Map of window ID's to dockable windows.
+	 */
+	private Map windowMap;
 
 
 	/**
-	 * Creates a preferences instance for this GUI plugin based on its
-	 * current properties.  Your GUI plugin should create a subclass of
-	 * <code>GUIPluginPreferences</code> that loads and saves properties
-	 * specific to your plugin, and return it from this method.
-	 *
-	 * @return A preferences instance.
-	 * @see GUIPluginPreferences
+	 * Constructor.
 	 */
-	protected abstract GUIPluginPreferences createPreferences();
-
-
-	/**
-	 * Returns the name of this dockable window.  The name is
-	 * displayed on tabs, etc.
-	 *
-	 * @return The name of this dockable window.
-	 * @see #setDockableWindowName(String)
-	 */
-	public String getDockableWindowName() {
-		return getPluginName();
+	public GUIPlugin() {
+		windowMap = new HashMap();
 	}
 
 
 	/**
-	 * Returns the icon to display beside the name of this dockable window
-	 * in the application's interface.
+	 * Returns an iterator over all dockable windows in this plugin.
 	 *
-	 * @return The icon for this dockable window.  This value may be
-	 *         <code>null</code> to represent no icon.
+	 * @return An iterator.
+	 * @see #getDockableWindow(String)
 	 */
-	public Icon getIcon() {
-		return getPluginIcon();
+	public Iterator dockableWindowIterator() {
+		return windowMap.values().iterator();
 	}
 
 
 	/**
-	 * Called when the GUI application is shutting down.  When this method is
-	 * called, the <code>Plugin</code> should save any properties via the
-	 * Java Preferences API.
+	 * Returns a dockable window.
 	 *
-	 * @see PluginPreferences
-	 * @see GUIPluginPreferences
+	 * @param id The id for the dockable window.
+	 * @return The dockable window, or <code>null</code> if no dockable
+	 *         window is associated with that identifier.
+	 * @see #putDockableWindow(String, DockableWindow)
+	 * @see #dockableWindowIterator()
 	 */
-	public void savePreferences() {
-		createPreferences().save();
+	public DockableWindow getDockableWindow(String id) {
+		return (DockableWindow)windowMap.get(id);
+	}
+
+
+	/**
+	 * Associates a dockable window with an identifier.
+	 *
+	 * @param id The identifier.
+	 * @param window The dockable window.
+	 * @see #getDockableWindow(String)
+	 */
+	protected void putDockableWindow(String id, DockableWindow window) {
+		windowMap.put(id, window);
 	}
 
 

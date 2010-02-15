@@ -27,11 +27,13 @@ import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.JPanel;
 
 import org.fife.ui.OptionsDialog;
 import org.fife.ui.SplashScreen;
+import org.fife.ui.dockablewindows.DockableWindow;
 import org.fife.ui.dockablewindows.DockableWindowPanel;
 
 
@@ -351,27 +353,25 @@ public abstract class AbstractPluggableGUIApplication
 	private static final class MainContentPanel extends DockableWindowPanel {
 	
 		public boolean addPlugin(GUIPlugin plugin) {
-			return addDockableWindow(plugin);
-		}
-
-		/**
-		 * Returns all installed plugins.  This will return the actual
-		 * plugins, not deep copies, so any changes made to the returned
-		 * array will affect the actual Plugins themselves.
-		 *
-		 * @return All installed plugins.  If no plugins are installed, a
-		 *         zero-length array is returned.
-		 * @see #addPlugin
-		 * @see #removePlugin
-		 */
-		public Plugin[] getPlugins() {
-			Plugin[] plugins = new Plugin[windowList.size()];
-			plugins = (Plugin[])windowList.toArray(plugins);
-			return plugins;
+			boolean success = true;
+			for (Iterator i=plugin.dockableWindowIterator(); i.hasNext(); ) {
+				DockableWindow wind = (DockableWindow)i.next();
+				if (!addDockableWindow(wind)) {
+					success = false; // Any 1 failure => failure
+				}
+			}
+			return success;
 		}
 
 		public boolean removePlugin(GUIPlugin plugin) {
-			return removeDockableWindow(plugin);
+			boolean success = true;
+			for (Iterator i=plugin.dockableWindowIterator(); i.hasNext(); ) {
+				DockableWindow wind = (DockableWindow)i.next();
+				if (!removeDockableWindow(wind)) {
+					success = false; // Any 1 failure => failure
+				}
+			}
+			return success;
 		}
 
 	}

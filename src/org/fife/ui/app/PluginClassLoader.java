@@ -182,12 +182,12 @@ public class PluginClassLoader extends ClassLoader {
 
 		if (count>0) {
 
-			final Object[] objs = new Object[] { app };
-			Class[] params = new Class[] {
-									AbstractPluggableGUIApplication.class };
+			final Object[] objs = { app };
+			Class[] params = { AbstractPluggableGUIApplication.class };
 
 			for (int i=0; i<count; i++) {
 				try {
+					Thread.sleep(500); // Space the Runnables out a little
 					String className = (String)plugins.get(i);
 					className = className.substring(0, className.length()-6);
 					Class c = loadClass(className);
@@ -217,10 +217,13 @@ public class PluginClassLoader extends ClassLoader {
 							"'Plugin' that does not extend class Plugin: " +
 							className);
 					}
-					Thread.sleep(500); // Space the Runnables out a little
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					e.printStackTrace();
-					app.displayException(e);
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							app.displayException(e);
+						}
+					});
 				}
 			}
 

@@ -34,6 +34,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Properties;
+import javax.swing.KeyStroke;
 
 
 
@@ -107,6 +108,7 @@ import java.util.Properties;
  *    <li>String
  *    <li>File
  *    <li>Color
+ *    <li>KeyStroke
  * </ul>
  *  
  * @author Robert Futrell
@@ -290,6 +292,13 @@ public abstract class Prefs {
 						}
 					}
 
+					else if (KeyStroke.class==type) {
+						if (value.length()>0) {
+							// returns null if formatted incorrectly
+							obj = KeyStroke.getKeyStroke((String)value);
+						}
+					}
+
 					else {
 						throw new IOException("Unhandled field type for " +
 								"field: " + name + " (" + type + ")");
@@ -371,13 +380,28 @@ public abstract class Prefs {
 				}
 
 				else if (File.class==type) {
-					File file = (File)value;
-					strVal = file.getAbsolutePath();
+					if (value!=null) {
+						File file = (File)value;
+						strVal = file.getAbsolutePath();
+					}
+				}
+
+				else if (KeyStroke.class==type) {
+					if (value!=null) {
+						KeyStroke ks = (KeyStroke)value;
+						strVal = ks.toString();
+					}
 				}
 
 				else {
 					throw new IOException("Unhandled field type for field: " +
 							name + " (" + type + ")");
+				}
+
+				// If null value/error parsing number occurred (Properties
+				// won't take null values)
+				if (strVal==null) {
+					strVal = "";
 				}
 
 				props.setProperty(name, strVal);

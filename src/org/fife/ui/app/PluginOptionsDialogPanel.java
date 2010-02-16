@@ -22,8 +22,6 @@
  */
 package org.fife.ui.app;
 
-import javax.swing.Icon;
-
 import org.fife.ui.OptionsDialogPanel;
 
 
@@ -58,16 +56,7 @@ public abstract class PluginOptionsDialogPanel extends OptionsDialogPanel {
 	public PluginOptionsDialogPanel(String name, Plugin plugin) {
 		super(name);
 		this.plugin = plugin;
-	}
-
-
-	/**
-	 * Returns the icon to display for this options panel, if any.
-	 *
-	 * @return The icon for this options dialog panel, if any.
-	 */
-	public Icon getIcon() {
-		return getPlugin().getPluginIcon();
+		setIcon(plugin.getPluginIcon());
 	}
 
 

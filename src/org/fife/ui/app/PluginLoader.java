@@ -24,29 +24,33 @@ package org.fife.ui.app;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.InputStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import javax.swing.SwingUtilities;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Enumeration;
 import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
+import java.util.jar.Manifest;
 
 
 /**
- * The class loader for all <code>AbstractPluggableGUIApplication</code>
- * plugins.
+ * Loads {@link Plugin}s for an {@link AbstractPluggableGUIApplication}.  This
+ * should be instantiated in a separate thread; it handles adding any found
+ * <code>Plugin</code>s to the parent application on the EDT properly.
  *
  * @author Robert Futrell
- * @version 0.1
+ * @version 0.5
  * @see AbstractPluggableGUIApplication
  */
-public class PluginClassLoader extends ClassLoader {
+class PluginLoader {
+
+	/**
+	 * The manifest attribute that plugin jars must define that specifies
+	 * the main <code>Plugin</code> class.
+	 */
+	public static final String PLUGIN_CLASS_ATTR = "Fife-Plugin-Class";
 
 	/**
 	 * The GUI application that owns this class loader.
@@ -59,11 +63,9 @@ public class PluginClassLoader extends ClassLoader {
 	private File pluginDir;
 
 	/**
-	 * A hashmap mapping resources to the Jar files they're in.
+	 * Class loader pointing to all plugin jars.
 	 */
-	private HashMap hashMap;
-
-	private static final String SEPARATOR = File.separator;
+	private URLClassLoader ucl;
 
 
 	/**
@@ -73,42 +75,50 @@ public class PluginClassLoader extends ClassLoader {
 	 * @param app The GUI application.
 	 * @throws IOException If an I/O error occurs.
 	 */
-	public PluginClassLoader(AbstractPluggableGUIApplication app)
+	public PluginLoader(AbstractPluggableGUIApplication app)
 											throws IOException {
 
-		super(app.getClass().getClassLoader());
 		this.app = app;
-		hashMap = new HashMap();
 		pluginDir = new File(app.getInstallLocation(), "plugins");
-		if (!pluginDir.isDirectory())
+		if (!pluginDir.isDirectory()) {
 			return;
+		}
 
+		// Get all jars in the plugin directory.
 		File[] jars = pluginDir.listFiles(new FileFilter() {
 			public boolean accept(File f) {
 				return f.getName().endsWith(".jar");
 			}
 		});
 		int jarCount = jars.length;
-		//System.err.println("... jarCount: " + jarCount);
 
 		ArrayList plugins = new ArrayList();
+		ArrayList urlList = new ArrayList();
 
 		for (int i=0; i<jarCount; i++) {
+
+			urlList.add(jars[i].toURI().toURL());
+
 			JarFile jarFile = new JarFile(jars[i]);
 			try {
-				Enumeration entires = jarFile.entries();
-				while (entires.hasMoreElements()) {
-					ZipEntry entry = (ZipEntry)entires.nextElement();
-					String name = entry.getName();
-					if (name.endsWith("Plugin.class")) {
-						plugins.add(name);
+				// If this jar contains a plugin, remember the class to load.
+				Manifest mf = jarFile.getManifest();
+				if (mf!=null) {
+					String clazz= mf.getMainAttributes().
+												getValue(PLUGIN_CLASS_ATTR);
+					if (clazz!=null) {
+						plugins.add(clazz);
 					}
-					hashMap.put(name, jars[i].getAbsolutePath());
 				}
 			} finally {
 				jarFile.close();
 			}
+
 		}
+
+		// Create the ClassLoader that does the actual dirty-work.
+		URL[] urls = (URL[])urlList.toArray(new URL[urlList.size()]);
+		ucl = new URLClassLoader(urls, app.getClass().getClassLoader());
 
 		loadPlugins(plugins);
 
@@ -116,66 +126,11 @@ public class PluginClassLoader extends ClassLoader {
 
 
 	/**
-	 * Finds the specified class.  This method is invoked by
-	 * <code>loadClass</code> after checking to see if the class has already
-	 * been loaded, and then checking the parent class loader for it.
+	 * Loads the main plugin classes, and adds the resulting {@link Plugin}s
+	 * to the application.
 	 *
-	 * @param name The name of the class.
-	 * @return The resulting class object.
-	 * @throws ClassNotFoundException If the class could not be found.
+	 * @param plugins The list of plugin classes.
 	 */
-	protected Class findClass(String name) throws ClassNotFoundException {
-		 // Sometimes we'll get slashes, others dots.
-		name = name.replaceAll("\\.", "/");
-		Object jarFileName = hashMap.get(name + ".class");
-		if (jarFileName==null)
-			throw new ClassNotFoundException(name);
-		try {
-			JarFile jarFile = new JarFile((String)jarFileName);
-			ZipEntry entry = jarFile.getEntry(name + ".class");
-			if (entry==null) // Should never happen.
-				throw new ClassNotFoundException(name);
-			InputStream in = jarFile.getInputStream(entry);
-			int length = (int)entry.getSize();
-			byte[] data = new byte[length];
-			int bytesRead = 0;
-			int offset = 0;
-			while (length>0) {
-				int temp = in.read(data, offset,length);
-				if (temp==-1)
-					throw new ClassNotFoundException(name);
-				offset += temp;
-				bytesRead += temp;
-				length -= temp;
-			}
-			in.close();
-			name = name.replaceAll("/", ".");
-			Class c = defineClass(name, data, 0,data.length);
-			return c;
-		} catch (IOException ioe) {
-			app.displayException(ioe);
-		}
-		throw new ClassNotFoundException(name);
-	}
-
-
-	public URL findResource(String name) {
-		Object jarFileName = hashMap.get(name);
-		if (jarFileName==null)
-			return null;
-		String jar = (String)jarFileName;
-		if (SEPARATOR.equals("\\"))
-			jar = jar.replaceAll("\\\\", "/");
-		try {
-			return new URL("jar:file:" + jar + "!/" + name);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			// Fall through.
-		}
-		return null;
-	}
-
-
 	private void loadPlugins(ArrayList plugins) {
 
 		int count = plugins.size();
@@ -189,8 +144,7 @@ public class PluginClassLoader extends ClassLoader {
 				try {
 					Thread.sleep(500); // Space the Runnables out a little
 					String className = (String)plugins.get(i);
-					className = className.substring(0, className.length()-6);
-					Class c = loadClass(className);
+					Class c = ucl.loadClass(className);
 					// Class ended in "Plugin.class", but if it's not actually
 					// a subclass of Plugin, then we have an error.
 					if (Plugin.class.isAssignableFrom(c)) {

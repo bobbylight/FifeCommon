@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import org.fife.ui.OptionsDialog;
 import org.fife.ui.SplashScreen;
@@ -251,7 +252,7 @@ public abstract class AbstractPluggableGUIApplication
 
 
 	/**
-	 * Loads plugins.  This is called in a separate thread to offset plugin
+	 * Loads plugins.  This is done in a separate thread to offset plugin
 	 * loading from the EDT.  GUI plugins will be added to the GUI on the
 	 * EDT.
 	 */
@@ -259,10 +260,14 @@ public abstract class AbstractPluggableGUIApplication
 		new Thread() {
 			public void run() {
 				try {
-					/*pluginClassLoader = */new PluginClassLoader(
+					/*pluginClassLoader = */new PluginLoader(
 								AbstractPluggableGUIApplication.this);
-				} catch (IOException ioe) {
-					displayException(ioe);
+				} catch (final IOException ioe) {
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							displayException(ioe);
+						}
+					});
 				}
 			}
 		}.start();

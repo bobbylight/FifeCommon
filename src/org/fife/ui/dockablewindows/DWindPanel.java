@@ -70,6 +70,7 @@ class DWindPanel extends JPanel {
 	public boolean addDockableWindow(DockableWindow window) {
 		tabbedPane.addTab(window.getDockableWindowName(),
 						window.getIcon(), window);
+		tabbedPane.setSelectedIndex(tabbedPane.getTabCount()-1);
 		// Force title panel to update as sometimes JTabbedPane doesn't
 		// fire stateChanged() events (if active index doesn't change).
 		titlePanel.stateChanged(null);

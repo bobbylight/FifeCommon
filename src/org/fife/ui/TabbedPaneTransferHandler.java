@@ -105,7 +105,9 @@ public class TabbedPaneTransferHandler extends TransferHandler
 
 	public void dragExit(DropTargetEvent e) {
 		Component c = e.getDropTargetContext().getComponent();
-		((DrawDnDIndicatorTabbedPane)c).clearDnDIndicatorRect();
+		if (c instanceof DrawDnDIndicatorTabbedPane) {
+			((DrawDnDIndicatorTabbedPane)c).clearDnDIndicatorRect();
+		}
 	}
 
 
@@ -124,8 +126,8 @@ public class TabbedPaneTransferHandler extends TransferHandler
 		// the rectangle to paint for the new tab.
 		if (destTabbedPane instanceof DrawDnDIndicatorTabbedPane) {
 
-			// Verify it's a tab transferrable (as this class may be
-			// subclassed to support other transferrable types).
+			// Verify it's a tab transferable (as this class may be
+			// subclassed to support other transferable types).
 			TabTransferable t = currentTransferable;
 			if (t!=null) {
 
@@ -165,7 +167,12 @@ public class TabbedPaneTransferHandler extends TransferHandler
 	}
 
 
-	public void drop(DropTargetDropEvent e) {}
+	public void drop(DropTargetDropEvent e) {
+		Component c = e.getDropTargetContext().getComponent();
+		if (c instanceof DrawDnDIndicatorTabbedPane) {
+			((DrawDnDIndicatorTabbedPane)c).clearDnDIndicatorRect();
+		}
+	}
 
 
 	public void dropActionChanged(DropTargetDragEvent e) {}

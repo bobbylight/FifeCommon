@@ -120,7 +120,13 @@ public class DockableWindowPanel extends JPanel
 				}
 				int current = floatingWindows.length - 1;
 				floatingWindows[current] = createFloatingWindowFrame(window);
+				Window focused = KeyboardFocusManager.
+						getCurrentKeyboardFocusManager().getFocusedWindow();
 				floatingWindows[current].setVisible(true);
+				// Keep focus on "main" window.
+				if (focused!=null) {
+					focused.requestFocus();
+				}
 				addListeners(window);
 				return true;
 
@@ -310,7 +316,12 @@ public class DockableWindowPanel extends JPanel
 				}
 			}
 			if (!found) {
-				for (int i=0; i<floatingWindows.length; i++) {
+				// floatingWindows should never be null, but I've had it
+				// happen while testing stuff out, so err on the side of
+				// caution (in case I accidentally leave some buggy code
+				// somewhere else).
+				int count = floatingWindows==null ? 0 : floatingWindows.length;
+				for (int i=0; i<count; i++) {
 					if (w==floatingWindows[i].getDockableWindow()) {
 						floatingWindows[i].refreshTitle(); // In case it changed too
 					}

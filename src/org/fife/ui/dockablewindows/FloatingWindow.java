@@ -22,6 +22,8 @@
  */
 package org.fife.ui.dockablewindows;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 
 
@@ -42,6 +44,8 @@ class FloatingWindow extends JFrame {
 	public FloatingWindow(DockableWindow window) {
 		setContentPane(window);
 		setTitle(window.getDockableWindowTitle());
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		addWindowListener(new Listener());
 	}
 
 
@@ -68,6 +72,20 @@ class FloatingWindow extends JFrame {
 			return true;
 		}
 		return false;
+	}
+
+
+	/**
+	 * Listens for window events.
+	 */
+	private class Listener extends WindowAdapter {
+
+		public void windowClosing(WindowEvent e) {
+			// Causes this window to close, but also updates all dockable
+			// window-related stuff.
+			getDockableWindow().setActive(false);
+		}
+
 	}
 
 

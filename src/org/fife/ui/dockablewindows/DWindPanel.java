@@ -193,7 +193,7 @@ class DWindPanel extends JPanel {
 	/**
 	 * The tabbed pane use to switch between multiple grouped docked windows.
 	 */
-	private static class DockedTabbedPane extends JTabbedPane {
+	private class DockedTabbedPane extends JTabbedPane {
 
 		public DockedTabbedPane() {
 			super(BOTTOM);

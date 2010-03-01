@@ -265,9 +265,7 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 
 		super.pack();
 
-System.out.println("*** " + getWidth() + ", " + getPreferredSize().width);
 		if (getWidth()>MAX_WIDTH && getHeight()<200) {
-System.out.println("Here!!!");
 			setSize(MAX_WIDTH, 200);
 		}
 

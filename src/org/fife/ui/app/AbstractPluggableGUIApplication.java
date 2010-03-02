@@ -58,10 +58,10 @@ public abstract class AbstractPluggableGUIApplication
 	 */
 	private PluginOptionsDialog pluginOptionsDialog;
 
-//	/**
-//	 * The class loader used for plugin stuff.
-//	 */
-//	private PluginClassLoader pluginClassLoader;
+	/**
+	 * The class loader used for plugin stuff.
+	 */
+	private PluginLoader pluginLoader;
 
 
 	/**
@@ -104,11 +104,13 @@ public abstract class AbstractPluggableGUIApplication
 
 
 	/**
-	 * Adds a plugin to this GUI application.
+	 * Adds a plugin to this GUI application.  Note this should only be called
+	 * on the EDT.
 	 *
 	 * @param plugin The plugin to add.
 	 * @see #handleInstallPlugin
 	 * @see #removePlugin
+	 * @see #isPluginLoadingComplete()
 	 */
 	public final void addPlugin(Plugin plugin) {
 
@@ -194,13 +196,14 @@ public abstract class AbstractPluggableGUIApplication
 
 	/**
 	 * Returns all installed plugins.  Note that this returns the actual
-	 * plugins and not deep copies, so any changes made to the plugin
-	 * array will affect the application itself.
+	 * plugins and not deep copies, so any changes made to the plugins in
+	 * the array will affect the application itself.
 	 *
 	 * @return All installed plugins.  If no plugins are installed, a
 	 *         zero-length array is returned.
-	 * @see #addPlugin
-	 * @see #removePlugin
+	 * @see #addPlugin(Plugin)
+	 * @see #removePlugin(Plugin)
+	 * @see #isPluginLoadingComplete()
 	 */
 	public Plugin[] getPlugins() {
 		int count = pluginList==null ? 0 : pluginList.size();
@@ -239,15 +242,29 @@ public abstract class AbstractPluggableGUIApplication
 
 	/**
 	 * Does the dirty work of actually installing a plugin.  This method
-	 * should be overridden by subclasses to do stuff as appropriate for
-	 * a plugin.  A subclass of {@link org.fife.ui.app.GUIPlugin} will
-	 * already have been added to the GUI; everything else (such as adding
-	 * the plugin's popup menu to your menu bar) you must do yourself.
+	 * should be overridden by subclasses to do stuff as appropriate for a
+	 * plugin.  A subclass of {@link org.fife.ui.app.GUIPlugin} will already
+	 * have its dockable windows added to the GUI; anything else that is
+	 * application-specific should be done here.<p>
+	 *
 	 * This default version of the method does nothing.
 	 *
 	 * @param plugin The plugin to install.
 	 */
 	protected void handleInstallPlugin(Plugin plugin) {
+	}
+
+
+	/**
+	 * Returns whether all plugins have been loaded for this application.
+	 * This does not count plugins added programmatically via
+	 * {@link #addPlugin(Plugin)}, although that isn't usually done (plugins
+	 * are usually all loaded automatically by the {@link PluginLoader}).
+	 *
+	 * @return Whether the loading of plugins is complete.
+	 */
+	public boolean isPluginLoadingComplete() {
+		return pluginLoader!=null && pluginLoader.isPluginLoadingComplete();
 	}
 
 
@@ -260,8 +277,9 @@ public abstract class AbstractPluggableGUIApplication
 		new Thread() {
 			public void run() {
 				try {
-					/*pluginClassLoader = */new PluginLoader(
+					pluginLoader = new PluginLoader(
 								AbstractPluggableGUIApplication.this);
+					pluginLoader.loadPlugins();
 				} catch (final IOException ioe) {
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
@@ -295,10 +313,12 @@ public abstract class AbstractPluggableGUIApplication
 
 
 	/**
-	 * Tries to uninstall and remove the specified plugin.
+	 * Tries to uninstall and remove the specified plugin.  This should only
+	 * be called on the EDT.
 	 *
 	 * @param plugin The plugin to remove.
 	 * @return Whether the uninstall was successful.
+	 * @see #addPlugin(Plugin)
 	 */
 	public boolean removePlugin(Plugin plugin) {
 

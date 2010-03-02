@@ -280,7 +280,7 @@ public abstract class Prefs {
 						if (value.length()==9 && value.charAt(0)=='$') {
 							long temp = Long.parseLong(value.substring(1), 16);
 							int rgba = (int)(temp & 0xffffffff);
-							System.out.println("... " + temp + " > " + rgba);
+							//System.out.println("... " + temp + " > " + rgba);
 							obj = new Color(rgba, true);
 						}
 					}

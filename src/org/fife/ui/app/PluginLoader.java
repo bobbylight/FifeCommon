@@ -41,7 +41,7 @@ import java.util.jar.Manifest;
  * <code>Plugin</code>s to the parent application on the EDT properly.
  *
  * @author Robert Futrell
- * @version 0.5
+ * @version 0.6
  * @see AbstractPluggableGUIApplication
  */
 class PluginLoader {
@@ -67,19 +67,106 @@ class PluginLoader {
 	 */
 	private URLClassLoader ucl;
 
+	/**
+	 * Indicates whether all plugins have been submitted to load.  Access to
+	 * this member should be synchronized.
+	 *
+	 * @see #loadingPluginCount
+	 */
+	private boolean pluginSubmissionsCompleted;
 
 	/**
-	 * Constructor.  This method is thread-safe; it ensures that all
-	 * plugins are added to the GUI on the EDT if necessary.
+	 * Indicates how many plugins have been submitted to load, but not yet
+	 * loaded.  Access to this member should be synchronized.
+	 *
+	 * @see #pluginSubmissionsCompleted
+	 */
+	private int loadingPluginCount;
+
+	/**
+	 * The amount of time to sleep, in milliseconds, between loading each
+	 * plugin.
+	 */
+	private static final int SLEEP_TIME						= 500;
+
+
+	/**
+	 * Constructor.
 	 *
 	 * @param app The GUI application.
-	 * @throws IOException If an I/O error occurs.
 	 */
-	public PluginLoader(AbstractPluggableGUIApplication app)
-											throws IOException {
-
+	public PluginLoader(AbstractPluggableGUIApplication app) {
 		this.app = app;
 		pluginDir = new File(app.getInstallLocation(), "plugins");
+	}
+
+
+	/**
+	 * Returns whether plugin loading has completed.
+	 *
+	 * @return Whether plugin loading has completed.
+	 */
+	public synchronized boolean isPluginLoadingComplete() {
+		return pluginSubmissionsCompleted && loadingPluginCount==0;
+	}
+
+
+	/**
+	 * Loads a single plugin.
+	 *
+	 * @param className The class name of the plugin.
+	 * @throws Exception If an error occurs.
+	 */
+	private void loadPluginImpl(String className) throws Exception {
+
+		final Object[] objs = { app };
+		Class[] params = { AbstractPluggableGUIApplication.class };
+		Class c = ucl.loadClass(className);
+
+		// This should be true unless there was an error in the manifest
+		if (Plugin.class.isAssignableFrom(c)) {
+			synchronized (this) {
+				loadingPluginCount++;
+			}
+			final Constructor cnst = c.getConstructor(params);
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						Plugin p = (Plugin)cnst.newInstance(objs);
+						app.addPlugin(p);
+					} catch (InvocationTargetException ite) {
+						Throwable e = ite.getTargetException();
+						e.printStackTrace();
+						app.displayException(e);
+					} catch (Exception e) {
+						e.printStackTrace();
+						app.displayException(e);
+					} finally {
+						synchronized (this) {
+							loadingPluginCount--;
+						}
+					}
+				}
+			});
+		}
+
+		else {
+			throw new InvalidPluginException(
+				"Specified plugin does not implement the Plugin interface: " +
+				className);
+		}
+
+	}
+
+
+	/**
+	 * Loads any plugins for this application.  This method is thread-safe; it
+	 * ensures all plugins are added to the GUI on the EDT if necessary.
+	 *
+	 * @throws IOException If an I/O error occurs.
+	 */
+	public void loadPlugins() throws IOException {
+
 		if (!pluginDir.isDirectory()) {
 			return;
 		}
@@ -104,8 +191,8 @@ class PluginLoader {
 				// If this jar contains a plugin, remember the class to load.
 				Manifest mf = jarFile.getManifest();
 				if (mf!=null) {
-					String clazz= mf.getMainAttributes().
-												getValue(PLUGIN_CLASS_ATTR);
+					String clazz = mf.getMainAttributes().
+											getValue(PLUGIN_CLASS_ATTR);
 					if (clazz!=null) {
 						plugins.add(clazz);
 					}
@@ -120,7 +207,7 @@ class PluginLoader {
 		URL[] urls = (URL[])urlList.toArray(new URL[urlList.size()]);
 		ucl = new URLClassLoader(urls, app.getClass().getClassLoader());
 
-		loadPlugins(plugins);
+		loadPluginsImpl(plugins);
 
 	}
 
@@ -131,56 +218,26 @@ class PluginLoader {
 	 *
 	 * @param plugins The list of plugin classes.
 	 */
-	private void loadPlugins(ArrayList plugins) {
+	private void loadPluginsImpl(ArrayList plugins) {
 
-		int count = plugins.size();
-
-		if (count>0) {
-
-			final Object[] objs = { app };
-			Class[] params = { AbstractPluggableGUIApplication.class };
-
-			for (int i=0; i<count; i++) {
-				try {
-					Thread.sleep(500); // Space the Runnables out a little
-					String className = (String)plugins.get(i);
-					Class c = ucl.loadClass(className);
-					// Class ended in "Plugin.class", but if it's not actually
-					// a subclass of Plugin, then we have an error.
-					if (Plugin.class.isAssignableFrom(c)) {
-						final Constructor cnst = c.getConstructor(params);
-						SwingUtilities.invokeLater(new Runnable() {
-							public void run() {
-								try {
-									Plugin p = (Plugin)cnst.newInstance(objs);
-									app.addPlugin(p);
-								} catch (InvocationTargetException ite) {
-									Throwable e = ite.getTargetException();
-									e.printStackTrace();
-									app.displayException(e);
-								} catch (Exception e) {
-									e.printStackTrace();
-									app.displayException(e);
-								}
-							}
-						});
+		for (int i=0; i<plugins.size(); i++) {
+			try {
+				Thread.sleep(SLEEP_TIME); // Space the Runnables out a little
+				String className = (String)plugins.get(i);
+				loadPluginImpl(className);
+			} catch (final Exception e) {
+				e.printStackTrace();
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						app.displayException(e);
 					}
-					else {
-						throw new InvalidPluginException(
-							"Plugin JAR contained a class ending with " +
-							"'Plugin' that does not extend class Plugin: " +
-							className);
-					}
-				} catch (final Exception e) {
-					e.printStackTrace();
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-							app.displayException(e);
-						}
-					});
-				}
+				});
 			}
+		}
 
+		// Specify that plugins have all been submitted to load
+		synchronized (this) {
+			pluginSubmissionsCompleted = true;
 		}
 
 	}

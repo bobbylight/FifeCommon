@@ -349,8 +349,15 @@ public class UIUtil {
 		if (table.getTableHeader()!=null) {
 			r = table.getTableHeader().getDefaultRenderer();
 			if (r instanceof Component) {
-				Component c = (Component)r;
-				c.setComponentOrientation(o);
+				((Component)r).applyComponentOrientation(o);
+			}
+			else if (r instanceof
+					FileExplorerTableModel.SortableHeaderRenderer) {
+				r = ((FileExplorerTableModel.SortableHeaderRenderer)r).
+														getDelegateRenderer();
+				if (r instanceof Component) {
+					((Component)r).applyComponentOrientation(o);
+				}
 			}
 		}
 	}

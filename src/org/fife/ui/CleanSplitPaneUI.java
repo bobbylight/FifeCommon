@@ -23,7 +23,7 @@ public class CleanSplitPaneUI extends BasicSplitPaneUI {
 	protected void installDefaults() {
 		super.installDefaults();
 		splitPane.setBorder(null);
-		divider.setDividerSize(5);
+		divider.setDividerSize(4);
 	}
 
 

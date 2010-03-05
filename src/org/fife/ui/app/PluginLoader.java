@@ -31,6 +31,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import javax.swing.SwingUtilities;
 import java.util.ArrayList;
+import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
@@ -51,6 +52,29 @@ class PluginLoader {
 	 * the main <code>Plugin</code> class.
 	 */
 	public static final String PLUGIN_CLASS_ATTR = "Fife-Plugin-Class";
+
+
+	/**
+	 * The manifest attribute that plugin jars can optionally define to
+	 * specify the priority with which to load the plugin.  If this is not
+	 * specified or an invalid value, then "<code>normal</code>" is used.
+	 *
+	 * @see #LOAD_PRIORITIES
+	 */
+	public static final String PLUGIN_LOAD_PRIORITY = "Fife-Plugin-Load-Priority";
+
+
+	/**
+	 * Valid values for {@link #PLUGIN_LOAD_PRIORITY}.
+	 */
+	public static final String[] LOAD_PRIORITIES = {
+		"highest",
+		"high",
+		"normal",
+		"low",
+		"lowest",
+	};
+
 
 	/**
 	 * The GUI application that owns this class loader.
@@ -98,6 +122,31 @@ class PluginLoader {
 	public PluginLoader(AbstractPluggableGUIApplication app) {
 		this.app = app;
 		pluginDir = new File(app.getInstallLocation(), "plugins");
+	}
+
+
+	/**
+	 * Returns the priority with which the plugin should be loaded.
+	 *
+	 * @param attrs The main manifest attributes.
+	 * @return The priority with which to load the plugin.
+	 */
+	private int getLoadPriority(Attributes attrs) {
+
+		int priority = 2;
+
+		String temp = attrs.getValue(PLUGIN_LOAD_PRIORITY);
+		if (temp!=null) {
+			for (int i=0; i<LOAD_PRIORITIES.length; i++) {
+				if (LOAD_PRIORITIES[i].equalsIgnoreCase(temp)) {
+					priority = i;
+					break;
+				}
+			}
+		}
+
+		return priority;
+
 	}
 
 
@@ -179,7 +228,7 @@ class PluginLoader {
 		});
 		int jarCount = jars.length;
 
-		ArrayList plugins = new ArrayList();
+		ArrayList[] plugins = new ArrayList[LOAD_PRIORITIES.length];
 		ArrayList urlList = new ArrayList();
 
 		for (int i=0; i<jarCount; i++) {
@@ -191,10 +240,14 @@ class PluginLoader {
 				// If this jar contains a plugin, remember the class to load.
 				Manifest mf = jarFile.getManifest();
 				if (mf!=null) {
-					String clazz = mf.getMainAttributes().
-											getValue(PLUGIN_CLASS_ATTR);
+					Attributes attrs = mf.getMainAttributes();
+					String clazz = attrs.getValue(PLUGIN_CLASS_ATTR);
 					if (clazz!=null) {
-						plugins.add(clazz);
+						int priority = getLoadPriority(attrs);
+						if (plugins[priority]==null) {
+							plugins[priority] = new ArrayList(3); // Small
+						}
+						plugins[priority].add(clazz);
 					}
 				}
 			} finally {
@@ -218,20 +271,23 @@ class PluginLoader {
 	 *
 	 * @param plugins The list of plugin classes.
 	 */
-	private void loadPluginsImpl(ArrayList plugins) {
+	private void loadPluginsImpl(ArrayList[] plugins) {
 
-		for (int i=0; i<plugins.size(); i++) {
-			try {
-				Thread.sleep(SLEEP_TIME); // Space the Runnables out a little
-				String className = (String)plugins.get(i);
-				loadPluginImpl(className);
-			} catch (final Exception e) {
-				e.printStackTrace();
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						app.displayException(e);
-					}
-				});
+		for (int p=0; p<plugins.length; p++) {
+			int pluginCount = plugins[p]==null ? 0 : plugins[p].size();
+			for (int i=0; i<pluginCount; i++) {
+				try {
+					Thread.sleep(SLEEP_TIME); // Space the Runnables out
+					String className = (String)plugins[p].get(i);
+					loadPluginImpl(className);
+				} catch (final Exception e) {
+					e.printStackTrace();
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							app.displayException(e);
+						}
+					});
+				}
 			}
 		}
 

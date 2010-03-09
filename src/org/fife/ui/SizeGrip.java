@@ -210,6 +210,13 @@ class SizeGrip extends StatusBarPanel {
 		private Point origPos;
 
 		public void mouseDragged(MouseEvent e) {
+			if (origPos==null) {
+				// Happens, for example, when a menu is open, and the user
+				// then clicks on and drags the size grip.  Swing doesn't send
+				// a mousePressed event to the grip, but does send the drag
+				// events (on Windows and OS X, at least).
+				mousePressed(e);
+			}
 			Point newPos = e.getPoint();
 			SwingUtilities.convertPointToScreen(newPos, SizeGrip.this);
 			int xDelta = newPos.x - origPos.x;

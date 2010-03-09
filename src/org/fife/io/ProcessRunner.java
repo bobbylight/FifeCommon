@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,11 +89,13 @@ public class ProcessRunner implements Runnable {
 				Method getenv = clazz.getMethod("getenv", null);
 				Map parentEnv = (Map)getenv.invoke(clazz, null);
 				env.putAll(parentEnv);
+			} catch (NoSuchMethodException nsme) { // Java 1.4
+				getEnvironmentNative(env);
 			} catch (RuntimeException re) {
 				throw re;
 			} catch (Exception e) {
 				e.printStackTrace();
-				// TODO: Use "cmd /c env" and "/bin/sh -c env" as fallbacks
+				getEnvironmentNative(env); // Fallback
 			}
 
 		}
@@ -158,6 +161,93 @@ public class ProcessRunner implements Runnable {
 	 */
 	public File getDirectory() {
 		return dir;
+	}
+
+
+	/**
+	 * Uses "<code>cmd /c set</code>" on Windows and
+	 * "<code>/bin/sh -c env</code>" on *nix to determine the current
+	 * environment.  This method is used when an application is running in a
+	 * 1.4 JVM, meaning <code>System.getenv()</code> is not available.
+	 *
+	 * @param env The map to append the environment variables to.
+	 */
+	private void getEnvironmentNative(Map env) {
+
+		String command = File.separatorChar=='\\' ?
+									"cmd /c set" : "/bin/sh -c env";
+
+		Process p = null;
+		StreamReaderThread stdoutThread = null;
+		Thread stderrThread = null;
+		String vars = null;
+
+		try {
+
+			p = Runtime.getRuntime().exec(command);
+
+			// Create threads to read the stdout and stderr of the external
+			// process.  If we do not do it this way, the process may
+			// deadlock.
+			InputStream errStream = p.getErrorStream();
+			InputStream outStream = p.getInputStream();
+			stdoutThread = new StreamReaderThread(p, outStream, null, true);
+			stderrThread = new StreamReaderThread(p, errStream, null, false);
+			stdoutThread.start();
+			stderrThread.start();
+
+			rc = p.waitFor();
+			p = null;
+
+			// Don't interrupt reader threads;
+			// just wait for them to terminate normally.
+			//stdoutThread.interrupt();
+			//stderrThread.interrupt();
+			stdoutThread.join();
+			stderrThread.join();
+
+			vars = stdoutThread.getStreamOutput();
+			
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			// IOE can only happen in Runtime.exec(), so stdoutThread and
+			// stderrThread are always null if we get here
+			//stdoutThread.interrupt();
+			//stderrThread.interrupt();
+		} catch (InterruptedException ie) {
+			ie.printStackTrace();
+			if (stdoutThread!=null) {
+				stdoutThread.interrupt();
+			}
+			if (stderrThread!=null) {
+				stderrThread.interrupt();
+			}
+		} finally {
+			if (p!=null) {
+				p.destroy();
+			}
+		}
+
+		// Parse the stdout for name/value pairs.
+		if (vars!=null) {
+			BufferedReader r = new BufferedReader(new StringReader(vars));
+			String line = null;
+			try {
+				while ((line=r.readLine())!=null) {
+					int split = line.indexOf('=');
+					if (split>-1) { // Should always be true
+						String name = line.substring(0, split);
+						String value = line.substring(split+1);
+						//System.out.println("Adding var: " + name + " => " + value);
+						env.put(name, value);
+					}
+				}
+				r.close();
+			} catch (IOException ioe) {
+				ioe.printStackTrace(); // Never happens
+			}
+		}
+
 	}
 
 

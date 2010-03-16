@@ -169,12 +169,12 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * Returns the file at the specified point in the view.
 	 *
 	 * @param p The point at which to look for a file.
-	 * @return The file at that point (or <code>null</code> if there isn't
-	 *         one???).
+	 * @return The file at that point, or <code>null</code> if there isn't
+	 *         one.
 	 */
 	public File getFileAtPoint(Point p) {
 		int row = rowAtPoint(p);
-		return (File)getValueAt(row, 0);
+		return row==-1 ? null : (File)getValueAt(row, 0);
 	}
 
 

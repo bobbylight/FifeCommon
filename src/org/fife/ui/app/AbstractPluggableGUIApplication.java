@@ -259,7 +259,8 @@ public abstract class AbstractPluggableGUIApplication
 	 * Returns whether all plugins have been loaded for this application.
 	 * This does not count plugins added programmatically via
 	 * {@link #addPlugin(Plugin)}, although that isn't usually done (plugins
-	 * are usually all loaded automatically by the {@link PluginLoader}).
+	 * are usually all loaded automatically by the
+	 * <code>PluginLoader</code>.
 	 *
 	 * @return Whether the loading of plugins is complete.
 	 */

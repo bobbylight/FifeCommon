@@ -81,7 +81,9 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	private JMenu openInMenu;
 	private Actions.SystemOpenAction systemEditAction;
 	private Actions.SystemOpenAction systemViewAction;
-	private RefreshAction refreshAction;
+	protected FileSystemTreeActions.NewFileAction newFileAction; // Used in DirectoryTree too
+	private FileSystemTreeActions.NewFolderAction newFolderAction;
+	private FileSystemTreeActions.RefreshAction refreshAction;
 
 	private FileSystemTreeRenderer cellRenderer;
 
@@ -95,7 +97,8 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 
 	/**
-	 * Constructor.
+	 * Constructor.  This will create a tree with a root node for each root
+	 * drive on the local file system.
 	 */
 	public FileSystemTree() {
 
@@ -114,33 +117,34 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			addCachedRootName(aRoot);
 		}
 
-		// Make it so they can only select one node at a time.
-		TreeSelectionModel tsm = getSelectionModel();
-		tsm.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		init();
 
-		tsm.addTreeSelectionListener(new TreeSelectionListener() {
-			public void valueChanged(TreeSelectionEvent e) {
-				scrollPathToVisible(e.getPath());
-			}
-		});
+	}
 
-		// Set the root.  Note that this must come BEFORE we
-		// set the cell renderer (below), otherwise, each tree node's
-		// width will initially be incorrect (fixed when the node is
-		// expanded/collapsed).
-		treeModel = new DefaultTreeModel(root);
-		setModel(treeModel);
 
-		cellRenderer = new FileSystemTreeRenderer();
-		setCellRenderer(cellRenderer);
+	/**
+	 * Constructor.
+	 *
+	 * @param rootDir The root directory for the tree.
+	 * @throws IllegalArgumentException If this directory does not exist.
+	 */
+	public FileSystemTree(File rootDir) {
 
-		// Make everything look nice.
-		enableEvents(AWTEvent.MOUSE_EVENT_MASK);
-		setShowsRootHandles(true);
-		setRootVisible(false);
+		if (rootDir==null || !rootDir.isDirectory()) {
+			throw new IllegalArgumentException("Invalid root dir: " + rootDir);
+		}
 
-		setTransferHandler(new TreeTransferHandler());
-		setDragEnabled(true);
+		// Initialize variables.
+		fileSystemView = FileSystemView.getFileSystemView();
+		iconManager = new FileChooserIconManager();
+		rootNameCache = new HashMap();
+
+		// Add all of our "root" nodes.
+		root = new FileSystemTreeNode();
+		root.add(createTreeNodeForImpl(rootDir, true));
+		addCachedRootName(rootDir);
+
+		init();
 
 	}
 
@@ -198,6 +202,8 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		// Only have the "Refresh" menu item enabled if a directory
 		// item is selected.
 		boolean enable = selectedFile!=null && selectedFile.isDirectory();
+		newFileAction.setEnabled(enable);
+		newFolderAction.setEnabled(enable);
 		refreshAction.setEnabled(enable);
 
 	}
@@ -226,7 +232,14 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 		popup.addSeparator();
 
-		refreshAction = new RefreshAction(bundle);
+		newFileAction = new FileSystemTreeActions.NewFileAction(this, bundle);
+		popup.add(new JMenuItem(newFileAction));
+		newFolderAction = new FileSystemTreeActions.NewFolderAction(this, bundle);
+		popup.add(new JMenuItem(newFolderAction));
+
+		popup.addSeparator();
+
+		refreshAction = new FileSystemTreeActions.RefreshAction(this, bundle);
 		JMenuItem item = new JMenuItem(refreshAction);
 		popup.add(item);
 
@@ -517,6 +530,42 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 
 	/**
+	 * Does any initialization common to all constructors.
+	 */
+	private void init() {
+
+		// Make it so they can only select one node at a time.
+		TreeSelectionModel tsm = getSelectionModel();
+		tsm.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+
+		tsm.addTreeSelectionListener(new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent e) {
+				scrollPathToVisible(e.getPath());
+			}
+		});
+
+		// Set the root.  Note that this must come BEFORE we
+		// set the cell renderer (below), otherwise, each tree node's
+		// width will initially be incorrect (fixed when the node is
+		// expanded/collapsed).
+		treeModel = new DefaultTreeModel(root);
+		setModel(treeModel);
+
+		cellRenderer = new FileSystemTreeRenderer();
+		setCellRenderer(cellRenderer);
+
+		// Make everything look nice.
+		enableEvents(AWTEvent.MOUSE_EVENT_MASK);
+		setShowsRootHandles(true);
+		setRootVisible(false);
+
+		setTransferHandler(new TreeTransferHandler());
+		setDragEnabled(true);
+
+	}
+
+
+	/**
 	 * Called when a mouse event occurs in this file system tree.  This method
 	 * is overridden so that we can display our popup menu if necessary.
 	 *
@@ -536,7 +585,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 *
 	 * @param node The node.
 	 */
-	private void refreshChildren(FileSystemTreeNode node) {
+	void refreshChildren(FileSystemTreeNode node) {
 		node.removeAllChildren();
 		File file = node.getFile();
 		if (file.isDirectory()) {
@@ -546,6 +595,46 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			for (int i=0; i<numChildren; i++)
 				node.add(createTreeNodeFor(filteredChildren[i]));
 		}
+	}
+
+
+	/**
+	 * Changes the "root" of this tree.
+	 *
+	 * @param rootFile The new root.  If this is <code>null</code>, then all
+	 *        of the file system's roots are used.  If it is a directory, then
+	 *        that directory is used.  If it is a plain file, or does not
+	 *        exist, an {@link IllegalArgumentException} is thrown.
+	 */
+	public void setRoot(File rootFile) {
+
+		if (rootFile==null) {
+			// Add all of our "root" nodes.
+			root = new FileSystemTreeNode();
+			for (Iterator i=RootManager.getInstance().iterator(); i.hasNext(); ) {
+				File aRoot = (File)i.next();
+				// Hack - We "know" all roots are directories, so why query
+				// via isDirectory()?  This is a nice performance boost.
+				root.add(createTreeNodeForImpl(aRoot, true));
+				addCachedRootName(aRoot);
+			}
+		}
+
+		// Create our single "root" node.
+		else if (rootFile.isDirectory()) {
+			root = new FileSystemTreeNode();
+			root.add(createTreeNodeForImpl(rootFile, true));
+			addCachedRootName(rootFile);
+		}
+
+		else {
+			throw new IllegalArgumentException(
+					"root must be 'null' or a directory");
+		}
+
+		treeModel = new DefaultTreeModel(root);
+		setModel(treeModel);
+
 	}
 
 
@@ -677,7 +766,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	/**
 	 * Renderer for the file tree.
 	 */
-	class FileSystemTreeRenderer extends DefaultTreeCellRenderer {
+	private class FileSystemTreeRenderer extends DefaultTreeCellRenderer {
 
 		private static final long serialVersionUID = 1L;
 
@@ -708,82 +797,6 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			}
 
 			return this;
-
-		}
-
-	}
-
-
-	/**
-	 * Action that "refreshes" the currently selected directory in the
-	 * directory tree.
-	 */
-	private class RefreshAction extends AbstractAction {
-
-		public RefreshAction(ResourceBundle bundle) {
-			super(bundle.getString("Refresh"));
-			putValue(Action.MNEMONIC_KEY,
-				new Integer(bundle.getString("RefreshMnemonic").charAt(0)));
-		}
-
-		public void actionPerformed(ActionEvent e) {
-
-			TreePath path = getSelectionPath();
-
-			if (path!=null) { // Should always be true.
-				FileSystemTreeNode node = (FileSystemTreeNode)path.
-							getLastPathComponent();
-				File file = node.getFile();
-
-				// The file should be a directory.  The only catch is
-				// that maybe the directory was deleted since the last
-				// time we cached.  NOTE:  We MUST check whether the file
-				// exists BEFORE we check whether it's a directory because
-				// isDirectory() can return true for a directory that has
-				// been removed after the File object was created, despite
-				// what the Javadoc says.
-
-				// If the directory no longer exists, refresh the structure
-				// from the parent directory down, in case other stuff has
-				// changed too.
-				if (!file.exists()) {
-					int count = path.getPathCount();
-					if (count>1) {
-						node = (FileSystemTreeNode)path.
-										getPathComponent(count-2);
-						refreshChildren(node);
-						treeModel.reload(node);
-					}
-					else { // It's the one and only file in the path...
-						removeSelectionPath(path);
-						treeModel.reload(node);
-					}
-				}
-
-				// If the directory still exists...
-				else if (file.isDirectory()) {
-					refreshChildren(node);
-					treeModel.reload(node); // Causes repaint properly.
-				}
-
-				// Otherwise, they've removed what was a directory when we
-				// cached data, and created a regular file in its place...
-				// Again, we'll refresh the parent directory's cached data.
-				else {
-					int count = path.getPathCount();
-					if (count>1) {
-						node = (FileSystemTreeNode)path.
-										getPathComponent(count-2);
-						refreshChildren(node);
-						treeModel.reload(node);
-					}
-					else { // It's the one and only file in the path...
-						removeSelectionPath(path);
-						treeModel.reload(node);
-					}
-				}
-
-			}
 
 		}
 

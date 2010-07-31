@@ -67,6 +67,8 @@ public class ModifiableTable extends JPanel {
 	public static final int MODIFY			= 4;
 	public static final int ADD_REMOVE			= ADD|REMOVE;
 	public static final int ADD_REMOVE_MODIFY	= ADD|REMOVE|MODIFY;
+	public static final int MOVE_UP_DOWN	= 8;
+	public static final int ALL_BUTTONS		= ADD_REMOVE_MODIFY|MOVE_UP_DOWN;
 
 	public static final String TOP			= BorderLayout.NORTH;
 	public static final String BOTTOM			= BorderLayout.SOUTH;
@@ -87,13 +89,17 @@ public class ModifiableTable extends JPanel {
 	private RButton addButton;
 	private RButton removeButton;
 	private RButton modifyButton;
+	private RButton moveUpButton;
+	private RButton moveDownButton;
 	private RowHandler rowHandler;
 	private Listener listener;
 	private EventListenerList listenerList;
 
-	private static final String ADD_COMMAND		= "AddCommand";
-	private static final String REMOVE_COMMAND	= "RemoveCommand";
-	private static final String MODIFY_COMMAND	= "ModifyCommand";
+	private static final String ADD_COMMAND			= "AddCommand";
+	private static final String REMOVE_COMMAND		= "RemoveCommand";
+	private static final String MODIFY_COMMAND		= "ModifyCommand";
+	private static final String MOVE_UP_COMMAND		= "MoveUpCommand";
+	private static final String MOVE_DOWN_COMMAND	= "MoveDownCommand";
 
 	private static final String BUNDLE_NAME		=
 						"org.fife.ui.modifiabletable.ModifiableTable";
@@ -133,7 +139,11 @@ public class ModifiableTable extends JPanel {
 	 * @param buttonLocation The location of the buttons, relative to the
 	 *        table.
 	 * @param buttons A bit flag representing what buttons to display.
-	 * @see #setRowHandler
+	 * @see #setRowHandler(RowHandler)
+	 * @see #ADD_REMOVE
+	 * @see #ADD_REMOVE_MODIFY
+	 * @see #MOVE_UP_DOWN
+	 * @see #ALL_BUTTONS
 	 */
 	public ModifiableTable(DefaultTableModel model, String buttonLocation,
 						int buttons) {
@@ -226,36 +236,17 @@ public class ModifiableTable extends JPanel {
 			panel = new JPanel();
 			buttonPanel = new JPanel(new BorderLayout());
 		}
-		String buttonLoc2 = null;
-		if (RIGHT.equals(buttonLocation)) {
-			panel.setLayout(new GridLayout(3,1, 5,5));
-			buttonLoc2 = BorderLayout.PAGE_START;
-			buttonPanel.setBorder(BorderFactory.createEmptyBorder(0,5,0,0));
-		}
-		else if (LEFT.equals(buttonLocation)) {
-			panel.setLayout(new GridLayout(3,1, 5,5));
-			buttonLoc2 = BorderLayout.PAGE_START;
-			buttonPanel.setBorder(BorderFactory.createEmptyBorder(0,0,0,5));
-		}
-		else if (TOP.equals(buttonLocation)) {
-			panel.setLayout(new GridLayout(1,3, 5,5));
-			buttonLoc2 = BorderLayout.LINE_START;
-			buttonPanel.setBorder(BorderFactory.createEmptyBorder(0,0,5,0));
-		}
-		else { // BOTTOM, or invalid value.
-			panel.setLayout(new GridLayout(1,3, 5,5));
-			buttonLoc2 = BorderLayout.LINE_START;
-			buttonPanel.setBorder(BorderFactory.createEmptyBorder(5,0,0,0));
-		}
 
 		ResourceBundle msg = ResourceBundle.getBundle(BUNDLE_NAME);
 
 		// Gather the desired buttons.
+		int buttonCount = 0;
 		if ((buttons&ADD)==ADD) {
 			addButton = new RButton(msg.getString("Button.Add"));
 			addButton.setActionCommand(ADD_COMMAND);
 			addButton.addActionListener(listener);
 			panel.add(addButton);
+			buttonCount++;
 		}
 		if ((buttons&REMOVE)==REMOVE) {
 			removeButton = new RButton(msg.getString("Button.Remove"));
@@ -263,6 +254,7 @@ public class ModifiableTable extends JPanel {
 			removeButton.addActionListener(listener);
 			removeButton.setEnabled(false);
 			panel.add(removeButton);
+			buttonCount++;
 		}
 		if ((buttons&MODIFY)==MODIFY) {
 			modifyButton = new RButton(msg.getString("Button.Modify"));
@@ -270,6 +262,43 @@ public class ModifiableTable extends JPanel {
 			modifyButton.addActionListener(listener);
 			modifyButton.setEnabled(false);
 			panel.add(modifyButton);
+			buttonCount++;
+		}
+		if ((buttons&MOVE_UP_DOWN)==MOVE_UP_DOWN) {
+			moveUpButton = new RButton(msg.getString("Button.MoveUp"));
+			moveUpButton.setActionCommand(MOVE_UP_COMMAND);
+			moveUpButton.addActionListener(listener);
+			moveUpButton.setEnabled(false);
+			panel.add(moveUpButton);
+			moveDownButton = new RButton(msg.getString("Button.MoveDown"));
+			moveDownButton.setActionCommand(MOVE_DOWN_COMMAND);
+			moveDownButton.addActionListener(listener);
+			moveDownButton.setEnabled(false);
+			panel.add(moveDownButton);
+			buttonCount += 2;
+		}
+
+		// Lay out the panel properly.
+		String buttonLoc2 = null;
+		if (RIGHT.equals(buttonLocation)) {
+			panel.setLayout(new GridLayout(buttonCount,1, 5,5));
+			buttonLoc2 = BorderLayout.PAGE_START;
+			buttonPanel.setBorder(BorderFactory.createEmptyBorder(0,5,0,0));
+		}
+		else if (LEFT.equals(buttonLocation)) {
+			panel.setLayout(new GridLayout(buttonCount,1, 5,5));
+			buttonLoc2 = BorderLayout.PAGE_START;
+			buttonPanel.setBorder(BorderFactory.createEmptyBorder(0,0,0,5));
+		}
+		else if (TOP.equals(buttonLocation)) {
+			panel.setLayout(new GridLayout(1,buttonCount, 5,5));
+			buttonLoc2 = BorderLayout.LINE_START;
+			buttonPanel.setBorder(BorderFactory.createEmptyBorder(0,0,5,0));
+		}
+		else { // BOTTOM, or invalid value.
+			panel.setLayout(new GridLayout(1,buttonCount, 5,5));
+			buttonLoc2 = BorderLayout.LINE_START;
+			buttonPanel.setBorder(BorderFactory.createEmptyBorder(5,0,0,0));
 		}
 
 		// Get ready to go.
@@ -401,8 +430,8 @@ public class ModifiableTable extends JPanel {
 	 * Modifies the contents of a row in the table.  This method is called
 	 * whenever the user presses the <code>Modify</code> button.
 	 *
-	 * @see #addRow
-	 * @see #removeRow
+	 * @see #addRow()
+	 * @see #removeRow()
 	 */
 	protected void modifyRow() {
 		if (rowHandler!=null) {
@@ -426,6 +455,43 @@ public class ModifiableTable extends JPanel {
 				UIManager.getLookAndFeel().provideErrorFeedback(table);
 			}
 		}
+	}
+
+
+	/**
+	 * Swaps the selected row with another.  If the selected row cannot be
+	 * moved the amount specified, nothing happens.
+	 *
+	 * @param amt The offset between the selected row and the row to swap it
+	 *        with; e.g. "1" or "-1".
+	 */
+	protected void moveRow(int amt) {
+
+		int selectedRow = table.getSelectedRow();
+
+		if ((selectedRow+amt)>=0 && (selectedRow+amt)<table.getRowCount()) {
+			Object[] row1 = getContentsOfRow(selectedRow+amt);
+			Object[] row2 = getContentsOfRow(selectedRow);
+			int colCount = row1.length;
+			TableModel model = table.getModel();
+			for (int i=0; i<colCount; i++) {
+				// Call model's setValueAt(), not table's, so that if
+				// they've moved columns around it's still okay.
+				model.setValueAt(row1[i], selectedRow, i);
+				model.setValueAt(row2[i], selectedRow+amt, i);
+			}
+			table.getSelectionModel().setSelectionInterval(selectedRow+amt,
+															selectedRow+amt);
+			fireModifiableTableEvent(
+					ModifiableTableChangeEvent.MODIFIED, selectedRow+amt);
+			fireModifiableTableEvent(
+					ModifiableTableChangeEvent.MODIFIED, selectedRow);
+		}
+
+		else {
+			UIManager.getLookAndFeel().provideErrorFeedback(table);
+		}
+
 	}
 
 
@@ -501,15 +567,22 @@ public class ModifiableTable extends JPanel {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			String actionCommand = e.getActionCommand();
-			if (ADD_COMMAND.equals(actionCommand)) {
+			String command = e.getActionCommand();
+			if (ADD_COMMAND.equals(command)) {
 				addRow();
 			}
-			else if (REMOVE_COMMAND.equals(actionCommand)) {
+			else if (REMOVE_COMMAND.equals(command)) {
 				removeRow();
 			}
-			else if (MODIFY_COMMAND.equals(actionCommand)) {
+			else if (MODIFY_COMMAND.equals(command)) {
 				modifyRow();
+			}
+			else if (MOVE_UP_COMMAND.equals(command)) {
+				moveRow(-1);
+				
+			}
+			else if (MOVE_DOWN_COMMAND.equals(command)) {
+				moveRow(1);
 			}
 		}
 
@@ -530,6 +603,10 @@ public class ModifiableTable extends JPanel {
 			if (removeButton!=null) {
 				boolean canRemove = rowHandler.shouldRemoveRow(row);
 				removeButton.setEnabled(selection && canRemove);
+			}
+			if (moveUpButton!=null) {
+				moveUpButton.setEnabled(selection && row>0);
+				moveDownButton.setEnabled(selection && row<table.getRowCount()-1);
 			}
 		}
 

@@ -106,6 +106,7 @@ import javax.swing.KeyStroke;
  * <ul>
  *    <li>All primitives (int, double, float, boolean, etc.)
  *    <li>String
+ *    <li>String[]
  *    <li>File
  *    <li>Color
  *    <li>KeyStroke
@@ -276,6 +277,20 @@ public abstract class Prefs {
 						obj = value;
 					}
 
+					else if (String[].class==type) {
+						String[] temp = null;
+						int length = Integer.parseInt(value);
+						if (length>-1) { // -1 => null array
+							temp = new String[length];
+							for (int j=0; j<length; j++) {
+								// Property will not be defined if the String
+								// should be null, so everything works out
+								temp[j] = props.getProperty(name + "." + j);
+							}
+						}
+						obj = temp;
+					}
+
 					else if (Color.class==type) {
 						if (value.length()==9 && value.charAt(0)=='$') {
 							long temp = Long.parseLong(value.substring(1), 16);
@@ -372,6 +387,25 @@ public abstract class Prefs {
 
 				else if (String.class==type) {
 					strVal = (String)value;
+				}
+
+				else if (String[].class==type) {
+					// Store length of array as "main" property, then each
+					// item as an extra property of form "name.index".
+					String[] array = (String[])value;
+					if (array==null) {
+						strVal = "-1";
+					}
+					else {
+						strVal = Integer.toString(array.length);
+						for (int j=0; j<array.length; j++) {
+							// No "name.N" property => String at that index
+							// was null (can't put null values into Properties)
+							if (array[j]!=null) {
+								props.setProperty(name + "." + j, array[j]);
+							}
+						}
+					}
 				}
 
 				else if (Color.class==type) {

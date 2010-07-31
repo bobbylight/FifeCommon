@@ -53,10 +53,17 @@ public class DirectoryTree extends FileSystemTree {
 
 
 	/**
-	 * Does any filtering and sorting of an array of files so that they will
-	 * be displayed properly.  For this class, this method takes only the
-	 * directories (not regular files) from the array and sorts them
-	 * alphabetically.
+	 * {@inheritDoc}
+	 */
+	protected void configurePopupMenuActions() {
+		super.configurePopupMenuActions();
+		newFileAction.setEnabled(false);
+	}
+
+
+	/**
+	 * Overridden to take only the directories (not regular files) from the
+	 * array and sorts them alphabetically.
 	 *
 	 * @param files The array of files to filter and sort.
 	 * @return The filtered and sorted array of directories.

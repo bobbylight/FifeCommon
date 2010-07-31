@@ -101,7 +101,8 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 								msg.getString("FavoritesSection")));
 		String header = msg.getString("FavoriteTable.Header");
 		model = new FavoritesTableModel(header);
-		modifiableTable = new ModifiableTable(model);
+		modifiableTable = new ModifiableTable(model,
+				BorderLayout.SOUTH, ModifiableTable.ALL_BUTTONS);
 		modifiableTable.setRowHandler(new FavoritesRowHandler());
 		modifiableTable.addModifiableTableListener(this);
 		JTable favoritesTable = modifiableTable.getTable();

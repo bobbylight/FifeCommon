@@ -89,8 +89,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	public static final int DIRECTORIES_ONLY		= JFileChooser.DIRECTORIES_ONLY;
 	public static final int FILES_AND_DIRECTORIES	= JFileChooser.FILES_AND_DIRECTORIES;
 
-	private static final int OPEN					= 0;
-	private static final int SAVE					= 1;
+	public static final int OPEN_DIALOG				= JFileChooser.OPEN_DIALOG;
+	public static final int SAVE_DIALOG				= JFileChooser.SAVE_DIALOG;
 
 	// Style constants for "open file style".
 	public static final int STYLE_BOLD				= 0;
@@ -210,6 +210,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private File[] selectedFiles;
 
 	private Dimension lastSize;
+	private int lastType;
 
 	private Vector fileFilters = new Vector(5,1);
 	private FileFilter currentFileFilter;
@@ -365,7 +366,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			favoriteList = new ArrayList(1); // Usually not many.
 		}
 
-		int index = Collections.binarySearch(favoriteList, dir);
+		Comparator c = File.separatorChar=='/' ? null :
+									String.CASE_INSENSITIVE_ORDER;
+		int index = Collections.binarySearch(favoriteList, dir, c);
 		if (index<0) { // Needs to be added (common case)
 			int insertionPoint = -(index+1);
 			favoriteList.add(insertionPoint, dir);
@@ -738,7 +741,13 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * this programmatically.  Note that this does NOT necessarily mean the
 	 * dialog will close; for example, if they have selected a directory
 	 * and the file selection mode is <code>FILES_ONLY</code>, then the
-	 * file dialog will simply change to that directory.
+	 * file dialog will simply change to that directory.<p>
+	 *
+	 * Users who wish to subclass this class and provide a means of canceling
+	 * the dialog closing (such as an "are you sure you wish to overwrite?"
+	 * message) should override {@link #approveSelectionImpl()}.  That method
+	 * is called at the end of this one, and the file chooser will only close
+	 * if that method returns <code>true</code>.
 	 */
 	public void approveSelection() {
 
@@ -774,11 +783,26 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			}
 		}
 
-		iconManager.clearIconCache(); // To keep cache from growing huge.
+		if (approveSelectionImpl()) {
+			iconManager.clearIconCache(); // To keep cache from growing huge.
+			retVal = APPROVE_OPTION;
+			dialog.setVisible(false);
+		}
 
-		retVal = APPROVE_OPTION;
-		dialog.setVisible(false);
+	}
 
+
+	/**
+	 * Called at the end of {@link #approveSelection()}; the file chooser
+	 * dialog will only close if this method returns <code>true</code>.
+	 * Subclasses can override this method to add things such as an "Are you
+	 * sure you want to overwrite?" message.
+	 *
+	 * @return Whether to close this file chooser.  The default implementation
+	 *         always returns <code>true</code>.
+	 */
+	protected boolean approveSelectionImpl() {
+		return true;
 	}
 
 
@@ -1185,6 +1209,18 @@ public class RTextFileChooser extends ResizableFrameContentPane
 				desc = fileText;
 		}
 		return desc;
+	}
+
+
+	/**
+	 * Returns the last type of dialog displayed.
+	 *
+	 * @return Either {@link #OPEN_DIALOG} or {@link #SAVE_DIALOG}.
+	 * @see #showOpenDialog(Window)
+	 * @see #showSaveDialog(Window)
+	 */
+	public int getDialogType() {
+		return lastType;
 	}
 
 
@@ -2654,7 +2690,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * <code>showSaveDialog</code> since much of what they do is the same.
 	 *
 	 * @param parent The parent of this open/save dialog.
-	 * @param dialogType Either <code>OPEN</code> or <code>CLOSE</code>.
+	 * @param dialogType Either {@link #OPEN_DIALOG} or {@link #SAVE_DIALOG}.
 	 */
 	protected int showDialogImpl(Window parent, int dialogType) {
 
@@ -2701,17 +2737,19 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		// Set up buttons/text, etc. to be appropriate to opening...
 		// FIXME:  Update me to set ALL strings!
-		if (dialogType==SAVE) {
+		if (dialogType==SAVE_DIALOG) {
 			dialog.setTitle(customTitle!=null ? customTitle : saveDialogTitleText);
 			acceptButton.setText(saveButtonText);
 			acceptButton.setMnemonic(saveButtonMnemonic);
 			acceptButton.setToolTipText(saveButtonToolTipText);
+			lastType = dialogType;
 		}
-		else { // OPEN
+		else { // OPEN_DIALOG
 			dialog.setTitle(customTitle!=null ? customTitle : openDialogTitleText);
 			acceptButton.setText(openButtonText);
 			acceptButton.setMnemonic(openButtonMnemonic);
 			acceptButton.setToolTipText(openButtonToolTipText);
+			lastType = OPEN_DIALOG;
 		}
 
 		// Display the dialog.
@@ -2759,7 +2797,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 *         or <code>ERROR_OPTION</code>.
 	 */
 	public int showOpenDialog(Window parent) {
-		return showDialogImpl(parent, OPEN);
+		return showDialogImpl(parent, OPEN_DIALOG);
 	}
 
 
@@ -2771,7 +2809,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 *         or <code>ERROR_OPTION</code>.
 	 */
 	public int showSaveDialog(Window parent) {
-		return showDialogImpl(parent, SAVE);
+		return showDialogImpl(parent, SAVE_DIALOG);
 	}
 
 

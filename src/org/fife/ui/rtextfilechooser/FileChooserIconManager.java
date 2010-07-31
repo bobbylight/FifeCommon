@@ -171,14 +171,16 @@ class FileChooserIconManager {
 				return icon;
 
 			// See if the system has an icon for this file.
-			try {
-				icon = fileSystemView.getSystemIcon(f);
-			} catch (/*FileNotFound*/Exception fnfe) {
-				// This happens, for example, on Windows when no such
-				// file "f" exists - the FileSystemView must check for
-				// the existance of the icon first.
-				//fnfe.printStackTrace();
-				// Leave icon as null, it'll get set below.
+			if (f.exists()) {
+				try {
+					icon = fileSystemView.getSystemIcon(f);
+				} catch (/*FileNotFound*/Exception fnfe) {
+					// This happens, for example, on Windows when no such
+					// file "f" exists - the FileSystemView must check for
+					// the existance of the icon first.
+					//fnfe.printStackTrace();
+					// Leave icon as null, it'll get set below.
+				}
 			}
 
 			// If it didn't, see if it matches one of our defaults.
@@ -219,6 +221,17 @@ class FileChooserIconManager {
 	 */
 	private static Icon loadIcon(ClassLoader cl, String file) {
 		return new ImageIcon(cl.getResource(file));
+	}
+
+
+	/**
+	 * Removes the cached icon for a single file, allowing it to be recreated.
+	 *
+	 * @param file The file whose icon should be removed.
+	 * @return The old icon, or <code>null</code> if there was none.
+	 */
+	public Icon removeIconFor(File file) {
+		return (Icon)iconCache.remove(file);
 	}
 
 

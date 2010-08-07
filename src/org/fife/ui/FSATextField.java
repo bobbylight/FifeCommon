@@ -1036,26 +1036,5 @@ System.out.println("DEBUG: *** parent is null");
 
 	}
 
-public static void main(String[] args) {
-
-	SwingUtilities.invokeLater(new Runnable() {
-		public void run() {
-			
-			FSATextField tf1 = new FSATextField(40);
-tf1.setName("tf1");
-			FSATextField tf2 = new FSATextField(40);
-tf2.setName("tf2");
-			JPanel temp = new JPanel(new BorderLayout());
-			temp.add(tf1, BorderLayout.SOUTH);
-			temp.add(tf2, BorderLayout.NORTH);
-			JFrame frame = new JFrame("Test");
-			frame.setContentPane(temp);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.pack();
-			frame.setLocationRelativeTo(null);
-			frame.setVisible(true);
-		}
-	});
-}
 
 }

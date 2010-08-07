@@ -1426,7 +1426,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @return The string.  Note that this will be invalid if <code>file</code>
 	 *         is a directory.
 	 */
-	private static final String getFileSizeStringFor(final File file) {
+	private static final String getFileSizeStringFor(File file) {
 
 		long size = file.length();
 		int count = 0;
@@ -1448,7 +1448,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			case 4 : suffix = "TB"; break;
 		}
 
-		return size + ' ' + suffix;
+		return size + " " + suffix;
 
 	}
 

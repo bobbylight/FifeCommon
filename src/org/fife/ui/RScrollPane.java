@@ -332,14 +332,6 @@ public class RScrollPane extends JScrollPane implements ActionListener,
 		getVerticalScrollBar().addMouseListener(popupListener);
 		getHorizontalScrollBar().addMouseListener(popupListener);
 
-		// This is a hack so background picture is updated whenever user
-		// uses scrollbars.
-//		getViewport().addChangeListener( new ChangeListener() {
-//			public void stateChanged(ChangeEvent e) {
-//				textArea.repaint();
-//			}
-//		} );
-
 	}
 
 

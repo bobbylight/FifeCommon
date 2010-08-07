@@ -433,7 +433,7 @@ System.out.println("DEBUG: *** parent is null");
 	 */
 	private void installExtraKeyActions() {
 
-		InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		InputMap inputMap = getInputMap(JComponent.WHEN_FOCUSED);
 		ActionMap actionMap = getActionMap();
 
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "OnDown");
@@ -504,7 +504,7 @@ System.out.println("DEBUG: *** parent is null");
 				JRootPane root = SwingUtilities.getRootPane(FSATextField.this);
 				if (root != null) {
 					InputMap im = root.getInputMap(
-								JComponent.WHEN_IN_FOCUSED_WINDOW);
+										JComponent.WHEN_IN_FOCUSED_WINDOW);
 					ActionMap am = root.getActionMap();
 					if (im != null && am != null) {
 						Object obj = im.get(KeyStroke.getKeyStroke(
@@ -535,8 +535,7 @@ System.out.println("DEBUG: *** parent is null");
 				}
 				JRootPane root = SwingUtilities.getRootPane(FSATextField.this);
 				if (root != null) {
-					InputMap im = root.getInputMap(
-								JComponent.WHEN_IN_FOCUSED_WINDOW);
+					InputMap im = root.getInputMap(JComponent.WHEN_FOCUSED);
 					ActionMap am = root.getActionMap();
 					if (im != null && am != null) {
 						Object obj = im.get(KeyStroke.getKeyStroke(
@@ -564,7 +563,7 @@ System.out.println("DEBUG: *** parent is null");
 	 */
 	private void installStandardKeyActions() {
 
-		InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		InputMap inputMap = getInputMap(JComponent.WHEN_FOCUSED);
 		ActionMap actionMap = getActionMap();
 
 		// Tab and Shift+Tab are traditionally focus-shifting keys.  Swing will
@@ -1037,5 +1036,26 @@ System.out.println("DEBUG: *** parent is null");
 
 	}
 
+public static void main(String[] args) {
+
+	SwingUtilities.invokeLater(new Runnable() {
+		public void run() {
+			
+			FSATextField tf1 = new FSATextField(40);
+tf1.setName("tf1");
+			FSATextField tf2 = new FSATextField(40);
+tf2.setName("tf2");
+			JPanel temp = new JPanel(new BorderLayout());
+			temp.add(tf1, BorderLayout.SOUTH);
+			temp.add(tf2, BorderLayout.NORTH);
+			JFrame frame = new JFrame("Test");
+			frame.setContentPane(temp);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.pack();
+			frame.setLocationRelativeTo(null);
+			frame.setVisible(true);
+		}
+	});
+}
 
 }

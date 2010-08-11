@@ -1074,13 +1074,11 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 *
 	 * @param file The file for which you want a canonical path.
 	 */
-	private final File getCanonicalFileFor(File file) {
-		// Should return a valid root if a directory "fileName"
-		// exists, or null if it doesn't.
-		File root = RootManager.getInstance().getRootForFile(file);
-		if (root!=null)
-			return file;
-		return new File(currentDirectory,  file.getAbsolutePath());
+	private final File getCanonicalFileFor(File dir) {
+		if (!dir.isAbsolute()) {
+			dir = new File(currentDirectory, dir.getPath());
+		}
+		return dir;
 	}
 
 

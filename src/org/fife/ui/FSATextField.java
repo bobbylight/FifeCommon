@@ -368,6 +368,41 @@ System.out.println("DEBUG: *** parent is null");
 
 
 	/**
+	 * Returns the number of instances of a character in a String.
+	 *
+	 * @param str The string to search in.  This cannot be <code>null</code>.
+	 * @param ch The character to search for.
+	 * @return The number of instances of the character in the String.
+	 */
+	private static final int getCharCount(String str, char ch) {
+		int count = 0;
+		int prev = 0;
+		int offs = 0;
+		while ((offs=str.indexOf(ch, prev))>-1) {
+			count++;
+			prev = offs + 1;
+		}
+		return count;
+	}
+
+
+	/**
+	 * Returns the files contained in the specified directory.
+	 *
+	 * @param dir The directory.
+	 * @return The contained files.
+	 */
+	private String[] getContainedFiles(File dir) {
+		// If they only want to see directories, we have to take a little
+		// more care.
+		if (directoriesOnly) {
+			return dir.list(directoriesOnlyFilenameFilter);
+		}
+		return dir.list();
+	}
+
+
+	/**
 	 * Returns the current directory for this text field.
 	 *
 	 * @return The current directory.
@@ -494,36 +529,6 @@ System.out.println("DEBUG: *** parent is null");
 			}
 		});
 
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "OnEnter");
-		actionMap.put("OnEnter", new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-				// Hide the popup window if necessary and call the
-				// default binding.
-				if (popupWindow!=null && popupWindow.isVisible())
-					setPopupVisible(false);
-				JRootPane root = SwingUtilities.getRootPane(FSATextField.this);
-				if (root != null) {
-					InputMap im = root.getInputMap(
-										JComponent.WHEN_IN_FOCUSED_WINDOW);
-					ActionMap am = root.getActionMap();
-					if (im != null && am != null) {
-						Object obj = im.get(KeyStroke.getKeyStroke(
-										KeyEvent.VK_ENTER,0));
-						if (obj != null) {
-							Action action = am.get(obj);
-							if (action != null) {
-								action.actionPerformed(new ActionEvent(
-										root, e.getID(),
-										e.getActionCommand(),
-										e.getWhen(),
-										e.getModifiers()));
-							}
-						}
-					}
-				}
-			}
-		});
-
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "OnEsc");
 		actionMap.put("OnEsc", new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -535,7 +540,7 @@ System.out.println("DEBUG: *** parent is null");
 				}
 				JRootPane root = SwingUtilities.getRootPane(FSATextField.this);
 				if (root != null) {
-					InputMap im = root.getInputMap(JComponent.WHEN_FOCUSED);
+					InputMap im = root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 					ActionMap am = root.getActionMap();
 					if (im != null && am != null) {
 						Object obj = im.get(KeyStroke.getKeyStroke(
@@ -921,13 +926,42 @@ System.out.println("DEBUG: *** parent is null");
 			if (dirName.charAt(dirName.length()-1)!=File.separatorChar)
 				dirName += File.separatorChar; // Only need to add slash if not == "C:\" on Windows.
 
-			// If they only want to see directories, we have to take a little
-			// more care.
-			if (directoriesOnly) {
-				containedFiles = directory.list(directoriesOnlyFilenameFilter);
+			// Take special care if this is a UNC path, to work around
+			// performance problems listing files in them if the file
+			// list is long.
+			// TODO: Always do this work in a Thread, restarting it if the
+			// user types a key before it completes.
+			if (File.separatorChar=='\\' &&
+					directory.getAbsolutePath().startsWith("\\\\")) {
+				// listFiles() is by far the slowest when returning the list
+				// of files from "\\foobar\" and "\\foobar\dir1\".  It seems
+				// generally much faster with "\\foobar\dir1\dir2\", so we'll
+				// put a crude hack into place and not even try to do
+				// completions if they haven't typed "enough" of a UNC path.
+				int slashCount = getCharCount(directory.getAbsolutePath(), '\\');
+				if (slashCount<5) {
+					containedFiles = null;
+				}
+				else {
+					// In case it's still slow, don't let it run longer than
+					// 8 seconds.
+					Cursor old = getCursor();
+					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+					GetContentsRunnable gcr = new GetContentsRunnable(directory);
+					Thread thread = new Thread(gcr);
+					thread.start();
+					try {
+						thread.join(8000);
+					} catch (InterruptedException ie) {
+						ie.printStackTrace();
+					}
+					setCursor(old);
+					thread.interrupt();
+					containedFiles = gcr.containedFiles;
+				}
 			}
-			else {
-				containedFiles = directory.list();
+			else { // Local directory - fast enough in most cases
+				containedFiles = getContainedFiles(directory);
 			}
 
 			// We must check for null here in case an IO error occurs.
@@ -1014,6 +1048,29 @@ System.out.println("DEBUG: *** parent is null");
 		// See Java bug: http://bugs.sun.com/view_bug.do?bug_id=4816818
 		// for more information.
 		SwingUtilities.invokeLater(listValueChangedRunnable);
+	}
+
+
+	/**
+	 * Runnable that gets the list of files in a directory.
+	 */
+	private class GetContentsRunnable implements Runnable {
+
+		private File dir;
+		public String[] containedFiles;
+
+		public GetContentsRunnable(File dir) {
+			this.dir = dir;
+		}
+
+		public void run() {
+			//long start = System.currentTimeMillis();
+			//System.out.println("Starting at: " + start);
+			containedFiles = getContainedFiles(dir);
+			//long time = System.currentTimeMillis() - start;
+			//System.out.println("DEBUG: list files completed in: " + (time/1000f) + " seconds");
+		}
+
 	}
 
 

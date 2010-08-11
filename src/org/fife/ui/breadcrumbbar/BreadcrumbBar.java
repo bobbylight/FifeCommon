@@ -211,7 +211,12 @@ tb.addChangeListener(new ChangeListener() {
 				name = loc.getAbsolutePath(); // Was "", on Windows at least
 			}
 			if (name.length()==0) { // Root directory "/", on OS X at least...
-				name = "/";
+				if (File.separatorChar=='\\') {
+					name = "\\\\"; // Windows => must be a UNC path
+				}
+				else {
+					name = "/";
+				}
 			}
 			b = new BreadcrumbBarButton(name);
 		}
@@ -404,7 +409,17 @@ tb.addChangeListener(new ChangeListener() {
 		buttonPanel.add(rootButton, 0);
 		backButton = createBackButton();
 		buttonPanel.add(backButton, 1);
-		iconLabel.setIcon(fsv.getSystemIcon(shownLocation));
+		Icon icon = null;
+		try {
+			icon = fsv.getSystemIcon(shownLocation);
+		} catch (NullPointerException npe) {
+			// getSystemIcon() throws an NPE when shownLocation is null.  We
+			// check for this before calling refresh(), but we're being
+			// defensive here, and using a sensible default if it happens
+			// despite our best efforts.
+			icon = UIManager.getIcon("FileView.directoryIcon");
+		}
+		iconLabel.setIcon(icon);
 
 		if (getMode()==TEXT_FIELD_MODE) {
 			setMode(BREADCRUMB_MODE); // revalidates for us
@@ -458,6 +473,12 @@ tb.addChangeListener(new ChangeListener() {
 	public void setShownLocation(File loc) {
 		if (loc!=null) {
 			loc = getAbsoluteLocation(loc.getPath());
+			if (!loc.exists()) {
+				// Just in case they remove a directory out from under us.
+				// FileSystemView.getSystemIcon() (called from refresh() below)
+				// will fail if the location doesn't exist.
+				loc = new File(System.getProperty("user.dir"));
+			}
 			if (!loc.equals(shownLocation)) {
 				File old = shownLocation;
 				try {

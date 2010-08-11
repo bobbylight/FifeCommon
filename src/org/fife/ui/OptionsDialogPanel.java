@@ -23,6 +23,7 @@
  */
 package org.fife.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
@@ -33,6 +34,7 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.util.ArrayList;
+import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -108,6 +110,76 @@ public abstract class OptionsDialogPanel extends JPanel {
 	public void addChildPanel(final OptionsDialogPanel child) {
 		childPanels.add(child);
 		child.parent = this;
+	}
+
+
+	/**
+	 * Adds a child component to a container, ensuring it is left-aligned.
+	 *
+	 * @param parent The parent container.  This should have a vertical
+	 *        BoxLayout.
+	 * @param toAdd The component to add.
+	 * @see #addLeftAligned(Container, Component, int)
+	 * @see #addLeftAligned(Container, Component, int, int)
+	 */
+	protected void addLeftAligned(Container parent, Component toAdd) {
+		addLeftAligned(parent, toAdd, 0);
+	}
+
+
+	/**
+	 * Adds a child component to a container, ensuring it is left-aligned.
+	 *
+	 * @param parent The parent container.  This should have a vertical
+	 *        BoxLayout.
+	 * @param toAdd The component to add.
+	 * @param spacer The amount of vertical space to add after the component.
+	 *        This may be zero.
+	 * @see #addLeftAligned(Container, Component)
+	 * @see #addLeftAligned(Container, Component, int, int)
+	 */
+	protected void addLeftAligned(Container parent, Component toAdd,
+									int spacer) {
+		addLeftAligned(parent, toAdd, spacer, 0);
+	}
+
+
+	/**
+	 * Adds a child component to a container, ensuring it is left-aligned.
+	 *
+	 * @param parent The parent container.  This should have a vertical
+	 *        BoxLayout.
+	 * @param toAdd The component to add.
+	 * @param spacer The amount of vertical space to add after the component.
+	 *        This may be zero.
+	 * @param indent An amount to indent <code>toAdd</code> by.  This may be
+	 *        zero.
+	 * @see #addLeftAligned(Container, Component)
+	 * @see #addLeftAligned(Container, Component, int)
+	 */
+	protected void addLeftAligned(Container parent, Component toAdd,
+									int spacer, int indent) {
+
+		indent = Math.max(indent, 0);
+
+		if (indent>0) {
+			Box box = Box.createHorizontalBox();
+			box.add(Box.createHorizontalStrut(indent));
+			box.add(toAdd);
+			box.add(Box.createHorizontalGlue());
+			toAdd = box;
+		}
+
+		// Always wrap everything inside BorderLayout.  Even a horizontal
+		// BoxLayout will slightly resize with a window.
+		JPanel temp = new JPanel(new BorderLayout());
+		temp.add(toAdd, BorderLayout.LINE_START);
+
+		parent.add(temp);
+		if (spacer>0) {
+			parent.add(Box.createVerticalStrut(5));
+		}
+
 	}
 
 

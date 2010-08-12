@@ -24,16 +24,11 @@
 package org.fife.ui.app;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
@@ -114,7 +109,7 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 		String command = e.getActionCommand();
 
 		if ("ToggleDetails".equals(command)) {
-			detailsButton.getArrowIcon().toggle();
+			detailsButton.toggleCollapsed();
 			detailsButton.repaint();
 			// Need cast for setPreferredSize() to work in 1.4.
 			JPanel cp = (JPanel)getContentPane(); // Okay cast - we made it
@@ -285,6 +280,8 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 	 */
 	public void setDescription(String desc) {
 		descArea.setText(desc);
+		// Force wrapping HTML at word boundaries:
+		descArea.firePropertyChange("wrapStyleWord", false, true);
 		// NOTE: Why must we reset cp's preferred size to keep pack()
 		// actually working here?
 		// Need cast for setPreferredSize() to work in 1.4.
@@ -310,70 +307,31 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 
 	private static class DetailsButton extends JButton {
 
+		private String mainText;
+		private boolean collapsed;
+
 		public DetailsButton(String text) {
-			setText(text);
-			setIcon(new ArrowIcon());
+			mainText = text;
+			setCollapsed(true);
 		}
 
-		public ArrowIcon getArrowIcon() {
-			return (ArrowIcon)getIcon();
-		}
-
-	}
-
-
-	private static class ArrowIcon implements Icon {
-
-		private int[] x;
-		private int[] y;
-		private int[] x2;
-		private int[] y2;
-
-		private static final int WIDTH		= 10;
-		private static final int HEIGHT		= 10;
-
-		public ArrowIcon() {
-			x = new int[] { WIDTH/2, 0, WIDTH };
-			y = new int[] { 0, HEIGHT, HEIGHT };
-			x2 = new int[3];
-			y2 = new int[3];
-		}
-
-		public int getIconWidth() {
-			return WIDTH;
-		}
-
-		public int getIconHeight() {
-			return HEIGHT;
-		}
-
-		public void paintIcon(Component c, Graphics g, int x, int y) {
-			Graphics2D g2d = (Graphics2D)g;
-			Object old = g2d.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
-			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-								RenderingHints.VALUE_ANTIALIAS_ON);
-			Color fg = UIManager.getColor("Button.foreground");
-			if (fg==null) { // Not guaranteed to be set in UIDefaults
-				fg = Color.black;
-			}
-			g2d.setColor(fg);
-			for (int i=0; i<3; i++) {
-				x2[i] = this.x[i] + x;
-				y2[i] = this.y[i] + y;
-			}
-			g2d.fillPolygon(x2,y2, 3);
-			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, old);
-		}
-
-		public void toggle() {
-			if (x[0]==(getIconWidth())/2) {
-				x[0] = 0; x[1] = getIconWidth(); x[2] = getIconWidth()/2;
-				y[0] = 0; y[1] = 0; y[2] = getIconHeight();
+		public void setCollapsed(boolean collapsed) {
+			this.collapsed = collapsed;
+			String text = null;
+			ComponentOrientation o = getComponentOrientation();
+			if (collapsed) {
+				text = o.isLeftToRight() ? (mainText + " >>") :
+											(mainText + " <<");
 			}
 			else {
-				x[0] = getIconWidth()/2; x[1] = 0; x[2] = getIconWidth();
-				y[0] = 0; y[1] = getIconHeight(); y[2] = y[1];
+				text = o.isLeftToRight() ? (mainText + " <<") :
+					(mainText + " >>");
 			}
+			setText(text);
+		}
+
+		public void toggleCollapsed() {
+			setCollapsed(!collapsed);
 		}
 
 	}

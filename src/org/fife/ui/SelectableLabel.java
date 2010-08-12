@@ -24,7 +24,7 @@ package org.fife.ui;
 
 import java.awt.Color;
 import java.awt.Font;
-import javax.swing.JEditorPane;
+import javax.swing.JTextPane;
 import javax.swing.JLabel;
 import javax.swing.UIManager;
 import javax.swing.plaf.TextUI;
@@ -37,7 +37,7 @@ import javax.swing.text.html.HTMLDocument;
  * @author Robert Futrell
  * @version 1.0
  */
-public class SelectableLabel extends JEditorPane {
+public class SelectableLabel extends JTextPane {
 
 
 	/**

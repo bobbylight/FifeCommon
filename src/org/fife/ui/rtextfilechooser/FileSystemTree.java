@@ -693,7 +693,9 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 * "background color" and other colors from the original LnF.
 	 */
 	public void updateUI() {
+
 		super.updateUI();
+
 		// Don't create a new one the first time through (done in ctor).
 		if (cellRenderer!=null) {
 			// NOTE: DefaultTreeCellRenderer caches icons, colors, etc.,
@@ -703,6 +705,11 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			cellRenderer = new FileSystemTreeRenderer();
 			setCellRenderer(cellRenderer);
 		}
+
+		if (popup!=null) {
+			SwingUtilities.updateComponentTreeUI(popup);
+		}
+
 	}
 
 

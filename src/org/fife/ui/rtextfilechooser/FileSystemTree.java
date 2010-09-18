@@ -81,6 +81,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	private JMenu openInMenu;
 	private Actions.SystemOpenAction systemEditAction;
 	private Actions.SystemOpenAction systemViewAction;
+	private Actions.CopyAction copyAction;
 	protected FileSystemTreeActions.NewFileAction newFileAction; // Used in DirectoryTree too
 	private FileSystemTreeActions.NewFolderAction newFolderAction;
 	private FileSystemTreeActions.RefreshAction refreshAction;
@@ -199,9 +200,12 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			systemViewAction.setEnabled(selectedFile!=null);
 		}
 
+		boolean enable = selectedFile!=null;
+		copyAction.setEnabled(enable);
+
 		// Only have the "Refresh" menu item enabled if a directory
 		// item is selected.
-		boolean enable = selectedFile!=null && selectedFile.isDirectory();
+		enable = selectedFile!=null && selectedFile.isDirectory();
 		newFileAction.setEnabled(enable);
 		newFolderAction.setEnabled(enable);
 		refreshAction.setEnabled(enable);
@@ -229,6 +233,11 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			openInMenu.add(systemViewAction);
 		}
 		popup.add(openInMenu);
+
+		popup.addSeparator();
+
+		copyAction = new Actions.CopyAction(this);
+		popup.add(copyAction);
 
 		popup.addSeparator();
 

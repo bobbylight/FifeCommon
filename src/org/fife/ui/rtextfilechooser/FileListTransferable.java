@@ -45,6 +45,8 @@ public class FileListTransferable implements Transferable {
 	 */
 	private List fileList;
 
+	private DataFlavor uriListFlavor; // RFC 2483, needed for Linux/OS X
+
 
 	/**
 	 * Constructor.
@@ -53,7 +55,18 @@ public class FileListTransferable implements Transferable {
 	 *        <code>null</code>.
 	 */
 	public FileListTransferable(List fileList) {
+
 		this.fileList = fileList;
+
+		// On Linux and OS X, file explorers don't take javaFileListFlavor
+		// but do take this
+		try {
+			uriListFlavor =
+				new DataFlavor("text/uri-list;class=java.lang.String");
+		} catch (ClassNotFoundException cnfe) {
+			cnfe.printStackTrace();
+		}
+
 	}
 
 
@@ -78,6 +91,24 @@ public class FileListTransferable implements Transferable {
 			return sb.subSequence(0, sb.length()-1).toString();
 		}
 
+		else if (uriListFlavor.equals(flavor)) {
+			StringBuffer sb = new StringBuffer();
+			if (fileList!=null) {
+				for (Iterator i=fileList.iterator(); i.hasNext(); ) {
+					File f = (File)i.next();
+					String uri = f.toURI().toString();
+					if (uri.startsWith("file:/") && uri.length()>6 &&
+							uri.charAt(6)!='/') { // Always true?
+						// Java doesn't form file URI's properly
+						uri = "file://localhost/" + uri.substring(6);
+					}
+					sb.append(uri).append("\r\n");
+				}
+			}
+			System.out.println("Transferring:\n" + sb.toString());
+			return sb.toString(); // Trailing \r\n is required by RFC 2483
+		}
+
 		else {
 			throw new UnsupportedFlavorException(flavor);
 		}
@@ -89,10 +120,16 @@ public class FileListTransferable implements Transferable {
 	 * {@inheritDoc}
 	 */
 	public DataFlavor[] getTransferDataFlavors() {
-		DataFlavor[] flavors = new DataFlavor[2];
-		flavors[0] = DataFlavor.javaFileListFlavor;
-		flavors[1] = DataFlavor.stringFlavor;
-		return flavors;
+
+		ArrayList flavors = new ArrayList();
+		flavors.add(DataFlavor.javaFileListFlavor);
+		if (uriListFlavor!=null) {
+			flavors.add(uriListFlavor);
+		}
+		flavors.add(DataFlavor.stringFlavor);
+
+		return (DataFlavor[])flavors.toArray(new DataFlavor[flavors.size()]);
+
 	}
 
 

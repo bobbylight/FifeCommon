@@ -22,6 +22,7 @@
  */
 package org.fife.ui.rtextfilechooser;
 
+import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -74,10 +75,13 @@ interface Actions {
 	 */
 	static class CopyAction extends FileChooserAction {
 
-		public CopyAction(RTextFileChooser chooser) {
-			super(chooser);
+		private FileSelector chooser;
+
+		public CopyAction(FileSelector chooser) {
+			super(null);
+			this.chooser = chooser;
 			putValue(Action.NAME, getString("Copy"));
-			int mod = chooser.getToolkit().getMenuShortcutKeyMask();
+			int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 			putValue(Action.ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_C, mod));
 		}
@@ -86,15 +90,16 @@ interface Actions {
 
 			// Get the selected files.  If there are no selected files (i.e.,
 			// they pressed "Ctrl+C" when no files were selected), beep.
-			File[] files = chooser.getView().getSelectedFiles();
+			File[] files = chooser.getSelectedFiles();
 			if (files==null || files.length==0) {
-				UIManager.getLookAndFeel().provideErrorFeedback(chooser);
+				UIManager.getLookAndFeel().provideErrorFeedback(null);
 				return;
 			}
 
 			List fileList = Arrays.asList(files);
 			FileListTransferable flt = new FileListTransferable(fileList);
-			Clipboard clipboard = chooser.getToolkit().getSystemClipboard();
+			Clipboard clipboard = Toolkit.getDefaultToolkit().
+												getSystemClipboard();
 			clipboard.setContents(flt, null);
 
 		}
@@ -192,7 +197,8 @@ interface Actions {
 	static abstract class FileChooserAction extends AbstractAction {
 
 		protected RTextFileChooser chooser;
-		private static ResourceBundle msg = ResourceBundle.getBundle("org.fife.ui.rtextfilechooser.FileChooserPopup");
+		private static ResourceBundle msg = ResourceBundle.getBundle(
+							"org.fife.ui.rtextfilechooser.FileChooserPopup");
 
 		public FileChooserAction(RTextFileChooser chooser) {
 			this.chooser = chooser;

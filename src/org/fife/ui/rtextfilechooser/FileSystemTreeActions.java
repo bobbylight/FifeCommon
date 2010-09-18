@@ -164,7 +164,7 @@ class FileSystemTreeActions {
 				if (root.isDirectory()) { // Should always be true
 
 					String name = File.separatorChar=='/' ? "newFile" :
-													"New File.txt";
+													"NewFile.txt";
 					File f = new File(root, name);
 					FileSystemTreeNode newChild = new FileSystemTreeNode(f);
 

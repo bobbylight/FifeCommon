@@ -366,15 +366,12 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			favoriteList = new ArrayList(1); // Usually not many.
 		}
 
-		Comparator c = File.separatorChar=='/' ? null :
-									String.CASE_INSENSITIVE_ORDER;
-		int index = Collections.binarySearch(favoriteList, dir, c);
-		if (index<0) { // Needs to be added (common case)
-			int insertionPoint = -(index+1);
-			favoriteList.add(insertionPoint, dir);
+		if (!favoriteList.contains(dir)) {
+			favoriteList.add(dir);
+			return true;
 		}
 
-		return index<0;
+		return false;
 
 	}
 

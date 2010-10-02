@@ -30,6 +30,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -352,8 +353,22 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 				fileList.add(files[i]);
 		}
 
-		Collections.sort(fileList);
-		Collections.sort(dirList);
+		// On Windows and OS X, comparison is case-insensitive.
+		Comparator c = null;
+		String os = System.getProperty("os.name");
+		boolean isOSX = os!=null ? os.toLowerCase().indexOf("os x")>-1 : false;
+		if (File.separatorChar=='\\' || isOSX) {
+			c = new Comparator() {
+				public int compare(Object o1, Object o2) {
+					File f1 = (File)o1;
+					File f2 = (File)o2;
+					return f1.getName().compareToIgnoreCase(f2.getName());
+				}
+			};
+		}
+
+		Collections.sort(fileList, c);
+		Collections.sort(dirList, c);
 		dirList.addAll(fileList);
 
 		File[] fileArray = new File[dirList.size()];
@@ -658,9 +673,20 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 		// Create our single "root" node.
 		else if (rootFile.isDirectory()) {
+
 			root = new FileSystemTreeNode();
-			root.add(createTreeNodeForImpl(rootFile, true));
-			addCachedRootName(rootFile);
+			File[] children = rootFile.listFiles();
+			int count = children==null ? 0 : children.length;
+			if (count>0) {
+				children = filterAndSort(children);
+			}
+
+			for (int i=0; i<count; i++) {
+				root.add(createTreeNodeForImpl(children[i],
+											children[i].isDirectory()));
+				addCachedRootName(children[i]);
+			}
+
 		}
 
 		else {

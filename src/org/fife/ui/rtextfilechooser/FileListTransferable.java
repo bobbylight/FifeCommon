@@ -22,6 +22,8 @@
  */
 package org.fife.ui.rtextfilechooser;
 
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -38,7 +40,7 @@ import java.util.List;
  * @author Robert Futrell
  * @version 1.0
  */
-public class FileListTransferable implements Transferable {
+public class FileListTransferable implements Transferable, ClipboardOwner {
 
 	/**
 	 * The list of files to transfer.
@@ -144,6 +146,11 @@ public class FileListTransferable implements Transferable {
 			}
 		}
 		return false;
+	}
+
+
+	public void lostOwnership(Clipboard clipboard, Transferable contents) {
+		// Do nothing
 	}
 
 

@@ -82,6 +82,8 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	private Actions.SystemOpenAction systemEditAction;
 	private Actions.SystemOpenAction systemViewAction;
 	private Actions.CopyAction copyAction;
+	private FileSystemTreeActions.PasteAction pasteAction;
+	private FileSystemTreeActions.DeleteAction deleteAction;
 	protected FileSystemTreeActions.NewFileAction newFileAction; // Used in DirectoryTree too
 	private FileSystemTreeActions.NewFolderAction newFolderAction;
 	private FileSystemTreeActions.RefreshAction refreshAction;
@@ -202,6 +204,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 		boolean enable = selectedFile!=null;
 		copyAction.setEnabled(enable);
+		deleteAction.setEnabled(enable);
 
 		// Only have the "Refresh" menu item enabled if a directory
 		// item is selected.
@@ -209,6 +212,9 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		newFileAction.setEnabled(enable);
 		newFolderAction.setEnabled(enable);
 		refreshAction.setEnabled(enable);
+
+		pasteAction.setEnabled(enable &&
+								pasteAction.isClipboardContentValid()); 
 
 	}
 
@@ -236,19 +242,17 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 		popup.addSeparator();
 
-		copyAction = new Actions.CopyAction(this);
 		popup.add(copyAction);
+		popup.add(pasteAction);
+		popup.add(deleteAction);
 
 		popup.addSeparator();
 
-		newFileAction = new FileSystemTreeActions.NewFileAction(this, bundle);
 		popup.add(new JMenuItem(newFileAction));
-		newFolderAction = new FileSystemTreeActions.NewFolderAction(this, bundle);
 		popup.add(new JMenuItem(newFolderAction));
 
 		popup.addSeparator();
 
-		refreshAction = new FileSystemTreeActions.RefreshAction(this, bundle);
 		JMenuItem item = new JMenuItem(refreshAction);
 		popup.add(item);
 
@@ -571,6 +575,27 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		setTransferHandler(new TreeTransferHandler());
 		setDragEnabled(true);
 
+		// Create our actions (most of which have shortcuts)
+		copyAction = new Actions.CopyAction(this);
+		pasteAction = new FileSystemTreeActions.PasteAction(this);
+		deleteAction = new FileSystemTreeActions.DeleteAction(null, this);
+		newFileAction = new FileSystemTreeActions.NewFileAction(this);
+		newFolderAction = new FileSystemTreeActions.NewFolderAction(this);
+		refreshAction = new FileSystemTreeActions.RefreshAction(this);
+
+		// Add actions with shortcuts to our action map so we don't have
+		// to use the popup menu.
+		InputMap im = getInputMap();
+		ActionMap am = getActionMap();
+		im.put((KeyStroke)copyAction.getValue(Action.ACCELERATOR_KEY), "Copy");
+		am.put("Copy", copyAction);
+		im.put((KeyStroke)pasteAction.getValue(Action.ACCELERATOR_KEY), "Paste");
+		am.put("Paste", pasteAction);
+		im.put((KeyStroke)deleteAction.getValue(Action.ACCELERATOR_KEY), "Delete");
+		am.put("Delete", deleteAction);
+		im.put((KeyStroke)refreshAction.getValue(Action.ACCELERATOR_KEY), "Refresh");
+		am.put("Refresh", refreshAction);
+
 	}
 
 
@@ -592,17 +617,19 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 * Refreshes the children of the specified node (representing a directory)
 	 * to accurately reflect the files inside of it.
 	 *
-	 * @param node The node.
+	 * @param node The node.  If this is <code>null</code>, nothing happens.
 	 */
 	void refreshChildren(FileSystemTreeNode node) {
-		node.removeAllChildren();
-		File file = node.getFile();
-		if (file.isDirectory()) {
-			File[] children = fileSystemView.getFiles(file, false);
-			File[] filteredChildren = filterAndSort(children);
-			int numChildren = filteredChildren.length;
-			for (int i=0; i<numChildren; i++)
-				node.add(createTreeNodeFor(filteredChildren[i]));
+		if (node!=null) {
+			node.removeAllChildren();
+			File file = node.getFile();
+			if (file.isDirectory()) {
+				File[] children = fileSystemView.getFiles(file, false);
+				File[] filteredChildren = filterAndSort(children);
+				for (int i=0; i<filteredChildren.length; i++) {
+					node.add(createTreeNodeFor(filteredChildren[i]));
+				}
+			}
 		}
 	}
 

@@ -1,17 +1,26 @@
 package org.fife.ui.rtextfilechooser;
 
 import java.awt.Component;
+import java.awt.Window;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.EventObject;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JOptionPane;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
@@ -22,6 +31,7 @@ import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreePath;
 
 import org.fife.ui.rtextfilechooser.FileSystemTree.FileSystemTreeNode;
+import org.fife.ui.rtextfilechooser.extras.FileIOExtras;
 
 
 /**
@@ -31,6 +41,119 @@ import org.fife.ui.rtextfilechooser.FileSystemTree.FileSystemTreeNode;
  * @version 1.0
  */
 class FileSystemTreeActions {
+
+
+	/**
+	 * Base class for file system tree-related actions.
+	 */
+	abstract static class AbstractTreeAction extends AbstractAction {
+
+		protected FileSystemTree tree;
+		private static ResourceBundle msg = ResourceBundle.getBundle(
+							"org.fife.ui.rtextfilechooser.FileSystemTree");
+
+		public AbstractTreeAction(FileSystemTree tree) {
+			this.tree = tree;
+		}
+
+		protected String getString(String key) {
+			return msg.getString(key);
+		}
+
+	}
+
+
+	/**
+	 * Action that handles deleting files.
+	 */
+	static class DeleteAction extends AbstractTreeAction {
+
+		private Window window;
+
+		public DeleteAction(Window parent, FileSystemTree tree) {
+			super(tree);
+			putValue(NAME, getString("Delete"));
+			putValue(ACCELERATOR_KEY,
+					KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+			this.window = parent;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+
+			// Get the selected files.  If there are no selected files (i.e.,
+			// they pressed "delete" when no files were selected), beep.
+			File[] files = tree.getSelectedFiles();
+			if (files==null || files.length==0) {
+				UIManager.getLookAndFeel().provideErrorFeedback(window);
+				return;
+			}
+
+			FileIOExtras extras = FileIOExtras.getInstance();
+			if (extras!=null) {
+				handleDeleteNative(files, extras);
+			}
+			else {
+				handleDeleteViaJava(files);
+			}
+
+		}
+
+		private void handleDeleteNative(File[] files, FileIOExtras extras) {
+			if (extras.moveToRecycleBin(files, true, true)) {
+				refresh();
+			}
+			else {
+				UIManager.getLookAndFeel().provideErrorFeedback(window);
+			}
+		}
+
+		private void handleDeleteViaJava(File[] files) {
+
+			// Prompt to confirm the file deletion.
+			int count = files.length;
+			int choice;
+			if (count==1) {
+				String fileName = files[0].getName();
+				choice = JOptionPane.showConfirmDialog(window,
+					RTextFileChooser.msg.
+							getString("DeleteConfirmPrompt") + fileName + "?");
+			}
+			else { // count>1
+				choice = JOptionPane.showConfirmDialog(window,
+					RTextFileChooser.msg.
+							getString("DeleteMultipleConfirmPrompt"));
+			}
+
+			// If they chose "yes," delete the files.
+			if (choice==JOptionPane.YES_OPTION) {
+				for (int i=0; i<count; i++) {
+					if (!files[i].delete()) {
+						Object[] arguments = { files[i].getName() };
+						String msg = MessageFormat.format(
+							RTextFileChooser.msg.getString("DeleteFailText"),
+							arguments);
+						JOptionPane.showMessageDialog(window,
+							msg,
+							RTextFileChooser.msg.getString("Error"),
+							JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				refresh();
+			}
+
+		}
+
+		private void refresh() {
+			FileSystemTreeNode node = (FileSystemTreeNode)tree.
+								getLastSelectedPathComponent();
+			if (node!=null) {
+				FileSystemTreeNode parent= (FileSystemTreeNode)node.getParent();
+				tree.refreshChildren(parent);
+				((DefaultTreeModel)tree.getModel()).reload(parent);
+			}
+		}
+
+	}
 
 
 	/**
@@ -138,17 +261,16 @@ class FileSystemTreeActions {
 	/**
 	 * Allows the user to create a new file.
 	 */
-	static class NewFileAction extends AbstractAction
+	static class NewFileAction extends AbstractTreeAction
 								implements CellEditorListener {
 
-		private FileSystemTree tree;
 		private TreeCellEditor editor;
 
-		public NewFileAction(FileSystemTree tree, ResourceBundle bundle) {
-			super(bundle.getString("NewFile"));
-			putValue(Action.MNEMONIC_KEY,
-				new Integer(bundle.getString("NewFileMnemonic").charAt(0)));
-			this.tree = tree;
+		public NewFileAction(FileSystemTree tree) {
+			super(tree);
+			putValue(NAME, getString("NewFile"));
+			putValue(MNEMONIC_KEY,
+				new Integer(getString("NewFileMnemonic").charAt(0)));
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -248,17 +370,16 @@ class FileSystemTreeActions {
 	/**
 	 * Allows the user to create a new folder.
 	 */
-	static class NewFolderAction extends AbstractAction
+	static class NewFolderAction extends AbstractTreeAction
 								implements CellEditorListener {
 
-		private FileSystemTree tree;
 		private TreeCellEditor editor;
 
-		public NewFolderAction(FileSystemTree tree, ResourceBundle bundle) {
-			super(bundle.getString("NewFolder"));
-			putValue(Action.MNEMONIC_KEY, new Integer(bundle.getString(
-					"NewFolderMnemonic").charAt(0)));
-			this.tree = tree;
+		public NewFolderAction(FileSystemTree tree) {
+			super(tree);
+			putValue(NAME, getString("NewFolder"));
+			putValue(MNEMONIC_KEY,
+					new Integer(getString("NewFolderMnemonic").charAt(0)));
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -349,20 +470,134 @@ class FileSystemTreeActions {
 	}
 
 
+	/**
+	 * Pastes files into the currently selected directory.<p>
+	 *
+	 * This action is currently pretty weak, and is only capable of pasting
+	 * single files.  In the future, it would be easy to add the ability to
+	 * paste multiple files and/or directories, but we need a way for the
+	 * FileSystemTree to specify a handler for name collisions (e.g. files
+	 * already existing).<p>
+	 * 
+	 * At the moment, if the selection is more than one file, or a directory,
+	 * or if the destination file already exists, the system beeps and the
+	 * copy does not occur.
+	 */
+	static class PasteAction extends AbstractTreeAction {
+
+		public PasteAction(FileSystemTree tree) {
+			super(tree);
+			putValue(NAME, getString("Paste"));
+			putValue(MNEMONIC_KEY,
+					new Integer(getString("PasteMnemonic").charAt(0)));
+			int mod = tree.getToolkit().getMenuShortcutKeyMask();
+			putValue(ACCELERATOR_KEY,
+					KeyStroke.getKeyStroke(KeyEvent.VK_V, mod));
+		}
+
+		public void actionPerformed(ActionEvent e) {
+
+			TreePath path = tree.getSelectionPath();
+			boolean copied = false;
+
+			if (path!=null) { // Should always be true.
+
+				FileSystemTreeNode node = (FileSystemTreeNode)path.
+							getLastPathComponent();
+				File destDir = node.getFile();
+
+				if (destDir.isDirectory()) { // Should always be true
+
+					Clipboard clip = tree.getToolkit().getSystemClipboard();
+					Transferable contents = clip.getContents(null);
+					DataFlavor accepted = DataFlavor.javaFileListFlavor;
+
+					if (contents.isDataFlavorSupported(accepted)) {
+
+						try {
+
+							List files = (List)contents.
+												getTransferData(accepted);
+							if (files!=null && files.size()==1) {
+
+								File toCopy = (File)files.get(0);
+								if (toCopy.isFile()) {
+									File dest = new File(destDir,
+														toCopy.getName());
+									if (!dest.exists()) {
+										Utilities.copyFile(toCopy, dest);
+										tree.refreshChildren(node);
+										((DefaultTreeModel)tree.getModel()).
+															reload(node);
+										tree.setSelectedFile(dest);
+										copied = true;
+									}
+								}
+
+							}
+
+						} catch (UnsupportedFlavorException ufe) {
+							ufe.printStackTrace(); // Never happens
+						} catch (IOException ioe) {
+							ioe.printStackTrace();
+						}
+
+					}
+
+				}
+
+			}
+
+			if (!copied) {
+				UIManager.getLookAndFeel().provideErrorFeedback(tree);
+			}
+
+		}
+
+		/**
+		 * Returns whether the system clipboard contents are "valid" for this
+		 * action to be enabled.  Currently this verifies that the contents
+		 * are just a single file.  Applications can enable this action based
+		 * on the return value of this method.
+		 *
+		 * @return Whether the contents of the clipboard are "valid" for this
+		 *         action to be used.
+		 */
+		public boolean isClipboardContentValid() {
+			Clipboard clip = tree.getToolkit().getSystemClipboard();
+			Transferable contents = clip.getContents(null);
+			DataFlavor accepted = DataFlavor.javaFileListFlavor;
+			if (contents.isDataFlavorSupported(accepted)) {
+				try {
+					List files = (List)contents.getTransferData(accepted);
+					if (files!=null && files.size()==1) {
+						return ((File)files.get(0)).isFile();
+					}
+				} catch (UnsupportedFlavorException ufe) {
+					ufe.printStackTrace(); // Never happens
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+			}
+			return false;
+		}
+
+	}
+
 
 	/**
 	 * Action that "refreshes" the currently selected directory in the
 	 * directory tree.
 	 */
-	static class RefreshAction extends AbstractAction {
+	static class RefreshAction extends AbstractTreeAction {
 
-		private FileSystemTree tree;
-
-		public RefreshAction(FileSystemTree tree, ResourceBundle bundle) {
-			super(bundle.getString("Refresh"));
-			putValue(Action.MNEMONIC_KEY,
-				new Integer(bundle.getString("RefreshMnemonic").charAt(0)));
-			this.tree = tree;
+		public RefreshAction(FileSystemTree tree) {
+			super(tree);
+			putValue(NAME, getString("Refresh"));
+			putValue(MNEMONIC_KEY,
+				new Integer(getString("RefreshMnemonic").charAt(0)));
+			putValue(ACCELERATOR_KEY,
+					KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
 		}
 
 		public void actionPerformed(ActionEvent e) {

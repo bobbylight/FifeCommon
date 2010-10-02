@@ -90,7 +90,15 @@ interface Actions {
 
 			// Get the selected files.  If there are no selected files (i.e.,
 			// they pressed "Ctrl+C" when no files were selected), beep.
-			File[] files = chooser.getSelectedFiles();
+			File[] files = null;
+			if (chooser instanceof RTextFileChooser) {
+				// Horrible hack!!!  File chooser shouldn't actually
+				// implement FileSelector!  But it's view does...
+				files = ((RTextFileChooser)chooser).getView().getSelectedFiles();
+			}
+			else { // FileSystemTree
+				files = chooser.getSelectedFiles();
+			}
 			if (files==null || files.length==0) {
 				UIManager.getLookAndFeel().provideErrorFeedback(null);
 				return;
@@ -100,7 +108,7 @@ interface Actions {
 			FileListTransferable flt = new FileListTransferable(fileList);
 			Clipboard clipboard = Toolkit.getDefaultToolkit().
 												getSystemClipboard();
-			clipboard.setContents(flt, null);
+			clipboard.setContents(flt, flt);
 
 		}
 

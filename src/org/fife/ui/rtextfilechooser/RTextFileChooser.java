@@ -255,7 +255,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/**
 	 * The resource bundle for file choosers.
 	 */
-	private static final ResourceBundle msg = ResourceBundle.getBundle(
+	static final ResourceBundle msg = ResourceBundle.getBundle(
 									"org.fife.ui.rtextfilechooser.FileChooser");
 
 	/**

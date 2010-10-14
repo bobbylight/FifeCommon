@@ -427,6 +427,15 @@ System.out.println("DEBUG: *** parent is null");
 
 
 	/**
+	 * Hides the popup window, if it is visible.  This can be used to
+	 * programmatically hide the popup window.
+	 */
+	public void hidePopup() {
+		setPopupVisible(false);
+	}
+
+
+	/**
 	 * Returns whether or not the current OS is case-insensitive (e.g.,
 	 * is Windows or OS X).
 	 *

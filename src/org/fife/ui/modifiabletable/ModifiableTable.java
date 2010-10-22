@@ -25,6 +25,7 @@ package org.fife.ui.modifiabletable;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -40,6 +41,7 @@ import javax.swing.UIManager;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.DefaultTableModel;
 
@@ -333,6 +335,16 @@ public class ModifiableTable extends JPanel {
 				return parent instanceof JViewport ?
 					parent.getHeight()>getPreferredSize().height : false;
 			}
+			/**
+			 * Overridden so that, if this component is disabled, the table
+			 * also appears disabled (see Sun bug 4113508).
+			 */
+			public Component prepareRenderer(TableCellRenderer renderer,
+											int row, int column) {
+				Component comp = super.prepareRenderer(renderer, row, column);
+				comp.setEnabled(isEnabled());  // Enable/disable renderer same as table.
+				return comp;
+			}
 			public boolean isCellEditable(int row, int col) {
 				return false;
 			}
@@ -342,6 +354,21 @@ public class ModifiableTable extends JPanel {
 		table.getSelectionModel().addListSelectionListener(listener);
 		table.addMouseListener(listener);
 		return table;
+	}
+
+
+	/**
+	 * Ensure that the currently selected row in the table is visible.  If no
+	 * row is selected, this method does nothing.
+	 */
+	private void ensureSelectedRowIsVisible() {
+		int row = table.getSelectedRow();
+		if (row>-1) {
+	        Rectangle cellBounds = table.getCellRect(row, 0, true);
+	        if (cellBounds != null) {
+	            table.scrollRectToVisible(cellBounds);
+	        }
+		}
 	}
 
 
@@ -482,6 +509,7 @@ public class ModifiableTable extends JPanel {
 			}
 			table.getSelectionModel().setSelectionInterval(selectedRow+amt,
 															selectedRow+amt);
+			ensureSelectedRowIsVisible();
 			fireModifiableTableEvent(
 					ModifiableTableChangeEvent.MODIFIED, selectedRow+amt);
 			fireModifiableTableEvent(
@@ -529,6 +557,34 @@ public class ModifiableTable extends JPanel {
 				fireModifiableTableEvent(ModifiableTableChangeEvent.REMOVED,
 									row);
 			}
+		}
+	}
+
+
+	/**
+	 * Toggles whether this modifiable table is enabled.
+	 *
+	 * @param enabled Whether this modifiable table is enabled.
+	 */
+	public void setEnabled(boolean enabled) {
+		if (enabled!=isEnabled()) {
+			super.setEnabled(enabled);
+			if (addButton!=null) {
+				addButton.setEnabled(enabled);
+			}
+			if (modifyButton!=null) {
+				modifyButton.setEnabled(enabled);
+			}
+			if (moveDownButton!=null) {
+				moveDownButton.setEnabled(enabled);
+			}
+			if (moveUpButton!=null) {
+				moveUpButton.setEnabled(enabled);
+			}
+			if (removeButton!=null) {
+				removeButton.setEnabled(enabled);
+			}
+			table.setEnabled(enabled);
 		}
 	}
 

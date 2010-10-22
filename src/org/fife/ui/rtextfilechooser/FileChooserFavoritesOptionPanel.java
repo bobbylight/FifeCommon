@@ -47,6 +47,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import org.fife.ui.EscapableDialog;
 import org.fife.ui.OptionsDialogPanel;
 import org.fife.ui.ResizableFrameContentPane;
 import org.fife.ui.UIUtil;
@@ -248,7 +249,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 	/**
 	 * The dialog that allows the user to add or modify Favorite.
 	 */
-	private static class EditFavoriteDialog extends JDialog
+	private static class EditFavoriteDialog extends EscapableDialog
 				implements ActionListener, DocumentListener {
 
 		static final int OK		= 0;
@@ -336,10 +337,10 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 			Object source = e.getSource();
 			if (source==okButton) {
 				rc = OK;
-				setVisible(false);
+				escapePressed();
 			}
 			else if (source==cancelButton) {
-				setVisible(false);
+				escapePressed();
 			}
 			else {
 				String command = e.getActionCommand();

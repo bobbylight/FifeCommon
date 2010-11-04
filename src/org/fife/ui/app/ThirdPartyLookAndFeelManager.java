@@ -26,10 +26,13 @@ package org.fife.ui.app;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
@@ -38,41 +41,121 @@ import org.fife.ui.app.ExtendedLookAndFeelInfo;
 
 
 /**
+ * NOTE: Specifying LookAndFeels in this XML file is done at your own risk!
+ * If a LookAndFeel throws an Exception on the EDT, for any reason (needs
+ * special configuration not handled by this LAF manager, requires a newer
+ * JRE version than is specified in the XML, etc.), it can hose the
+ * <code>GUIApplication</code> and keep it from running!<p>
+ *
  * A class capable of reading an XML file specifying 3rd party Look and Feel
  * JAR files, and returning an array of information about the Look and Feels,
  * so your <code>GUIApplication</code> can use them.<p>
  *
  * The XML file read should have the following format:<p>
  * <pre>
- *   &lt;?xml version="1.0"?&gt;
+ *   &lt;?xml version="1.0" encoding="UTF-8" ?&gt;
  *   &lt;ThirdPartyLookAndFeels&gt;
- *      &lt;LookAndFeel name="name" class="class" jar="jar"/&gt;
+ *      &lt;LookAndFeel name="name" class="class" jars="jar"/&gt;
+ *      &lt;LookAndFeel name="name" class="class" jars="jar" minJavaVersion="1.6"/&gt;
  *      ... other LookAndFeel tags if desired ...
  *   &lt;/ThirdPartyLookAndFeels&gt;
  * </pre>
  *
  * where <code>name</code> is the name of the Look and Feel (as appears in
  * RText's menu), <code>class</code> is the main Look and Feel class, such as
- * <code>org.fife.plaf.OfficeXP.OfficeXPLookAndFeel</code>, and <code>jar</code>
- * is the path to the JAR file containing the Look and Feel, relative to the
- * install location of the specified <code>GUIApplicatoin</code>.
+ * <code>org.fife.plaf.OfficeXP.OfficeXPLookAndFeel</code>, and
+ * <code>jars</code> is the path(s) to the JAR file(s) containing the Look and
+ * Feel, relative to the install location of the specified
+ * <code>GUIApplication</code>.  The <code>minJavaVersion</code> attribute is
+ * optional, and specifies the minimum Java version the JRE must be for the
+ * application to offer this LookAndFeel as a choice.  This should be a double
+ * value, such as "1.5", "1.6", etc.
  *
  * @author Robert Futrell
- * @version 0.1
+ * @version 1.0
  */
 public class ThirdPartyLookAndFeelManager {
 
-	private static final String CLASS			= "class";
-	private static final String JAR			= "jar";
-	private static final String LOOK_AND_FEEL	= "LookAndFeel";
-	private static final String NAME			= "name";
-	private static final String ROOT_ELEMENT	= "ThirdPartyLookAndFeels";
+	/**
+	 * The root directory of the application.
+	 */
+	private String appRoot;
+
+	private List lnfInfo;
+	private URLClassLoader lafLoader;
+
+	private static final String CLASS				= "class";
+	private static final String JARS				= "jars";
+	private static final String LOOK_AND_FEEL		= "LookAndFeel";
+	private static final String MIN_JAVA_VERSION	= "minJavaVersion";
+	private static final String NAME				= "name";
 
 
 	/**
 	 * Constructor.
 	 */
-	private ThirdPartyLookAndFeelManager() {
+	public ThirdPartyLookAndFeelManager(String appRoot) {
+
+		this.appRoot = appRoot;
+		URL[] urls = null;
+
+		lnfInfo = load3rdPartyLookAndFeelInfo("lnfs/lookandfeels.xml");
+
+		try {
+			int count = lnfInfo==null ? 0 : lnfInfo.size();
+			// 3rd party Look and Feel jars?  Add them to classpath.
+			// NOTE:  The lines of code below MUST be in the order they're
+			// in or stuff breaks for some reason; I'm not sure why...
+			if (count>0) {
+				List lnfJarUrlList = new ArrayList();
+				for (Iterator i=lnfInfo.iterator(); i.hasNext(); ) {
+					ExtendedLookAndFeelInfo info =
+									(ExtendedLookAndFeelInfo)i.next();
+					urls = info.getURLs(appRoot);
+					for (int j=0; j<urls.length; j++) {
+						if (!lnfJarUrlList.contains(urls[j])) {
+							lnfJarUrlList.add(urls[j]);
+						}
+					}
+				}
+				urls = (URL[])lnfJarUrlList.toArray(new URL[0]);
+			}
+		} catch (RuntimeException re) { // FindBugs
+			throw re;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (urls==null) {
+			urls = new URL[0];
+		}
+
+		// Specifying a parent ClassLoader other than the default hoses some
+		// LAFs, such as Substance.
+		lafLoader = new URLClassLoader(urls);//this.getClass().getClassLoader());
+
+	}
+
+
+	/**
+	 * Returns an array of information on the JAR files containing 3rd party
+	 * Look and Feels.  These jars were dynamically loaded from an XML file
+	 * relative to the root directory you gave this manager instance.
+	 *
+	 * @return An array of URLs for JAR files containing Look and Feels.
+	 */
+	public ExtendedLookAndFeelInfo[] get3rdPartyLookAndFeelInfo() {
+		if (lnfInfo==null) {
+			return new ExtendedLookAndFeelInfo[0];
+		}
+		ExtendedLookAndFeelInfo[] array =
+					new ExtendedLookAndFeelInfo[lnfInfo.size()];
+		return (ExtendedLookAndFeelInfo[])lnfInfo.toArray(array);
+	}
+
+
+	public ClassLoader getLAFClassLoader() {
+		return lafLoader;
 	}
 
 
@@ -80,16 +163,15 @@ public class ThirdPartyLookAndFeelManager {
 	 * Returns an array with each element representing a 3rd party Look and
 	 * Feel available to your GUI application.
 	 *
-	 * @param app The GUI application.
 	 * @param xmlFile The XML file specifying the 3rd party Look and Feels.
-	 * @throws IOException If an error occurs while reading
-	 *         <code>xmlFile</code>.
+	 * @return A list of {@link ExtendedLookAndFeelInfo}s.
 	 */
-	public static ExtendedLookAndFeelInfo[] get3rdPartyLookAndFeelInfo(
-								GUIApplication app, String xmlFile)
-									throws IOException {
+	private List load3rdPartyLookAndFeelInfo(String xmlFile) {
 
-		File file = new File(app.getInstallLocation(), xmlFile);
+		File file = new File(appRoot, xmlFile);
+		if (!file.isFile()) {
+			return null;
+		}
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
@@ -100,23 +182,22 @@ public class ThirdPartyLookAndFeelManager {
 					new InputStreamReader(new FileInputStream(file), "UTF-8")));
 			is.setEncoding("UTF-8");
 			doc = db.parse(is);
-		} catch (FileNotFoundException fnfe) {
-			fnfe.printStackTrace();
-			throw fnfe; // So we don't lose the "file not found" part.
+		} catch (RuntimeException re) { // FindBugs
+			throw re;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new IOException("XML error:  Error parsing file");
+			return null;
 		}
 
 		// Traverse the XML tree.
-		ArrayList lnfInfo = new ArrayList(1);
-		initializeFromXMLFile(doc, lnfInfo);
+		ArrayList lafInfo = new ArrayList(1);
+		try {
+			loadFromXML(doc.getDocumentElement(), lafInfo);
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 
-		// Convert our List into an actual array and return it.
-		ExtendedLookAndFeelInfo[] info = new ExtendedLookAndFeelInfo[
-												lnfInfo.size()];
-		info = (ExtendedLookAndFeelInfo[])lnfInfo.toArray(info);
-		return info;
+		return lafInfo;
 
 	}
 
@@ -125,96 +206,96 @@ public class ThirdPartyLookAndFeelManager {
 	 * Used in parsing the XML file containing the 3rd party look and feels.
 	 *
 	 * @param node The root node of the parsed XML document.
-	 * @param lnfInfo An array list of <code>ExtendedLookAndFeelInfo</code>s.
+	 * @param lafInfo An array list of <code>ExtendedLookAndFeelInfo</code>s.
 	 * @throws IOException If an error occurs while parsing the XML.
 	 */
-	private static void initializeFromXMLFile(Node node,
-							ArrayList lnfInfo) throws IOException {
+	private static void loadFromXML(Element root, ArrayList lafInfo)
+										throws IOException {
 
-		if (node==null)
+		if (root==null) {
 			throw new IOException("XML error:  node==null!");
+		}
 
-		int type = node.getNodeType();
-		switch (type) {
+		NodeList children = root.getChildNodes();
+		for (int i=0; i<children.getLength(); i++) {
 
-			case Node.DOCUMENT_NODE:
-				initializeFromXMLFile(
-						((Document)node).getDocumentElement(), lnfInfo);
-				break;
+			Node child = children.item(i);
+			if (child.getNodeType()==Node.ELEMENT_NODE) {
 
-			// Handle element nodes.
-			case Node.ELEMENT_NODE:
-
-				String nodeName = node.getNodeName();
-
-				// Might be the "topmost" node.
-				if (nodeName.equals(ROOT_ELEMENT)) {
-					NodeList childNodes = node.getChildNodes();
-					int childCount = childNodes==null ? 0 :
-									childNodes.getLength();
-					for (int i=0; i<childCount; i++)
-						initializeFromXMLFile(childNodes.item(i),
-											lnfInfo);
-				}
+				String elemName = child.getNodeName();
 
 				// Might be a Look and Feel declaration.
-				else if (nodeName.equals(LOOK_AND_FEEL)) {
+				if (LOOK_AND_FEEL.equals(elemName)) {
+	
 					// Shouldn't have any children.
-					NodeList childNodes = node.getChildNodes();
+					NodeList childNodes = child.getChildNodes();
 					if (childNodes!=null && childNodes.getLength()>0) {
-						throw new IOException("XML error:  language " +
+						throw new IOException("XML error:  LookAndFeel " +
 							"tags shouldn't have children!");
 					}
-					NamedNodeMap attributes = node.getAttributes();
-					if (attributes==null || attributes.getLength()!=3) {
+					NamedNodeMap attributes = child.getAttributes();
+					if (attributes==null || attributes.getLength()<3) {
 						throw new IOException("XML error: LookAndFeel " +
 							"tags should have three attributes!");
 					}
 					String name = null;
 					String className = null;
-					String jar = null;
-					for (int i=0; i<3; i++) {
-						Node node2 = attributes.item(i);
-						nodeName = node2.getNodeName();
-						if (nodeName.equals(NAME))
+					String jars = null;
+					double minVersion = 0;
+					for (int j=0; j<attributes.getLength(); j++) {
+						Node node2 = attributes.item(j);
+						String attr = node2.getNodeName();
+						if (NAME.equals(attr)) {
 							name = node2.getNodeValue();
-						else if (nodeName.equals(CLASS))
+						}
+						else if (CLASS.equals(attr)) {
 							className = node2.getNodeValue();
-						else if (nodeName.equals(JAR))
-							jar = node2.getNodeValue();
-						else
+						}
+						else if (JARS.equals(attr)) {
+							jars = node2.getNodeValue();
+						}
+						else if (MIN_JAVA_VERSION.equals(attr)) {
+							try {
+								minVersion = Double.parseDouble(node2.getNodeValue());
+							} catch (NumberFormatException nfe) {
+								nfe.printStackTrace();
+							}
+						}
+						else {
 							throw new IOException("XML error: unknown " +
-								"attribute: '" + nodeName + "'");
+								"attribute: '" + attr + "'");
+						}
 					}
-					if (name==null || className==null || jar==null) {
+					if (name==null || className==null || jars==null) {
 						throw new IOException("XML error: LookAndFeel " +
 							"must have attributes 'name', 'class' and " +
 							"'jar'.");
 					}
-					lnfInfo.add(new ExtendedLookAndFeelInfo(name,
-											className, jar));
+					boolean add = true;
+					if (minVersion>0) {
+						String javaSpecVersion = System.getProperty("java.specification.version");
+						try {
+							double javaSpecVersionVal = Double.parseDouble(javaSpecVersion);
+							add = javaSpecVersionVal >= minVersion;
+						} catch (NumberFormatException nfe) {
+							nfe.printStackTrace();
+						}
+					}
+					if (add) {
+						lafInfo.add(new ExtendedLookAndFeelInfo(name,
+														className, jars));
+					}
 				}
 
 				// Anything else is an error.
 				else {
 					throw new IOException("XML error:  Unknown element " +
-						"node: " + nodeName);
+						"node: " + elemName);
 				}
 
-				break;
+			}
 
-			// Whitespace nodes.
-			case Node.TEXT_NODE:
-			case Node.COMMENT_NODE:
-			case Node.CDATA_SECTION_NODE:
-				break;
-
-			// An error occurred?
-			default:
-				throw new IOException("XML error:  Unknown node type: " +
-					type);
-
-		} // End of switch (type).
+		}
 
 	}
 

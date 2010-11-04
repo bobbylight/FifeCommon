@@ -33,11 +33,11 @@ import javax.swing.UIManager;
  * Information about a 3rd party Look and Feel in a JAR file.
  *
  * @author Robert Futrell
- * @version 0.1
+ * @version 1.0
  */
 public class ExtendedLookAndFeelInfo extends UIManager.LookAndFeelInfo {
 
-	private String jarFile;
+	private String jarFiles;
 
 
 	/**
@@ -45,42 +45,48 @@ public class ExtendedLookAndFeelInfo extends UIManager.LookAndFeelInfo {
 	 *
 	 * @param name The name of the Look and Feel.
 	 * @param className The name of the main class of the Look and Feel.
-	 * @param jarFile The JAR file containing the Look and Feel.  This is a
-	 *        path to the JAR that is relative to the GUI application using
-	 *        this Look.
+	 * @param jarFiles The JAR file(s) containing the Look and Feel.  This is a
+	 *        comma-separated set of paths to the JARs that are relative to the
+	 *        GUI application using this Look.
 	 */
 	public ExtendedLookAndFeelInfo(String name, String className,
-							String jarFile) {
+							String jarFiles) {
 		super(name, className);
-		this.jarFile = jarFile;
+		this.jarFiles = jarFiles;
 	}
 
 
 	/**
-	 * Returns the JAR file containing this Look and Feel.
+	 * Returns the JAR files containing this Look and Feel.
 	 *
-	 * @return The JAR file.  This path is relative to a GUI application's
-	 *         install location.
-	 * @see org.fife.ui.app.GUIApplication#getInstallLocation
+	 * @return The JAR files.  These are comma-separated paths relative to a
+	 *         GUI application's install location.
+	 * @see org.fife.ui.app.GUIApplication#getInstallLocation()
 	 */
-	public String getJarFile() {
-		return jarFile;
+	public String getJarFiles() {
+		return jarFiles;
 	}
 
 
 	/**
-	 * Returns a URL specifying the JAR file containing this Look and Feel.
+	 * Returns a URL array specifying the JAR files containing this Look and
+	 * Feel.
 	 *
-	 * @param app The GUI application for which this Look and Feel is to be
-	 *        available.  The JAR file path is assumed to be relative to its
-	 *        install location.
-	 * @return A URL for the JAR file.
+	 * @param The root directory that the JAR file paths are assumed to be
+	 *        relative to.
+	 * @return A URL array for the JAR files.  This will never be
+	 *         <code>null</code>.
 	 * @throws MalformedURLException This should never happen.
-	 * @see #getJarFile
-	 * @see org.fife.ui.app.GUIApplication#getInstallLocation
+	 * @see #getJarFiles()
+	 * @see org.fife.ui.app.GUIApplication#getInstallLocation()
 	 */
-	public URL getURL(final GUIApplication app) throws MalformedURLException {
-		return new File(app.getInstallLocation(), jarFile).toURI().toURL();
+	public URL[] getURLs(String root) throws MalformedURLException {
+		String[] jars = jarFiles.split(",");
+		URL[] urls = new URL[jars.length];
+		for (int i=0; i<jars.length; i++) {
+			urls[i]=new File(root, jars[i]).toURI().toURL();
+		}
+		return urls;
 	}
 
 

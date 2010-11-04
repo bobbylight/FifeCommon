@@ -36,8 +36,6 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -50,7 +48,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
-import javax.swing.LookAndFeel;
 import javax.swing.MenuElement;
 import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
@@ -199,10 +196,11 @@ public abstract class AbstractGUIApplication extends JFrame
 	 */
 	protected JPanel actualContentPane;
 
-private ClassLoader lafClassLoader;
-public ClassLoader getLookAndFeelClassLoader() {
-	return lafClassLoader;
-}
+	/**
+	 * Used to dynamically load 3rd-party LookAndFeels.
+	 */
+	private ThirdPartyLookAndFeelManager lafManager;
+
 
 	private static final String STATUS_BAR_LOCATION	= BorderLayout.SOUTH;
 	private static final String TOOL_BAR_LOCATION	= BorderLayout.NORTH;
@@ -667,6 +665,18 @@ public ClassLoader getLookAndFeelClassLoader() {
 
 
 	/**
+	 * Returns the manager in charge of any 3rd-party LookAndFeels this
+	 * application is aware of.
+	 *
+	 * @return The manager, or <code>null</code> if there is none.
+	 * @see #setLookAndFeelManager(ThirdPartyLookAndFeelManager)
+	 */
+	public ThirdPartyLookAndFeelManager getLookAndFeelManager() {
+		return lafManager;
+	}
+
+
+	/**
 	 * Returns the location of the specified jar file in the currently-running
 	 * application's classpath.  This can be useful if you wish to know the
 	 * location of the installation of the currently-running application.<p>
@@ -679,7 +689,7 @@ public ClassLoader getLookAndFeelClassLoader() {
 	 * @param jarFileName The name of the jar file for which to search.
 	 * @return The directory in which the jar file resides.
 	 */
-	private static String getLocationOfJar(String jarFileName) {
+	public static String getLocationOfJar(String jarFileName) {
 
 		String classPath = System.getProperty("java.class.path");
 		int index = classPath.indexOf(jarFileName);
@@ -692,7 +702,9 @@ public ClassLoader getLookAndFeelClassLoader() {
 		if (index>-1) {
 			int pathBeginning = classPath.lastIndexOf(File.pathSeparator,
 												index-1) + 1;
-			return classPath.substring(pathBeginning, index);
+			String loc = classPath.substring(pathBeginning, index);
+			File file = new File(loc);
+			return file.getAbsolutePath();
 		}
 
 		// Otherwise, it must be in the current directory.
@@ -706,16 +718,14 @@ public ClassLoader getLookAndFeelClassLoader() {
 	 * Feels.  These JAR files will be added to the <code>UIManager</code>'s
 	 * classpath so that these LnFs can be used in this GUI application.<p>
 	 *
-	 * Your application should override this method if you want to provide the
-	 * user with 3rd party Look and Feel choices, especially if you want them
-	 * to be able to update the Look and Feel on the fly.  The default
-	 * implementation returns <code>null</code>, meaning there are no 3rd party
-	 * Look and Feels.
+	 * For this method to return anything, you must install a
+	 * {@link ThirdPartyLookAndFeelManager}.
 	 *
 	 * @return An array of information on JAR files containing Look and Feels.
+	 * @see #setLookAndFeelManager(ThirdPartyLookAndFeelManager)
 	 */
-	protected ExtendedLookAndFeelInfo[] get3rdPartyLookAndFeelInfo() {
-		return null;
+	public ExtendedLookAndFeelInfo[] get3rdPartyLookAndFeelInfo() {
+		return lafManager!=null ? lafManager.get3rdPartyLookAndFeelInfo() : null;
 	}
 
 
@@ -1218,6 +1228,17 @@ public ClassLoader getLookAndFeelClassLoader() {
 
 
 	/**
+	 * Sets the utility used to dynamically load 3rd-party LookAndFeels.
+	 *
+	 * @param manager The utility, or <code>null</code> for none.
+	 * @see #getLookAndFeelManager()
+	 */
+	public void setLookAndFeelManager(ThirdPartyLookAndFeelManager manager) {
+		lafManager = manager;
+	}
+
+
+	/**
 	 * Sets the status bar to use in this application.  This method fires a
 	 * property change of type <code>STATUS_BAR_PROPERTY</code>.
 	 *
@@ -1339,57 +1360,18 @@ public ClassLoader getLookAndFeelClassLoader() {
 			mainContentPanel = createMainContentPanel(actualContentPane);
 			toolBarPanels[0].add(mainContentPanel);
 
-			// Set the LnF if the saved one is different from the default.  If
-			// any jars containing 3rd party Look and Feels are specified by
-			// getLookAndFeelJarFileURLs(), then they are added to the UIManager's
-			// classpath first so that if the saved LnF is in them, it can be
-			// loaded.
-			String lnfName = UIManager.getLookAndFeel().getClass().getName();
-			ClassLoader cl = null;
-			try {
-				ExtendedLookAndFeelInfo[] lnfInfo = get3rdPartyLookAndFeelInfo();
-				int count = lnfInfo==null ? 0 : lnfInfo.length;
-				// 3rd party Look and Feel jars?  Add them to classpath.
-				// NOTE:  The lines of code below MUST be in the order they're
-				// in or stuff breaks for some reason; I'm not sure why...
-				if (count>0) {
-					URL[] lnfJarURLs = new URL[count];
-					for (int i=0; i<count; i++)
-						lnfJarURLs[i] = lnfInfo[i].getURL(AbstractGUIApplication.this);
-					cl = new URLClassLoader(lnfJarURLs,
-										this.getClass().getClassLoader());
-					if (prefs!=null && prefs.lookAndFeel!=null) {
-						// We must load the class for some reason...
-						Class c = cl.loadClass(prefs.lookAndFeel);
-						if (!c.getName().equals(lnfName)) {
-							LookAndFeel lnf = (LookAndFeel)c.newInstance();
-							UIManager.setLookAndFeel(lnf);
-						}
-					}
-				}
-				// No 3rd party Look and Feel jars (which is most likely)?
-				// Then simply update the LnF if necessary.
-				else {
-					cl = ClassLoader.getSystemClassLoader();
-					if (prefs!=null && prefs.lookAndFeel!=null &&
-							!prefs.lookAndFeel.equals(lnfName)) {
-						UIManager.setLookAndFeel(prefs.lookAndFeel);
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				displayException(e);
-			} finally {
-				AbstractGUIApplication.this.lafClassLoader = cl;
+			if (lafManager!=null) {
 				// We MUST add our class loader capable of loading 3rd party
 				// LaF jars as this property as it is used internally by
 				// Swing when loading classes.  Any 3rd party jars aren't
-				// on RText's classpath, so Swing won't pick them up
-				// without it.  It must be set AFTER any
-				// UIManager.setLookAndFeel() call as that call resets this
-				// property to null (for the new LnF).  We also put this in a
-				// finally block so our Look and Feel menu will still work
-				// even if an Exception is thrown above.
+				// on our classpath, so Swing won't pick them up without it.
+				// It must be set AFTER any UIManager.setLookAndFeel() call as
+				// that call resets this property to null (for the new LnF).
+				// We don't actually change the LAF in accordance with user
+				// preferences here as we assume the application did that
+				// before instantiating us (required by some LAFs, such as
+				// Substance).
+				ClassLoader cl = lafManager.getLAFClassLoader();
 				UIManager.getLookAndFeelDefaults().put("ClassLoader", cl);
 			}
 

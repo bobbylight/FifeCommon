@@ -24,6 +24,7 @@
 package org.fife.ui.dockablewindows;
 
 import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -43,9 +44,6 @@ class DWindPanel extends JPanel {
 
 	private JTabbedPane tabbedPane;
 	private TitlePanel titlePanel;
-
-	private static final Color titlePanelBG1	= new Color(153,180,209);//40,93,220);
-	private static final Color titlePanelBG2	= new Color(225,233,241);//200,200,255);
 
 
 	/**
@@ -240,13 +238,29 @@ class DWindPanel extends JPanel {
 	private class TitlePanel extends JPanel implements ChangeListener {
 
 		private JLabel label;
+		private Color gradient1;
+		private Color gradient2;
 
 		public TitlePanel(String title) {
 			super(new BorderLayout());
 			setBorder(BorderFactory.createEmptyBorder(0,5,0,5));
+			refreshGradientColors();
 			label = new JLabel(title);
-//			label.setForeground(Color.WHITE);
+			refreshLabelForeground();
 			add(label);
+		}
+
+		/**
+		 * Performs a gentler "darker" operation than Color.darker().
+		 *
+		 * @param c
+		 * @return
+		 */
+		public Color darker(Color c) {
+			final double FACTOR = 0.85;
+			return new Color(Math.max((int)(c.getRed()  *FACTOR), 0), 
+					Math.max((int)(c.getGreen()*FACTOR), 0),
+					Math.max((int)(c.getBlue() *FACTOR), 0));
 		}
 
 		public Dimension getMinimumSize() {
@@ -262,14 +276,18 @@ class DWindPanel extends JPanel {
 			return d;
 		}
 
+		private boolean getUseCustomColors() {
+			String laf = UIManager.getLookAndFeel().getClass().getName();
+			return laf.endsWith("WindowsLookAndFeel") ||
+					laf.endsWith("MetalLookAndFeel");
+		}
+
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			Graphics2D g2d = (Graphics2D)g;
 			GradientPaint paint = new GradientPaint(
-//							0,0, titlePanelBG1,
-//							getWidth(),0, titlePanelBG2);
-0,0, titlePanelBG2,
-0,getHeight(),titlePanelBG1);
+												0,0, gradient1,
+												0,getHeight(),gradient2);
 			Paint oldPaint = g2d.getPaint();
 			g2d.setPaint(paint);
 			Rectangle bounds = getBounds();
@@ -291,6 +309,63 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 			if (index>-1) {
 				DockableWindow w = getDockableWindowAt(index);
 				setTitle(w.getDockableWindowTitle());
+			}
+		}
+
+		private void refreshGradientColors() {
+			if (getUseCustomColors()) {
+				gradient1 = new Color(225,233,241);//200,200,255);
+				gradient2 = new Color(153,180,209);//40,93,220);
+			}
+			else {
+				gradient1 = UIManager.getColor("TextField.selectionBackground");
+				if (gradient1==null) {
+					gradient1 = UIManager.getColor("textHighlight");
+					if (gradient1==null) {
+						gradient1 = new Color(153,180,209);
+					}
+				}
+				gradient2 = darker(gradient1);
+			}
+		}
+
+		private void refreshLabelForeground() {
+			if (getUseCustomColors()) {
+				// Unfortunately we must force a reset of the Label's
+				// foreground, even though its updateUI() should have done so,
+				// since we had to install a non-ColorUIResource to get a
+				// color change for Nimbus.
+				Color c = UIManager.getColor("Label.foreground");
+				if (c!=null) {
+					label.setForeground(c);
+				}
+			}
+			else {
+				Color c = UIManager.getColor("TextField.selectionForeground");
+				if (c==null) {
+					c = UIManager.getColor("nimbusSelectedText"); // Nimbus!!!
+					if (c==null) {
+						c = UIManager.getColor("textHighlightText");
+						if (c==null) {
+							c = Color.black;
+						}
+					}
+				}
+				// Nimbus ignores ColorUIResources (!), but honors Colors, so
+				// unfortunately we must ensure we have a true "Color" here.
+				c = new Color(c.getRed(), c.getGreen(), c.getBlue());
+				label.setForeground(c);
+			}
+		}
+
+		public void updateUI() {
+			super.updateUI();
+			if (label!=null) {
+				label.updateUI();
+			}
+			refreshGradientColors();
+			if (label!=null) {
+				refreshLabelForeground();
 			}
 		}
 

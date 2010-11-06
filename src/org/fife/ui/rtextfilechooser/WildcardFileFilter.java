@@ -77,7 +77,7 @@ class WildcardFileFilter extends FileFilter {
 
 					// backslash-out any chars with special meaning for
 					// the regex, but are valid Windows filename chars;
-					// then add this char (and the blackshash if any).
+					// then add this char (and the backslash if any).
 					default:
 						if ("+()^$.{}[]".indexOf(gPat[i]) >= 0)
 						    rPat[j++] = '\\';

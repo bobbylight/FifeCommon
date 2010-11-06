@@ -33,7 +33,9 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.*;
@@ -47,7 +49,7 @@ import org.fife.ui.FileExplorerTableModel;
  * choosers.
  *
  * @author Robert Futrell
- * @version 0.1
+ * @version 1.0
  */
 class DetailsView extends JTable implements RTextFileChooserView {
 
@@ -59,7 +61,28 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	private String writeStr;
 	private String readWriteStr;
 
+	/**
+	 * Number of file sets this view has displayed.  This is used to help
+	 * ensure that notices from Threads actually do apply to the currently
+	 * displayed list of files.  Accesses to this field should be synchronized
+	 * by {@link #ATTRIBUTES_LOCK}.
+	 */
+	private transient int displayCount;
+
+	/**
+	 * Thread that asynchronously loads attributes for the listed files.
+	 * Accesses to this field should be synchronized by
+	 * {@link #ATTRIBUTES_LOCK}.
+	 */
+	private transient Thread attributeThread;
+
 	private static final int MAX_NAME_COLUMN_SIZE		= 150;
+
+	/**
+	 * Used to ensure the asynchronous loading of attributes for the table
+	 * is handled properly.
+	 */
+	private static final Object ATTRIBUTES_LOCK = new Object();
 
 
 	/**
@@ -84,8 +107,8 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 
 		// Create the table model, then wrap it in a sorter model.
-		DetailsViewModel dvm = new DetailsViewModel(nameString, sizeString,
-							typeString, statusString, lastModifiedString);
+		DetailsViewModel dvm = new DetailsViewModel(nameString, typeString,
+							statusString, sizeString, lastModifiedString);
 		FileExplorerTableModel sorter = new FileExplorerTableModel(dvm);
 		setModel(sorter);
 		sorter.setTable(this);
@@ -95,7 +118,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		InputMap tableInputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		tableInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "none");
 
-		// Prevent this table from swalling F2 (I think this causes editable
+		// Prevent this table from swallowing F2 (I think this causes editable
 		// JTables to go into editing mode, but we want our parent dialog to
 		// handle this keypress).
 		tableInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "none");
@@ -110,9 +133,11 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		// gray-highlighted.
 		int columnCount = getColumnCount();
 		TableColumnModel columnModel = getColumnModel();
-		getColumnModel().getColumn(0).setCellRenderer(new FileTableColumnRenderer());
-		for (int i=1; i<columnCount-1; i++)
+		getColumnModel().getColumn(0).setCellRenderer(new FileNameColumnRenderer());
+		for (int i=1; i<columnCount-2; i++) {
 			columnModel.getColumn(i).setCellRenderer(new DefaultTableCellRenderer());
+		}
+		columnModel.getColumn(columnCount-2).setCellRenderer(new FileSizeColumnRenderer());
 		columnModel.getColumn(columnCount-1).setCellRenderer(new DateCellRenderer());
 		sorter.setColumnComparator(File.class, new FileComparator());
 
@@ -136,6 +161,41 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 
 	/**
+	 * Adds the specified file attributes to this table.  This method is
+	 * called by our worker thread, but should be run on the EDT via
+	 * <code>SwingUtilities.invokeLater()</code>.
+	 *
+	 * @param batch The set of file attributes to add to the table.
+	 */
+	private void addFileAttributes(AttributeBatch batch) {
+
+		synchronized (ATTRIBUTES_LOCK) {
+
+			// If we've changed directories/filters/etc., but somehow the
+			// attributes-gathering Thread isn't yet dead, ignore its updates.
+			if (batch.getDisplayCount()!=displayCount) {
+				return;
+			}
+
+			FileExplorerTableModel tevm = (FileExplorerTableModel)getModel();
+			DetailsViewModel model = (DetailsViewModel)tevm.getTableModel();
+
+			for (int i=0; i<batch.getSize(); i++) {
+				int row = batch.getStart() + i;
+				FileAttributes attrs = batch.getAttributes(i);
+				model.setValueAt(attrs.status, row, 2);
+				Long size = new Long(attrs.size);
+				model.setValueAt(size, row, 3);
+				Long modified = new Long(attrs.modified);
+				model.setValueAt(modified, row, 4);
+			}
+
+		}
+
+	}
+
+
+	/**
 	 * Clears all files displayed by this view.
 	 */
 	public void clearDisplayedFiles() {
@@ -152,6 +212,13 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		int row = getRowFor(file);
 		if (row!=-1)
 			scrollRectToVisible(getCellRect(row, 0, true));
+	}
+
+
+	private int getDisplayCount() {
+		synchronized (ATTRIBUTES_LOCK) {
+			return displayCount;
+		}
 	}
 
 
@@ -345,6 +412,19 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	}
 
 
+	private void restartAttributeThread(Vector files) {
+		synchronized (ATTRIBUTES_LOCK) {
+			displayCount++;
+			if (attributeThread!=null) {
+				attributeThread.interrupt();
+			}
+			attributeThread = new Thread(
+								new AttributeRunnable(displayCount, files));
+			attributeThread.start();
+		}
+	}
+
+
 	/**
 	 * Selects the file at the specified point in the view.  If no file
 	 * exists at that point, the selection should be cleared.
@@ -368,16 +448,10 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		DetailsViewModel tableModel =
 			(DetailsViewModel)((FileExplorerTableModel)getModel()).getTableModel();
 
-		// The setData() call would be faster, but would require us
-		// to reset column 0's renderer to our custome one.  So, for
-		// now, we're leaving it as the two substitute lines below.
-		// Although, we could substitute them and just re-add the
-		// renderer.  The real bottleneck though is the File.length()
-		// calls...
-		//tableModel.setData(dirList);
-		tableModel.setRowCount(0);
-		tableModel.addRows(files);
+		tableModel.setContents(files);
 		initFileNameColumnSize();
+
+		restartAttributeThread(files);
 
 	}
 
@@ -416,9 +490,121 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 
 	/**
+	 * A list of attributes for a batch of files, to update the table view
+	 * with.
+	 */
+	private class AttributeBatch {
+
+		private int displayCount;
+		private int start;
+		private List fileAttrs;
+
+		public AttributeBatch(int displayCount, int start) {
+			this.displayCount = displayCount;
+			this.start = start;
+			fileAttrs = new ArrayList();
+		}
+
+		public void addAttributes(FileAttributes attrs) {
+			fileAttrs.add(attrs);
+		}
+
+		public FileAttributes getAttributes(int index) {
+			return (FileAttributes)fileAttrs.get(index);
+		}
+
+		public int getDisplayCount() {
+			return displayCount;
+		}
+
+		public int getSize() {
+			return fileAttrs.size();
+		}
+
+		public int getStart() {
+			return start;
+		}
+
+	}
+
+
+	/**
+	 * Gathers information about the displayed files and updates the table view
+	 * with batches of updates.
+	 */
+	private class AttributeRunnable implements Runnable {
+
+		private int displayCount;
+		private Vector files;
+
+		/**
+		 * Arbitrarily-chosen number of files to get attributes for at a time.
+		 * This should be relatively small so that the table updates quickly.
+		 */
+		private static final int BATCH_SIZE = 15;
+
+
+		public AttributeRunnable(int displayCount, Vector files) {
+			this.displayCount = displayCount;
+			this.files = files;
+		}
+
+		public void run() {
+
+			int i = 0;
+			while (i<files.size()) {
+
+				if (shouldStop()) {
+					return;
+				}
+
+				int max = Math.min(i+BATCH_SIZE, files.size());
+				final AttributeBatch batch = new AttributeBatch(displayCount,i);
+
+				for (int j=i; j<max; j++) {
+					File file = (File)files.get(j);
+					batch.addAttributes(new FileAttributes(file));
+				}
+
+				if (shouldStop()) {
+					return;
+				}
+
+				i = max;
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						addFileAttributes(batch);
+					}
+				});
+
+//				try {
+//					Thread.sleep(100);
+//				} catch (Exception e) {}
+
+			}
+
+		}
+
+		/**
+		 * Returns whether this thread should stop processing prematurely.
+		 * It should stop if it was interrupted (the user changed directories
+		 * or file filters), and we effectively check for this in two
+		 * different ways.
+		 *
+		 * @return Whether this thread should stop running.
+		 */
+		private boolean shouldStop() {
+			return Thread.currentThread().isInterrupted() ||
+					displayCount!=DetailsView.this.getDisplayCount();
+		}
+
+	}
+
+
+	/**
 	 * Renders the "last modified" column.
 	 */
-	static class DateCellRenderer extends DefaultTableCellRenderer {
+	private static class DateCellRenderer extends DefaultTableCellRenderer {
 
 		public Component getTableCellRendererComponent(JTable table,
 								Object value, boolean isSelected,
@@ -426,8 +612,10 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 			super.getTableCellRendererComponent(table, value, isSelected,
 								hasFocus, row, column);
-			setText(Utilities.getLastModifiedString(
+			if (value!=null) { // Will be null before Thread gets to us
+				setText(Utilities.getLastModifiedString(
 									((Long)value).longValue()));
+			}
 			return this;
 		}
 
@@ -441,15 +629,15 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 		Vector tempVector;
 
-		public DetailsViewModel(String nameHeader, String sizeHeader,
-							String typeHeader, String statusHeader,
-							String lastModifiedHeader) {
-			String[] columnNames = new String[4];
+		public DetailsViewModel(String nameHeader, String typeHeader,
+							String statusHeader,
+							String sizeHeader, String lastModifiedHeader) {
+			String[] columnNames = new String[5];
 			columnNames[0] = nameHeader;
-			//columnNames[1] = sizeHeader; // Huge performance hit for dirs with many files in Table view...
 			columnNames[1] = typeHeader;
 			columnNames[2] = statusHeader;
-			columnNames[3] = lastModifiedHeader;
+			columnNames[3] = sizeHeader;
+			columnNames[4] = lastModifiedHeader;
 			setColumnIdentifiers(columnNames);
 		}
 
@@ -461,51 +649,48 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		 * adds a lot of overhead (e.g., notifies listeners of each line
 		 * added instead of just all of them at once, etc.).
 		 */
-		public void addRows(Vector data) {
+		public void setContents(Vector data) {
+
+			// Calling setDataVector() call would be faster, but would require
+			// us to reset column 0's renderer to our custom one.  So, for now,
+			// we're leaving it as the two substitute lines below.  Although,
+			// we could substitute them and just re-add the renderer.
+			//setDataVector(manipulated(data));
+
+			setRowCount(0);
 
 			int dataSize = data.size();
 			if (dataSize==0)
 				return; // For example, if our filter filters out all files in this dir.
-			int dataVectorSize = dataVector.size();
-			dataVector.setSize(dataVectorSize + dataSize); // Ensure we have enough values.
 			for (int i=0; i<dataSize; i++) {
-				dataVector.set(dataVectorSize++,
-						getTableObjectVectorForFile((File)data.get(i)));
+				dataVector.add(getTableObjectVectorForFile((File)data.get(i)));
 			}
+
 		}
 
 		public Class getColumnClass(int column) {
 			switch (column) {
-				case 0:	// File name.
+				case 0:	// File name
 					return File.class;
-				case 3:	// Last modified.
+				case 3: // Size
+					// Fall through
+				case 4: // Last modified
 					return Long.class;
 				default:
 					return Object.class;
 			}
 		}
 
-		private final Vector getTableObjectVectorForFile(final File file) {
+		private final Vector getTableObjectVectorForFile(File file) {
 //			boolean isDirectory = file.isDirectory();
-//			String length = getFileSizeStringFor(file); // Invalid if file is a directory.
+//			long length = isDirectory ? -1 : file.length();
 			String description = chooser.getDescription(file);
-			boolean canRead = file.canRead();
-			boolean canWrite = file.canWrite();
-			String status = "";
-			if (canRead) {
-				if (canWrite)
-					status = readWriteStr;
-				else
-					status = readStr;
-			}
-			else if (canWrite)
-				status = writeStr;
 			Vector tempVector = new Vector(5);//tempVector.clear();
 			tempVector.add(0, file);
-//			tempVector.add(isDirectory ? "" : length);
 			tempVector.add(1, description);
-			tempVector.add(2, status);
-			tempVector.add(3, new Long(file.lastModified()));
+			tempVector.add(2, null);//status);
+			tempVector.add(3, null);//new Long(length));
+			tempVector.add(4, null);//new Long(file.lastModified()));
 			return tempVector;
 		}
 
@@ -513,15 +698,34 @@ class DetailsView extends JTable implements RTextFileChooserView {
 			return false;
 		}
 
-		/**
-		 * Takes a Vector (of files), and sets the data represented by this
-		 * table to be suitable for the "Details View."
-		 */
-		public void setData(Vector dataVector) {
-			int size = dataVector.size(); // Convert file values to TableObject values.
-			for (int i=0; i<size; i++)
-				dataVector.setElementAt(getTableObjectVectorForFile((File)dataVector.get(i)), i);
-			setDataVector(dataVector, columnIdentifiers);
+	}
+
+
+	/**
+	 * Attributes of a specific file.
+	 */
+	private class FileAttributes {
+
+		//public File file;
+		public String status;
+		public long size;
+		public long modified;
+
+		public FileAttributes(File file) {
+			//this.file = file;
+			size = file.isDirectory() ? -1 : file.length();
+			boolean canRead = file.canRead();
+			boolean canWrite = file.canWrite();
+			if (canRead) {
+				status = canWrite ? readWriteStr : readStr;
+			}
+			else if (canWrite) {
+				status = writeStr;
+			}
+			else {
+				status = null;
+			}
+			modified = file.lastModified();
 		}
 
 	}
@@ -534,7 +738,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * both files or both directories, then it uses <code>File</code>'s
 	 * standard <code>compareTo</code> method.
 	 */
-	static class FileComparator implements Comparator {
+	private static class FileComparator implements Comparator {
 
 		public int compare(Object o1, Object o2) {
 			File f1 = (File)o1;
@@ -561,7 +765,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * Renderer used for columns displaying <code>File</code>s in a
 	 * <code>JTable</code>.
 	 */
-	class FileTableColumnRenderer extends DefaultTableCellRenderer {
+	private class FileNameColumnRenderer extends DefaultTableCellRenderer {
 
 		private Rectangle paintTextR = new Rectangle();
 		private Rectangle paintIconR = new Rectangle();
@@ -642,6 +846,29 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 			return this;
 
+		}
+
+	}
+
+
+	/**
+	 * Renderer for the "file size" column.
+	 */
+	private static class FileSizeColumnRenderer extends DefaultTableCellRenderer {
+
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean selected, boolean focused,
+				int row, int col) {
+			super.getTableCellRendererComponent(table, value, selected,
+												focused, row, col);
+			if (value!=null) { // is null before Thread gets to it
+				Long l = (Long)value;
+				long size = l.longValue();
+				String text = size==-1 ? "" :
+								Utilities.getFileSizeStringFor(size, true);
+				setText(text);
+			}
+			return this;
 		}
 
 	}

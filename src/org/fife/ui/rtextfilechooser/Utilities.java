@@ -29,6 +29,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,8 +56,23 @@ public class Utilities {
 	private static final String ROOT_ELEMENT	= "ExtraFileFilters";
 	private static final String SHOW_EXTENSIONS	= "showExtensions";
 
+	/**
+	 * Should only be accessed on the EDT.
+	 */
 	private static final DateFormat lastModifiedDateFormat =
 							new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+
+	/**
+	 * Should only be accessed on the EDT.
+	 */
+	private static NumberFormat fileSizeFormat;
+
+	static {
+		fileSizeFormat = NumberFormat.getNumberInstance();
+		fileSizeFormat.setGroupingUsed(true);
+		fileSizeFormat.setMinimumFractionDigits(0);
+		fileSizeFormat.setMaximumFractionDigits(1);
+	}
 
 
 	/**
@@ -153,6 +169,76 @@ InputSource is = new InputSource(new FileReader(file));
 				destination.close();
 			}
 		}
+
+	}
+
+
+	/**
+	 * Returns a string representation of a file size, such as "842 bytes",
+	 * "1.43 KB" or "3.4 MB".
+	 *
+	 * @param file The file for which you want its size converted into an
+	 *        appropriate string.
+	 * @return The string.  Note that this will be invalid if <code>file</code>
+	 *         is a directory.
+	 */
+	public static final String getFileSizeStringFor(File file) {
+		return getFileSizeStringFor(file.length(), false);
+	}
+
+
+	/**
+	 * Returns a string representation of a file size, such as "842 bytes",
+	 * "1.43 KB" or "3.4 MB".  This method should only be called on the EDT.
+	 *
+	 * @param size the size of a file, in bytes.
+	 * @return The string.
+	 * @see #getFileSizeStringFor(File)
+	 */
+	public static final String getFileSizeStringFor(long size,
+										boolean reportInKB) {
+
+		String str = null;
+
+		if (reportInKB) {
+
+			String suffix = " bytes";
+			if (size>=1024) {
+				size /= 1024;
+				suffix = " KB";
+			}
+
+			str = fileSizeFormat.format(size) + suffix;
+
+		}
+
+		else {
+
+			int count = 0;
+			double tempSize = size;
+			double prevSize = tempSize;
+
+			// Keep dividing by 1024 until you get the largest unit that goes
+			// into this file's size.
+			while ( count<4 && ((tempSize = prevSize/1024f)>=1)) {
+				prevSize = tempSize;
+				count++;
+			}
+
+			String suffix = null;
+			switch (count) {
+				case 0 : suffix = "bytes"; break;
+				case 1 : suffix = "KB"; break;
+				case 2 : suffix = "MB"; break;
+				case 3 : suffix = "GB"; break;
+				case 4 : suffix = "TB"; break;
+			}
+
+			str = fileSizeFormat.format(prevSize) + " " + suffix;
+
+		}
+
+		return str;
 
 	}
 

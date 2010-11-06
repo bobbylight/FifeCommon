@@ -1366,6 +1366,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 				try {
 					globFilter.setPattern(text);
 					refreshView(true); // Show all files matching this pattern.
+					fileNameTextField.setFileSystemAware(false);
+					fileNameTextField.setText(null);
+					fileNameTextField.setFileSystemAware(true);
 				} catch (Exception e) {
 					// Invalid pattern was entered...
 					JOptionPane.showMessageDialog(this, "Invalid pattern: " + text +
@@ -1408,42 +1411,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		}
 
 		return files;
-
-	}
-
-
-	/**
-	 * Returns a string representation of a file size, such as "842 bytes",
-	 * "1.43 KB" or "3.4 MB".
-	 *
-	 * @param file The file for which you want its size converted into an
-	 *        appropriate string.
-	 * @return The string.  Note that this will be invalid if <code>file</code>
-	 *         is a directory.
-	 */
-	private static final String getFileSizeStringFor(File file) {
-
-		long size = file.length();
-		int count = 0;
-		long tempSize = size;
-
-		// Keep dividing by 1024 until you get the largest unit that goes
-		// into this file's size.
-		while ( (tempSize = size >> 10) >= 1) {
-			size = tempSize;
-			count++;
-		}
-
-		String suffix = null;
-		switch (count) {
-			case 0 : suffix = "bytes"; break;
-			case 1 : suffix = "KB"; break;
-			case 2 : suffix = "MB"; break;
-			case 3 : suffix = "GB"; break;
-			case 4 : suffix = "TB"; break;
-		}
-
-		return size + " " + suffix;
 
 	}
 
@@ -1709,7 +1676,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		return "<html><body>&nbsp;" + nameString + file.getName() +
 			"<br>&nbsp;" + lastModifiedString +
 			Utilities.getLastModifiedString(file.lastModified()) +
-			"<br>&nbsp;" + sizeString + getFileSizeStringFor(file) +
+			"<br>&nbsp;" + sizeString + Utilities.getFileSizeStringFor(file) +
 			"</body></html>";
 	}
 

@@ -281,14 +281,15 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 		else {
 			Graphics2D g2d = (Graphics2D)g;
 			Paint old = g2d.getPaint();
-			if (unselectedTabGradient==null ||
-					y!=unselectedTabGradient.getPoint1().getY()) {
-				// Re-create gradient when user resizes tabbed pane
-				unselectedTabGradient = new GradientPaint(
-						0,y, Color.LIGHT_GRAY,
-						0,y+h/2, UIManager.getColor("TabbedPane.highlight"));
-			}
-			g2d.setPaint(unselectedTabGradient);
+//			if (unselectedTabGradient==null ||
+//					y!=unselectedTabGradient.getPoint1().getY()) {
+//				// Re-create gradient when user resizes tabbed pane
+//				unselectedTabGradient = new GradientPaint(
+//						0,y, Color.LIGHT_GRAY,
+//						0,y+h/2, UIManager.getColor("TabbedPane.highlight"));
+//			}
+//			g2d.setPaint(unselectedTabGradient);
+g2d.setColor(UIManager.getColor("Panel.background"));
 			g2d.fillRect(x, y, w, h);
 			g2d.setPaint(old);
 		}

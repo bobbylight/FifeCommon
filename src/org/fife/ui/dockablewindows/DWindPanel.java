@@ -24,7 +24,8 @@
 package org.fife.ui.dockablewindows;
 
 import java.awt.*;
-
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -122,6 +123,45 @@ class DWindPanel extends JPanel {
 	}
 
 
+	public static Color getSubstanceColor(String name) throws Exception {
+
+		/*
+		LookAndFeel laf = UIManager.getLookAndFeel();
+		if (laf instanceof SubstanceLookAndFeel) {
+			SubstanceSkin skin = SubstanceLookAndFeel.getCurrentSkin();
+			SubstanceColorScheme scheme = skin.getActiveColorScheme(DecorationAreaType.NONE);
+			scheme.getXXX();
+		}
+		*/
+
+		Color color = null;
+		name = Character.toUpperCase(name.charAt(0)) + name.substring(1);
+
+		String pkg = "org.pushingpixels.substance.api.";
+		LookAndFeel laf = UIManager.getLookAndFeel();
+		ClassLoader cl = (ClassLoader)UIManager.get("ClassLoader");
+		if (cl!=null) {
+			Class clazz = Class.forName(pkg + "SubstanceLookAndFeel", true, cl);
+			if (clazz.isInstance(laf)) {
+				Class skinClazz = Class.forName(pkg + "SubstanceSkin", true, cl);
+				Method m = clazz.getDeclaredMethod("getCurrentSkin", null);
+				Object skin = m.invoke(null, null);
+				Class decAreaTypeClazz = Class.forName(pkg + "DecorationAreaType", true, cl);
+				Field decAreaTypeField = decAreaTypeClazz.getDeclaredField("GENERAL");
+				Object decAreaType = decAreaTypeField.get(null);
+				m = skinClazz.getDeclaredMethod("getActiveColorScheme", new Class[] { decAreaTypeClazz });
+				Object colorScheme = m.invoke(skin, new Object[] { decAreaType });
+				Class colorSchemeClazz = Class.forName(pkg + "SubstanceColorScheme", true, cl);
+				m = colorSchemeClazz.getMethod("get" + name, null);
+				color = (Color)m.invoke(colorScheme, null);
+			}
+		}
+
+		return color;
+
+	}
+
+
 	/**
 	 * Returns the dockable window at the specified index.
 	 *
@@ -130,6 +170,17 @@ class DWindPanel extends JPanel {
 	 */
 	public DockableWindow getDockableWindowAt(int index) {
 		return (DockableWindow)tabbedPane.getComponentAt(index);
+	}
+
+
+	/**
+	 * Returns whether a Substance LookAndFeel is enabled.
+	 *
+	 * @return Whether a Substance LookAndFeel is enabled.
+	 */
+	private boolean isSubstanceLAF() {
+		return UIManager.getLookAndFeel().getClass().getName().
+				indexOf(".Substance")>-1;
 	}
 
 
@@ -317,7 +368,17 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 				gradient1 = new Color(225,233,241);//200,200,255);
 				gradient2 = new Color(153,180,209);//40,93,220);
 			}
-			else {
+			else if (isSubstanceLAF()) {
+				try {
+					gradient1 = getSubstanceColor("ultraLightColor");
+					gradient2 = getSubstanceColor("lightColor");
+				} catch (RuntimeException re) { // FindBugs
+					throw re;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			if (gradient1==null) {
 				gradient1 = UIManager.getColor("TextField.selectionBackground");
 				if (gradient1==null) {
 					gradient1 = UIManager.getColor("textHighlight");
@@ -330,18 +391,26 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 		}
 
 		private void refreshLabelForeground() {
+			Color c = null;
 			if (getUseCustomColors()) {
 				// Unfortunately we must force a reset of the Label's
 				// foreground, even though its updateUI() should have done so,
 				// since we had to install a non-ColorUIResource to get a
 				// color change for Nimbus.
-				Color c = UIManager.getColor("Label.foreground");
-				if (c!=null) {
-					label.setForeground(c);
-				}
+				c = UIManager.getColor("Label.foreground");
 			}
-			else {
-				Color c = UIManager.getColor("TextField.selectionForeground");
+			else if (isSubstanceLAF()) {
+				c = UIManager.getColor("Label.foreground");
+//				try {
+//					c = getSubstanceColor("selectionForegroundColor");
+//				} catch (RuntimeException re) { // FindBugs
+//					throw re;
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+			}
+			if (c==null) {
+				c = UIManager.getColor("TextField.selectionForeground");
 				if (c==null) {
 					c = UIManager.getColor("nimbusSelectedText"); // Nimbus!!!
 					if (c==null) {
@@ -351,11 +420,11 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 						}
 					}
 				}
-				// Nimbus ignores ColorUIResources (!), but honors Colors, so
-				// unfortunately we must ensure we have a true "Color" here.
-				c = new Color(c.getRed(), c.getGreen(), c.getBlue());
-				label.setForeground(c);
 			}
+			// Nimbus ignores ColorUIResources (!), but honors Colors, so
+			// unfortunately we must ensure we have a true "Color" here.
+			c = new Color(c.getRed(), c.getGreen(), c.getBlue());
+			label.setForeground(c);
 		}
 
 		public void updateUI() {

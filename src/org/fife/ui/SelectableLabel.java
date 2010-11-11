@@ -49,6 +49,41 @@ public class SelectableLabel extends JTextPane {
 
 
 	/**
+	 * Returns a hex string for the specified color, suitable for HTML.
+	 *
+	 * @param c The color.
+	 * @return The string representation, in the form "<code>#rrggbb</code>",
+	 *         or <code>null</code> if <code>c</code> is <code>null</code>.
+	 */
+	private static final String getHexString(Color c) {
+
+		if (c==null) {
+			return null;
+		}
+
+		StringBuffer sb = new StringBuffer("#");
+		int r = c.getRed();
+		if (r<16) {
+			sb.append('0');
+		}
+		sb.append(Integer.toHexString(r));
+		int g = c.getGreen();
+		if (g<16) {
+			sb.append('0');
+		}
+		sb.append(Integer.toHexString(g));
+		int b = c.getBlue();
+		if (b<16) {
+			sb.append('0');
+		}
+		sb.append(Integer.toHexString(b));
+
+		return sb.toString();
+
+	}
+
+
+	/**
 	 * Constructor.
 	 *
 	 * @param text The text to display.  This can be HTML.
@@ -141,9 +176,13 @@ public class SelectableLabel extends JTextPane {
 			font = new JLabel().getFont();
 		}
 
+		// When rendering HTML, the JEditorPane foreground color is ignored;
+		// we have to set it in the CSS as well.  This is only needed for
+		// LAF's whose label color isn't (extremely close to) black.
+		Color fg = getForeground();
 		String bodyRule = "body { font-family: " + font.getFamily() +
-						",verdana,arial,helvetica; " +
-						"font-size: " + font.getSize() + "pt; }";
+						"; font-size: " + font.getSize() + "pt" +
+						"; color: " + getHexString(fg) + "; }";
 		((HTMLDocument)getDocument()).getStyleSheet().addRule(bodyRule);
 
 	}

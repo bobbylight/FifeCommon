@@ -32,8 +32,11 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.util.ArrayList;
+import java.util.Map;
+
 import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -492,6 +495,17 @@ public abstract class OptionsDialogPanel extends JPanel {
 		public void paintBorder(Component c, Graphics g, int x, int y,
 							int width, int height) {
 
+			Graphics2D g2d = (Graphics2D)g;
+
+			// Try to use the rendering hint set that is "native".
+			Map old = null;
+			Map hints = (Map)c.getToolkit().
+							getDesktopProperty("awt.font.desktophints");
+			if (hints!=null) {
+				old = g2d.getRenderingHints();
+				g2d.addRenderingHints(hints);
+			}
+
 			g.setColor(Color.BLUE);
 			font = javax.swing.UIManager.getFont("Label.font");
 			FontMetrics fm = c.getFontMetrics(font);
@@ -510,6 +524,10 @@ public abstract class OptionsDialogPanel extends JPanel {
 				g.drawString(title, titleX,titleY);
 				g.setColor(c.getBackground().darker());
 				g.drawLine(x,middleY, titleX-5,middleY);
+			}
+
+			if (old!=null) {
+				g2d.addRenderingHints(old);
 			}
 
 		}

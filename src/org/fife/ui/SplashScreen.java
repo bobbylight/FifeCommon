@@ -34,6 +34,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.net.URL;
+import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -189,8 +190,23 @@ public class SplashScreen extends JWindow {
 
 			// Paint the status text.
 			if (text!=null) {
+
+				// Try to use the rendering hint set that is "native".
+				Map old = null;
+				Map hints = (Map)getToolkit().
+								getDesktopProperty("awt.font.desktophints");
+				if (hints!=null) {
+					old = g2d.getRenderingHints();
+					g2d.addRenderingHints(hints);
+				}
+
 				g2d.setColor(textColor);
 				g2d.drawString(text, textX,textY);
+
+				if (old!=null) {
+					g2d.addRenderingHints(old);
+				}
+
 			}
 
 		}

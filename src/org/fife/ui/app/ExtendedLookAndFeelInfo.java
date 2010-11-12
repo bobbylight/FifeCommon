@@ -72,8 +72,8 @@ public class ExtendedLookAndFeelInfo extends UIManager.LookAndFeelInfo {
 	 * Returns a URL array specifying the JAR files containing this Look and
 	 * Feel.
 	 *
-	 * @param The root directory that the JAR file paths are assumed to be
-	 *        relative to.
+	 * @param root The root directory that the JAR file paths are assumed to
+	 *        be relative to.
 	 * @return A URL array for the JAR files.  This will never be
 	 *         <code>null</code>.
 	 * @throws MalformedURLException This should never happen.

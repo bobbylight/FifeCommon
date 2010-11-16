@@ -46,6 +46,8 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.text.View;
 
+import org.fife.ui.SubstanceUtils;
+
 
 /**
  * The UI for tabbed panes holding dockable windows in a
@@ -64,7 +66,7 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 	 */
 	private List croppedTitlesList;
 
-	private GradientPaint unselectedTabGradient;
+	private Paint unselectedTabPaint;
 
 	private static final int SELECTED_TAB_BOOST				= 1;
 
@@ -274,22 +276,36 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 	protected void paintTabBackground(Graphics g, int tabPlacement,
 			int tabIndex, int x, int y, int w, int h, boolean isSelected) {
 		if (isSelected) {
-			g.setColor(UIManager.getColor("TabbedPane.highlight"));
-			//g.setColor(UIManager.getColor("Panel.background"));
+			Color c = UIManager.getColor("TabbedPane.highlight");
+			if (SubstanceUtils.isSubstanceInstalled()) {
+				try {
+					c = SubstanceUtils.getSubstanceColor(
+							SubstanceUtils.EXTRA_LIGHT_COLOR);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			g.setColor(c);
 			g.fillRect(x,y, w,h);
 		}
 		else {
 			Graphics2D g2d = (Graphics2D)g;
 			Paint old = g2d.getPaint();
-//			if (unselectedTabGradient==null ||
-//					y!=unselectedTabGradient.getPoint1().getY()) {
-//				// Re-create gradient when user resizes tabbed pane
-//				unselectedTabGradient = new GradientPaint(
-//						0,y, Color.LIGHT_GRAY,
-//						0,y+h/2, UIManager.getColor("TabbedPane.highlight"));
-//			}
-//			g2d.setPaint(unselectedTabGradient);
-g2d.setColor(UIManager.getColor("Panel.background"));
+			if (unselectedTabPaint==null) {
+				if (SubstanceUtils.isSubstanceInstalled()) {
+					try {
+						unselectedTabPaint = SubstanceUtils.getSubstanceColor(
+								SubstanceUtils.ULTRA_LIGHT_COLOR);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				if (unselectedTabPaint==null) {
+					unselectedTabPaint = new GradientPaint(0,y, Color.LIGHT_GRAY,
+							0,y+h/2, UIManager.getColor("TabbedPane.highlight"));
+				}
+			}
+			g2d.setPaint(unselectedTabPaint);
 			g2d.fillRect(x, y, w, h);
 			g2d.setPaint(old);
 		}

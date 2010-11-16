@@ -211,23 +211,9 @@ class DWindPanel extends JPanel {
 		}
 
 		public void setUI(TabbedPaneUI ui) {
-			if (!(getUI() instanceof DockedWindowTabbedPaneUI)) {
-				// Keep using tabbed pane ui so laf stays the same, but need to
-				// set a new one to pick up new tabbed pane colors, fonts, etc.
-				super.setUI(new DockedWindowTabbedPaneUI());
-			}
-			else {
-				// At a minimum, set the font of the tabbed pane to what it
-				// should be, as different LaFs have different default fonts
-				// (for example, Metal's default font is bold, for some reason,
-				// while Windows XP's is Tahoma.  Usually though it's "Sans
-				// Serif").
-				Font font = UIManager.getFont("TabbedPane.font");
-				//System.out.println("... font==" + font.getFamily());
-				if (font!=null) {
-					setFont(font);
-				}
-			}
+			// Keep using tabbed pane ui so laf stays the same, but need to
+			// set a new one to pick up new tabbed pane colors, fonts, etc.
+			super.setUI(new DockedWindowTabbedPaneUI());
 		}
 
 	}

@@ -60,14 +60,12 @@ public abstract class TranslucencyUtil {
 				}
 
 				else if ("1.6".equals(ver)) {
-					System.out.println("DEBUG: Java 6");
 					Class clazz = Class.forName(
 								"org.fife.util.Java6TranslucencyUtil");
 					instance = (TranslucencyUtil)clazz.newInstance();
 				}
 
 				else { // Java 1.7 +
-					System.out.println("DEBUG: Java 7 +");
 					Class clazz = Class.forName(
 								"org.fife.util.Java7TranslucencyUtil");
 					instance = (TranslucencyUtil)clazz.newInstance();

@@ -111,7 +111,7 @@ class PluginLoader {
 	 * The amount of time to sleep, in milliseconds, between loading each
 	 * plugin.
 	 */
-	private static final int SLEEP_TIME						= 500;
+	private static final int SLEEP_TIME						= 250;
 
 
 	/**

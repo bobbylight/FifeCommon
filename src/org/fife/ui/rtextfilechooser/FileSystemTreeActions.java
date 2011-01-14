@@ -291,9 +291,8 @@ class FileSystemTreeActions {
 					FileSystemTreeNode newChild = new FileSystemTreeNode(f);
 
 					tree.expandPath(path);
-					node.add(newChild);
 					DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-					model.reload(node);
+					model.insertNodeInto(newChild, node, 0);
 					tree.setSelectionPath(new TreePath(newChild.getPath()));
 					tree.setEditable(true);
 					editor = new FileTreeCellEditor(tree,
@@ -302,7 +301,6 @@ class FileSystemTreeActions {
 					editor.addCellEditorListener(this);
 					tree.setCellEditor(editor);
 					tree.startEditingAtPath(tree.getSelectionPath());
-
 				}
 				else {
 					UIManager.getLookAndFeel().provideErrorFeedback(tree);
@@ -400,18 +398,16 @@ class FileSystemTreeActions {
 					FileSystemTreeNode newChild = new FileSystemTreeNode(f);
 
 					tree.expandPath(path);
-					node.add(newChild);
 					DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-					model.reload(node);
+					model.insertNodeInto(newChild, node, 0);
 					tree.setSelectionPath(new TreePath(newChild.getPath()));
 					tree.setEditable(true);
 					editor = new FileTreeCellEditor(tree,
 							(DefaultTreeCellRenderer)tree.getCellRenderer(),
 							root, true);
-					editor.addCellEditorListener(this);
+					editor.addCellEditorListener(NewFolderAction.this);
 					tree.setCellEditor(editor);
 					tree.startEditingAtPath(tree.getSelectionPath());
-
 				} else {
 					UIManager.getLookAndFeel().provideErrorFeedback(tree);
 				}

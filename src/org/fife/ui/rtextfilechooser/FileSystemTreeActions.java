@@ -347,10 +347,12 @@ class FileSystemTreeActions {
 		public void editingCanceled(ChangeEvent e) {
 
 			// Removes the node that was being edited.
-			FileSystemTreeNode node = (FileSystemTreeNode)tree.
-								getSelectionPath().getLastPathComponent();
+			TreePath path = tree.getSelectionPath();
+			FileSystemTreeNode node = (FileSystemTreeNode)path.
+												getLastPathComponent();
+			FileSystemTreeNode parent = null;
 			if (node!=null) { // Should always be true
-				FileSystemTreeNode parent = (FileSystemTreeNode)node.getParent();
+				parent = (FileSystemTreeNode)node.getParent();
 				tree.refreshChildren(parent);
 				((DefaultTreeModel)tree.getModel()).reload(parent);
 			}
@@ -359,6 +361,13 @@ class FileSystemTreeActions {
 			editor = null;
 			tree.setCellEditor(null);
 			tree.setEditable(false);
+
+			// Select the parent that was going to be added to.
+			// Use parent's file, not node.getFile().getParentFile(),
+			// as node.getFile() may be our DUMMY_FILE.
+			if (parent!=null) {
+				tree.setSelectedFile(parent.getFile());
+			}
 
 		}
 
@@ -469,11 +478,12 @@ class FileSystemTreeActions {
 		public void editingCanceled(ChangeEvent e) {
 
 			// Removes the node that was being edited.
-			FileSystemTreeNode node = (FileSystemTreeNode)tree.
-									getSelectionPath().getLastPathComponent();
+			TreePath path = tree.getSelectionPath();
+			FileSystemTreeNode node = (FileSystemTreeNode)path.
+												getLastPathComponent();
+			FileSystemTreeNode parent = null;
 			if (node != null) { // Should always be true
-				FileSystemTreeNode parent = (FileSystemTreeNode) node
-						.getParent();
+				parent = (FileSystemTreeNode) node.getParent();
 				tree.refreshChildren(parent);
 				((DefaultTreeModel)tree.getModel()).reload(parent);
 			}
@@ -482,6 +492,13 @@ class FileSystemTreeActions {
 			editor = null;
 			tree.setCellEditor(null);
 			tree.setEditable(false);
+
+			// Select the parent that was going to be added to.
+			// Use parent's file, not node.getFile().getParentFile(),
+			// as node.getFile() may be our DUMMY_FILE.
+			if (parent!=null) {
+				tree.setSelectedFile(parent.getFile());
+			}
 
 		}
 

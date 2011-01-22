@@ -320,6 +320,16 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			popup = createPopupMenu();
 		}
 
+		// Select the tree node at the mouse position.
+		TreePath path = getPathForLocation(p.x, p.y);
+		if (path!=null) {
+			setSelectionPath(path);
+			scrollPathToVisible(path);
+		}
+		else {
+			clearSelection();
+		}
+
 		// Configure and display it!
 		configurePopupMenuActions();
 		popup.show(this, p.x, p.y);

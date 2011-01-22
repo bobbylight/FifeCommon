@@ -279,9 +279,9 @@ class FileSystemTreeActions {
 
 			if (path!=null) { // Should always be true.
 
-				FileSystemTreeNode node = (FileSystemTreeNode)path.
+				FileSystemTreeNode parentNode = (FileSystemTreeNode)path.
 							getLastPathComponent();
-				File root = node.getFile();
+				File root = parentNode.getFile();
 
 				if (root.isDirectory()) { // Should always be true
 
@@ -290,17 +290,51 @@ class FileSystemTreeActions {
 					File f = new File(root, name);
 					FileSystemTreeNode newChild = new FileSystemTreeNode(f);
 
-					tree.expandPath(path);
+					// We must do this before inserting a child node, due to
+					// our use of "dummy" child nodes for tree visual appeal.
+//System.out.println("pre-expand path == " + path);
+//System.out.println("pre-expand node == " + parentNode);
+//System.out.println("pre-expand child count == " + parentNode.getChildCount());
+//if (parentNode.getChildCount()>0) {
+//	System.out.println("pre-expand child 1 == " + parentNode.getChildAt(0));
+//}
+					tree.refreshChildren(parentNode);
+//System.out.println("post-expand child count == " + parentNode.getChildCount());
+//if (parentNode.getChildCount()>0) {
+//	System.out.println("post-expand child 1 == " + parentNode.getChildAt(0));
+//}
 					DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-					model.insertNodeInto(newChild, node, 0);
-					tree.setSelectionPath(new TreePath(newChild.getPath()));
+					model.insertNodeInto(newChild, parentNode, 0);
+//System.out.println("post-insert child count == " + parentNode.getChildCount());
+//if (parentNode.getChildCount()>0) {
+//	System.out.println("post insert child 1 == " + parentNode.getChildAt(0));
+//}
+
+					// JTree only works with TreePaths returned by it (!);
+					// creating TreePaths by its constructor or by other means
+					// results in NPE's when adding a child node to a newly-
+					// added child node.
+					// Don't know why, but the lines below are magic!  Can't
+					// be simplified...
+					tree.expandPath(path); // Expand to show new child
+					int parentRow = tree.getRowForPath(path);
+//					System.out.println(tree.isExpanded(path));
+					int newRow = parentRow + 1;
+					TreePath newChildPath = tree.getPathForRow(newRow);
+//System.out.println("newChildPath == " + newChildPath);
+//System.out.println("--- " + tree.getPathForRow(newRow-1));
+//System.out.println("--- " + tree.getPathForRow(newRow));
+//System.out.println("--- " + tree.getPathForRow(newRow+1));
+//System.out.println("--- " + parentNode.getChildCount() + " - " + parentNode.getChildAt(0));
+					tree.setSelectionPath(newChildPath);
 					tree.setEditable(true);
 					editor = new FileTreeCellEditor(tree,
 							(DefaultTreeCellRenderer)tree.getCellRenderer(),
 							root, false);
 					editor.addCellEditorListener(this);
 					tree.setCellEditor(editor);
-					tree.startEditingAtPath(tree.getSelectionPath());
+					tree.startEditingAtPath(newChildPath);
+
 				}
 				else {
 					UIManager.getLookAndFeel().provideErrorFeedback(tree);
@@ -359,6 +393,7 @@ class FileSystemTreeActions {
 			editor = null;
 			tree.setCellEditor(null);
 			tree.setEditable(false);
+			tree.requestFocusInWindow();
 
 		}
 
@@ -386,28 +421,43 @@ class FileSystemTreeActions {
 
 			if (path != null) { // Should always be true.
 
-				FileSystemTreeNode node = (FileSystemTreeNode) path
+				FileSystemTreeNode parentNode = (FileSystemTreeNode)path
 						.getLastPathComponent();
-				File root = node.getFile();
+				File root = parentNode.getFile();
 
 				if (root.isDirectory()) { // Should always be true
 
 					String name = File.separatorChar == '/' ? "newDir"
 							: "New Folder";
 					File f = new File(root, name);
-					FileSystemTreeNode newChild = new FileSystemTreeNode(f);
+					// Pass in "true" for directory property, as this directory
+					// doesn't exist yet.
+					FileSystemTreeNode newChild = tree.
+												createTreeNodeForImpl(f, true);
 
-					tree.expandPath(path);
+					tree.refreshChildren(parentNode);
 					DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-					model.insertNodeInto(newChild, node, 0);
-					tree.setSelectionPath(new TreePath(newChild.getPath()));
+					model.insertNodeInto(newChild, parentNode, 0);
+
+					// JTree only works with TreePaths returned by it (!);
+					// creating TreePaths by its constructor or by other means
+					// results in NPE's when adding a child node to a newly-
+					// added child node.
+					// Don't know why, but the lines below are magic!  Can't
+					// be simplified...
+					tree.expandPath(path); // Expand to show new child
+					int parentRow = tree.getRowForPath(path);
+					int newRow = parentRow + 1;
+					TreePath newChildPath = tree.getPathForRow(newRow);
+					tree.setSelectionPath(newChildPath);
 					tree.setEditable(true);
 					editor = new FileTreeCellEditor(tree,
 							(DefaultTreeCellRenderer)tree.getCellRenderer(),
-							root, true);
-					editor.addCellEditorListener(NewFolderAction.this);
+							root, false);
+					editor.addCellEditorListener(this);
 					tree.setCellEditor(editor);
-					tree.startEditingAtPath(tree.getSelectionPath());
+					tree.startEditingAtPath(newChildPath);
+
 				} else {
 					UIManager.getLookAndFeel().provideErrorFeedback(tree);
 				}
@@ -460,6 +510,7 @@ class FileSystemTreeActions {
 			editor = null;
 			tree.setCellEditor(null);
 			tree.setEditable(false);
+			tree.requestFocusInWindow();
 
 		}
 

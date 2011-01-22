@@ -72,7 +72,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	private static final File   DUMMY_FILE			= new File(DUMMY_FILE_NAME);
 	private static final String EMPTY				= "";
 
-	private DefaultTreeModel treeModel;
+	private FileSystemTreeModel treeModel;
 	private FileSystemTreeNode root;
 	private HashMap rootNameCache;				// Cache of root names.
 	private FileSystemView fileSystemView;
@@ -269,7 +269,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 * @param file The file for which to create a tree node.
 	 * @return The tree node for the file.
 	 */
-	private FileSystemTreeNode createTreeNodeFor(File file) {
+	public FileSystemTreeNode createTreeNodeFor(File file) {
 		return createTreeNodeForImpl(file, file.isDirectory());
 	}
 
@@ -284,7 +284,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 * @param directory Whether the specified file is a directory.
 	 * @return The tree node for the file.
 	 */
-	private FileSystemTreeNode createTreeNodeForImpl(File file,
+	protected FileSystemTreeNode createTreeNodeForImpl(File file,
 											boolean directory) {
 
 		// The node for the file.
@@ -576,7 +576,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		// set the cell renderer (below), otherwise, each tree node's
 		// width will initially be incorrect (fixed when the node is
 		// expanded/collapsed).
-		treeModel = new DefaultTreeModel(root);
+		treeModel = new FileSystemTreeModel(root);
 		setModel(treeModel);
 
 		cellRenderer = new FileSystemTreeRenderer();
@@ -645,6 +645,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 					node.add(createTreeNodeFor(filteredChildren[i]));
 				}
 			}
+			((FileSystemTreeModel)getModel()).nodeStructureChanged(node);
 		}
 	}
 
@@ -694,7 +695,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 					"root must be 'null' or a directory");
 		}
 
-		treeModel = new DefaultTreeModel(root);
+		treeModel = new FileSystemTreeModel(root);
 		setModel(treeModel);
 
 	}
@@ -779,6 +780,30 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		// Some actions only work with Java 6+.
 		String ver = System.getProperty("java.specification.version");
 		IS_JAVA_6_PLUS = !ver.startsWith("1.4") && !ver.startsWith("1.5");
+	}
+
+
+	public static class FileSystemTreeModel extends DefaultTreeModel {
+
+		public FileSystemTreeModel(TreeNode root) {
+			super(root);
+		}
+
+		public void insertNodeInto(MutableTreeNode child,
+								MutableTreeNode parent, int index) {
+			FileSystemTreeNode fstParent = (FileSystemTreeNode)parent;
+			if (fstParent.containsFile(DUMMY_FILE)) {
+				// Here, we're replacing a node, not inserting one
+				fstParent.removeAllChildren(); // Just the one
+				parent.insert(child, 0);
+				fireTreeNodesChanged(this, getPathToRoot(child),
+						 new int[] { 0 }, new Object[] { child });
+			}
+			else {
+				super.insertNodeInto(child, fstParent, index);
+			}
+		}
+
 	}
 
 

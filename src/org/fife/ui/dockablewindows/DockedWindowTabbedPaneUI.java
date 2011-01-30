@@ -36,6 +36,7 @@ import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.Paint;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Icon;
@@ -301,12 +302,16 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 					}
 				}
 				if (unselectedTabPaint==null) {
-					unselectedTabPaint = new GradientPaint(0,y, Color.LIGHT_GRAY,
-							0,y+h/2, UIManager.getColor("TabbedPane.highlight"));
+					unselectedTabPaint = new GradientPaint(0,0, Color.LIGHT_GRAY,
+							0,h/2, UIManager.getColor("TabbedPane.highlight"));
 				}
 			}
 			g2d.setPaint(unselectedTabPaint);
-			g2d.fillRect(x, y, w, h);
+			// Transform is needed in case we're using the gradient.
+			AffineTransform trans = g2d.getTransform();
+			g2d.translate(0, y);
+			g2d.fillRect(x, 0, w, h);
+			g2d.setTransform(trans);
 			g2d.setPaint(old);
 		}
 	}

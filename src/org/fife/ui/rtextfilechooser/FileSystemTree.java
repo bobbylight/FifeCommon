@@ -220,6 +220,21 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	}
 
 
+	public String convertValueToText(Object value, boolean selected,
+			boolean expanded, boolean leaf, int row, boolean hasFocus) {
+		// For FileSystemTrees, we should always be getting a
+		// FileSystemTreeNode as our last path component.
+		if (value instanceof FileSystemTreeNode) {
+			File file = ((FileSystemTreeNode)value).getFile();
+			if (file!=null) {
+				return file.getName();
+			}
+		}
+		return super.convertValueToText(value, selected, expanded, leaf, row,
+									hasFocus);
+	}
+
+
 	/**
 	 * Creates the popup menu for this file system tree.  Subclasses can
 	 * override this method if they wish to add more menu items to the

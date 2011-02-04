@@ -44,7 +44,10 @@ import javax.swing.JTree;
 import javax.swing.ListCellRenderer;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
+import javax.swing.plaf.BorderUIResource;
+import javax.swing.plaf.UIResource;
 import javax.swing.table.TableCellRenderer;
 
 
@@ -485,6 +488,32 @@ public class UIUtil {
 		}
 
 		return nonOpaqueTabbedPaneComponents==1 ? true : false;
+
+	}
+
+
+	/**
+	 * Tweaks certain LookAndFeels (i.e., Windows XP) to look just a tad more
+	 * like the native Look.
+	 */
+	public static void installOsSpecificLafTweaks() {
+
+		String lafName = UIManager.getLookAndFeel().getName();
+		String os = System.getProperty("os.name");
+
+		// XP has insets between the edge of popup menus and the selection.
+		if ("Windows XP".equals(os) && "Windows".equals(lafName)) {
+
+			Border insetsBorder = BorderFactory.createEmptyBorder(2, 3, 2, 3);
+
+			String key = "PopupMenu.border";
+			Border origBorder = UIManager.getBorder(key);
+			UIResource res = new BorderUIResource.CompoundBorderUIResource(
+										origBorder, insetsBorder);
+			//UIManager.put(key, res);
+			UIManager.getLookAndFeelDefaults().put(key, res);
+
+		}
 
 	}
 

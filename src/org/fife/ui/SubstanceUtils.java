@@ -163,10 +163,25 @@ public class SubstanceUtils {
 	 *
 	 * @param laf The LookAndFeel.
 	 * @return Whether it is a Substance LookAndFeel.
+	 * @see #isASubstanceLookAndFeel(String)
 	 * @see #isSubstanceInstalled()
 	 */
 	public static boolean isASubstanceLookAndFeel(LookAndFeel laf) {
-		return laf.getClass().getName().indexOf(".Substance")>-1;
+		return isASubstanceLookAndFeel(laf.getClass().getName());
+	}
+
+
+
+	/**
+	 * Returns whether a given LookAndFeel is a Substance LookAndFeel.
+	 *
+	 * @param lafName The LookAndFeel's class name.
+	 * @return Whether it is a Substance LookAndFeel.
+	 * @see #isASubstanceLookAndFeel(LookAndFeel)
+	 * @see #isSubstanceInstalled()
+	 */
+	public static boolean isASubstanceLookAndFeel(String lafName) {
+		return lafName.indexOf(".Substance")>-1;
 	}
 
 

@@ -30,6 +30,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -55,6 +56,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 	private RTextFileChooser chooser; // The chooser this view is in.
 	private MouseListener mouseListener;
+	private ViewKeyListener keyListener;
 	private SelectionListener selectionListener;
 
 	private String readStr;
@@ -151,6 +153,8 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		// Add any listeners.
 		mouseListener = new MouseListener(chooser);
 		addMouseListener(mouseListener);
+		keyListener = new ViewKeyListener();
+		addKeyListener(keyListener);
 		selectionListener = new SelectionListener(chooser);
 		getSelectionModel().addListSelectionListener(selectionListener);
 
@@ -350,7 +354,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		int row = rowAtPoint(e.getPoint());
 		if (row==-1)
 			return null;
-		File file = (File)getValueAt(row, 0);
+		File file = (File)getModel().getValueAt(row, 0);
 		if (file==null || file.isDirectory())
 			return null;
 		tip = chooser.getToolTipFor(file);
@@ -408,6 +412,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 */
 	public void removeAllListeners() {
 		removeMouseListener(mouseListener);
+		removeKeyListener(keyListener);
 		getSelectionModel().removeListSelectionListener(selectionListener);
 	}
 
@@ -869,6 +874,85 @@ class DetailsView extends JTable implements RTextFileChooserView {
 				setText(text);
 			}
 			return this;
+		}
+
+	}
+
+
+	/**
+	 * Listens for key events in the table, to allow the user to type the name
+	 * of a file and have it selected.
+	 */
+	private class ViewKeyListener extends KeyAdapter {
+
+		private String typed;
+		private long lastTime;
+
+		private int getNextMatch(String text, int fromRow) {
+
+			text = text.toUpperCase();
+			FileExplorerTableModel model = (FileExplorerTableModel)getModel();
+
+			// First, try everything after the selected row
+			for (int row=fromRow; row<getRowCount(); row++) {
+				// Get value from the model, as columns may be reordered.
+				Object value = model.getValueAt(row, 0);
+				String fileName = (value instanceof File) ?
+						((File)value).getName() : value.toString();
+				fileName = fileName.toUpperCase();
+				if (fileName.startsWith(text)) {
+					return row;
+				}
+			}
+
+			// Then, wrap around to before the selected row
+			for (int row=0; row<fromRow; row++) {
+				// Get value from the model, as columns may be reordered.
+				Object value = model.getValueAt(row, 0);
+				String fileName = (value instanceof File) ?
+						((File)value).getName() : value.toString();
+				fileName = fileName.toUpperCase();
+				if (fileName.startsWith(text)) {
+					return row;
+				}
+			}
+
+			return -1;
+
+		}
+
+		public void keyTyped(KeyEvent e) {
+
+			FileExplorerTableModel model = (FileExplorerTableModel)getModel();
+			if (model==null || model.getRowCount()==0) {
+				return;
+			}
+
+			long time = e.getWhen();
+			if (time<lastTime+1000) {
+				if (typed==null) {
+					typed = String.valueOf(e.getKeyChar());
+				}
+				else {
+					typed += e.getKeyChar();
+				}
+			}
+			else {
+				typed = String.valueOf(e.getKeyChar());
+			}
+			lastTime = time;
+
+			int startRow = getSelectedRow();
+			if (startRow==-1) {
+				startRow = 0;
+			}
+
+			int matchRow = getNextMatch(typed, startRow);
+			if (matchRow!=-1) {
+				getSelectionModel().setSelectionInterval(matchRow, matchRow);
+				ensureFileIsVisible(getSelectedFile());
+			}
+
 		}
 
 	}

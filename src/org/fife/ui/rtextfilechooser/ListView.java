@@ -29,6 +29,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Vector;
@@ -73,6 +75,7 @@ class ListView extends JList implements RTextFileChooserView {
 
 		setTransferHandler(new FileChooserViewTransferHandler(this));
 		setDragEnabled(true);
+		addKeyListener(new ViewKeyListener());
 
 		// Add any listeners.
 		mouseListener = new MouseListener(chooser);
@@ -91,7 +94,10 @@ class ListView extends JList implements RTextFileChooserView {
 	 * Clears all files displayed by this view.
 	 */
 	public void clearDisplayedFiles() {
-		setListData(new File[0]); // Must do this so the file list gets erased
+		// setListData() replaces our ListModel, with a non-DefaultListModel
+		// model, which we don't want to do
+		//setListData(new File[0]);
+		setModel(new DefaultListModel());
 	}
 
 
@@ -225,7 +231,14 @@ class ListView extends JList implements RTextFileChooserView {
 	 * @param files A vector containing the files to display.
 	 */
 	public void setDisplayedFiles(Vector files) {
-		setListData(files);
+		// setListData() replaces our ListModel, with a non-DefaultListModel
+		// model, which we don't want to do
+		//setListData(files);
+		DefaultListModel model = new DefaultListModel();
+		for (int i=0; i<files.size(); i++) {
+			model.addElement(files.get(i));
+		}
+		setModel(model);
 	}
 
 
@@ -362,6 +375,82 @@ class ListView extends JList implements RTextFileChooserView {
 			else {
 				super.setBounds(x,y, width,height);
 			}
+		}
+
+	}
+
+
+	/**
+	 * Listens for key events in the list, to allow the user to type the name
+	 * of a file and have it selected.
+	 */
+	private class ViewKeyListener extends KeyAdapter {
+
+		private String typed;
+		private long lastTime;
+
+		private int getNextMatch(String text, int fromCell) {
+
+			text = text.toUpperCase();
+			ListModel model = getModel();
+
+			// First, try everything after the selected row
+			for (int row=fromCell; row<model.getSize(); row++) {
+				Object value = model.getElementAt(row);
+				String fileName = (value instanceof File) ?
+						((File)value).getName() : value.toString();
+				fileName = fileName.toUpperCase();
+				if (fileName.startsWith(text)) {
+					return row;
+				}
+			}
+
+			// Then, wrap around to before the selected row
+			for (int row=0; row<fromCell; row++) {
+				Object value = model.getElementAt(row);
+				String fileName = (value instanceof File) ?
+						((File)value).getName() : value.toString();
+				fileName = fileName.toUpperCase();
+				if (fileName.startsWith(text)) {
+					return row;
+				}
+			}
+
+			return -1;
+
+		}
+
+		public void keyTyped(KeyEvent e) {
+
+			if (getModel().getSize()==0) {
+				return;
+			}
+
+			long time = e.getWhen();
+			if (time<lastTime+1000) {
+				if (typed==null) {
+					typed = String.valueOf(e.getKeyChar());
+				}
+				else {
+					typed += e.getKeyChar();
+				}
+			}
+			else {
+				typed = String.valueOf(e.getKeyChar());
+			}
+			lastTime = time;
+
+			int startCell = getLeadSelectionIndex();
+			if (startCell==-1) {
+				startCell = 0;
+			}
+
+			int matchCell = getNextMatch(typed, startCell);
+			if (matchCell!=-1) {
+				setSelectedIndex(matchCell);
+				ensureFileIsVisible(getSelectedFile());
+			}
+
 		}
 
 	}

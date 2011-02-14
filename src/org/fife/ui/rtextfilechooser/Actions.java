@@ -23,6 +23,7 @@
 package org.fife.ui.rtextfilechooser;
 
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -32,11 +33,11 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.fife.ui.rtextfilechooser.extras.FileIOExtras;
@@ -148,7 +149,8 @@ interface Actions {
 		}
 
 		private void handleDeleteNative(File[] files, FileIOExtras extras) {
-			if (extras.moveToRecycleBin(files, true, true)) {
+			Window parent = SwingUtilities.getWindowAncestor(chooser);
+			if (extras.moveToRecycleBin(parent, files, true, true)) {
 				refresh();
 			}
 			else {

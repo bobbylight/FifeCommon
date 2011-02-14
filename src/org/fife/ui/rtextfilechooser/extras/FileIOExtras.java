@@ -22,6 +22,7 @@
  */
 package org.fife.ui.rtextfilechooser.extras;
 
+import java.awt.Window;
 import java.io.File;
 
 
@@ -85,6 +86,8 @@ public abstract class FileIOExtras {
 	/**
 	 * Moves the specified files and/or directories to the recycle bin.
 	 *
+	 * @param parent The parent window for the dialog.  This may be
+	 *        <code>null</code>.
 	 * @param files An array of files/directories to move.
 	 * @param confirmation Whether a "Are you sure you want to send XXX to
 	 *        the Trash?" should be displayed to the user.
@@ -98,7 +101,7 @@ public abstract class FileIOExtras {
 	 *         the delete operation in the UI.  This method only fails if
 	 *         a serious internal error occurs (out of memory, etc.).
 	 */
-	public boolean moveToRecycleBin(File[] files,
+	public boolean moveToRecycleBin(Window parent, File[] files,
 						boolean confirmation, boolean silent) {
 		if (files==null || files.length==0) {
 			return true;
@@ -107,13 +110,15 @@ public abstract class FileIOExtras {
 		for (int i=0; i<files.length; i++) {
 			fileNames[i] = files[i].getAbsolutePath();
 		}
-		return moveToRecycleBin(fileNames, confirmation, silent);
+		return moveToRecycleBin(parent, fileNames, confirmation, silent);
 	}
 
 
 	/**
 	 * Moves the specified file to the recycle bin.
 	 *
+	 * @param parent The parent window for the dialog.  This may be
+	 *        <code>null</code>.
 	 * @param files The names of the files to move.  These should
 	 *        be absolute paths.
 	 * @param confirmation Whether a "Are you sure you want to send XXX to
@@ -128,7 +133,7 @@ public abstract class FileIOExtras {
 	 *         the delete operation in the UI.  This method only fails if
 	 *         a serious internal error occurs (out of memory, etc.).
 	 */
-	public abstract boolean moveToRecycleBin(String[] files,
+	public abstract boolean moveToRecycleBin(Window parent, String[] files,
 						boolean confirmation, boolean silent);
 
 
@@ -146,7 +151,7 @@ public abstract class FileIOExtras {
 
 		FileIOExtras extras = FileIOExtras.getInstance();
 		if (extras!=null) {
-			boolean success = extras.moveToRecycleBin(args, true, true);
+			boolean success = extras.moveToRecycleBin(null, args, true, true);
 			System.out.println("Success: " + success);
 		}
 		else {

@@ -21,6 +21,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
@@ -80,6 +81,10 @@ class FileSystemTreeActions {
 
 		public void actionPerformed(ActionEvent e) {
 
+			if (window==null) { // Often unfortunately null
+				window = SwingUtilities.getWindowAncestor(tree);
+			}
+
 			// Get the selected files.  If there are no selected files (i.e.,
 			// they pressed "delete" when no files were selected), beep.
 			File[] files = tree.getSelectedFiles();
@@ -99,7 +104,7 @@ class FileSystemTreeActions {
 		}
 
 		private void handleDeleteNative(File[] files, FileIOExtras extras) {
-			if (extras.moveToRecycleBin(files, true, true)) {
+			if (extras.moveToRecycleBin(window, files, true, true)) {
 				refresh();
 			}
 			else {

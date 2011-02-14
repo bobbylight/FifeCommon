@@ -27,7 +27,7 @@ package org.fife.ui.rtextfilechooser.extras;
  * Extra file IO stuff specific to x64.
  *
  * @author Robert Futrell
- * @version 1.0
+ * @version 1.1
  */
 class x64FileIOExtras extends Win32FileIOExtras {
 
@@ -45,6 +45,8 @@ class x64FileIOExtras extends Win32FileIOExtras {
 	/**
 	 * Moves the specified file to the recycle bin.
 	 *
+	 * @param hwnd The handle to the parent window, or <code>0</code> if
+	 *        unknown.
 	 * @param fileName The name of the file to move.  This should
 	 *        be an absolute path.
 	 * @param confirmation Whether a "Are you sure you want to send XXX to
@@ -59,7 +61,7 @@ class x64FileIOExtras extends Win32FileIOExtras {
 	 *         the delete operation in the UI.  This method only fails if
 	 *         a serious internal error occurs (out of memory, etc.).
 	 */
-	public native boolean moveToRecycleBin(String[] files,
+	protected native boolean moveToRecycleBinImpl(long hwnd, String[] files,
 						boolean confirmation, boolean silent);
 
 

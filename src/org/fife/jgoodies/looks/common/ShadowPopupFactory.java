@@ -31,8 +31,6 @@
 package org.fife.jgoodies.looks.common;
 
 import java.awt.Component;
-
-import javax.swing.LookAndFeel;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
 
@@ -46,8 +44,8 @@ import org.fife.jgoodies.looks.Options;
  * Adds a drop shadow border to all popups except ComboBox popups.
  * It is installed by the JGoodies Plastic L&amp;F, as well as by
  * the JGoodies Windows L&amp;F during the Look&amp;Feel initialization,
- * see {@link com.jgoodies.looks.plastic.PlasticLookAndFeel#initialize} and
- * {@link com.jgoodies.looks.windows.WindowsLookAndFeel#initialize}.<p>
+ * see <code>com.jgoodies.looks.plastic.PlasticLookAndFeel#initialize</code>
+ * <code>com.jgoodies.looks.windows.WindowsLookAndFeel#initialize</code>.<p>
  *
  * This factory shall not be used on platforms that provide native drop shadows,
  * such as the Mac OS X. Therefore the invocation of the {@link #install()}
@@ -65,8 +63,6 @@ import org.fife.jgoodies.looks.Options;
  * @see java.awt.AWTPermission
  * @see java.awt.Robot
  * @see javax.swing.Popup
- * @see LookAndFeel#initialize
- * @see LookAndFeel#uninitialize
  */
 public final class ShadowPopupFactory extends PopupFactory {
 

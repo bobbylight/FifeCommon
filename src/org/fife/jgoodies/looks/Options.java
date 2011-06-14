@@ -60,12 +60,6 @@ public final class Options {
     // Look & Feel Names ******************************************************
 
     /**
-     * The class name of the JGoodies Plastic L&amp;f.
-     */
-    public static final String PLASTIC_NAME =
-        "com.jgoodies.looks.plastic.PlasticLookAndFeel";
-
-    /**
      * The class name of the JGoodies Plastic3D L&amp;f.
      */
     public static final String PLASTIC3D_NAME =
@@ -108,62 +102,6 @@ public final class Options {
     // Keys for Overriding Font Settings **************************************
 
     /**
-     * A key for setting a custom FontPolicy for the Plastic L&amp;fs.
-     * Used for both the system properties and the UIDefaults table.
-     *
-     * @see PlasticLookAndFeel#getFontPolicy()
-     * @see PlasticLookAndFeel#setFontPolicy(FontPolicy)
-     */
-    public static final String PLASTIC_FONT_POLICY_KEY =
-        "Plastic.fontPolicy";
-
-    /**
-     * A key for setting the default control font in Plastic L&amp;fs.
-     * Used for both the system properties and the UIDefaults table.
-     *
-     * @see FontPolicies#customSettingsPolicy(FontPolicy)
-     */
-    public static final String PLASTIC_CONTROL_FONT_KEY =
-        "Plastic.controlFont";
-
-    /**
-     * A key for setting the default menu font in Plastic L&amp;fs.
-     * Used for both the system properties and the UIDefaults table.
-     *
-     * @see FontPolicies#customSettingsPolicy(FontPolicy)
-     */
-    public static final String PLASTIC_MENU_FONT_KEY =
-        "Plastic.menuFont";
-
-    /**
-     * A key for setting a custom FontPolicy for the Windows L&amp;fs.
-     * Used for both the system properties and the UIDefaults table.
-     *
-     * @see WindowsLookAndFeel#getFontPolicy()
-     * @see WindowsLookAndFeel#setFontPolicy(FontPolicy)
-     */
-    public static final String WINDOWS_FONT_POLICY_KEY =
-        "Windows.fontPolicy";
-
-    /**
-     * A key for setting the default control font in the Windows L&amp;f.
-     * Used for both the system properties and the UIDefaults table.
-     *
-     * @see FontPolicies#customSettingsPolicy(FontPolicy)
-     */
-    public static final String WINDOWS_CONTROL_FONT_KEY =
-        "Windows.controlFont";
-
-    /**
-     * A key for setting the default menu font in the Windows L&amp;f.
-     * Used for both the system properties and the UIDefaults table.
-     *
-     * @see FontPolicies#customSettingsPolicy(FontPolicy)
-     */
-    public static final String WINDOWS_MENU_FONT_KEY =
-        "Windows.menuFont";
-
-    /**
      * A convenience constant for the standard Swing system property key
      * that configures the use of system fonts.
      *
@@ -182,30 +120,6 @@ public final class Options {
      */
     public static final String USE_SYSTEM_FONTS_APP_KEY =
         "Application.useSystemFontSettings";
-
-
-    // Keys for Micro Layout Policies *****************************************
-
-    /**
-     * A UIManager key for setting a custom MicroLayoutPolicy
-     * for the Plastic L&amp;fs.
-     *
-     * @see PlasticLookAndFeel#getMicroLayoutPolicy()
-     * @see PlasticLookAndFeel#setMicroLayoutPolicy(MicroLayout)
-     */
-    public static final String PLASTIC_MICRO_LAYOUT_POLICY_KEY =
-        "Plastic.MicroLayoutPolicy";
-
-
-    /**
-     * A UIManager key for setting a custom MicroLayoutPolicy
-     * for the Windows L&amp;f.
-     *
-     * @see WindowsLookAndFeel#getMicroLayoutPolicy()
-     * @see WindowsLookAndFeel#setMicroLayoutPolicy(MicroLayout)
-     */
-    public static final String WINDOWS_MICRO_LAYOUT_POLICY_KEY =
-        "Windows.MicroLayoutPolicy";
 
 
     // Optional Global User Properties ****************************************
@@ -261,16 +175,6 @@ public final class Options {
      * that the scroll pane border should be etched.
      */
     public static final String IS_ETCHED_KEY = "jgoodies.isEtched";
-
-    /**
-     * A client property key for JMenuBar and JToolBar style hints.
-     * Available styles are: <code>HeaderStyle.Single</code> and
-     * <code>HeaderStyle.Both</code>.
-     *
-     * @see HeaderStyle
-     * @see BorderStyle
-     */
-    public static final String HEADER_STYLE_KEY = "jgoodies.headerStyle";
 
     /**
      * A JMenu client property key for a hint

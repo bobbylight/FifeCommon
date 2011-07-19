@@ -209,10 +209,16 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 		// Only have the "Refresh" menu item enabled if a directory
 		// item is selected.
-		enable = selectedFile!=null && selectedFile.isDirectory();
+		enable = (selectedFile!=null && selectedFile.isDirectory()) ||
+				(selectedFile==null && root.getFile()!=null);
+		refreshAction.setEnabled(enable);
+
+		// Enable "new file" and "new folder" actions if we're viewing the
+		// contents of a folder, or a folder is selected.
+		enable = selectedFile!=null ||
+				(selectedFile==null && root.getFile()!=null);
 		newFileAction.setEnabled(enable);
 		newFolderAction.setEnabled(enable);
-		refreshAction.setEnabled(enable);
 
 		pasteAction.setEnabled(enable &&
 								pasteAction.isClipboardContentValid()); 
@@ -510,6 +516,18 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 
 	/**
+	 * Returns the directory being used as the invisible "root" of this tree.
+	 *
+	 * @return The root directory, or <code>null</code> if none (i.e., if all
+	 *         file system roots are being shown instead).
+	 * @see #setRoot(File)
+	 */
+	public File getRoot() {
+		return root.getFile();
+	}
+
+
+	/**
 	 * Returns the file currently selected by the user.
 	 *
 	 * @return The file currently selected, or <code>null</code>
@@ -657,9 +675,15 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 * Refreshes the children of the specified node (representing a directory)
 	 * to accurately reflect the files inside of it.
 	 *
-	 * @param node The node.  If this is <code>null</code>, nothing happens.
+	 * @param node The node.  If this is <code>null</code>, the entire tree is
+	 *        refreshed.
 	 */
 	void refreshChildren(FileSystemTreeNode node) {
+
+		if (node==null) {
+			node = (FileSystemTreeNode)getModel().getRoot();
+		}
+
 		if (node!=null) {
 			node.removeAllChildren();
 			File file = node.getFile();
@@ -672,6 +696,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			}
 			((FileSystemTreeModel)getModel()).nodeStructureChanged(node);
 		}
+
 	}
 
 
@@ -682,6 +707,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 *        of the file system's roots are used.  If it is a directory, then
 	 *        that directory is used.  If it is a plain file, or does not
 	 *        exist, an {@link IllegalArgumentException} is thrown.
+	 * @see #getRoot()
 	 */
 	public void setRoot(File rootFile) {
 
@@ -700,7 +726,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		// Create our single "root" node.
 		else if (rootFile.isDirectory()) {
 
-			root = new FileSystemTreeNode();
+			root = new FileSystemTreeNode(rootFile);
 			File[] children = rootFile.listFiles();
 			int count = children==null ? 0 : children.length;
 			if (count>0) {

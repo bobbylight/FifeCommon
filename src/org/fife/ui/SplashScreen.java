@@ -192,13 +192,7 @@ public class SplashScreen extends JWindow {
 			if (text!=null) {
 
 				// Try to use the rendering hint set that is "native".
-				Map old = null;
-				Map hints = (Map)getToolkit().
-								getDesktopProperty("awt.font.desktophints");
-				if (hints!=null) {
-					old = g2d.getRenderingHints();
-					g2d.addRenderingHints(hints);
-				}
+				Map old = UIUtil.setNativeRenderingHints(g2d);
 
 				g2d.setColor(textColor);
 				g2d.drawString(text, textX,textY);

@@ -41,6 +41,7 @@ import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 
 
@@ -498,16 +499,10 @@ public abstract class OptionsDialogPanel extends JPanel {
 			Graphics2D g2d = (Graphics2D)g;
 
 			// Try to use the rendering hint set that is "native".
-			Map old = null;
-			Map hints = (Map)c.getToolkit().
-							getDesktopProperty("awt.font.desktophints");
-			if (hints!=null) {
-				old = g2d.getRenderingHints();
-				g2d.addRenderingHints(hints);
-			}
+			Map old = UIUtil.setNativeRenderingHints(g2d);
 
 			g.setColor(Color.BLUE);
-			font = javax.swing.UIManager.getFont("Label.font");
+			font = UIManager.getFont("Label.font");
 			FontMetrics fm = c.getFontMetrics(font);
 			int titleWidth = fm.stringWidth(title);
 			int middleY = y + HEIGHT/2;

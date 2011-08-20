@@ -28,6 +28,7 @@ import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
@@ -37,11 +38,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.*;
 
 import org.fife.ui.FileExplorerTableModel;
+import org.fife.ui.UIUtil;
 
 
 /**
@@ -812,12 +815,16 @@ class DetailsView extends JTable implements RTextFileChooserView {
 				icon.paintIcon(this, g, paintIconR.x, paintIconR.y);
 
 			if (text != null) {
+				Map old = UIUtil.setNativeRenderingHints((Graphics2D)g);
 				int textX = paintTextR.x;
 				int textY = paintTextR.y + fm.getAscent();
 				g.setColor(getForeground());
 				g.drawString(clippedText, textX,textY);
 				if (isAlreadyOpened && chooser.getStyleOpenFiles()) {
 					g.drawLine(textX, textY+2, textX+paintTextR.width, textY+2);
+				}
+				if (old!=null) {
+					((Graphics2D)g).addRenderingHints(old);
 				}
 			}
 

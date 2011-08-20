@@ -35,6 +35,7 @@
 		<mkdir dir="${class-dir}"/>
 		<javac srcdir="${source-dir}" destdir="${class-dir}"
 			classpath="extra:lib/rsyntaxtextarea.jar:lib/autocomplete.jar"
+			includeantruntime="false"
 			deprecation="yes" debug="${debug}" debuglevel="${debuglevel}"
 			source="${java-level}" target="${java-level}"/>
 	</target>

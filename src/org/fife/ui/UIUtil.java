@@ -26,11 +26,14 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Container;
+import java.awt.Graphics2D;
 import java.awt.LayoutManager;
+import java.awt.Toolkit;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -604,6 +607,32 @@ public class UIUtil {
 								String key) {
 		comp.getAccessibleContext().setAccessibleDescription(
 											msg.getString(key));
+	}
+
+
+	/**
+	 * Sets the rendering hints on a graphics object to those closest to the
+	 * system's desktop values.<p>
+	 * 
+	 * See <a href="http://download.oracle.com/javase/6/docs/api/java/awt/doc-files/DesktopProperties.html">AWT
+	 * Desktop Properties</a> for more information.
+	 *
+	 * @param g2d The graphics context.
+	 * @return The old rendering hints.
+	 */
+	public static Map setNativeRenderingHints(Graphics2D g2d) {
+
+		Map old = g2d.getRenderingHints();
+
+		// Try to use the rendering hint set that is "native".
+		Map hints = (Map)Toolkit.getDefaultToolkit().
+						getDesktopProperty("awt.font.desktophints");
+		if (hints!=null) {
+			g2d.addRenderingHints(hints);
+		}
+
+		return old;
+
 	}
 
 

@@ -30,8 +30,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Vector;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
@@ -103,9 +106,6 @@ public class ModifiableTable extends JPanel {
 	private static final String MOVE_UP_COMMAND		= "MoveUpCommand";
 	private static final String MOVE_DOWN_COMMAND	= "MoveDownCommand";
 
-	private static final String BUNDLE_NAME		=
-						"org.fife.ui.modifiabletable.ModifiableTable";
-
 
 	/**
 	 * Creates a <code>ModifiableTable</code> with <code>Add</code>,
@@ -157,6 +157,28 @@ public class ModifiableTable extends JPanel {
 	 * Constructor.
 	 *
 	 * @param model The model to use for the table.
+	 * @param buttonLocation The location of the buttons, relative to the
+	 *        table.
+	 * @param buttons A bit flag representing what buttons to display.
+	 * @param customButtons A list of {@link Action}s for "extra"
+	 *        buttons to add.  This may be <code>null</code> if no custom
+	 *        buttons are to be added.
+	 * @see #setRowHandler(RowHandler)
+	 * @see #ADD_REMOVE
+	 * @see #ADD_REMOVE_MODIFY
+	 * @see #MOVE_UP_DOWN
+	 * @see #ALL_BUTTONS
+	 */
+	public ModifiableTable(DefaultTableModel model, String buttonLocation,
+						int buttons, List customButtons) {
+		this(model, null, buttonLocation, buttons, customButtons);
+	}
+
+
+	/**
+	 * Constructor.
+	 *
+	 * @param model The model to use for the table.
 	 * @param columnNames Objects to use for names of the columns.  This value
 	 *        can be <code>null</code> if the model already takes care of its
 	 *        column names.
@@ -167,6 +189,28 @@ public class ModifiableTable extends JPanel {
 	 */
 	public ModifiableTable(DefaultTableModel model, Object[] columnNames, 
 						String buttonLocation, int buttons) {
+		this(model, columnNames, buttonLocation, buttons, null);
+	}
+
+
+	/**
+	 * Constructor.
+	 *
+	 * @param model The model to use for the table.
+	 * @param columnNames Objects to use for names of the columns.  This value
+	 *        can be <code>null</code> if the model already takes care of its
+	 *        column names.
+	 * @param buttonLocation The location of the buttons, relative to the
+	 *        table.
+	 * @param buttons A bit flag representing what buttons to display.
+	 * @param customButtons A list of {@link Action}s for "extra"
+	 *        buttons to add.  This may be <code>null</code> if no custom
+	 *        buttons are to be added.
+	 * @see #setRowHandler
+	 */
+	public ModifiableTable(DefaultTableModel model, Object[] columnNames, 
+						String buttonLocation, int buttons,
+						List customButtons) {
 
 		if (Boolean.getBoolean(PROPERTY_PANELS_NON_OPAQUE)) {
 			setOpaque(false);
@@ -178,7 +222,8 @@ public class ModifiableTable extends JPanel {
 
 		setLayout(new BorderLayout());
 		add(new RScrollPane(table));
-		add(createButtonPanel(buttonLocation, buttons), buttonLocation);
+		add(createButtonPanel(buttonLocation, buttons, customButtons),
+								buttonLocation);
 
 		UIUtil.fixJTableRendererOrientations(table);
 
@@ -222,9 +267,13 @@ public class ModifiableTable extends JPanel {
 	 * @param buttonLocation The location of the buttons, relative to the
 	 *        table.
 	 * @param buttons A bit flag representing what buttons to display.
+	 * @param customButtons A list of {@link Action}s for "extra"
+	 *        buttons to add.  This may be <code>null</code> if no custom
+	 *        buttons are to be added.
 	 * @return The panel of buttons.
 	 */
-	protected JPanel createButtonPanel(String buttonLocation, int buttons) {
+	protected JPanel createButtonPanel(String buttonLocation, int buttons,
+			List customButtons) {
 
 		// Get panel and spacing ready.
 		JPanel panel = null;
@@ -239,7 +288,8 @@ public class ModifiableTable extends JPanel {
 			buttonPanel = new JPanel(new BorderLayout());
 		}
 
-		ResourceBundle msg = ResourceBundle.getBundle(BUNDLE_NAME);
+		ResourceBundle msg = ResourceBundle.getBundle(
+										ModifiableTable.class.getName());
 
 		// Gather the desired buttons.
 		int buttonCount = 0;
@@ -278,6 +328,17 @@ public class ModifiableTable extends JPanel {
 			moveDownButton.setEnabled(false);
 			panel.add(moveDownButton);
 			buttonCount += 2;
+		}
+
+		// Any custom buttons specified by the user.  These currently must
+		// always stay enabled.
+		if (customButtons!=null) {
+			for (Iterator i=customButtons.iterator(); i.hasNext(); ) {
+				Action a = (Action)i.next();
+				RButton extraButton = new RButton(a);
+				panel.add(extraButton);
+				buttonCount++;
+			}
 		}
 
 		// Lay out the panel properly.

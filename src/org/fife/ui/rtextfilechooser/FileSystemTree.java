@@ -96,9 +96,6 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 */
 	private static final boolean IS_JAVA_6_PLUS;
 
-	private static final String BUNDLE_NAME =
-						"org.fife.ui.rtextfilechooser.FileSystemTree";
-
 
 	/**
 	 * Constructor.  This will create a tree with a root node for each root
@@ -251,7 +248,8 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	protected JPopupMenu createPopupMenu() {
 
 		JPopupMenu popup = new JPopupMenu();
-		ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME);
+		ResourceBundle bundle = ResourceBundle.getBundle(
+											FileSystemTree.class.getName());
 
 		openInMenu = new JMenu(bundle.getString("PopupMenu.OpenIn"));
 		if (IS_JAVA_6_PLUS) {

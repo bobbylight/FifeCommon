@@ -49,8 +49,6 @@ public class RScrollPane extends JScrollPane implements ActionListener,
 	// scrollbar's popup menu.
 	private int mouseX, mouseY;	
 
-	private static final String BUNDLE_NAME	= "org.fife.ui.RScrollPane";
-
 
 	/**
 	 * Creates an <code>RScrollPane</code> with no view.  Note that if you use
@@ -97,7 +95,7 @@ public class RScrollPane extends JScrollPane implements ActionListener,
 		String command = e.getActionCommand();
 
 		// Scroll to the position the mouse points to horizontally.
-		if (command.equals("ScrollHereHorizontal")) {
+		if ("ScrollHereHorizontal".equals(command)) {
 
 			int width = getHorizontalScrollBar().getWidth();
 			float howFarIn = ((float)mouseX) / ((float)width);
@@ -110,7 +108,7 @@ public class RScrollPane extends JScrollPane implements ActionListener,
 	       }
 
 		// Scroll to the position the mouse points to vertically.
-		else if (command.equals("ScrollHereVertical")) {
+		else if ("ScrollHereVertical".equals(command)) {
 
 			int height = getVerticalScrollBar().getHeight();
 			float howFarIn = ((float)mouseY) / ((float)height);
@@ -123,19 +121,19 @@ public class RScrollPane extends JScrollPane implements ActionListener,
 		}
 
 		// Scroll to the top.
-		else if (command.equals("Top")) {
+		else if ("Top".equals(command)) {
 			BoundedRangeModel brm = getVerticalScrollBar().getModel();
 			brm.setValue(0);
 		}
 
 		// Scroll to the bottom.
-		else if (command.equals("Bottom")) {
+		else if ("Bottom".equals(command)) {
 			BoundedRangeModel brm = getVerticalScrollBar().getModel();
 			brm.setValue(brm.getMaximum());
 		}
 
 		// Scroll one page up in the document.
-		else if (command.equals("PageUp")) {
+		else if ("PageUp".equals(command)) {
 			JViewport viewport = getViewport();
 			Point p = viewport.getViewPosition();
 			int viewportHeight = viewport.getExtentSize().height;
@@ -146,7 +144,7 @@ public class RScrollPane extends JScrollPane implements ActionListener,
 	       }
 
 		// Scroll one page down in the document.
-		else if (command.equals("PageDown")) {
+		else if ("PageDown".equals(command)) {
 			JViewport viewport = getViewport();
 			Point p = viewport.getViewPosition();
 			int viewportHeight = viewport.getExtentSize().height;
@@ -160,7 +158,7 @@ public class RScrollPane extends JScrollPane implements ActionListener,
 		}
 
 		// Scroll one unit up in the document.
-		else if (command.equals("ScrollUp")) {
+		else if ("ScrollUp".equals(command)) {
 			JViewport viewport = getViewport();
 			Point p = viewport.getViewPosition();
 			int unitIncrement = getVerticalScrollBar().getUnitIncrement(-1);
@@ -175,7 +173,7 @@ public class RScrollPane extends JScrollPane implements ActionListener,
 		}
 
 		// Scroll one unit down in the document.
-		else if (command.equals("ScrollDown")) {
+		else if ("ScrollDown".equals(command)) {
 			JViewport viewport = getViewport();
 			Point p = viewport.getViewPosition();
 			int unitIncrement = getVerticalScrollBar().getUnitIncrement(1);
@@ -191,19 +189,19 @@ public class RScrollPane extends JScrollPane implements ActionListener,
 		}
 
 		// Scroll all the way to the left.
-		else if (command.equals("LeftEdge")) {
+		else if ("LeftEdge".equals(command)) {
 			BoundedRangeModel brm = getHorizontalScrollBar().getModel();
 			brm.setValue(0);
 		}
 
 		// Scroll all the way to the right.
-		else if (command.equals("RightEdge")) {
+		else if ("RightEdge".equals(command)) {
 			BoundedRangeModel brm = getHorizontalScrollBar().getModel();
 			brm.setValue(brm.getMaximum());
 		}
 
 		// Scroll one page to the left.
-		else if (command.equals("PageLeft")) {
+		else if ("PageLeft".equals(command)) {
 			JViewport viewport = getViewport();
 			Point p = viewport.getViewPosition();
 			int viewportWidth = viewport.getExtentSize().width;
@@ -214,7 +212,7 @@ public class RScrollPane extends JScrollPane implements ActionListener,
 		}
 
 		// Scroll one page to the right.
-		else if (command.equals("PageRight")) {
+		else if ("PageRight".equals(command)) {
 			JViewport viewport = getViewport();
 			Point p = viewport.getViewPosition();
 			Component view = viewport.getView();
@@ -226,7 +224,7 @@ public class RScrollPane extends JScrollPane implements ActionListener,
 		}
 
 		// Scroll one element (pixel) to the left.
-		else if (command.equals("ScrollLeft")) {
+		else if ("ScrollLeft".equals(command)) {
 			JViewport viewport = getViewport();
 			Point p = viewport.getViewPosition();
 			int unitIncrement = getHorizontalScrollBar().getUnitIncrement(-1);
@@ -241,7 +239,7 @@ public class RScrollPane extends JScrollPane implements ActionListener,
 		}
 
 		// Scroll one element (pixel) to the right.
-		else if (command.equals("ScrollRight")) {
+		else if ("ScrollRight".equals(command)) {
 			JViewport viewport = getViewport();
 			Point p = viewport.getViewPosition();
 			int unitIncrement = getHorizontalScrollBar().getUnitIncrement(1);
@@ -283,7 +281,7 @@ public class RScrollPane extends JScrollPane implements ActionListener,
 	private void createHorizontalScrollBarMenu() {
 
 		horizSBMenu = new JPopupMenu();
-		ResourceBundle msg = ResourceBundle.getBundle(BUNDLE_NAME);
+		ResourceBundle msg = ResourceBundle.getBundle(RScrollPane.class.getName());
 
 		addMenuItem("ScrollHere", "ScrollHereHorizontal", horizSBMenu, msg);
 		horizSBMenu.addSeparator();
@@ -307,7 +305,7 @@ public class RScrollPane extends JScrollPane implements ActionListener,
 	private void createVerticalScrollBarMenu() {
 
 		vertSBMenu = new JPopupMenu();
-		ResourceBundle msg = ResourceBundle.getBundle(BUNDLE_NAME);
+		ResourceBundle msg = ResourceBundle.getBundle(RScrollPane.class.getName());
 
 		addMenuItem("ScrollHere","ScrollHereVertical", vertSBMenu, msg);
 		vertSBMenu.addSeparator();

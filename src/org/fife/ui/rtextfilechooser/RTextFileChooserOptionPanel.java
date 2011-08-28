@@ -25,7 +25,6 @@ package org.fife.ui.rtextfilechooser;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -132,9 +131,9 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		temp2 = createStyleOpenFilesPanel(msg);
 		temp.add(temp2);
 		offerSuggestionsCB = createCheckBox(msg, "OfferSuggestions");
-		addLeftAlignedComponent(offerSuggestionsCB, temp, orientation, false);
+		addLeftAligned(temp, offerSuggestionsCB);
 		autoCompleteCheckBox = createCheckBox(msg, "AutoComplete");
-		addLeftAlignedComponent(autoCompleteCheckBox, temp, orientation,true);
+		addLeftAligned(temp, autoCompleteCheckBox, 0, 20);
 		add(temp, BorderLayout.NORTH);
 
 		JPanel customColorsPanel = new JPanel(new BorderLayout());
@@ -194,27 +193,6 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 			firePropertyChange(OPEN_FILES_STYLE_PROPERTY, null, style);
 		}
 
-	}
-
-
-	/**
-	 * Adds the specified component to a specified panel left-aligned.
-	 *
-	 * @param c The component to add.
-	 * @param panel The panel to which to add the component.
-	 * @param orientation The locale's orientation.
-	 * @param indent Whether to indent the item.
-	 */
-	private static final void addLeftAlignedComponent(Component c,
-			JPanel panel, ComponentOrientation orientation, boolean indent) {
-		JPanel temp = new JPanel();
-		temp.setLayout(new BoxLayout(temp, BoxLayout.LINE_AXIS));
-		if (indent) {
-			temp.add(Box.createHorizontalStrut(20));
-		}
-		temp.add(c);
-		temp.add(Box.createHorizontalGlue());
-		panel.add(temp);
 	}
 
 

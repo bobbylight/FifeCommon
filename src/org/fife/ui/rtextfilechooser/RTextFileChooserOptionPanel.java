@@ -578,8 +578,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 				dialog.setData((String)oldData[0], (Color)oldData[1]);
 			int rc = dialog.showMappingDialog();
 			if (rc==ExtensionColorMappingDialog.OK) {
-				return new Object[] { dialog.getExtension(),
-									dialog.getColor() };
+				return new Object[] { dialog.getExtension(),dialog.getColor() };
 			}
 			return null;
 		}

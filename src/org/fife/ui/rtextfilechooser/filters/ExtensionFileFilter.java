@@ -25,6 +25,8 @@ package org.fife.ui.rtextfilechooser.filters;
 import java.io.File;
 import javax.swing.filechooser.*;
 
+import org.fife.ui.rtextfilechooser.Utilities;
+
 
 /**
  * A file filter for <code>JFileChooser</code>s that filters using extensions
@@ -197,19 +199,17 @@ public class ExtensionFileFilter extends FileFilter {
 		}
 
 		// Get the extension of the file.
-		String extension = null;
-		String s = f.getName();
-		int i = s.lastIndexOf('.');
-		if (i>0 && i<s.length()-1)
-			extension = s.substring(i+1);
-		if (extension==null)
+		String extension = Utilities.getExtension(f.getName());
+		if (extension==null) {
 			return false;
-		else if (caseCheck)
+		}
+		else if (caseCheck) {
 			extension = extension.toLowerCase();
+		}
 
 		// Now, accept the file ONLY if it matches one of our filters.
 		int extensionCount = extensions.length;
-		for (i=0; i<extensionCount; i++) {
+		for (int i=0; i<extensionCount; i++) {
 			if (extensions[i].equals(extension))
 				return true;
 		}

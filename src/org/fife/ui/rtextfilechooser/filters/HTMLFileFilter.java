@@ -25,6 +25,8 @@ package org.fife.ui.rtextfilechooser.filters;
 import java.io.File;
 import javax.swing.filechooser.*;
 
+import org.fife.ui.rtextfilechooser.Utilities;
+
 
 /**
  * A file filter for <code>JFileChooser</code>s that filters everything except
@@ -42,27 +44,14 @@ public class HTMLFileFilter extends FileFilter {
 	 * @return Whether the file passes this filter.
 	 */
 	public boolean accept(File f) {
-
-		// Accept the "file" if it is a directory.
+		// Accept all directories
 		if (f.isDirectory()) {
 			return true;
 		}
-
-		// Get the extension of the file.
-		String extension = null;
-		String s = f.getName();
-		int i = s.lastIndexOf('.');
-		if (i>0 && i<s.length()-1)
-			extension = s.substring(i+1).toLowerCase();
-
-		// Now, accept the file ONLY if it is a .txt file.
-		if (extension!=null && 
-			(extension.equals("htm") || extension.equals("html")))
-			return true;
-
-		// Any other files are not accepted by this filter.
-		return false;
-
+		String extension = Utilities.getExtension(f.getName());
+		return extension!=null && 
+			(extension.equalsIgnoreCase("htm") ||
+					extension.equalsIgnoreCase("html"));
 	}
 
 

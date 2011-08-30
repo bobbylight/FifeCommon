@@ -1459,7 +1459,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		else {
 			// If there's an extension, check for a custom color.
 			String fileName = file.getName();
-			String extension = fileName.substring(fileName.lastIndexOf('.')+1);
+			String extension = Utilities.getExtension(fileName);
 			if (extension!=null && extension.length()>0) {
 				Color color = getColorForExtension(extension);
 				if (color==null)

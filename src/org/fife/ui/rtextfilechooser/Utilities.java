@@ -150,7 +150,7 @@ InputSource is = new InputSource(new FileReader(file));
 	public static void copyFile(File sourceFile, File destFile)
 									throws IOException {
 
-		if(!destFile.exists()) {
+		if (!destFile.exists()) {
 			destFile.createNewFile();
 		}
 
@@ -170,6 +170,19 @@ InputSource is = new InputSource(new FileReader(file));
 			}
 		}
 
+	}
+
+
+	/**
+	 * Returns the extension of a file name.
+	 *
+	 * @param fileName The file name.
+	 * @return The extension, or <code>null</code> if the file name has no
+	 *         extension.
+	 */
+	public static final String getExtension(String fileName) {
+		int lastDot = fileName.lastIndexOf('.');
+		return lastDot>-1 ? fileName.substring(lastDot+1) : null;
 	}
 
 

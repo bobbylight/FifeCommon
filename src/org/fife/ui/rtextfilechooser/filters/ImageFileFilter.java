@@ -27,6 +27,8 @@ import java.io.File;
 import java.util.ResourceBundle;
 import javax.swing.filechooser.FileFilter;
 
+import org.fife.ui.rtextfilechooser.Utilities;
+
 
 /**
  * A file filter for <code>JFileChooser</code>s that filters everything except
@@ -67,11 +69,9 @@ public class ImageFileFilter extends FileFilter {
 		}
 
 		// Get the extension of the file.
-		String extension = null;
-		String s = f.getName();
-		int i = s.lastIndexOf('.');
-		if (i>0 && i<s.length()-1) {
-			extension = s.substring(i+1).toLowerCase();
+		String extension = Utilities.getExtension(f.getName());
+		if (extension!=null) {
+			extension = extension.toLowerCase();
 		}
 
 		return isValidExtension(extension);

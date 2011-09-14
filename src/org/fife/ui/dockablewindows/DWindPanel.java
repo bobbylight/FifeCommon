@@ -24,12 +24,16 @@
 package org.fife.ui.dockablewindows;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.TabbedPaneUI;
 
 import org.fife.ui.SubstanceUtils;
+import org.fife.ui.dockablewindows.DockableWindowPanel.ContentPanel;
 
 
 /**
@@ -43,6 +47,7 @@ class DWindPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
+	private ContentPanel parent;
 	private JTabbedPane tabbedPane;
 	private TitlePanel titlePanel;
 
@@ -50,7 +55,8 @@ class DWindPanel extends JPanel {
 	/**
 	 * Constructor.
 	 */
-	public DWindPanel() {
+	public DWindPanel(ContentPanel parent) {
+		this.parent = parent;
 		setLayout(new BorderLayout());
 		tabbedPane = new DockedTabbedPane();
 		add(tabbedPane);
@@ -225,6 +231,7 @@ class DWindPanel extends JPanel {
 	private class TitlePanel extends JPanel implements ChangeListener {
 
 		private JLabel label;
+		private JButton minimizeButton;
 		private Color gradient1;
 		private Color gradient2;
 
@@ -235,6 +242,19 @@ class DWindPanel extends JPanel {
 			label = new JLabel(title);
 			refreshLabelForeground();
 			add(label);
+			Icon minimizeIcon = new ImageIcon(getClass().getResource("minimize.png"));
+			minimizeButton = new JButton(minimizeIcon);
+			minimizeButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					parent.setCollapsed(true);
+				}
+			});
+			minimizeButton.setOpaque(false);
+			JToolBar tb = new JToolBar();
+			tb.setOpaque(false);
+			tb.setBorder(null);
+			tb.add(minimizeButton);
+			add(tb, BorderLayout.LINE_END);
 		}
 
 		/**

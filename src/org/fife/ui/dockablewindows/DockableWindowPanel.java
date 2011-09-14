@@ -24,6 +24,8 @@
 package org.fife.ui.dockablewindows;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -62,7 +64,7 @@ public class DockableWindowPanel extends JPanel
 
 		panels = new ContentPanel[4];
 		for (int i=0; i<4; i++) {
-			panels[i] = new ContentPanel(new GridLayout(1,1));
+			panels[i] = new ContentPanel();
 			panels[i].setDockableWindowsLocation(panelToLocationMap[i]);
 		}
 		for (int i=0; i<4-1; i++) {
@@ -467,21 +469,25 @@ public class DockableWindowPanel extends JPanel
 	 * child.  <code>MainContentPanel</code> contains
 	 * 4 of these embedded in each other.
 	 */
-	private static final class ContentPanel extends JPanel {
+	static final class ContentPanel extends JPanel {
 
 		private JSplitPane splitPane;
 		private DWindPanel windowPanel;
+		private Component mainContent;
 		private int dockableWindowsLocation;
 		private int dividerLocation;
+		private boolean collapsed;
+		private CollapsedPanel collapsedPanel;
 
-		public ContentPanel(LayoutManager lm) {
-			super(lm);
+		public ContentPanel() {
+			super(new BorderLayout());
 		}
 
 		public boolean addDockableWindow(DockableWindow window) {
 			// If this is our first dockable window...
 			if (splitPane==null) {
-				windowPanel = new DWindPanel();
+				mainContent = getComponent(0);
+				windowPanel = new DWindPanel(this);
 				windowPanel.addDockableWindow(window);
 				int split;
 				double resizeWeight = 0.0;
@@ -491,24 +497,24 @@ public class DockableWindowPanel extends JPanel
 						split = JSplitPane.VERTICAL_SPLIT;
 						resizeWeight = 0.0;
 						comp1 = windowPanel;
-						comp2 = getComponent(0);
+						comp2 = mainContent;
 						break;
 					case LEFT:
 						split = JSplitPane.HORIZONTAL_SPLIT;
 						resizeWeight = 0.0;
 						comp1 = windowPanel;
-						comp2 = getComponent(0);
+						comp2 = mainContent;
 						break;
 					case BOTTOM:
 						split = JSplitPane.VERTICAL_SPLIT;
 						resizeWeight = 1.0;
-						comp1 = getComponent(0);
+						comp1 = mainContent;
 						comp2 = windowPanel;
 						break;
 					default: // RIGHT:
 						split = JSplitPane.HORIZONTAL_SPLIT;
 						resizeWeight = 1.0;
-						comp1 = getComponent(0);
+						comp1 = mainContent;
 						comp2 = windowPanel;
 						break;
 				}
@@ -522,11 +528,15 @@ public class DockableWindowPanel extends JPanel
 				splitPane.setDividerLocation(dividerLocation);
 				splitPane.applyComponentOrientation(getComponentOrientation());
 				add(splitPane);
-				validate();
+				/*re*/validate();
 				return true;
 			}
 			// We already have some dockable windows...
-			return windowPanel.addDockableWindow(window);
+			boolean added = windowPanel.addDockableWindow(window);
+			if (added && collapsed) {
+				collapsedPanel.refreshDockableWindowButtons();
+			}
+			return added;
 		}
 
 		public int containsDockableWindow(DockableWindow window) {
@@ -540,36 +550,77 @@ public class DockableWindowPanel extends JPanel
 
 		// Returns the non-dockable window content this panel contains.
 		public JPanel getRegularContent() {
-			if (splitPane==null) {
-				return (JPanel)getComponent(0);
-			}
-			switch (dockableWindowsLocation) {
-				case TOP:
-				case LEFT:
-					return (JPanel)splitPane.getRightComponent();
-				case BOTTOM:
-				case RIGHT:
-					return (JPanel)splitPane.getLeftComponent();
-			}
-			// We never actually get here.
-			throw new InternalError("Invalid state in getRegularContent");
+			return (JPanel)mainContent;
 		}
 
 		public boolean removeDockableWindow(DockableWindow window) {
 			if (windowPanel!=null) {
 				boolean rc = windowPanel.removeDockableWindow(window);
+				if (collapsed) {
+					collapsedPanel.refreshDockableWindowButtons();
+				}
 				if (windowPanel.getDockableWindowCount()==0) {
-					Component content = getRegularContent();
-					this.remove(splitPane);
+					this.removeAll(); // Remove whatever component we have
 					splitPane = null;
 					windowPanel = null;
-					add(content);
-					validate();
+					collapsedPanel = null;
+					collapsed = false;
+					add(mainContent);
+					revalidate();
 				}
 				return rc;
 			}
 			// We don't have a window panel => no dockable windows.
 			return false;
+		}
+
+		public void setCollapsed(boolean collapsed) {
+			if (collapsed!=this.collapsed) {
+				this.collapsed = collapsed;
+				if (collapsed) {
+					remove(splitPane);
+					if (collapsedPanel==null) {
+						collapsedPanel = new CollapsedPanel(dockableWindowsLocation);
+					}
+					switch (dockableWindowsLocation) {
+						case TOP:
+							add(collapsedPanel, BorderLayout.NORTH);
+							add(splitPane.getBottomComponent());
+							break;
+						case LEFT:
+							add(collapsedPanel, BorderLayout.WEST);
+							add(splitPane.getRightComponent());
+							break;
+						case BOTTOM:
+							add(collapsedPanel, BorderLayout.SOUTH);
+							add(splitPane.getTopComponent());
+							break;
+						default: // RIGHT:
+							add(collapsedPanel, BorderLayout.EAST);
+							add(splitPane.getLeftComponent());
+							break;
+					}
+				}
+				else {
+					while (getComponentCount()>0) { // Should be 2
+						remove(0);
+					}
+					// Add main component back to split pane
+					switch (dockableWindowsLocation) {
+						case TOP:
+						case LEFT:
+							splitPane.setBottomComponent(mainContent);
+							break;
+						case BOTTOM:
+						default: // RIGHT:
+							splitPane.setTopComponent(mainContent);
+							break;
+					}
+					add(splitPane);
+				}
+				revalidate();
+				repaint();
+			}
 		}
 
 		public void setDividerLocation(int location) {
@@ -585,6 +636,60 @@ public class DockableWindowPanel extends JPanel
 			dockableWindowsLocation = location;
 		}
 	
+		private class CollapsedPanel extends JPanel {
+
+			private JToolBar toolbar;
+
+			CollapsedPanel(int dockableWindowLocation) {
+				setLayout(new BorderLayout());
+				int orientation = (dockableWindowLocation==DockableWindow.TOP ||
+						dockableWindowLocation==DockableWindow.BOTTOM) ?
+								JToolBar.HORIZONTAL : JToolBar.VERTICAL;
+				toolbar = new JToolBar(orientation);
+				toolbar.setOpaque(false);
+				toolbar.setFloatable(false);
+
+				Icon minimizeIcon = new ImageIcon(getClass().getResource("restore.png"));
+				JButton b = new JButton(minimizeIcon);
+				b.setOpaque(false);
+				b.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						setCollapsed(false);
+					}
+				});
+				toolbar.add(b);
+
+				refreshDockableWindowButtons();
+
+				add(toolbar, orientation==JToolBar.HORIZONTAL ?
+						BorderLayout.LINE_END : BorderLayout.NORTH);
+
+			}
+
+			public int refreshDockableWindowButtons() {
+				while (toolbar.getComponentCount()>1) { // Keep restore button
+					toolbar.remove(1);
+				}
+				for (int i=0; i<windowPanel.getDockableWindowCount(); i++) {
+					DockableWindow dwind = windowPanel.getDockableWindowAt(i);
+					Icon icon = dwind.getIcon();
+					JButton b = new JButton(icon);
+					b.setToolTipText(dwind.getDockableWindowName());
+					b.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							//windowPanel.setActiveDockableWindow(dwind);
+							setCollapsed(false);
+						}
+					});
+					b.setOpaque(false);
+					toolbar.add(b);
+				}
+				toolbar.revalidate();
+				return toolbar.getComponentCount();
+			}
+
+		}
+
 	}
 
 

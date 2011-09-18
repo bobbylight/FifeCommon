@@ -24,6 +24,7 @@
 package org.fife.ui.dockablewindows;
 
 import java.awt.LayoutManager;
+import java.util.ResourceBundle;
 import javax.swing.Icon;
 import javax.swing.JPanel;
 
@@ -81,6 +82,9 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	 * The icon for this window.
 	 */
 	private Icon icon;
+
+	private static final String MSG = "org.fife.ui.dockablewindows.DockableWindows";
+	private static final ResourceBundle msg = ResourceBundle.getBundle(MSG);
 
 
 	/**
@@ -220,6 +224,17 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	 */
 	public int getPosition() {
 		return position;
+	}
+
+
+	/**
+	 * Returns a localized message.
+	 *
+	 * @param key The key for the message.
+	 * @return The localized message.
+	 */
+	static String getString(String key) {
+		return msg.getString(key);
 	}
 
 

@@ -25,8 +25,6 @@ package org.fife.ui.dockablewindows;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -186,12 +184,25 @@ class DWindPanel extends JPanel {
 		int index = containsDockableWindow(window);
 		if (index>-1) {
 			tabbedPane.removeTabAt(index);
+			window.setActive(false);
 			// Force title panel to update as sometimes JTabbedPane doesn't
 			// fire stateChanged() events (if active index doesn't change).
 			titlePanel.stateChanged(null);
 			return true;
 		}
 		return false;
+	}
+
+
+	/**
+	 * Sets the selected dockable window.  Does nothing if the index is invalid.
+	 *
+	 * @param index The dockable window to select.
+	 */
+	public void setActiveDockableWindow(int index) {
+		if (index>=0 && index<tabbedPane.getTabCount()) {
+			tabbedPane.setSelectedIndex(index);
+		}
 	}
 
 
@@ -242,15 +253,10 @@ class DWindPanel extends JPanel {
 			label = new JLabel(title);
 			refreshLabelForeground();
 			add(label);
-			Icon minimizeIcon = new ImageIcon(getClass().getResource("minimize.png"));
-			minimizeButton = new JButton(minimizeIcon);
-			minimizeButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					parent.setCollapsed(true);
-				}
-			});
+			minimizeButton = new JButton(new MinimizeAction());
 			minimizeButton.setOpaque(false);
 			JToolBar tb = new JToolBar();
+			tb.setFloatable(false);
 			tb.setOpaque(false);
 			tb.setBorder(null);
 			tb.add(minimizeButton);
@@ -320,6 +326,7 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 		}
 
 		private void refreshGradientColors() {
+			gradient1 = gradient2 = null;
 			if (getUseCustomColors()) {
 				gradient1 = new Color(225,233,241);//200,200,255);
 				gradient2 = new Color(153,180,209);//40,93,220);
@@ -392,6 +399,21 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 			if (label!=null) {
 				refreshLabelForeground();
 			}
+		}
+
+		private class MinimizeAction extends AbstractAction {
+
+			public MinimizeAction() {
+				putValue(SHORT_DESCRIPTION, // tool tip
+						DockableWindow.getString("Button.Minimize"));
+				Icon icon = new ImageIcon(getClass().getResource("minimize.png"));
+				putValue(SMALL_ICON, icon);
+			}
+
+			public void actionPerformed(ActionEvent e) {
+				parent.setCollapsed(true);
+			}
+
 		}
 
 	}

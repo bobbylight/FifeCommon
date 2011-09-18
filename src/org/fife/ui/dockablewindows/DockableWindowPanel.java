@@ -26,6 +26,8 @@ package org.fife.ui.dockablewindows;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -375,7 +377,7 @@ public class DockableWindowPanel extends JPanel
 		//	return true;
 		// See if window is docked on one of our 4 sides.
 		for (int p=0; p<4; p++) {
-			if (panels[p].removeDockableWindow(window)) {
+			if (panels[p].removeDockableWindowImpl(window)) {
 				return true;
 			}
 		}
@@ -469,7 +471,7 @@ public class DockableWindowPanel extends JPanel
 	 * child.  <code>MainContentPanel</code> contains
 	 * 4 of these embedded in each other.
 	 */
-	static final class ContentPanel extends JPanel {
+	final class ContentPanel extends JPanel {
 
 		private JSplitPane splitPane;
 		private DWindPanel windowPanel;
@@ -553,7 +555,7 @@ public class DockableWindowPanel extends JPanel
 			return (JPanel)mainContent;
 		}
 
-		public boolean removeDockableWindow(DockableWindow window) {
+		public boolean removeDockableWindowImpl(DockableWindow window) {
 			if (windowPanel!=null) {
 				boolean rc = windowPanel.removeDockableWindow(window);
 				if (collapsed) {
@@ -635,10 +637,22 @@ public class DockableWindowPanel extends JPanel
 		public void setDockableWindowsLocation(int location) {
 			dockableWindowsLocation = location;
 		}
-	
-		private class CollapsedPanel extends JPanel {
+
+		public void updateUI() {
+			super.updateUI();
+			if (splitPane!=null && !splitPane.isDisplayable()) {
+				SwingUtilities.updateComponentTreeUI(splitPane);
+			}
+			if (collapsedPanel!=null && !collapsedPanel.isDisplayable()) {
+				SwingUtilities.updateComponentTreeUI(collapsedPanel);
+			}
+		}
+
+		private class CollapsedPanel extends JPanel implements MouseListener {
 
 			private JToolBar toolbar;
+			private JPopupMenu contextMenu;
+			private JButton popupButton;
 
 			CollapsedPanel(int dockableWindowLocation) {
 				setLayout(new BorderLayout());
@@ -648,47 +662,107 @@ public class DockableWindowPanel extends JPanel
 				toolbar = new JToolBar(orientation);
 				toolbar.setOpaque(false);
 				toolbar.setFloatable(false);
-
-				Icon minimizeIcon = new ImageIcon(getClass().getResource("restore.png"));
-				JButton b = new JButton(minimizeIcon);
-				b.setOpaque(false);
-				b.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						setCollapsed(false);
-					}
-				});
-				toolbar.add(b);
+				toolbar.setBorder(null);
+				//toolbar.add(new JButton(new RestoreAction()));
 
 				refreshDockableWindowButtons();
 
-				add(toolbar, orientation==JToolBar.HORIZONTAL ?
+				boolean isHorizontal = orientation==JToolBar.HORIZONTAL;
+				add(toolbar, isHorizontal ?
 						BorderLayout.LINE_END : BorderLayout.NORTH);
+				setBorder(isHorizontal ? BorderFactory.createEmptyBorder(0, 0, 0, 5) :
+					BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 			}
 
+			private void maybeShowPopup(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					popupButton = (JButton)e.getSource();
+					if (contextMenu==null) {
+						contextMenu = new JPopupMenu();
+						contextMenu.add(new JMenuItem(new CloseAction()));
+					}
+					contextMenu.show(popupButton, e.getX(), e.getY());
+				}
+			}
+
+			public void mouseClicked(MouseEvent e) {
+			}
+
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			public void mouseExited(MouseEvent e) {
+			}
+
+			public void mousePressed(MouseEvent e) {
+				maybeShowPopup(e);
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				maybeShowPopup(e);
+			}
+
 			public int refreshDockableWindowButtons() {
-				while (toolbar.getComponentCount()>1) { // Keep restore button
-					toolbar.remove(1);
+				while (toolbar.getComponentCount()>0) {
+					toolbar.getComponent(0).removeMouseListener(this);
+					toolbar.remove(0);
 				}
 				for (int i=0; i<windowPanel.getDockableWindowCount(); i++) {
 					DockableWindow dwind = windowPanel.getDockableWindowAt(i);
 					Icon icon = dwind.getIcon();
 					JButton b = new JButton(icon);
 					b.setToolTipText(dwind.getDockableWindowName());
+					b.setOpaque(false);
+					b.putClientProperty("DockableWindow", dwind);
+					final int index = i;
 					b.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							//windowPanel.setActiveDockableWindow(dwind);
+							windowPanel.setActiveDockableWindow(index);
 							setCollapsed(false);
 						}
 					});
-					b.setOpaque(false);
+					b.addMouseListener(this);
 					toolbar.add(b);
 				}
 				toolbar.revalidate();
 				return toolbar.getComponentCount();
 			}
 
+			private class CloseAction extends AbstractAction {
+
+				public CloseAction() {
+					putValue(NAME, DockableWindow.getString("PopupMenu.Close"));
+				}
+
+				public void actionPerformed(ActionEvent e) {
+					if (popupButton!=null) { // Should always be true
+						DockableWindow dwind = (DockableWindow)popupButton.
+										getClientProperty("DockableWindow");
+						DockableWindowPanel.this.removeDockableWindow(dwind);
+					}
+				}
+
+			}
+
 		}
+
+		/*
+		private class RestoreAction extends AbstractAction {
+
+			public RestoreAction() {
+				putValue(SHORT_DESCRIPTION, // Tool tip
+					DockableWindow.getString("Button.Restore"));
+				Icon icon = new ImageIcon(getClass().getResource("restore.png"));
+				putValue(SMALL_ICON, icon);
+			}
+
+			public void actionPerformed(ActionEvent e) {
+				setCollapsed(false);
+			}
+
+		}
+		*/
 
 	}
 

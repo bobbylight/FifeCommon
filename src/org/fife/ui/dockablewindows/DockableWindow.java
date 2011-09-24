@@ -364,4 +364,19 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	}
 
 
+	/**
+	 * Returns a string representation of this dockable window.  Useful for
+	 * debugging.
+	 *
+	 * @return A string representation of this dockable window.
+	 */
+	public String toString() {
+		return "[DockableWindow: " +
+				"name=" + getDockableWindowName() +
+				", active=" + isActive() +
+				", pos=" + getPosition() +
+				"]";
+	}
+
+
 }

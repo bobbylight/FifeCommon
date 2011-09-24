@@ -184,7 +184,7 @@ class DWindPanel extends JPanel {
 		int index = containsDockableWindow(window);
 		if (index>-1) {
 			tabbedPane.removeTabAt(index);
-			window.setActive(false);
+			//window.setActive(false);
 			// Force title panel to update as sometimes JTabbedPane doesn't
 			// fire stateChanged() events (if active index doesn't change).
 			titlePanel.stateChanged(null);

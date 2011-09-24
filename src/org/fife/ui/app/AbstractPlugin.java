@@ -1,8 +1,9 @@
 /*
- * 09/16/2005
+ * 09/24/2011
  *
- * StatusBarPlugin.java - A plugin for a GUI application's status bar.
- * Copyright (C) 2005 Robert Futrell
+ * AbstractPlugin.java - Base class for Plugins that don't need to extend a
+ * specific class.
+ * Copyright (C) 2011 Robert Futrell
  * robert_futrell at users.sourceforge.net
  * http://fifesoft.com
  *
@@ -22,16 +23,18 @@
  */
 package org.fife.ui.app;
 
-import org.fife.ui.StatusBarPanel;
-
 
 /**
- * A plugin representing a component in a status bar.
+ * Base class for <code>Plugin</code> implementations that don't need to 
+ * extend a specific class.
  *
  * @author Robert Futrell
  * @version 1.0
+ * @see StatusBarPlugin
+ * @see GUIPlugin
  */
-public abstract class StatusBarPlugin extends StatusBarPanel implements Plugin {
+public abstract class AbstractPlugin implements Plugin {
+
 
 	private String parentOptionPanelID;
 
@@ -51,7 +54,7 @@ public abstract class StatusBarPlugin extends StatusBarPanel implements Plugin {
 	 *        should be no parent.
 	 * @see #getOptionsDialogPanelParentPanelID()
 	 */
-	public void setOptionsDialogPanelParentPanelName(String id) {
+	public void setOptionsDialogPanelParentPanelID(String id) {
 		parentOptionPanelID = id;
 	}
 

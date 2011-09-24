@@ -60,6 +60,18 @@ public interface Plugin {
 
 
 	/**
+	 * Returns the panel that this plug-in's option panels should be added
+	 * as children of.
+	 *
+	 * @return The ID of the parent panel, or <code>null</code> if they
+	 *         should be added at the "root" level of option panels.
+	 * 
+	 * @see #getOptionsDialogPanel()
+	 */
+	public String getOptionsDialogPanelParentPanelID();
+
+
+	/**
 	 * Returns the author of the plugin.
 	 *
 	 * @return The author.

@@ -205,13 +205,17 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 
 
 	/**
-	 * Adds an options panel to this options dialog.
+	 * Adds an options panel, and any child panels, to this options dialog.
 	 *
 	 * @param panel The options panel to add.
 	 */
 	private void addOptionPanel(OptionsDialogPanel panel) {
 		panel.addPropertyChangeListener(this);
 		currentOptionPanel.add(panel, panel.getName());
+		int childCount = panel.getChildPanelCount();
+		for (int i=0; i<childCount; i++) {
+			addOptionPanel(panel.getChildPanel(i));
+		}
 	}
 
 
@@ -351,6 +355,24 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 
 
 	/**
+	 * Inserts a tree node into the navigation tree for an option panel and
+	 * its children (if any).
+	 *
+	 * @param parentNode The parent node to insert into.
+	 * @param panel The option panel to add.
+	 */
+	private void insertOptionPanel(MutableTreeNode parentNode,
+			OptionsDialogPanel panel) {
+		MutableTreeNode node = new DefaultMutableTreeNode(panel);
+		treeModel.insertNodeInto(node, parentNode, parentNode.getChildCount());
+		int childCount = panel.getChildPanelCount();
+		for (int i = 0; i < childCount; i++) {
+			insertOptionPanel(node, panel.getChildPanel(i));
+		}
+	}
+
+
+	/**
 	 * Listens for a property change in one of the option panels.  This
 	 * basically just listens for the user to change a value, so it can
 	 * activate the "Apply" button.
@@ -414,30 +436,14 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		this.optionsPanels = optionsPanels;
 		int numOptionPanels = optionsPanels.length;
 
-		// Create the tree listing the options panels.
+		// Populate the navigation tree and the CardLayout main view.
 		root.removeAllChildren();
-		for (int i=0; i<numOptionPanels; i++) {
-			OptionsDialogPanel panel = optionsPanels[i];
-			MutableTreeNode node = new DefaultMutableTreeNode(panel);
-			treeModel.insertNodeInto(node, root, root.getChildCount());
-			int childCount = panel.getChildPanelCount();
-			for (int j=0; j<childCount; j++) {
-				treeModel.insertNodeInto(new DefaultMutableTreeNode(
-											panel.getChildPanel(j)),
-									node, j);
-			}
-		}
-		UIUtil.expandAllNodes(optionTree);
-
-		// Remove old option panels and add new ones.
 		currentOptionPanel.removeAll();
 		for (int i=0; i<numOptionPanels; i++) {
+			insertOptionPanel(root, optionsPanels[i]);
 			addOptionPanel(optionsPanels[i]);
-			int childCount = optionsPanels[i].getChildPanelCount();
-			for (int j=0; j<childCount; j++) {
-				addOptionPanel(optionsPanels[i].getChildPanel(j));
-			}
 		}
+		UIUtil.expandAllNodes(optionTree);
 
 		// Must be done after currentOptionPanelLayout is created.
 		// Must check option panel count because of 1-param constructor.

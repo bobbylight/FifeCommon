@@ -2,7 +2,7 @@
  * 04/25/2005
  *
  * AbstractPluggableGUIApplication.java - A GUI application able to be
- * extended by plugins.
+ * extended by plug-ins.
  * Copyright (C) 2005 Robert Futrell
  * robert_futrell at users.sourceforge.net
  * http://fifesoft.com
@@ -32,7 +32,6 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.fife.ui.OptionsDialog;
 import org.fife.ui.SplashScreen;
 import org.fife.ui.dockablewindows.DockableWindow;
 import org.fife.ui.dockablewindows.DockableWindowPanel;
@@ -40,7 +39,7 @@ import org.fife.ui.dockablewindows.DockableWindowPanel;
 
 /**
  * An extension of <code>AbstractGUIApplication</code> adding the ability to
- * add/remove plugins.
+ * add/remove plug-ins.
  *
  * @author Robert Futrell
  * @version 0.5
@@ -49,14 +48,9 @@ public abstract class AbstractPluggableGUIApplication
 									extends AbstractGUIApplication {
 
 	/**
-	 * List of installed plugins.
+	 * List of installed plug-ins.
 	 */
 	private List pluginList;
-
-	/**
-	 * The options dialog for plugins.
-	 */
-	private PluginOptionsDialog pluginOptionsDialog;
 
 	/**
 	 * The class loader used for plugin stuff.
@@ -146,7 +140,7 @@ public abstract class AbstractPluggableGUIApplication
 	/**
 	 * Creates the panel that contains the main content (via the
 	 * <code>actualContentPane</code>.  The returned panel also contains
-	 * any GUI plugins.
+	 * any GUI plug-ins.
 	 *
 	 * @param actualContentPane The panel that will contain the program's
 	 *        content.  This panel should be added to the returned panel.
@@ -160,46 +154,11 @@ public abstract class AbstractPluggableGUIApplication
 
 
 	/**
-	 * Returns an options dialog containing options for all installed
-	 * plugins.  This dialog is lazily created the first time this method
-	 * is called.
-	 *
-	 * @return The options dialog.
-	 */
-	public synchronized OptionsDialog getPluginOptionsDialog() {
-		return getPluginOptionsDialog(true);
-	}
-
-
-	/**
-	 * Workaround for an apparent javac bug - I could not simply make
-	 * <code>pluginOptionsDialog</code> protected and call
-	 * <code>pluginOptionsDialog.pack()</code> in a subclass without getting
-	 * a compiler warning about "Method pack is not public and cannot be
-	 * accessed outside of package"... But, I'd like a way for subclasses to
-	 * get to <code>pluginOptionsDialog</code> without it being created if it
-	 * hasn't already been.
-	 *
-	 * @param create Whether or not to create the dialog if it hasn't already
-	 *        been.
-	 * @return The plugin options dialog.
-	 */
-	protected synchronized OptionsDialog getPluginOptionsDialog(
-												boolean create) {
-		if (pluginOptionsDialog==null && create)
-			pluginOptionsDialog = new PluginOptionsDialog(this);
-		if (pluginOptionsDialog!=null)
-			pluginOptionsDialog.initialize();
-		return pluginOptionsDialog;
-	}
-
-
-	/**
-	 * Returns all installed plugins.  Note that this returns the actual
-	 * plugins and not deep copies, so any changes made to the plugins in
+	 * Returns all installed plug-ins.  Note that this returns the actual
+	 * plug-ins and not deep copies, so any changes made to the plug-ins in
 	 * the array will affect the application itself.
 	 *
-	 * @return All installed plugins.  If no plugins are installed, a
+	 * @return All installed plug-ins.  If no plug-ins are installed, a
 	 *         zero-length array is returned.
 	 * @see #addPlugin(Plugin)
 	 * @see #removePlugin(Plugin)
@@ -256,13 +215,13 @@ public abstract class AbstractPluggableGUIApplication
 
 
 	/**
-	 * Returns whether all plugins have been loaded for this application.
-	 * This does not count plugins added programmatically via
-	 * {@link #addPlugin(Plugin)}, although that isn't usually done (plugins
+	 * Returns whether all plug-ins have been loaded for this application.
+	 * This does not count plug-ins added programmatically via
+	 * {@link #addPlugin(Plugin)}, although that isn't usually done (plug-ins
 	 * are usually all loaded automatically by the
 	 * <code>PluginLoader</code>.
 	 *
-	 * @return Whether the loading of plugins is complete.
+	 * @return Whether the loading of plug-ins is complete.
 	 */
 	public boolean isPluginLoadingComplete() {
 		return pluginLoader!=null && pluginLoader.isPluginLoadingComplete();
@@ -270,8 +229,8 @@ public abstract class AbstractPluggableGUIApplication
 
 
 	/**
-	 * Loads plugins.  This is done in a separate thread to offset plugin
-	 * loading from the EDT.  GUI plugins will be added to the GUI on the
+	 * Loads plug-ins.  This is done in a separate thread to offset plugin
+	 * loading from the EDT.  GUI plug-ins will be added to the GUI on the
 	 * EDT.
 	 */
 	private void loadPlugins() {
@@ -298,9 +257,9 @@ public abstract class AbstractPluggableGUIApplication
 	 * for subclasses to do initialization of stuff that will be needed by
 	 * the application right before it is displayed.<p>
 	 *
-	 * This method loads all plugins.  If you override this method, you should
+	 * This method loads all plug-ins.  If you override this method, you should
 	 * be sure to call <code>super.preDisplayInit()</code>.  This should be
-	 * called after the GUI has been finalized so that plugins can access all
+	 * called after the GUI has been finalized so that plug-ins can access all
 	 * parts of the GUI.
 	 *
 	 * @param prefs The preferences of the application.
@@ -356,7 +315,7 @@ public abstract class AbstractPluggableGUIApplication
 
 	/**
 	 * Sets the position of the divider for the specified split pane.  Note
-	 * that if no plugins are docked at the specified location (and thus no
+	 * that if no plug-ins are docked at the specified location (and thus no
 	 * split pane is there), this method does nothing.
 	 *
 	 * @param splitPane The split pane for which to set the divider
@@ -373,7 +332,7 @@ public abstract class AbstractPluggableGUIApplication
 
 
 	/**
-	 * A panel capable of using split panes to add "GUI plugins" to the
+	 * A panel capable of using split panes to add "GUI plug-ins" to the
 	 * top, left, bottom, and right of some main content.
 	 */
 	private static final class MainContentPanel extends DockableWindowPanel {

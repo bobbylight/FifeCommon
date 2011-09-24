@@ -60,6 +60,12 @@ public abstract class OptionsDialogPanel extends JPanel {
 	private String name;
 
 	/**
+	 * An identifier for this option panel.  Non-localized so it can be used
+	 * in code.
+	 */
+	private String id;
+
+	/**
 	 * The icon to use for this options panel in the options dialog, if any.
 	 */
 	private Icon icon;
@@ -291,6 +297,17 @@ public abstract class OptionsDialogPanel extends JPanel {
 
 
 	/**
+	 * Returns the ID of this option panel.
+	 *
+	 * @return The ID of this option panel, or <code>null</code> for none.
+	 * @see #setId(String)
+	 */
+	public String getId() {
+		return id;
+	}
+
+
+	/**
 	 * Returns the string used to describe this panel in the left-hand
 	 * tree pane of the options dialog.
 	 *
@@ -356,6 +373,17 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 */
 	public void setIcon(Icon icon) {
 		this.icon = icon;
+	}
+
+
+	/**
+	 * Sets the ID of this option panel.
+	 *
+	 * @param id The ID of this option panel.
+	 * @see #getId()
+	 */
+	public void setId(String id) {
+		this.id = id;
 	}
 
 

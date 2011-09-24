@@ -32,6 +32,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import javax.swing.*;
 import javax.swing.plaf.SplitPaneUI;
 
@@ -53,6 +56,7 @@ public class DockableWindowPanel extends JPanel
 	public static final int LARGE_ON_TOP_AND_BOTTOM	= 1;
 	private ContentPanel[] panels;
 	private FloatingWindow[] floatingWindows;
+	private SortedSet listeningTo;
 	private int dockingStyle;
 	protected List windowList;
 	private int[] panelToLocationMap = { 0, 2, 1, 3,
@@ -85,6 +89,7 @@ public class DockableWindowPanel extends JPanel
 		applyComponentOrientation(orientation);
 
 		setBorder(BorderFactory.createEmptyBorder(0,3,2,3));
+		listeningTo = new TreeSet();
 
 	}
 
@@ -172,11 +177,15 @@ public class DockableWindowPanel extends JPanel
 	 * Adds this panel as a listener to the specified dockable window.
 	 *
 	 * @param window The dockable window.
-	 * @see #removeListeners(DockableWindow)
 	 */
 	private void addListeners(DockableWindow window) {
-		window.addDockableWindowListener(this);
-		window.addPropertyChangeListener(this);
+		// We don't remove ourselves as listeners when removing a dockable
+		// window, to allow ourselves to listen as apps send re-add
+		// notifications.  So, only add ourselves as listeners once.
+		if (!listeningTo.contains(window.getDockableWindowName())) {
+			window.addDockableWindowListener(this);
+			window.addPropertyChangeListener(this);
+		}
 	}
 
 
@@ -278,10 +287,17 @@ public class DockableWindowPanel extends JPanel
 		DockableWindow w = (DockableWindow)e.getSource();
 
 		if (DockableWindow.ACTIVE_PROPERTY.equals(name)) {
+
+			/*
+			 * This is no longer a valid check, since we docked windows to be
+			 * removed while we still listen to their events so we can re-add
+			 * them...
 			if (!windowList.contains(w)) {
 				throw new InternalError("Dockable window list does not " +
 					"contain window: " + w);
 			}
+			*/
+
 			//boolean active = w.isActive();
 			// FIXME:  Add window properly.  Removing, then re-adding
 			// the window is an inefficient yet simple way to ensure
@@ -366,7 +382,9 @@ public class DockableWindowPanel extends JPanel
 
 		if (!removeDockableWindowFromList(window))
 			return false; // Not in master list => just quit.
-		removeListeners(window);
+
+		// Keep listening to windows so user can toggle visibility off/on.
+		//removeListeners(window);
 
 		// NOTE:  We can't bail early even if the window isn't active,
 		// as isActive() may be set to false before the window is
@@ -412,18 +430,6 @@ public class DockableWindowPanel extends JPanel
 	 */
 	private boolean removeDockableWindowFromList(DockableWindow window) {
 		return windowList.remove(window);
-	}
-
-
-	/**
-	 * Removes this panel as a listener of the specified dockable window.
-	 *
-	 * @param window The dockable window.
-	 * @see #addListeners(DockableWindow)
-	 */
-	private void removeListeners(DockableWindow window) {
-		window.removeDockableWindowListener(this);
-		window.removePropertyChangeListener(this);
 	}
 
 
@@ -561,8 +567,14 @@ public class DockableWindowPanel extends JPanel
 				if (collapsed) {
 					collapsedPanel.refreshDockableWindowButtons();
 				}
-				if (windowPanel.getDockableWindowCount()==0) {
+				// NASTY!  removeDockableWindow() above may have caused a
+				// recursive call into here and set windowPanel to null already.
+				// TODO: fix me.
+				if (windowPanel!=null && windowPanel.getDockableWindowCount()==0) {
 					this.removeAll(); // Remove whatever component we have
+					if (splitPane!=null) { // Always true?
+						this.dividerLocation = splitPane.getDividerLocation();
+					}
 					splitPane = null;
 					windowPanel = null;
 					collapsedPanel = null;
@@ -580,6 +592,7 @@ public class DockableWindowPanel extends JPanel
 			if (collapsed!=this.collapsed) {
 				this.collapsed = collapsed;
 				if (collapsed) {
+					this.dividerLocation = splitPane.getDividerLocation();
 					remove(splitPane);
 					if (collapsedPanel==null) {
 						collapsedPanel = new CollapsedPanel(dockableWindowsLocation);
@@ -619,6 +632,9 @@ public class DockableWindowPanel extends JPanel
 							break;
 					}
 					add(splitPane);
+					if (splitPane!=null) { // Always true?
+						splitPane.setDividerLocation(dividerLocation);
+					}
 				}
 				revalidate();
 				repaint();
@@ -740,6 +756,7 @@ public class DockableWindowPanel extends JPanel
 						DockableWindow dwind = (DockableWindow)popupButton.
 										getClientProperty("DockableWindow");
 						DockableWindowPanel.this.removeDockableWindow(dwind);
+						dwind.setActive(false);
 					}
 				}
 

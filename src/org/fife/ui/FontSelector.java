@@ -41,6 +41,10 @@ public class FontSelector extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
+	public static final int LABELED     = 0;
+	public static final int NOT_LABELED = 1;
+	public static final int CHECK_BOX   = 2;
+
 	private JComponent labelComp;
 	private FontTextField field;
 	private boolean underline;
@@ -61,39 +65,44 @@ public class FontSelector extends JPanel implements ActionListener {
 	 * Constructor.
 	 */
 	public FontSelector() {
-		this(false);
+		this(LABELED);
 	}
 
 
 	/**
 	 * Constructor.
 	 *
-	 * @param togglable Whether the user should be able to enable
-	 *        and disable this font selector via a checkbox.
+	 * @param type One of {@link #LABELED}, {@link #NOT_LABELED}, or
+	 *        {@link #CHECK_BOX}.
 	 */
-	public FontSelector(boolean togglable) {
+	public FontSelector(int type) {
 
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		setAlignmentX(Component.LEFT_ALIGNMENT);
-		if (togglable) {
-			JCheckBox cb = new JCheckBox(msg.getString("FontTitle"), true);
-			cb.addActionListener(this);
-			field = new FontTextField();
-			labelComp = cb;
-		}
-		else {
-			JLabel label = new JLabel(msg.getString("FontTitle"));
-			field = new FontTextField();
-			label.setLabelFor(field);
-			labelComp = label;
+		field = new FontTextField();
+		switch (type) {
+			default:
+			case LABELED:
+				JLabel label = new JLabel(msg.getString("FontTitle"));
+				label.setLabelFor(field);
+				labelComp = label;
+				break;
+			case NOT_LABELED:
+				break;
+			case CHECK_BOX:
+				JCheckBox cb = new JCheckBox(msg.getString("FontTitle"), true);
+				cb.addActionListener(this);
+				labelComp = cb;
+				break;
 		}
 
 		browseButton = new RButton(msg.getString("Browse"));
-		browseButton.setActionCommand("Browse");
 		browseButton.addActionListener(this);
 
-		add(labelComp);
-		add(Box.createHorizontalStrut(5));
+		if (labelComp!=null) {
+			add(labelComp);
+			add(Box.createHorizontalStrut(5));
+		}
 		add(field);
 		add(Box.createHorizontalStrut(5));
 		add(browseButton);
@@ -107,10 +116,8 @@ public class FontSelector extends JPanel implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 
-		String actionCommand = e.getActionCommand();
-
 		// If the user clicked the "Browse" button for fonts...
-		if (actionCommand.equals("Browse")) {
+		if (e.getSource()==browseButton) {
 
 			FontDialog fd = new FontDialog(null, msg.getString("Font"),
 									field.getDisplayedFont(),
@@ -210,7 +217,7 @@ public class FontSelector extends JPanel implements ActionListener {
 	 * @see #setToggledOn(boolean)
 	 */
 	public boolean isToggledOn() {
-		return (labelComp instanceof JLabel) ||
+		return labelComp==null || (labelComp instanceof JLabel) ||
 			((JCheckBox)labelComp).isSelected();
 	}
 

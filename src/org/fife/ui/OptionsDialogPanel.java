@@ -187,7 +187,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 
 		parent.add(temp);
 		if (spacer>0) {
-			parent.add(Box.createVerticalStrut(5));
+			parent.add(Box.createVerticalStrut(spacer));
 		}
 
 	}

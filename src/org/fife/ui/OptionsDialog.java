@@ -211,11 +211,26 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 */
 	private void addOptionPanel(OptionsDialogPanel panel) {
 		panel.addPropertyChangeListener(this);
-		currentOptionPanel.add(panel, panel.getName());
-		int childCount = panel.getChildPanelCount();
-		for (int i=0; i<childCount; i++) {
+		currentOptionPanel.add(panel, createKeyForPanel(panel));
+		for (int i=0; i<panel.getChildPanelCount(); i++) {
 			addOptionPanel(panel.getChildPanel(i));
 		}
+	}
+
+
+	/**
+	 * Returns the key to use to store/retrieve a panel in the CardLayout
+	 * display panel.
+	 *
+	 * @param panel The options panel.
+	 * @return The key.
+	 */
+	private String createKeyForPanel(OptionsDialogPanel panel) {
+		String key = panel.getName();
+		while ((panel=panel.getParentPanel())!=null) {
+			key = panel.getName() + "-" + key;
+		}
+		return key;
 	}
 
 
@@ -503,7 +518,8 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 			}
 		}
 
-		currentOptionPanelLayout.show(currentOptionPanel, panel.getName());
+		currentOptionPanelLayout.show(currentOptionPanel,
+										createKeyForPanel(panel));
 
 		titledPanel.setTitle(panel.getName());
 		titledPanel.setIcon(panel.getIcon());

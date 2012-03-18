@@ -1,8 +1,8 @@
 /*
  * 10/21/2005
  *
- * DWindPanel.java - A panel containing a bunch of dockable windows in a
- * tabbed pane.
+ * DockableWindowGroup.java - A panel containing a bunch of dockable windows
+ * in a tabbed pane.
  * Copyright (C) 2005 Robert Futrell
  * robert_futrell at users.sourceforge.net
  * http://fifesoft.com
@@ -25,23 +25,28 @@ package org.fife.ui.dockablewindows;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.util.Map;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.TabbedPaneUI;
 
 import org.fife.ui.SubstanceUtils;
+import org.fife.ui.UIUtil;
 import org.fife.ui.dockablewindows.DockableWindowPanel.ContentPanel;
 
 
 /**
  * A panel containing a bunch of <code>DockableWindow</code>s contained
- * in a tabbed pane.
+ * in a tabbed pane.  Instances of this class contain all docked windows on
+ * any edge of a <code>DockableWindowPanel</code>.
  *
  * @author Robert Futrell
  * @version 1.0
  */
-class DWindPanel extends JPanel {
+class DockableWindowGroup extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -53,7 +58,7 @@ class DWindPanel extends JPanel {
 	/**
 	 * Constructor.
 	 */
-	public DWindPanel(ContentPanel parent) {
+	public DockableWindowGroup(ContentPanel parent) {
 		this.parent = parent;
 		setLayout(new BorderLayout());
 		tabbedPane = new DockedTabbedPane();
@@ -211,8 +216,19 @@ class DWindPanel extends JPanel {
 	 */
 	private class DockedTabbedPane extends JTabbedPane {
 
+		private JPopupMenu popup;
+
 		public DockedTabbedPane() {
 			super(BOTTOM);
+			enableEvents(AWTEvent.MOUSE_EVENT_MASK);
+		}
+
+		private JPopupMenu getPopupMenu() {
+			if (popup==null) {
+				DockableWindowPanel dwindPanel= parent.getDockableWindowPanel();
+				popup = Actions.createRedockPopupMenu(dwindPanel);
+			}
+			return popup;
 		}
 
 		protected void paintComponent(Graphics g) {
@@ -220,11 +236,29 @@ class DWindPanel extends JPanel {
 			// Swing's (i.e. the OS's) default AA settings without
 			// subclassing components.
 			Graphics2D g2d = (Graphics2D)g;
-			RenderingHints.Key key = RenderingHints.KEY_TEXT_ANTIALIASING;
-			Object old = g2d.getRenderingHint(key);
-			g2d.setRenderingHint(key, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			Map old = UIUtil.setNativeRenderingHints(g2d);
 			super.paintComponent(g);
-			g2d.setRenderingHint(key, old);
+			g2d.setRenderingHints(old);
+		}
+
+		protected void processMouseEvent(MouseEvent e) {
+			if (SwingUtilities.isRightMouseButton(e)) {
+				if (e.isPopupTrigger()) {
+					int x = e.getX();
+					int y = e.getY();
+					int index = indexAtLocation(x, y);
+					if (index!=-1) {
+						setSelectedIndex(index);
+						DockableWindow dwind = (DockableWindow)getSelectedComponent();
+						putClientProperty("DockableWindow", dwind);
+						JPopupMenu popup = getPopupMenu();
+						popup.show(this, x, y);
+					}
+				}
+			}
+			else {
+				super.processMouseEvent(e);
+			}
 		}
 
 		public void setUI(TabbedPaneUI ui) {

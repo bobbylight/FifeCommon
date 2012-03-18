@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.swing.*;
 import javax.swing.plaf.SplitPaneUI;
 
@@ -43,7 +42,8 @@ import org.fife.ui.CleanSplitPaneUI;
 
 /**
  * A panel capable of having "windows" docked to any of its four sides,
- * as well as manage "floating" windows.
+ * as well as manage "floating" windows.  This can be used as the content pane
+ * for applications wishing to have docked windows.
  *
  * @author Robert Futrell
  * @version 0.1
@@ -472,15 +472,14 @@ public class DockableWindowPanel extends JPanel
 
 
 	/**
-	 * A panel containing either a single child or a split pane
-	 * containing a tabbed pane of dockable windows and one other
-	 * child.  <code>MainContentPanel</code> contains
-	 * 4 of these embedded in each other.
+	 * A panel containing either a single child or a split pane containing a
+	 * tabbed pane of dockable windows and one other child.
+	 * <code>MainContentPanel</code> contains 4 of these embedded in each other.
 	 */
 	final class ContentPanel extends JPanel {
 
 		private JSplitPane splitPane;
-		private DWindPanel windowPanel;
+		private DockableWindowGroup windowPanel;
 		private Component mainContent;
 		private int dockableWindowsLocation;
 		private int dividerLocation;
@@ -495,7 +494,7 @@ public class DockableWindowPanel extends JPanel
 			// If this is our first dockable window...
 			if (splitPane==null) {
 				mainContent = getComponent(0);
-				windowPanel = new DWindPanel(this);
+				windowPanel = new DockableWindowGroup(this);
 				windowPanel.addDockableWindow(window);
 				int split;
 				double resizeWeight = 0.0;
@@ -554,6 +553,10 @@ public class DockableWindowPanel extends JPanel
 
 		public int getDividerLocation() {
 			return splitPane!=null ? splitPane.getDividerLocation() : -1;
+		}
+
+		DockableWindowPanel getDockableWindowPanel() {
+			return DockableWindowPanel.this;
 		}
 
 		// Returns the non-dockable window content this panel contains.
@@ -664,11 +667,15 @@ public class DockableWindowPanel extends JPanel
 			}
 		}
 
+		/**
+		 * A panel with buttons for each docked window in this collapsed panel.
+		 * Displayed when the user clicks the "minimized" button in a
+		 * DockableWindowGroup.
+		 */
 		private class CollapsedPanel extends JPanel implements MouseListener {
 
 			private JToolBar toolbar;
 			private JPopupMenu contextMenu;
-			private JButton popupButton;
 
 			CollapsedPanel(int dockableWindowLocation) {
 				setLayout(new BorderLayout());
@@ -693,10 +700,10 @@ public class DockableWindowPanel extends JPanel
 
 			private void maybeShowPopup(MouseEvent e) {
 				if (e.isPopupTrigger()) {
-					popupButton = (JButton)e.getSource();
+					JButton popupButton = (JButton)e.getSource();
 					if (contextMenu==null) {
-						contextMenu = new JPopupMenu();
-						contextMenu.add(new JMenuItem(new CloseAction()));
+						contextMenu = Actions.createRedockPopupMenu(
+												DockableWindowPanel.this);
 					}
 					contextMenu.show(popupButton, e.getX(), e.getY());
 				}
@@ -745,41 +752,7 @@ public class DockableWindowPanel extends JPanel
 				return toolbar.getComponentCount();
 			}
 
-			private class CloseAction extends AbstractAction {
-
-				public CloseAction() {
-					putValue(NAME, DockableWindow.getString("PopupMenu.Close"));
-				}
-
-				public void actionPerformed(ActionEvent e) {
-					if (popupButton!=null) { // Should always be true
-						DockableWindow dwind = (DockableWindow)popupButton.
-										getClientProperty("DockableWindow");
-						DockableWindowPanel.this.removeDockableWindow(dwind);
-						dwind.setActive(false);
-					}
-				}
-
-			}
-
 		}
-
-		/*
-		private class RestoreAction extends AbstractAction {
-
-			public RestoreAction() {
-				putValue(SHORT_DESCRIPTION, // Tool tip
-					DockableWindow.getString("Button.Restore"));
-				Icon icon = new ImageIcon(getClass().getResource("restore.png"));
-				putValue(SMALL_ICON, icon);
-			}
-
-			public void actionPerformed(ActionEvent e) {
-				setCollapsed(false);
-			}
-
-		}
-		*/
 
 	}
 

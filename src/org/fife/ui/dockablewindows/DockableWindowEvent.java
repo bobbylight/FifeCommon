@@ -63,6 +63,7 @@ public class DockableWindowEvent extends EventObject {
 	 * Returns the new location of the dockable window.
 	 *
 	 * @return The new location.
+	 * @see DockableWindowConstants
 	 */
 	public int getNewPosition() {
 		return newPosition;
@@ -73,6 +74,7 @@ public class DockableWindowEvent extends EventObject {
 	 * Returns the old location of the dockable window.
 	 *
 	 * @return The old location.
+	 * @see DockableWindowConstants
 	 */
 	public int getOldPosition() {
 		return oldPosition;

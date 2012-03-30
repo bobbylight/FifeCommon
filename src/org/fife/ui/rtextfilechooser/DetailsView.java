@@ -118,15 +118,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		setModel(sorter);
 		sorter.setTable(this);
 
-		// Prevent this table from interpreting Enter to mean "move to the
-		// next row."
-		InputMap tableInputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-		tableInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "none");
-
-		// Prevent this table from swallowing F2 (I think this causes editable
-		// JTables to go into editing mode, but we want our parent dialog to
-		// handle this keypress).
-		tableInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "none");
+		fixKeyboardShortcuts();
 
 		// Make this table look just a little nicer.
 		setIntercellSpacing(new Dimension(0,0));
@@ -221,6 +213,29 @@ class DetailsView extends JTable implements RTextFileChooserView {
 			scrollRectToVisible(getCellRect(row, 0, true));
 	}
 
+
+	/**
+	 * Removes keyboard mappings that interfere with our file chooser's
+	 * shortcuts.
+	 */
+	private void fixKeyboardShortcuts() {
+
+		InputMap im = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+		// Prevent this table from interpreting Enter to mean "move to the
+		// next row."
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "none");
+
+		// Prevent this table from swallowing F2 (I think this causes editable
+		// JTables to go into editing mode, but we want our parent dialog to
+		// handle this keypress).
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "none");
+
+		// Prevent shift+delete from doing nothing (registered to delete an
+		// element?).
+		im.put(KeyStroke.getKeyStroke("shift DELETE"), "none");
+
+	}
 
 	private int getDisplayCount() {
 		synchronized (ATTRIBUTES_LOCK) {

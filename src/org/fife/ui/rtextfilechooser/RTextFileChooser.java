@@ -183,6 +183,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private Actions.SystemOpenAction systemViewAction;
 	private Actions.CopyAction copyAction;
 	private Actions.DeleteAction deleteAction;
+	private Actions.DeleteAction hardDeleteAction;
 	private Actions.RefreshAction refreshAction;
 	private Actions.RenameAction renameAction;
 	private Actions.UpOneLevelAction upOneLevelAction;
@@ -887,7 +888,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		systemViewAction = new Actions.SystemOpenAction(selector, "open");
 		renameAction = new Actions.RenameAction(this);
 		copyAction = new Actions.CopyAction(this);
-		deleteAction = new Actions.DeleteAction(this);
+		deleteAction = new Actions.DeleteAction(this, false);
+		hardDeleteAction = new Actions.DeleteAction(this, true);
 		refreshAction = new Actions.RefreshAction(this);
 		upOneLevelAction = new Actions.UpOneLevelAction(this);
 
@@ -1735,6 +1737,11 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		ks = (KeyStroke)deleteAction.getValue(Action.ACCELERATOR_KEY);
 		inputMap.put(ks, "OnDelete");
 		actionMap.put("OnDelete", deleteAction);
+
+		// Have Delete delete the currently selected file(s).
+		ks = (KeyStroke)hardDeleteAction.getValue(Action.ACCELERATOR_KEY);
+		inputMap.put(ks, "OnHardDelete");
+		actionMap.put("OnHardDelete", hardDeleteAction);
 
 		// Have Backspace go "up one level."
 		// This causes problems on OS X (action occurs even it back space is

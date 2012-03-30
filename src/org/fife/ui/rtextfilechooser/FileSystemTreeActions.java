@@ -9,6 +9,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.EventObject;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
@@ -70,12 +72,15 @@ class FileSystemTreeActions {
 	static class DeleteAction extends AbstractTreeAction {
 
 		private Window window;
+		private boolean hard;
 
-		public DeleteAction(Window parent, FileSystemTree tree) {
+		public DeleteAction(Window parent, FileSystemTree tree, boolean hard) {
 			super(tree);
 			putValue(NAME, getString("Delete"));
-			putValue(ACCELERATOR_KEY,
-					KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+			this.hard = hard;
+			int modifiers = hard ? InputEvent.SHIFT_MASK : 0;
+			putValue(Action.ACCELERATOR_KEY,
+					KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, modifiers));
 			this.window = parent;
 		}
 
@@ -94,7 +99,7 @@ class FileSystemTreeActions {
 			}
 
 			FileIOExtras extras = FileIOExtras.getInstance();
-			if (extras!=null) {
+			if (!hard && extras!=null) {
 				handleDeleteNative(files, extras);
 			}
 			else {

@@ -26,6 +26,7 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.lang.reflect.Method;
@@ -121,11 +122,23 @@ interface Actions {
 	 */
 	static class DeleteAction extends FileChooserAction {
 
-		public DeleteAction(RTextFileChooser chooser) {
+		private boolean hard;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param chooser The file chooser.
+		 * @param hard Whether this is a "hard" delete (i.e. permanently delete,
+		 *        rather than go through OS means and possibly put into a
+		 *        Recycle Bin).
+		 */
+		public DeleteAction(RTextFileChooser chooser, boolean hard) {
 			super(chooser);
 			putValue(Action.NAME, getString("Delete"));
+			this.hard = hard;
+			int modifiers = hard ? InputEvent.SHIFT_MASK : 0;
 			putValue(Action.ACCELERATOR_KEY,
-					KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+					KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, modifiers));
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -139,7 +152,7 @@ interface Actions {
 			}
 
 			FileIOExtras extras = FileIOExtras.getInstance();
-			if (extras!=null) {
+			if (!hard && extras!=null) {
 				handleDeleteNative(files, extras);
 			}
 			else {
@@ -148,6 +161,13 @@ interface Actions {
 
 		}
 
+		/**
+		 * Uses the native means for deleting a file.  This allows us to use
+		 * Windows' Recycle Bin, for example.
+		 *
+		 * @param files The files to delete.
+		 * @param extras The native class that actually does the deletion.
+		 */
 		private void handleDeleteNative(File[] files, FileIOExtras extras) {
 			Window parent = SwingUtilities.getWindowAncestor(chooser);
 			if (extras.moveToRecycleBin(parent, files, true, true)) {
@@ -158,6 +178,11 @@ interface Actions {
 			}
 		}
 
+		/**
+		 * Deletes files with pure Java.  Only does a hard delete.
+		 *
+		 * @param files The files to delete.
+		 */
 		private void handleDeleteViaJava(File[] files) {
 
 			// Prompt to confirm the file deletion.

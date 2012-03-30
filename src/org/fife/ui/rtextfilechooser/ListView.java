@@ -83,6 +83,8 @@ class ListView extends JList implements RTextFileChooserView {
 		selectionListener = new SelectionListener(chooser);
 		addListSelectionListener(selectionListener);
 
+		fixInputMap();
+
 		ComponentOrientation orientation = ComponentOrientation.
 									getOrientation(getLocale());
 		applyComponentOrientation(orientation);
@@ -115,6 +117,21 @@ class ListView extends JList implements RTextFileChooserView {
 		int index = model.indexOf(file);
 		if (index!=-1)
 			ensureIndexIsVisible(index);
+
+	}
+
+
+	/**
+	 * Removes keyboard mappings that interfere with our file chooser's
+	 * shortcuts.
+	 */
+	private void fixInputMap() {
+
+		InputMap im = getInputMap();
+
+		// Prevent shift+delete from doing nothing (registered to delete an
+		// element?).
+		im.put(KeyStroke.getKeyStroke("shift DELETE"), "none");
 
 	}
 
@@ -287,9 +304,9 @@ class ListView extends JList implements RTextFileChooserView {
 					}
 				}
 
-			} // End of for (int i=0; i<num; i++).
+			}
 
-		} // End of if (num>0).
+		}
 
 	}
 

@@ -85,6 +85,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	private Actions.CopyAction copyAction;
 	private FileSystemTreeActions.PasteAction pasteAction;
 	private FileSystemTreeActions.DeleteAction deleteAction;
+	private FileSystemTreeActions.DeleteAction hardDeleteAction;
 	protected FileSystemTreeActions.NewFileAction newFileAction; // Used in DirectoryTree too
 	private FileSystemTreeActions.NewFolderAction newFolderAction;
 	private FileSystemTreeActions.RefreshAction refreshAction;
@@ -634,7 +635,8 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		// Create our actions (most of which have shortcuts)
 		copyAction = new Actions.CopyAction(this);
 		pasteAction = new FileSystemTreeActions.PasteAction(this);
-		deleteAction = new FileSystemTreeActions.DeleteAction(null, this);
+		deleteAction = new FileSystemTreeActions.DeleteAction(null, this, false);
+		hardDeleteAction = new FileSystemTreeActions.DeleteAction(null, this, true);
 		newFileAction = new FileSystemTreeActions.NewFileAction(this);
 		newFolderAction = new FileSystemTreeActions.NewFolderAction(this);
 		refreshAction = new FileSystemTreeActions.RefreshAction(this);
@@ -649,6 +651,8 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		am.put("Paste", pasteAction);
 		im.put((KeyStroke)deleteAction.getValue(Action.ACCELERATOR_KEY), "Delete");
 		am.put("Delete", deleteAction);
+		im.put((KeyStroke)hardDeleteAction.getValue(Action.ACCELERATOR_KEY), "HardDelete");
+		am.put("HardDelete", hardDeleteAction);
 		im.put((KeyStroke)refreshAction.getValue(Action.ACCELERATOR_KEY), "Refresh");
 		am.put("Refresh", refreshAction);
 

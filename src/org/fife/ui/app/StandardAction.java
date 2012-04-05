@@ -72,11 +72,15 @@ public abstract class StandardAction extends AbstractAction {
 			if (temp!=null) {
 				// Use meta on OS X instead of ctrl
 				if (app.getOS()==GUIApplication.OS_MAC_OSX &&
-						(temp.startsWith("control ") ||
+						((temp.startsWith("control ") ||
 							temp.startsWith("ctrl ")) ||
-							temp.startsWith("default ")) {
+							temp.startsWith("default "))) {
 					int space = temp.indexOf(' ');
 					temp = "meta" + temp.substring(space);
+				}
+				else if (temp.startsWith("default ")) {
+					int space = temp.indexOf(' ');
+					temp = "control" + temp.substring(space);
 				}
 				KeyStroke ks = KeyStroke.getKeyStroke(temp);
 				setAccelerator(ks);

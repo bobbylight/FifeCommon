@@ -60,7 +60,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
 import javax.swing.text.html.HTMLDocument;
-
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
@@ -94,23 +93,28 @@ import org.fife.ui.app.GUIApplication;
  *        </li>
  * </ul>
  *
- * Notes:<br>
- *   In your HTML documentation, anchors can be used as hyperlinks; however,
- *   if you have a hyperlink that is simply an anchor to another place in the
- *   current HTML file (<code>a href="#anchor"</code> as opposed to
- *   <code>a href="file2.html#anchor"</code>), you need to explicitly state
- *   that the anchor is in the current file (i.e.,
- *   <code>a href="file2.html#anchor"</code>) for this class to parse it
- *   correctly.
+ * Notes:
+ * <ul>
+ *    <li>In your HTML documentation, anchors can be used as hyperlinks;
+ *    however, if you have a hyperlink that is simply an anchor to another place
+ *    in the current HTML file (<code>a href="#anchor"</code> as opposed to
+ *    <code>a href="file2.html#anchor"</code>), you need to explicitly state
+ *    that the anchor is in the current file (i.e.,
+ *    <code>a href="file2.html#anchor"</code>) for this class to parse it
+ *    correctly.</li>
+ *    <li>If the specified URL starts with <code>http://</code> and we're
+ *    running in a Java 6 or newer JVM, the link is opened in the system
+ *    default web browser.</li>
+ * </ul>
  *
  * @author Robert Futrell
- * @version 1.0
+ * @version 1.1
  */
 public class HelpDialog extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
-	private GUIApplication guiApp;
+	private GUIApplication app;
 
 	private JTabbedPane tabbedPane;
 	private DefaultMutableTreeNode root;
@@ -135,7 +139,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 	private String searchString;		// What to look for in the search tab.
 	private boolean highlightSearchString;
 
-	private ArrayList history;		// All HelpTreeNodes the user has previoiusly viewed.
+	private ArrayList history;		// All HelpTreeNodes the user has previously viewed.
 	private int historyPos;			// Position in history array we're at.
 	private boolean updateHistory;	// If true, selecting a tocTree node updates history.
 
@@ -148,6 +152,8 @@ public class HelpDialog extends JFrame implements ActionListener {
 	private String baseDir;
 	private URL baseURL;
 	private String noMatchHTML; // Probably never used.
+
+	private boolean webUrlsInRealBrowser;
 
 	private ResourceBundle treeBundle;
 
@@ -182,7 +188,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 										String baseDir) {
 
 		// Make the title of the dialog appropriate.
-		this.guiApp = owner;
+		this.app = owner;
 
 		Border border8080 = BorderFactory.createEmptyBorder(8,0,8,0);
 
@@ -193,6 +199,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		// Create some stuff we'll need below.
 		ResourceBundle msg = getHelpBundle();
 		HelpListener listener = new HelpListener();
+		webUrlsInRealBrowser = true;
 
 		noMatchHTML = "<html><body><h2>" + msg.getString("NoMatch") +
 				"</h2><HR ALIGN=\"center\" WIDTH=\"100%\"></body></html>";
@@ -202,7 +209,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		try {
 			setBaseURL(new File(baseDir).toURI().toURL());
 		} catch (Exception e) {
-			guiApp.displayException(this, e);
+			app.displayException(this, e);
 		}
 
 		// Create the DefaultMutableTreeNode tree that will be our "tree" of
@@ -225,7 +232,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		tocTree = new JTree(root);
 		tocTree.setRootVisible(rootVisible);	// Set in initializeFromXMLFile().
 		tocTree.setSelectionModel(new RTreeSelectionModel());
-		tocTree.setToggleClickCount(1);
+		//tocTree.setToggleClickCount(1);
 		tocTree.addTreeSelectionListener(listener);
 		tocTree.addKeyListener(listener);
 		JScrollPane scrollPane = new RScrollPane(1,1, tocTree);
@@ -494,7 +501,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		//	is.setEncoding("UTF-8");
 			doc = db.parse(is);//db.parse(file);
 		} catch (Exception ex) {
-			guiApp.displayException(this, ex);
+			app.displayException(this, ex);
 			return;
 		}
 
@@ -577,7 +584,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 				}
 
 			} catch (IOException e) {
-				guiApp.displayException(this, e);
+				app.displayException(this, e);
 			}
 
 			// Highlight all occurrences of searchString if desired.
@@ -686,6 +693,23 @@ public class HelpDialog extends JFrame implements ActionListener {
 	 */
 	public final String getListTopicsButtonText() {
 		return listTopicsButton.getText();
+	}
+
+
+	/**
+	 * Returns whether URLs starting with "<code>http://</code>" should be
+	 * opened in a real web browser (assuming Java 6), instead of this Help
+	 * dialog.  The default value of this property is <code>true</code>, since
+	 * it's assumed this is usually done to go to project home pages or more
+	 * extensive online documentation, and JEditorPane can't really handle
+	 * "real" HTML.
+	 *
+	 * @return Whether URL's starting with "<code>http://</code>" are opened in
+	 *         a real browser.
+	 * @see #setOpenWebUrlsInRealBrowser(boolean)
+	 */
+	public boolean getOpenWebUrlsInRealBrowser() {
+		return webUrlsInRealBrowser;
 	}
 
 
@@ -824,8 +848,8 @@ public class HelpDialog extends JFrame implements ActionListener {
 			treeBundle = new PropertyResourceBundle(
 					new FileInputStream(baseDir + name));
 		} catch (Exception e) {
-			// Keep guiApp as owner as this dialog isn't yet displayable
-			guiApp.displayException(e);
+			// Keep app as owner as this dialog isn't yet displayable
+			app.displayException(e);
 			return null;
 		}
 
@@ -1252,6 +1276,16 @@ public class HelpDialog extends JFrame implements ActionListener {
 			return;
 		}
 
+		// Anything on the "real" web should probably be displayed in a real
+		// browser.
+		if (("http".equals(url.getProtocol()) && webUrlsInRealBrowser) ||
+				"ftp".equals(url.getProtocol())) {
+			if (!UIUtil.browse(url.toString())) {
+				UIManager.getLookAndFeel().provideErrorFeedback(this);
+			}
+			return;
+		}
+
 		// In the tocTree, make the new page the selected one.
 		// This fires a TreeEvent action to occur, and method valueChanged()
 		// will set the new Help page for us.
@@ -1312,6 +1346,23 @@ public class HelpDialog extends JFrame implements ActionListener {
 	 */
 	public void setListTopicsButtonText(String text) {
 		listTopicsButton.setText(text);
+	}
+
+
+	/**
+	 * Toggles whether URLs starting with "<code>http://</code>" should be
+	 * opened in a real web browser (assuming Java 6), instead of this Help
+	 * dialog.  The default value of this property is <code>true</code>, since
+	 * it's assumed this is usually done to go to project home pages or more
+	 * extensive online documentation, and JEditorPane can't really handle
+	 * "real" HTML.
+	 *
+	 * @param inRealBrowser Whether to open URL's starting with
+	 *        "<code>http://</code>" in a real browser.
+	 * @see #getOpenWebUrlsInRealBrowser()
+	 */
+	public void setOpenWebUrlsInRealBrowser(boolean inRealBrowser) {
+		webUrlsInRealBrowser = inRealBrowser;
 	}
 
 
@@ -1380,7 +1431,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 					try {
 						url = new URL("file://" + baseURL.getPath() + e.getDescription());
 					} catch (MalformedURLException mue) {
-						guiApp.displayException(HelpDialog.this, mue);
+						app.displayException(HelpDialog.this, mue);
 					}
 				}
 				String anchor = null;
@@ -1477,7 +1528,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 						tocTree.expandRow(row);
 				}
 
-			} // End of if ( e.getKeyCode() == KeyEvent.VK_ENTER ).
+			}
 
 		}
 
@@ -1501,7 +1552,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 				// load the clicked-on help page.
 				else if (e.getComponent().equals(searchList))
 					loadSelectedHelpPageSearch();
-			} // End of if (e.getClickCount()==2).
+			}
 		}
 
 		/**
@@ -1543,7 +1594,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 			else if (selection==2)
 				field = searchField;
 			if (field!=null) {
-				final JTextField field2 = field; // Must be final...
+				final JTextField field2 = field;
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						field2.requestFocusInWindow();
@@ -1620,7 +1671,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 				// unless told otherwise
 				clickedOnTOCTree = true;
 
-			} // End of if (htn.url != null).
+			}
 
 		}
 

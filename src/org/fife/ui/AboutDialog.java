@@ -32,6 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -57,6 +58,9 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 	private JTabbedPane tabbedPane;
 	private Component appPanel;
 
+	private static final ResourceBundle msg =
+		ResourceBundle.getBundle("org.fife.ui.AboutDialog");
+
 
 	/**
 	 * Creates a new <code>AboutDialog</code>.
@@ -80,8 +84,6 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 
 		ComponentOrientation orientation = ComponentOrientation.
 									getOrientation(getLocale());
-
-		ResourceBundle msg= ResourceBundle.getBundle("org.fife.ui.AboutDialog");
 
 		// Set the main content pane for the "About" dialog.
 		JPanel contentPane =new ResizableFrameContentPane(new BorderLayout());
@@ -165,9 +167,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 			setVisible(false);
 		}
 		else if (actionCommand.equals("License")) {
-			ResourceBundle msg = ResourceBundle.
-									getBundle("org.fife.ui.AboutDialog");
-			GPLLicenseDialog licenseDialog = new GPLLicenseDialog(msg);
+			JDialog licenseDialog = createLicenseDialog();
 			licenseDialog.setVisible(true);
 		}
 	}
@@ -203,6 +203,33 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 
 
 	/**
+	 * Returns the dialog that displays this application's license.  By default,
+	 * a dialog displaying the GPL is displayed.  Subclasses can override.
+	 *
+	 * @return The license dialog.
+	 */
+	protected JDialog createLicenseDialog() {
+		return new LicenseDialog(getGplText());
+	}
+
+
+	private String getGplText() {
+		return
+		"This program is free software; you can redistribute it and/or modify " +
+		"it under the terms of the GNU General Public License as published by " +
+		"the Free Software Foundation; either version 2 of the License, or " +
+		"(at your option) any later version.\n\n" +
+		"This program is distributed in the hope that it will be useful, " +
+		"but WITHOUT ANY WARRANTY; without even the implied warranty of " +
+		"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the " +
+		"GNU General Public License for more details.\n\n" +
+		"You should have received a copy of the GNU General Public License " +
+		"along with this program; if not, write to the Free Software " +
+		"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA";
+	}
+
+
+	/**
 	 * Sets the main "about this application" panel.
 	 *
 	 * @param panel The panel.
@@ -219,8 +246,6 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 			appPanel = null;
 		}
 		else { // Adding app panel
-			ResourceBundle msg = ResourceBundle.
-								getBundle("org.fife.ui.AboutDialog");
 			String title = msg.getString("Tab.Application");
 			tabbedPane.insertTab(title, null, panel, null, 0);
 			appPanel = panel;
@@ -231,11 +256,12 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 	/**
 	 * A dialog box that displays the GNU GPL.
 	 */
-	class GPLLicenseDialog extends EscapableDialog implements ActionListener {
+	protected class LicenseDialog extends EscapableDialog
+			implements ActionListener {
 
 		private static final long serialVersionUID = 1L;
 
-		GPLLicenseDialog(ResourceBundle msg) {
+		public LicenseDialog(String licenseText) {
 
 			ComponentOrientation o = ComponentOrientation.
 									getOrientation(getLocale());
@@ -246,18 +272,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 			setContentPane(cp);
 
 			JTextArea textArea = new JTextArea(15, 60);
-			textArea.setText(
-				"This program is free software; you can redistribute it and/or modify " +
-				"it under the terms of the GNU General Public License as published by " +
-				"the Free Software Foundation; either version 2 of the License, or " +
-				"(at your option) any later version.\n\n" +
-				"This program is distributed in the hope that it will be useful, " +
-				"but WITHOUT ANY WARRANTY; without even the implied warranty of " +
-				"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the " +
-				"GNU General Public License for more details.\n\n" +
-				"You should have received a copy of the GNU General Public License " +
-				"along with this program; if not, write to the Free Software " +
-				"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
+			textArea.setText(licenseText);
 			textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 			textArea.setLineWrap(true);
 			textArea.setWrapStyleWord(true);
@@ -280,7 +295,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			setVisible(false);
+			escapePressed();
 		}
 
 	}

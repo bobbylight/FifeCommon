@@ -1518,7 +1518,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 				}
 
 				// If they press enter while on an expandable node in the
-				// tocTree, toggle it's expandedness.
+				// tocTree, toggle whether it's expanded.
 				else if (source.equals( tocTree )) {
 					int row = tocTree.getMaxSelectionRow();
 					// These are okay since tree is single-selection.

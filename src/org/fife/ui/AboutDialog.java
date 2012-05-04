@@ -17,6 +17,7 @@ import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -28,6 +29,8 @@ import javax.swing.JTextArea;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+
+import org.fife.io.IOUtil;
 
 
 /**
@@ -191,28 +194,25 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 
 	/**
 	 * Returns the dialog that displays this application's license.  By default,
-	 * a dialog displaying the GPL is displayed.  Subclasses can override.
+	 * a dialog displaying the modified BSD license is displayed.  Subclasses
+	 * can override.
 	 *
 	 * @return The license dialog.
 	 */
 	protected JDialog createLicenseDialog() {
-		return new LicenseDialog(getGplText());
+		return new LicenseDialog(getModifiedBsdText());
 	}
 
 
-	private String getGplText() {
-		return
-		"This program is free software; you can redistribute it and/or modify " +
-		"it under the terms of the GNU General Public License as published by " +
-		"the Free Software Foundation; either version 2 of the License, or " +
-		"(at your option) any later version.\n\n" +
-		"This program is distributed in the hope that it will be useful, " +
-		"but WITHOUT ANY WARRANTY; without even the implied warranty of " +
-		"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the " +
-		"GNU General Public License for more details.\n\n" +
-		"You should have received a copy of the GNU General Public License " +
-		"along with this program; if not, write to the Free Software " +
-		"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA";
+	private String getModifiedBsdText() {
+		String text = null;
+		try {
+			text = IOUtil.readFully(AboutDialog.class. // Subclasses
+					getResourceAsStream("modifiedBsdLicense.txt"));
+		} catch (IOException ioe) { // Never happens
+			text = ioe.getMessage();
+		}
+		return text;
 	}
 
 
@@ -258,7 +258,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 			cp.setBorder(UIUtil.getEmpty5Border());
 			setContentPane(cp);
 
-			JTextArea textArea = new JTextArea(15, 60);
+			JTextArea textArea = new JTextArea(22, 81);
 			textArea.setText(licenseText);
 			textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 			textArea.setLineWrap(true);

@@ -51,6 +51,7 @@
 				<include name="**/*.png"/>
 				<include name="**/*.gif"/>
 				<include name="**/*.jpg"/>
+				<include name="org/fife/ui/modifiedBsdLicense.txt"/>
 			</fileset>
 			<fileset dir="extra">
 				<include name="com/apple/osxadapter/*.class"/>

@@ -33,6 +33,7 @@ import org.fife.ui.RScrollPane;
 import org.fife.ui.ResizableFrameContentPane;
 import org.fife.ui.UIUtil;
 import org.fife.ui.breadcrumbbar.BreadcrumbBar;
+import org.fife.ui.rtextfilechooser.filters.AcceptAllFileFilter;
 
 
 /**
@@ -88,6 +89,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 	private FileSystemView fileSystemView;
 	private ItemListener itemListener;
+	private AcceptAllFileFilter acceptAllFilter;
 
 	private BreadcrumbBar lookInBreadcrumbBar;
 	private FSATextField fileNameTextField;
@@ -555,16 +557,11 @@ public class RTextFileChooser extends ResizableFrameContentPane
 								6, 6);		//xPad, yPad
 
 		// The "accept all files" file filter.
-		addChoosableFileFilter(new FileFilter() {
-			public boolean accept(File f) {
-				return true;
-			}
-			public String getDescription() {
-				return UIManager.getString(
-							"FileChooser.acceptAllFileFilterText");
-			}
-		});
-		populatefilterComboBox();
+		if (acceptAllFilter==null) {
+			acceptAllFilter = new AcceptAllFileFilter();
+		}
+		addChoosableFileFilter(acceptAllFilter);
+		populateFilterComboBox();
 
 		// Localize and get ready to go!
 		installStrings();
@@ -1884,7 +1881,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * Ensures that the "File Filter" combo box contains all file filters
 	 * known by this file dialog.
 	 */
-	private void populatefilterComboBox() {
+	private void populateFilterComboBox() {
 		filterCombo.removeAllItems();
 		int max = fileFilters.size();
 		for (int i=0; i<max; i++)
@@ -2277,8 +2274,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * Sets the current file filter. The file filter is used by the
 	 * file chooser to filter out files from the user's view.
 	 *
-	 * @param filter The new current file filter to use.
-	 * @see #getFileFilter
+	 * @param filter The new current file filter to use.  If this is
+	 *        <code>null</code>, the "all files" filter is selected.
+	 * @see #getFileFilter()
 	 */
 	public void setFileFilter(FileFilter filter) {
 		setFileFilterImpl(filter, true);
@@ -2289,7 +2287,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * Sets the current file filter. The file filter is used by the
 	 * file chooser to filter out files from the user's view.
 	 *
-	 * @param filter The new current file filter to use.
+	 * @param filter The new current file filter to use.  If this is
+	 *        <code>null</code>, the "all files" filter is selected.
 	 * @param cacheIfGUINotRealized If the GUI isn't created, whether or not
 	 *        the selected file filter should be set to this filter when it
 	 *        is created.  This parameter is here because
@@ -2300,6 +2299,13 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	protected void setFileFilterImpl(FileFilter filter,
 							boolean cacheIfGUINotRealized) {
 
+		if (filter==null) {
+			if (acceptAllFilter==null) {
+				acceptAllFilter = new AcceptAllFileFilter();
+			}
+			filter = acceptAllFilter;
+		}
+
 		// Add the file filter to the filter combo if it isn't already there.
 		if (filter!=null && !fileFilters.contains(filter)) {
 			int size = fileFilters.size();
@@ -2308,7 +2314,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			else
 				fileFilters.insertElementAt(filter, size);
 			if (guiInitialized) {
-				populatefilterComboBox();
+				populateFilterComboBox();
 			}
 		}
 

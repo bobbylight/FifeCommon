@@ -393,8 +393,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		setLayout(new BorderLayout());
 		setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
-		JPanel topPanel = new JPanel();
-		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.LINE_AXIS));
+		Box topPanel = new Box(BoxLayout.LINE_AXIS);
 
 		JLabel lookInLabel = new JLabel(getString("LookInLabel"));
 
@@ -463,8 +462,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		// Initialize either the list view or the details (table) view.
 		installDetailsViewStrings();
 		setViewModeImpl(mode);
-		JPanel centerPanel = new JPanel();
-		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+		Box centerPanel = Box.createVerticalBox();
 		centerPanel.add(Box.createVerticalStrut(5));
 		centerPanel.add(viewScrollPane);
 		centerPanel.add(Box.createVerticalStrut(5));

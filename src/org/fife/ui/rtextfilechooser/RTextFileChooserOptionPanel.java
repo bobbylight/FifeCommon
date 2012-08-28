@@ -13,6 +13,7 @@ package org.fife.ui.rtextfilechooser;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridLayout;
@@ -104,12 +105,10 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		setBorder(UIUtil.getEmpty5Border());
 		setLayout(new BorderLayout());
 
-		JPanel temp = new JPanel();
-		temp.setLayout(new BoxLayout(temp, BoxLayout.Y_AXIS));
+		Box temp = Box.createVerticalBox();
 		temp.setBorder(new OptionPanelBorder(msg.getString("General")));
 		hiddenFilesCheckBox = createCheckBox(msg, "HiddenFiles");
-		JPanel temp2 = new JPanel();
-		temp2.setLayout(new BoxLayout(temp2, BoxLayout.LINE_AXIS));
+		Container temp2 = createHorizontalBox();
 		hiddenColorButton = new RColorSwatchesButton();
 		temp2.add(hiddenFilesCheckBox);
 		temp2.add(hiddenColorButton);

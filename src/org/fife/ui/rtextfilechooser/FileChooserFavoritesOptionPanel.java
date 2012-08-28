@@ -20,7 +20,7 @@ import java.io.File;
 import java.util.ResourceBundle;
 import java.util.Vector;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -259,8 +259,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 			contentPane.setBorder(UIUtil.getEmpty5Border());
 
 			// Panel containing main stuff.
-			JPanel topPanel = new JPanel();
-			topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+			Box topPanel = Box.createVerticalBox();
 			JPanel temp = new JPanel(new BorderLayout());
 			temp.setBorder(BorderFactory.createEmptyBorder(0,0,5,0));
 			JLabel label = UIUtil.createLabel(msg,

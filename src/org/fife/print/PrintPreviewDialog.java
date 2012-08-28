@@ -121,8 +121,7 @@ public class PrintPreviewDialog extends EscapableDialog
 
 		JPanel toolBarPanel = new JPanel();
 		toolBarPanel.setLayout(new GridLayout(1,6, 5,10));
-		JPanel topPanel = new JPanel();
-		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.LINE_AXIS));
+		Box topPanel = new Box(BoxLayout.LINE_AXIS);
 		topPanel.add(toolBarPanel);
 		topPanel.add(Box.createHorizontalGlue());
 		topPanel.setBorder(BorderFactory.createEmptyBorder(1,1,2,1));

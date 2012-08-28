@@ -23,8 +23,8 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.Map;
-
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -160,7 +160,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 		indent = Math.max(indent, 0);
 
 		if (indent>0) {
-			Box box = Box.createHorizontalBox();
+			Box box = createHorizontalBox();
 			box.add(Box.createHorizontalStrut(indent));
 			box.add(toAdd);
 			box.add(Box.createHorizontalGlue());
@@ -177,6 +177,18 @@ public abstract class OptionsDialogPanel extends JPanel {
 			parent.add(Box.createVerticalStrut(spacer));
 		}
 
+	}
+
+
+	/**
+	 * Returns a horizontal box that respects component orientation, which
+	 * <code>Box.createHorizontalBox()</code> does not, for backward
+	 * compatibility reasons (!).
+	 *
+	 * @return The horizontal box.
+	 */
+	protected Box createHorizontalBox() {
+		return new Box(BoxLayout.LINE_AXIS);
 	}
 
 

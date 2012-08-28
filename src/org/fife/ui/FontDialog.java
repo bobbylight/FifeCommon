@@ -36,7 +36,7 @@ public class FontDialog extends JDialog implements ActionListener,
 	private JList fontList;
 	private JList fontSizeList;
 	private JLabel sampleTextLabel;
-	private JPanel fontFormatPanel;
+	private Box fontFormatPanel;
 	private JPanel samplePanel;
 	private JCheckBox boldCheckBox;
 	private JCheckBox italicCheckBox;
@@ -115,14 +115,12 @@ public class FontDialog extends JDialog implements ActionListener,
 		setTitle(title);
 
 		// Create a panel for choosing the font.
-		JPanel fontChooserPanel = new JPanel();
+		Box fontChooserPanel = Box.createVerticalBox();
 		fontList = new JList(createFontListModel());
 		fontList.setCellRenderer(new FontListCellRenderer());
 		fontList.setSelectionModel(new RListSelectionModel());
 		fontList.getSelectionModel().addListSelectionListener(this);
 		JScrollPane fontListScrollPane = new RScrollPane(fontList);
-		fontChooserPanel.setLayout(new BoxLayout(fontChooserPanel,
-												BoxLayout.Y_AXIS));
 		fontChooserLabel = UIUtil.createLabel(msg, "FontLabel",
 											"FontLabelMnemonic");
 		fontChooserPanel.add(fontChooserLabel);
@@ -131,7 +129,7 @@ public class FontDialog extends JDialog implements ActionListener,
 		fontListScrollPane.setAlignmentX(alignment);
 
 		// Create a panel for choosing the font's point size.
-		JPanel fontSizePanel = new JPanel();
+		Box fontSizePanel = Box.createVerticalBox();
 		DefaultListModel listModel = new DefaultListModel();
 		for (int i=2; i<=40; i++) {
 			// TODO: Use Integer.valueOf(i) in 1.5.
@@ -141,8 +139,6 @@ public class FontDialog extends JDialog implements ActionListener,
 		fontSizeList.setSelectionModel(new RListSelectionModel());
 		fontSizeList.getSelectionModel().addListSelectionListener(this);
 		JScrollPane fontSizeListScrollPane = new RScrollPane(fontSizeList);
-		fontSizePanel.setLayout(new BoxLayout(fontSizePanel,
-												BoxLayout.Y_AXIS));
 		sizeLabel = UIUtil.createLabel(msg, "SizeLabel", "SizeLabelMnemonic");
 		fontSizePanel.add(sizeLabel);
 		fontSizePanel.add(fontSizeListScrollPane);
@@ -155,9 +151,7 @@ public class FontDialog extends JDialog implements ActionListener,
 		underlineCheckBox = createCheckBox(msg, "Underline");
 		if (underlineSelectable==false)
 			underlineCheckBox.setEnabled(false);
-		fontFormatPanel = new JPanel();
-		BoxLayout box = new BoxLayout(fontFormatPanel, BoxLayout.Y_AXIS);
-		fontFormatPanel.setLayout(box);
+		fontFormatPanel = Box.createVerticalBox();
 		fontFormatPanel.add(boldCheckBox);
 		fontFormatPanel.add(italicCheckBox);
 		fontFormatPanel.add(underlineCheckBox);

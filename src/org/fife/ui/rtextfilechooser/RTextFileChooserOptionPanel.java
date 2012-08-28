@@ -26,7 +26,6 @@ import java.util.Set;
 import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
@@ -224,10 +223,9 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	}
 
 
-	private JPanel createStyleOpenFilesPanel(ResourceBundle msg) {
+	private Box createStyleOpenFilesPanel(ResourceBundle msg) {
 
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
+		Box panel = createHorizontalBox();
 
 		openFilesStyleCombo = new SpecialValueComboBox();
 		UIUtil.fixComboOrientation(openFilesStyleCombo);
@@ -436,8 +434,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 			contentPane.setBorder(UIUtil.getEmpty5Border());
 
 			// Panel containing main stuff.
-			JPanel topPanel = new JPanel();
-			topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+			Box topPanel = Box.createVerticalBox();
 			JPanel temp = new JPanel(new BorderLayout());
 			temp.setBorder(BorderFactory.createEmptyBorder(0,0,5,0));
 			JLabel label = UIUtil.createLabel(msg,

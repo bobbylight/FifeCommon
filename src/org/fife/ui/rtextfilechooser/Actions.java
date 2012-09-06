@@ -37,7 +37,7 @@ import org.fife.ui.rtextfilechooser.extras.FileIOExtras;
  * @author Robert Futrell
  * @version 1.0
  */
-interface Actions {
+public interface Actions {
 
 
 	/**
@@ -309,7 +309,7 @@ interface Actions {
 	 * NOTE: This method is a FileChooserAction only so we can use its
 	 * ResourceBundle.  This is somewhat of a hack.
 	 */
-	static class SystemOpenAction extends FileChooserAction {
+	public static class SystemOpenAction extends FileChooserAction {
 
 		private FileSelector chooser;
 		private String methodName;

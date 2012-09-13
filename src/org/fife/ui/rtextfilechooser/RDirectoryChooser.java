@@ -23,11 +23,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ResourceBundle;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
+import org.fife.ui.EscapableDialog;
 import org.fife.ui.RButton;
 import org.fife.ui.ResizableFrameContentPane;
 import org.fife.ui.RScrollPane;
@@ -51,7 +51,7 @@ import org.fife.ui.UIUtil;
  * @author Robert Futrell
  * @version 0.1
  */
-public class RDirectoryChooser extends JDialog {
+public class RDirectoryChooser extends EscapableDialog {
 
 	private RButton okButton;
 	private RButton cancelButton;
@@ -123,6 +123,12 @@ public class RDirectoryChooser extends JDialog {
 	 */
 	public String getChosenDirectory() {
 		return chosenDirectory;
+	}
+
+
+	public void escapePressed() {
+		chosenDirectory = null;
+		super.escapePressed();
 	}
 
 
@@ -218,8 +224,7 @@ public class RDirectoryChooser extends JDialog {
 				setVisible(false);
 			}
 			else if (actionCommand.equals("Cancel")) {
-				chosenDirectory = null;
-				setVisible(false);
+				escapePressed();
 			}
 		}
 

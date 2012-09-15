@@ -158,16 +158,14 @@ class FileChooserIconManager {
 				return icon;
 
 			// See if the system has an icon for this file.
-			if (f.exists()) {
-				try {
-					icon = fileSystemView.getSystemIcon(f);
-				} catch (/*FileNotFound*/Exception fnfe) {
-					// This happens, for example, on Windows when no such
-					// file "f" exists - the FileSystemView must check for
-					// the existance of the icon first.
-					//fnfe.printStackTrace();
-					// Leave icon as null, it'll get set below.
-				}
+			try {
+				icon = fileSystemView.getSystemIcon(f);
+			} catch (/*FileNotFound*/Exception fnfe) {
+				// This happens, for example, on Windows when no such
+				// file "f" exists - the FileSystemView must check for
+				// the existence of the icon first.
+				//fnfe.printStackTrace();
+				// Leave icon as null, it'll get set below.
 			}
 
 			// If it didn't, see if it matches one of our defaults.

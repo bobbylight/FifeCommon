@@ -18,7 +18,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -57,11 +56,9 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 	private static final String DUMMY_FILE_NAME		= "dummy";
 	private static final File   DUMMY_FILE			= new File(DUMMY_FILE_NAME);
-	private static final String EMPTY				= "";
 
 	private FileSystemTreeModel treeModel;
 	private FileSystemTreeNode root;
-	private HashMap rootNameCache;				// Cache of root names.
 	private FileSystemView fileSystemView;
 	protected FileChooserIconManager iconManager;
 
@@ -91,10 +88,8 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 */
 	public FileSystemTree() {
 
-		// Initialize variables.
 		fileSystemView = FileSystemView.getFileSystemView();
 		iconManager = new FileChooserIconManager();
-		rootNameCache = new HashMap();
 
 		// Add all of our "root" nodes.
 		root = new FileSystemTreeNode();
@@ -103,7 +98,6 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			// Hack - We "know" all roots are directories, so why query
 			// via isDirectory()?  This is a nice performance boost.
 			root.add(createTreeNodeForImpl(aRoot, true));
-			addCachedRootName(aRoot);
 		}
 
 		init();
@@ -123,40 +117,15 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			throw new IllegalArgumentException("Invalid root dir: " + rootDir);
 		}
 
-		// Initialize variables.
 		fileSystemView = FileSystemView.getFileSystemView();
 		iconManager = new FileChooserIconManager();
-		rootNameCache = new HashMap();
 
 		// Add all of our "root" nodes.
 		root = new FileSystemTreeNode();
 		root.add(createTreeNodeForImpl(rootDir, true));
-		addCachedRootName(rootDir);
 
 		init();
 
-	}
-
-
-	/**
-	 * Adds a file name to the cached names (for roots).  We cache root
-	 * directories' names because FileSystemView.getSystemDisplayName() can
-	 * be costly, especially for disk drives on Windows (like A:\).
-	 */
-	private void addCachedRootName(File aRoot) {
-		// Check separator character as a quick "hack" to check for Windows.
-		// We don't call getName() for drives because for some reason it can
-		// take a long time to get the name if it has one (such as A:\ and
-		// C:\).
-		if (File.separatorChar=='\\') {
-			String absolutePath = aRoot.getAbsolutePath();
-			if (absolutePath.length()==3 &&
-					absolutePath.endsWith(":\\")) {
-				rootNameCache.put(aRoot, absolutePath);
-				return;
-			}
-		}
-		rootNameCache.put(aRoot, getName(aRoot));
 	}
 
 
@@ -473,15 +442,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 * @return The display name.
 	 */
 	protected String getName(File file) {
-		if (file==null)
-			return null;
-		String name = (String)rootNameCache.get(file);
-		if (name!=null)
-			return name;
-		name = fileSystemView.getSystemDisplayName(file);
-		if (name!=null && !EMPTY.equals(name))
-			return name;
-		return file.getAbsolutePath();
+		return FileDisplayNames.get().getName(file);
 	}
 
 
@@ -708,7 +669,6 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 				// Hack - We "know" all roots are directories, so why query
 				// via isDirectory()?  This is a nice performance boost.
 				root.add(createTreeNodeForImpl(aRoot, true));
-				addCachedRootName(aRoot);
 			}
 		}
 
@@ -725,7 +685,6 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			for (int i=0; i<count; i++) {
 				root.add(createTreeNodeForImpl(children[i],
 											children[i].isDirectory()));
-				addCachedRootName(children[i]);
 			}
 
 		}
@@ -924,12 +883,11 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			// data such as "Colors" or some junk).  So if we check this, we
 			// don't cast to File before the stuff has changed to File.
 			Object userObj = ((DefaultMutableTreeNode)value).getUserObject();
-			if (userObj instanceof File && row!=-1) {
+			if (userObj instanceof File) {
 				File file = (File)userObj;
 				setText(FileSystemTree.this.getName(file));
 				setIcon(iconManager.getIcon(file));
 			}
-
 			return this;
 
 		}

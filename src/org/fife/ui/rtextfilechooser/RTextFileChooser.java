@@ -1562,10 +1562,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @return The file's name.
 	 */
 	public String getName(File f) {
-		String name = fileSystemView.getSystemDisplayName(f);
-		if (name==null || "".equals(name))
-			name = f.getAbsolutePath();
-		return name;
+		return FileDisplayNames.get().getName(f);
 	}
 
 

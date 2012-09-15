@@ -41,6 +41,7 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileSystemView;
 
 import org.fife.ui.FSATextField;
+import org.fife.ui.rtextfilechooser.FileDisplayNames;
 
 
 /**
@@ -307,18 +308,7 @@ tb.addChangeListener(new ChangeListener() {
 
 
 	private String getName(File dir) {
-		String name = null;
-		name = fsv.getSystemDisplayName(dir);
-		if (name.length()==0) {
-			name = dir.getName();
-		}
-		if (name.length()==0) { // some roots, like A:\, if drive is empty
-			name = dir.getAbsolutePath();
-		}
-		if (name.length()==0) { // Root directory "/", on OS X at least...
-			name = "/";
-		}
-		return name;
+		return FileDisplayNames.get().getName(dir);
 	}
 
 

@@ -292,7 +292,11 @@ public class MenuButton extends JButton {
 		}
 
 		public void paintIcon(Component c, Graphics g, int x, int y) {
-			g.setColor(Color.BLACK);
+			Color color = UIManager.getColor("Label.foreground");
+			if (color==null) { // The button's foreground, should be the same
+				color = c.getForeground();
+			}
+			g.setColor(color);
 			xcoord[0] = x;
 			xcoord[1] = x + SIZE;
 			// Use unsigned rshift to prevent overflow

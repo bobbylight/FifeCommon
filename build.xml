@@ -5,8 +5,11 @@
 	This is the Ant build script for org.fife.* classes that might be
 	useful accross applications.  Here is a list of available targets:
 	
-		1. compile:          Compiles all org.fife classes into ${class-dir}.
-		2. make-common-jar:  Creates the jar file.
+		1. compile:            Compiles all org.fife classes into ${class-dir}.
+		2. make-common-jar:    Creates the jar file.
+		3. create-jni-headers: Creates header files for win32 and x64 versions
+		                       of the FileIOExtras class (native file
+		                       operations for file choosers, etc.).
 
 	Author:   Robert Futrell
 	Version:  1.0
@@ -65,7 +68,7 @@
 
 	<!-- Creates the JNI headers for the native methods. -->
 	<target name="create-jni-headers" description="Create JNI headers">
-		<javah destdir="." force="yes" classpath="${class-dir}">
+		<javah destdir="." force="yes" classpath="${class-dir}" verbose="true">
 			<class name="org.fife.ui.rtextfilechooser.extras.Win32FileIOExtras"/>
 			<class name="org.fife.ui.rtextfilechooser.extras.x64FileIOExtras"/>
 		</javah>

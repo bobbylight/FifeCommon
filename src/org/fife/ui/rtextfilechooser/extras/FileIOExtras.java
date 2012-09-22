@@ -125,6 +125,33 @@ public abstract class FileIOExtras {
 
 
 	/**
+	 * Displays the OS's "properties" dialog for a file or directory.
+	 *
+	 * @param parent The parent window for the dialog.  This may be
+	 *        <code>null</code>.
+	 * @param file The file to display the properties of.
+	 * @return Whether the operation was successful.  Implementations that do
+	 *         not implement this method can return <code>false</code>.
+	 */
+	public boolean showFilePropertiesDialog(Window parent, File file) {
+		return showFilePropertiesDialog(parent, file.getAbsolutePath());
+	}
+
+
+	/**
+	 * Displays the OS's "properties" dialog for a file or directory.
+	 *
+	 * @param parent The parent window for the dialog.  This may be
+	 *        <code>null</code>.
+	 * @param file The file to display the properties of.
+	 * @return Whether the operation was successful.  Implementations that do
+	 *         not implement this method can return <code>false</code>.
+	 */
+	public abstract boolean showFilePropertiesDialog(Window parent,
+			String file);
+
+
+	/**
 	 * Entry point for a simple debugging application.
 	 *
 	 * @param args Command line arguments.

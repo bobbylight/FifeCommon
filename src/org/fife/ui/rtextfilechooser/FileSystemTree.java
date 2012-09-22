@@ -73,6 +73,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	protected FileSystemTreeActions.NewFileAction newFileAction; // Used in DirectoryTree too
 	private FileSystemTreeActions.NewFolderAction newFolderAction;
 	private FileSystemTreeActions.RefreshAction refreshAction;
+	private Actions.PropertiesAction propertiesAction;
 
 	private FileSystemTreeRenderer cellRenderer;
 
@@ -167,9 +168,11 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 				(selectedFile==null && root.getFile()!=null);
 		refreshAction.setEnabled(enable);
 
+		propertiesAction.setEnabled(selectedFile!=null);
+
 		// Enable "new file" and "new folder" actions if we're viewing the
 		// contents of a folder, or a folder is selected.
-		enable = selectedFile!=null ||
+		enable = (selectedFile!=null && selectedFile.isDirectory()) ||
 				(selectedFile==null && root.getFile()!=null);
 		newFileAction.setEnabled(enable);
 		newFolderAction.setEnabled(enable);
@@ -222,16 +225,13 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		popup.add(copyAction);
 		popup.add(pasteAction);
 		popup.add(deleteAction);
-
 		popup.addSeparator();
-
 		popup.add(new JMenuItem(newFileAction));
 		popup.add(new JMenuItem(newFolderAction));
-
 		popup.addSeparator();
-
-		JMenuItem item = new JMenuItem(refreshAction);
-		popup.add(item);
+		popup.add(new JMenuItem(refreshAction));
+		popup.addSeparator();
+		popup.add(new JMenuItem(propertiesAction));
 
 		popup.applyComponentOrientation(getComponentOrientation());
 		return popup;
@@ -588,21 +588,39 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		newFileAction = new FileSystemTreeActions.NewFileAction(this);
 		newFolderAction = new FileSystemTreeActions.NewFolderAction(this);
 		refreshAction = new FileSystemTreeActions.RefreshAction(this);
+		propertiesAction = new Actions.PropertiesAction(this);
 
-		// Add actions with shortcuts to our action map so we don't have
-		// to use the popup menu.
+		installKeyboardActions();
+
+	}
+
+
+	/**
+	 * Installs keyboard actions so we don't have to use the popup menu for
+	 * everything.
+	 */
+	protected void installKeyboardActions() {
+
 		InputMap im = getInputMap();
 		ActionMap am = getActionMap();
+
 		im.put((KeyStroke)copyAction.getValue(Action.ACCELERATOR_KEY), "Copy");
 		am.put("Copy", copyAction);
+
 		im.put((KeyStroke)pasteAction.getValue(Action.ACCELERATOR_KEY), "Paste");
 		am.put("Paste", pasteAction);
+
 		im.put((KeyStroke)deleteAction.getValue(Action.ACCELERATOR_KEY), "Delete");
 		am.put("Delete", deleteAction);
+
 		im.put((KeyStroke)hardDeleteAction.getValue(Action.ACCELERATOR_KEY), "HardDelete");
 		am.put("HardDelete", hardDeleteAction);
+
 		im.put((KeyStroke)refreshAction.getValue(Action.ACCELERATOR_KEY), "Refresh");
 		am.put("Refresh", refreshAction);
+
+		im.put((KeyStroke)propertiesAction.getValue(Action.ACCELERATOR_KEY), "OnAltEnter");
+		am.put("OnAltEnter", propertiesAction);
 
 	}
 

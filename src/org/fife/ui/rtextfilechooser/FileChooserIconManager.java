@@ -157,15 +157,19 @@ class FileChooserIconManager {
 			if (icon!=null)
 				return icon;
 
-			// See if the system has an icon for this file.
-			try {
-				icon = fileSystemView.getSystemIcon(f);
-			} catch (/*FileNotFound*/Exception fnfe) {
-				// This happens, for example, on Windows when no such
-				// file "f" exists - the FileSystemView must check for
-				// the existence of the icon first.
-				//fnfe.printStackTrace();
-				// Leave icon as null, it'll get set below.
+			// See if the system has an icon for this file.  FileSystemView
+			// will write a stack trace to stderr (!) if the file does not
+			// and is not a root folder, so we must guard against that here.
+			if (f.exists() || RootManager.getInstance().isRoot(f)) {
+				try {
+					icon = fileSystemView.getSystemIcon(f);
+				} catch (/*FileNotFound*/Exception fnfe) {
+					// This happens, for example, on Windows when no such
+					// file "f" exists - the FileSystemView must check for
+					// the existence of the icon first.
+					//fnfe.printStackTrace();
+					// Leave icon as null, it'll get set below.
+				}
 			}
 
 			// If it didn't, see if it matches one of our defaults.

@@ -68,23 +68,7 @@ class Win32FileIOExtras extends FileIOExtras {
 
 
 	/**
-	 * Moves the specified file to the recycle bin.
-	 *
-	 * @param parent The parent window for the dialog.  This may be
-	 *        <code>null</code>.
-	 * @param fileName The name of the file to move.  This should
-	 *        be an absolute path.
-	 * @param confirmation Whether a "Are you sure you want to send XXX to
-	 *        the Trash?" should be displayed to the user.
-	 * @param silent If this is <code>true</code>, no progress dialog is
-	 *        displayed to the user.  If this is <code>false</code>, then
-	 *        a progress bar is displayed as the file(s) are being deleted.
-	 *        On Windows, this parameter appears to only be honored if
-	 *        <code>confirmation</code> is <code>true</code>.
-	 * @return Whether the operation was successful.  Note that this method
-	 *         returns <code>true</code> even if the user manually aborts
-	 *         the delete operation in the UI.  This method only fails if
-	 *         a serious internal error occurs (out of memory, etc.).
+	 * {@inheritDoc}
 	 */
 	public boolean moveToRecycleBin(Window parent, String[] files,
 						boolean confirmation, boolean silent) {
@@ -114,6 +98,27 @@ class Win32FileIOExtras extends FileIOExtras {
 	 */
 	protected native boolean moveToRecycleBinImpl(long hwnd, String[] files,
 						boolean confirmation, boolean silent);
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean showFilePropertiesDialog(Window parent, String file) {
+		long hwnd = parent!=null ? getHwnd(parent) : 0;
+		return showFilePropertiesDialogImpl(hwnd, file);
+	}
+
+
+	/**
+	 * Does the dirty work of displaying the properties dialog for a file.
+	 * 
+	 * @param hwnd The handle to the parent window, or <code>0</code> if
+	 *        unknown.
+	 * @param file The file whose properties should be displayed.
+	 * @return <code>true</code>, unless an error occurs.
+	 */
+	protected native boolean showFilePropertiesDialogImpl(long hwnd,
+			String file);
 
 
 }

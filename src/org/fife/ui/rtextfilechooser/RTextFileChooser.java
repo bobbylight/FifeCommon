@@ -176,6 +176,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private Actions.RefreshAction refreshAction;
 	private Actions.RenameAction renameAction;
 	private Actions.UpOneLevelAction upOneLevelAction;
+	private Actions.PropertiesAction propertiesAction;
 
 	/*
 	 * Internal stuff.
@@ -874,6 +875,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		hardDeleteAction = new Actions.DeleteAction(this, true);
 		refreshAction = new Actions.RefreshAction(this);
 		upOneLevelAction = new Actions.UpOneLevelAction(this);
+		propertiesAction = new Actions.PropertiesAction(this);
 
 	}
 
@@ -945,6 +947,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 				JMenuItem upOneLevel = (JMenuItem)getComponent(7);
 				upOneLevel.setEnabled(upOneLevelButton.isEnabled());
 
+				((JMenuItem)getComponent(11)).setEnabled(filesSelected);
+
 				super.show(c, x,y);
 
 			}
@@ -957,31 +961,19 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		JMenu subMenu = new JMenu(msg.getString("PopupMenu.OpenIn"));
 		popupMenu.add(subMenu);
-		menuItem = new JMenuItem(systemEditAction);
-		subMenu.add(menuItem);
-		menuItem = new JMenuItem(systemViewAction);
-		subMenu.add(menuItem);
+		subMenu.add(new JMenuItem(systemEditAction));
+		subMenu.add(new JMenuItem(systemViewAction));
 
-		menuItem = new JMenuItem(renameAction);
-		popupMenu.add(menuItem);
-
+		popupMenu.add(new JMenuItem(renameAction));
 		popupMenu.addSeparator();
-
-		menuItem = new JMenuItem(copyAction);
-		popupMenu.add(menuItem);
-
-		menuItem = new JMenuItem(deleteAction);
-		popupMenu.add(menuItem);
-
+		popupMenu.add(new JMenuItem(copyAction));
+		popupMenu.add(new JMenuItem(deleteAction));
 		popupMenu.addSeparator();
-
-		menuItem = new JMenuItem(upOneLevelAction);
-		popupMenu.add(menuItem);
-
+		popupMenu.add(new JMenuItem(upOneLevelAction));
 		popupMenu.addSeparator();
-
-		menuItem = new JMenuItem(refreshAction);
-		popupMenu.add(menuItem);
+		popupMenu.add(new JMenuItem(refreshAction));
+		popupMenu.addSeparator();
+		popupMenu.add(new JMenuItem(propertiesAction));
 
 		ComponentOrientation o = getComponentOrientation();
 		popupMenu.applyComponentOrientation(o);
@@ -1702,7 +1694,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "OnEsc");
 		actionMap.put("OnEsc",new AbstractAction() {
 				public void actionPerformed(ActionEvent e) {
-					cancelButton.doClick();
+					cancelButton.doClick(0);
 				}
 			}
 		);
@@ -1736,6 +1728,11 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		ks = (KeyStroke)refreshAction.getValue(Action.ACCELERATOR_KEY);
 		inputMap.put(ks, "OnRefresh");
 		actionMap.put("OnRefresh", refreshAction);
+
+		// Alt+Enter shows the properties of the selected files.
+		ks = (KeyStroke)propertiesAction.getValue(Action.ACCELERATOR_KEY);
+		inputMap.put(ks, "OnProperties");
+		actionMap.put("OnProperties", propertiesAction);
 
 	}
 

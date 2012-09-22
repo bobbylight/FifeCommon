@@ -9,6 +9,7 @@
  */
 package org.fife.ui.rtextfilechooser;
 
+import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
@@ -376,6 +377,54 @@ public interface Actions {
 			}
 
 			return null;
+
+		}
+
+	}
+
+
+	/**
+	 * Displays the "properties" dialog for any selected files.
+	 */
+	/*
+	 * This is a File Chooser action only to get at its resource bundle, so
+	 * this is kind of a hack.
+	 */
+	static class PropertiesAction extends FileChooserAction {
+
+		private FileSelector selector;
+
+		public PropertiesAction(FileSelector selector) {
+			super(null);
+			putValue(NAME, "Properties");
+			final int alt = InputEvent.ALT_MASK;
+			KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, alt);
+			putValue(ACCELERATOR_KEY, ks);
+			this.selector = selector;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+
+			FileIOExtras extras = FileIOExtras.getInstance();
+			if (extras==null) {
+				UIManager.getLookAndFeel().provideErrorFeedback(null);
+				return;
+			}
+
+			File[] selected = null;
+			if (selector instanceof RTextFileChooser) {
+				RTextFileChooser chooser = (RTextFileChooser)selector;
+				selected = chooser.getView().getSelectedFiles();
+			}
+			else {
+				selected = selector.getSelectedFiles();
+			}
+			
+			Window parent = SwingUtilities.
+					getWindowAncestor((Component)selector);
+			for (int i=0; i<selected.length; i++) {
+				extras.showFilePropertiesDialog(parent, selected[i]);
+			}
 
 		}
 

@@ -759,8 +759,15 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			// Won't work on a leaf node, but who cares...
 			expandPath(path);
 		}
-		setSelectionPath(path);
-		scrollPathToVisible(path);
+		
+		// This is often called before the tree is displayed.
+		final TreePath path2 = path;
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				setSelectionPath(path2);
+				scrollPathToVisible(path2);
+			}
+		});
 
 		return true;
 

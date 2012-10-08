@@ -12,6 +12,7 @@ package org.fife.ui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
+import java.awt.Dialog;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridLayout;
@@ -200,7 +201,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 	 * @return The license dialog.
 	 */
 	protected JDialog createLicenseDialog() {
-		return new LicenseDialog(getModifiedBsdText());
+		return new LicenseDialog(this, getModifiedBsdText());
 	}
 
 
@@ -248,8 +249,9 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 
 		private static final long serialVersionUID = 1L;
 
-		public LicenseDialog(String licenseText) {
+		public LicenseDialog(Dialog parent, String licenseText) {
 
+			super(parent);
 			ComponentOrientation o = ComponentOrientation.
 									getOrientation(getLocale());
 

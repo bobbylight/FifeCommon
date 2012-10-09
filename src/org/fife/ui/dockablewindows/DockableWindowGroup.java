@@ -93,6 +93,12 @@ class DockableWindowGroup extends JPanel {
 	}
 
 
+	public void focusActiveDockableWindow() {
+		DockableWindow dwind = getDockableWindowAt(tabbedPane.getSelectedIndex());
+		dwind.focused();
+	}
+
+
 	/**
 	 * Returns the number of dockable windows contained in this tabbed
 	 * pane.
@@ -246,6 +252,16 @@ class DockableWindowGroup extends JPanel {
 			else {
 				super.processMouseEvent(e);
 			}
+		}
+
+		public void setSelectedIndex(int index) {
+			super.setSelectedIndex(index);
+			final DockableWindow dwind = (DockableWindow)getSelectedComponent();
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					dwind.focused();
+				}
+			});
 		}
 
 		public void setUI(TabbedPaneUI ui) {

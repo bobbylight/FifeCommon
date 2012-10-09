@@ -10,6 +10,7 @@
  */
 package org.fife.ui.dockablewindows;
 
+import java.awt.Component;
 import java.awt.LayoutManager;
 import java.util.ResourceBundle;
 import javax.swing.Icon;
@@ -53,6 +54,12 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	 * Whether this dockable window is active.
 	 */
 	private boolean active;
+
+	/**
+	 * The "primary" component in this docked window.  If defined, this
+	 * component is given focus when the docked window's tab is clicked.
+	 */
+	private Component primaryComponent;
 
 	/**
 	 * The "name" of this dockable window (displayed in tabs, etc.).
@@ -157,6 +164,20 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 				((DockableWindowListener)listeners[i+1]).
 								dockableWindowPositionWillChange(e);
 		}
+	}
+
+
+	/**
+	 * Called when the user clicks on the tab for this dockable window.
+	 * This focuses the "primary" component in the window, if any.
+	 * 
+	 * @return Whether the primary component was focused.
+	 */
+	public boolean focused() {
+		if (primaryComponent!=null) {
+			return primaryComponent.requestFocusInWindow();
+		}
+		return false;
 	}
 
 
@@ -348,6 +369,17 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 			position = newPos;
 			firePositionChanged(e);
 		}
+	}
+
+
+	/**
+	 * Sets the "primary" component in this docked window.  If defined, this
+	 * component is given focus when the docked window's tab is clicked.
+	 *
+	 * @param primary The new primary component.
+	 */
+	public void setPrimaryComponent(Component primary) {
+		this.primaryComponent = primary;
 	}
 
 

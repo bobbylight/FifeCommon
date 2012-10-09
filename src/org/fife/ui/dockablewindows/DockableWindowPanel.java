@@ -223,10 +223,35 @@ public class DockableWindowPanel extends JPanel
 
 
 	/**
+	 * Focuses the specified dockable window group.  Does nothing if there
+	 * are no dockable windows at the location specified.
+	 *
+	 * @param group The dockable window group to focus.  This must be a valid
+	 *        value from {@link DockableWindowConstants}.
+	 * @return Whether there were dockable windows at the location specified.
+	 */
+	public boolean focusDockableWindowGroup(int group) {
+		if (group<0 || group>=4) {
+			throw new IllegalArgumentException("group must be a valid value " +
+					"from DockableWindowConstants.");
+		}
+		ContentPanel cp = panels[panelToLocationMap[group]];
+		if (cp.windowPanel!=null) {
+			if (cp.collapsed) {
+				cp.setCollapsed(false);
+			}
+			cp.windowPanel.focusActiveDockableWindow();
+			return true;
+		}
+		return false;
+	}
+
+
+	/**
 	 * Returns the panel containing the "actual" content (e.g., the stuff
 	 * that isn't a dockable window).
 	 *
-	 * @return The "acutal" content.
+	 * @return The "actual" content.
 	 */
 	public JPanel getContentPanel() {
 		return panels[0].getRegularContent();
@@ -259,6 +284,57 @@ public class DockableWindowPanel extends JPanel
 		DockableWindow[] windows = new DockableWindow[windowList.size()];
 		windows = (DockableWindow[])windowList.toArray(windows);
 		return windows;
+	}
+
+
+	/**
+	 * Returns the focused dockable window group.
+	 *
+	 * @return The focused window group, or <code>-1</code> if no dockable
+	 *         window group is focused.
+	 * @see DockableWindowConstants
+	 */
+	public int getFocusedDockableWindowGroup() {
+
+		Component focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+		if (focused==null) {
+			return -1;
+		}
+
+		Container parent = focused.getParent();
+		while (parent!=null) {
+			if (parent instanceof DockableWindowGroup) {
+				for (int i=0; i<4; i++) {
+					int panelIndex = panelToLocationMap[i];
+					if (panels[panelIndex]!=null && parent==panels[panelIndex].windowPanel) {
+						return i;
+					}
+				}
+				return -1;
+			}
+			else if (parent instanceof JLayeredPane) { // Assume in center
+				return -1;
+			}
+			parent = parent.getParent();
+		}
+
+		return -1; // Never happens
+
+	}
+
+
+	/**
+	 * Returns whether dockable windows are at the specified location.
+	 *
+	 * @param group A constant from {@link DockableWindowConstants}
+	 * @return Whether dockable windows are at the specified location.
+	 */
+	public boolean hasDockableWindowGroup(int group) {
+		if (group<0 || group>=4) {
+			throw new IllegalArgumentException("Dockable window group must " +
+					"be a constant from DockableWindowConstants");
+		}
+		return panels[panelToLocationMap[group]].getDockableWindowCount()>0;
 	}
 
 
@@ -432,7 +508,7 @@ public class DockableWindowPanel extends JPanel
 
 	/**
 	 * @param splitPane The split pane for which to set the divider
-	 *        location; one of <code>GUIApplicationConstants.TOP</code>,
+	 *        location; one of <code>DockableWindowConstants.TOP</code>,
 	 *        <code>LEFT</code>, <code>BOTTOM</code> or
 	 *        <code>RIGHT</code>.
 	 * @param pos The position of the divider.
@@ -540,6 +616,10 @@ public class DockableWindowPanel extends JPanel
 
 		public int getDividerLocation() {
 			return splitPane!=null ? splitPane.getDividerLocation() : -1;
+		}
+
+		int getDockableWindowCount() {
+			return windowPanel==null ? 0 : windowPanel.getDockableWindowCount();
 		}
 
 		DockableWindowPanel getDockableWindowPanel() {

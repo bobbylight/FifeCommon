@@ -42,7 +42,22 @@ public class MenuButton extends JButton {
 	/**
 	 * Adds a menu item to the popup menu.
 	 *
+	 * @param action The action to make into a menu item.
+	 * @see #addMenuItem(JMenuItem)
+	 * @see #addSeparator()
+	 * @see #insertMenuItem(JMenuItem, int)
+	 * @see #removeItem(int)
+	 */
+	public void addMenuItem(Action action) {
+		addMenuItem(new JMenuItem(action));
+	}
+
+
+	/**
+	 * Adds a menu item to the popup menu.
+	 *
 	 * @param menuItem The menu item to add.
+	 * @see #addMenuItem(Action)
 	 * @see #addSeparator()
 	 * @see #insertMenuItem(JMenuItem, int)
 	 * @see #removeItem(int)

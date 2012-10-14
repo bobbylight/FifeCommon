@@ -13,6 +13,7 @@ package org.fife.ui.breadcrumbbar;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -28,7 +29,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.Timer;
-import javax.swing.UIManager;
 
 
 /**
@@ -211,26 +211,25 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 
 	private static class ArrowMenuItem extends JMenuItem {
 
-		public ArrowMenuItem(javax.swing.Icon icon) {
+		private Icon arrowIcon;
+		private Icon disabledArrowIcon;
+
+		public ArrowMenuItem(Icon icon) {
+			// We only temporarily set the menu item's standard icon, just so
+			// we can use Swing to get our "disabled" version.  Then we clear
+			// it so we can draw the icon ourselves, in the text area.
 			super(icon);
+			arrowIcon = icon;
+			disabledArrowIcon = getDisabledIcon();
+			setIcon(null);
 		}
 
-		public void setUI(javax.swing.plaf.MenuItemUI ui) {
-			super.setUI(new javax.swing.plaf.basic.BasicMenuItemUI() {
-				public void paintMenuItem(java.awt.Graphics g, javax.swing.JComponent c,
-						javax.swing.Icon checkIcon, javax.swing.Icon arrowIcon,
-						java.awt.Color bg, java.awt.Color fg, int defaultTextIconGap) {
-					JMenuItem mi = (JMenuItem)c;
-					if (bg==null) { // Nimbus doesn't set a selection bg color
-						bg = UIManager.getColor("nimbusSelectionBackground");
-					}
-					paintBackground(g, mi, bg);
-					javax.swing.Icon icon = mi.getModel().isEnabled() ?
-												getIcon() : getDisabledIcon();
-					int x = (getWidth()-icon.getIconWidth())/2;
-					icon.paintIcon(c, g, x, 0);
-				}
-			});
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			Icon icon = isEnabled() ? arrowIcon : disabledArrowIcon;
+			int x = (getWidth() - icon.getIconWidth()) / 2;
+			int y = (getHeight() - icon.getIconHeight()) / 2;
+			icon.paintIcon(this, g, x, y);
 		}
 
 	}

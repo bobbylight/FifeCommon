@@ -509,7 +509,6 @@ public interface GUIApplication extends GUIApplicationConstants {
 			try {
 				hd = app.getHelpDialog();
 			} finally {
-				// Make sure cursor returns to normal.
 				if (app instanceof Component) {
 					((Component)app).setCursor(Cursor.getPredefinedCursor(
 											Cursor.DEFAULT_CURSOR));

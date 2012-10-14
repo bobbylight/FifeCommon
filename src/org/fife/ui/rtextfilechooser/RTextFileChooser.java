@@ -395,6 +395,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
 		Box topPanel = new Box(BoxLayout.LINE_AXIS);
+		topPanel.setOpaque(true); // Boxes extend JComponent -> not opaque
 
 		JLabel lookInLabel = new JLabel(getString("LookInLabel"));
 

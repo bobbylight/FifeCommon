@@ -12,6 +12,7 @@ package org.fife.ui.app;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -73,6 +74,7 @@ public class ThirdPartyLookAndFeelManager {
 
 	private static final String CLASS				= "class";
 	private static final String JARS				= "jars";
+	private static final String DIR					= "dir";
 	private static final String LOOK_AND_FEEL		= "LookAndFeel";
 	private static final String MIN_JAVA_VERSION	= "minJavaVersion";
 	private static final String NAME				= "name";
@@ -138,6 +140,26 @@ public class ThirdPartyLookAndFeelManager {
 		ExtendedLookAndFeelInfo[] array =
 					new ExtendedLookAndFeelInfo[lnfInfo.size()];
 		return (ExtendedLookAndFeelInfo[])lnfInfo.toArray(array);
+	}
+
+
+	private static String getJarsFromDirectory(String dirName) {
+		StringBuffer sb = new StringBuffer();
+		File dir = new File(dirName);
+		File[] files = dir.listFiles(new FileFilter() {
+			public boolean accept(File pathname) {
+				return pathname.getName().endsWith(".jar");
+			}
+		});
+		int count = files==null ? 0 : files.length;
+		for (int i=0; i<count; i++) {
+			if (i>0) {
+				sb.append(',');
+			}
+			sb.append(files[i].getPath());
+		}
+		System.out.println("--- " + sb.toString());
+		return sb.length()==0 ? null : sb.toString();
 	}
 
 
@@ -240,6 +262,9 @@ public class ThirdPartyLookAndFeelManager {
 						}
 						else if (JARS.equals(attr)) {
 							jars = node2.getNodeValue();
+						}
+						else if (DIR.equals(attr)) {
+							jars = getJarsFromDirectory(node2.getNodeValue());
 						}
 						else if (MIN_JAVA_VERSION.equals(attr)) {
 							try {

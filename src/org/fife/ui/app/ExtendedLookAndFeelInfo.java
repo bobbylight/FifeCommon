@@ -71,7 +71,8 @@ public class ExtendedLookAndFeelInfo extends UIManager.LookAndFeelInfo {
 		String[] jars = jarFiles.split(",");
 		URL[] urls = new URL[jars.length];
 		for (int i=0; i<jars.length; i++) {
-			urls[i]=new File(root, jars[i]).toURI().toURL();
+			File jarFile = new File(root, jars[i]);
+			urls[i] = jarFile.toURI().toURL();
 		}
 		return urls;
 	}

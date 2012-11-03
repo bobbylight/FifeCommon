@@ -12,6 +12,8 @@ package org.fife.ui.app;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import javax.swing.LookAndFeel;
+import javax.swing.SwingUtilities;
 
 import org.fife.ui.dockablewindows.DockableWindow;
 
@@ -64,6 +66,28 @@ public abstract class GUIPlugin extends AbstractPlugin
 	 */
 	public DockableWindow getDockableWindow(String id) {
 		return (DockableWindow)windowMap.get(id);
+	}
+
+
+	/**
+	 * Overridden to update the <code>LookAndFeel</code> of any non-active
+	 * (i.e. not visible) dockable windows owned by this plugin.  Active
+	 * dockable windows are automatically handled by the main window's updating
+	 * of its UI.<p>
+	 * 
+	 * Subclasses can override if they have modal dialogs (for example) that
+	 * are cached and should be updated, but should call into the super
+	 * implementation.
+	 *
+	 * @param newLaf The new <code>LookAndFeel</code>.
+	 */
+	protected void lookAndFeelChanged(LookAndFeel newLaf) {
+		for (Iterator i=dockableWindowIterator(); i.hasNext(); ) {
+			DockableWindow dw = (DockableWindow)i.next();
+			if (!dw.isActive()) {
+				SwingUtilities.updateComponentTreeUI(dw);
+			}
+		}
 	}
 
 

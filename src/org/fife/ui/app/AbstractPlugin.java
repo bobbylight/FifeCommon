@@ -10,6 +10,11 @@
  */
 package org.fife.ui.app;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import javax.swing.LookAndFeel;
+import javax.swing.UIManager;
+
 
 /**
  * Base class for <code>Plugin</code> implementations that don't need to 
@@ -22,8 +27,19 @@ package org.fife.ui.app;
  */
 public abstract class AbstractPlugin implements Plugin {
 
-
 	private String parentOptionPanelID;
+
+
+	protected AbstractPlugin() {
+		UIManager.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent e) {
+				String property = e.getPropertyName();
+				if ("lookAndFeel".equals(property)) {
+					lookAndFeelChanged((LookAndFeel)e.getNewValue());
+				}
+			}
+		});
+	}
 
 
 	/**
@@ -31,6 +47,17 @@ public abstract class AbstractPlugin implements Plugin {
 	 */
 	public String getOptionsDialogPanelParentPanelID() {
 		return parentOptionPanelID;
+	}
+
+
+	/**
+	 * Called when the LookAndFeel changes.  This is a hook for plugins to
+	 * manually update their popup dialogs.  Subclasses should override if
+	 * necessary, but always call the super implementation.
+	 *
+	 * @param newLaf The new <code>LookAndFeel</code>.
+	 */
+	protected void lookAndFeelChanged(LookAndFeel newLaf) {
 	}
 
 

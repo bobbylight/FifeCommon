@@ -584,6 +584,25 @@ public class UIUtil {
 
 
 	/**
+	 * Make a table use the right grid color on Windows Vista, when using the
+	 * Windows Look and Feel.
+	 *
+	 * @param table The table to update.
+	 */
+	public static void possiblyFixGridColor(JTable table) {
+		String laf = UIManager.getLookAndFeel().getClass().getName();
+		if (laf.endsWith("WindowsLookAndFeel")) {
+			if (Color.white.equals(table.getBackground())) {
+				Color gridColor = table.getGridColor();
+				if (gridColor!=null && gridColor.getRGB()<=0x808080) {
+					table.setGridColor(new Color(0xe3e3e3));
+				}
+			}
+		}
+	}
+
+
+	/**
 	 * Sets the accessible description on the specified component.
 	 *
 	 * @param comp The component on which to set the accessible description.

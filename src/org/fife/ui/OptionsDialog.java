@@ -98,11 +98,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 				// Must set new cell renderer each time lnf changes as
 				// DefaultTreeCellRenderer is "buggy" in that it caches
 				// colors, fonts, icons, etc.
-				DefaultTreeCellRenderer r = new DefaultTreeCellRenderer();
-				r.setLeafIcon(null);
-				r.setOpenIcon(null);
-				r.setClosedIcon(null);
-				setCellRenderer(r);
+				setCellRenderer(new OptionTreeCellRenderer());
 			}
 		};
 		optionTree.setSelectionModel(new RTreeSelectionModel());

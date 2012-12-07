@@ -68,29 +68,13 @@ public class MenuBar extends JMenuBar {
 	 * @return The <code>JMenu</code>.
 	 */
 	protected JMenu createMenu(ResourceBundle msg, String textKey) {
-		return createMenu(msg, textKey, textKey + MNEMONIC_SUFFIX);
-	}
-
-
-	/**
-	 * Returns an <code>JMenu</code> with the specified text and mnemonic.
-	 *
-	 * @param msg The resource bundle in which to get the text.
-	 * @param textKey The key into the bundle containing the string text value.
-	 * @param mnemonicKey The key into the bundle containing a single-char
-	 *        <code>String</code> value for the mnemonic.
-	 * @return The <code>JMenu</code>.
-	 */
-	protected JMenu createMenu(ResourceBundle msg, String textKey,
-							String mnemonicKey) {
 		JMenu menu = new JMenu(msg.getString(textKey));
 		// TODO: When we remove Java 1.4/1.5 support, use msg.containsKey()
-		if (mnemonicKey!=null) {
-			try {
-				menu.setMnemonic((int)msg.getString(mnemonicKey).charAt(0));
-			} catch (MissingResourceException mre) {
-				// Swallow
-			}
+		String mnemonicKey = textKey + MNEMONIC_SUFFIX;
+		try {
+			menu.setMnemonic((int)msg.getString(mnemonicKey).charAt(0));
+		} catch (MissingResourceException mre) {
+			// Swallow
 		}
 		return menu;
 	}
@@ -107,30 +91,13 @@ public class MenuBar extends JMenuBar {
 	 * @return The <code>JMenu</code>.
 	 */
 	protected JMenuItem createMenuItem(ResourceBundle msg, String textKey) {
-		return createMenuItem(msg, textKey, textKey + MNEMONIC_SUFFIX);
-	}
-
-
-	/**
-	 * Returns an <code>JMenuItem</code> with the specified text and
-	 * mnemonic.
-	 *
-	 * @param bundle The resource bundle in which to get the text.
-	 * @param textKey The key into the bundle containing the string text value.
-	 * @param mnemonicKey The key into the bundle containing a single-char
-	 *        <code>String</code> value for the mnemonic.
-	 * @return The <code>JMenuItem</code>.
-	 */
-	protected JMenuItem createMenuItem(ResourceBundle bundle,
-								String textKey, String mnemonicKey) {
-		JMenuItem item = new JMenuItem(bundle.getString(textKey));
+		JMenuItem item = new JMenuItem(msg.getString(textKey));
 		// TODO: When we remove Java 1.4/1.5 support, use msg.containsKey()
-		if (mnemonicKey!=null) {
-			try {
-				item.setMnemonic((int)bundle.getString(mnemonicKey).charAt(0));
-			} catch (MissingResourceException mre) {
-				// Swallow
-			}
+		String mnemonicKey = textKey + MNEMONIC_SUFFIX;
+		try {
+			item.setMnemonic((int)msg.getString(mnemonicKey).charAt(0));
+		} catch (MissingResourceException mre) {
+			// Swallow
 		}
 		return item;
 	}

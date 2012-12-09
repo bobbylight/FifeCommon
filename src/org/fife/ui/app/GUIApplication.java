@@ -396,6 +396,18 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * Creates a new <code>ExitAction</code>.
 		 *
 		 * @param app The GUI application that owns this action.
+		 * @param nameKey The key for the name of the action (and the possible
+		 *        root of keys for description, mnemonic, etc.).
+		 * @param icon The name of the icon resource for this action.
+		 */
+		public ExitAction(GUIApplication app, String nameKey, String icon) {
+			super(app, nameKey, icon);
+		}
+
+		/**
+		 * Creates a new <code>ExitAction</code>.
+		 *
+		 * @param app The GUI application that owns this action.
 		 * @param msg The resource bundle to localize from.
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
@@ -435,6 +447,18 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 */
 		public HelpAction(GUIApplication app, String nameKey) {
 			super(app, nameKey);
+		}
+
+		/**
+		 * Creates a new <code>HelpAction</code>.
+		 *
+		 * @param app The GUI application that owns this action.
+		 * @param nameKey The key for the name of the action (and the possible
+		 *        root of keys for description, mnemonic, etc.).
+		 * @param icon The name of the icon resource for this action.
+		 */
+		public HelpAction(GUIApplication app, String nameKey, String icon) {
+			super(app, nameKey, icon);
 		}
 
 		/**
@@ -504,6 +528,19 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * Creates a new <code>ToggleStatusBarAction</code>.
 		 *
 		 * @param app The GUI application that owns this action.
+		 * @param nameKey The key for the name of the action (and the possible
+		 *        root of keys for description, mnemonic, etc.).
+		 * @param icon The name of the icon resource for this action.
+		 */
+		public ToggleStatusBarAction(GUIApplication app, String nameKey,
+				String icon) {
+			super(app, nameKey, icon);
+		}
+
+		/**
+		 * Creates a new <code>ToggleStatusBarAction</code>.
+		 *
+		 * @param app The GUI application that owns this action.
 		 * @param msg The resource bundle to localize from.
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
@@ -542,6 +579,19 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 */
 		public ToggleToolBarAction(GUIApplication app, String nameKey) {
 			super(app, nameKey);
+		}
+
+		/**
+		 * Creates a new <code>ToggleToolBarAction</code>.
+		 *
+		 * @param app The GUI application that owns this action.
+		 * @param nameKey The key for the name of the action (and the possible
+		 *        root of keys for description, mnemonic, etc.).
+		 * @param icon The name of the icon resource for this action.
+		 */
+		public ToggleToolBarAction(GUIApplication app, String nameKey,
+				String icon) {
+			super(app, nameKey, icon);
 		}
 
 		/**

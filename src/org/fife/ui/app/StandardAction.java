@@ -61,7 +61,31 @@ public abstract class StandardAction extends AbstractAction {
 	 * @param key The key in the bundle for the name of this action.
 	 */
 	public StandardAction(GUIApplication app, String key) {
+		this(app, key, null);
+	}
+
+
+	/**
+	 * Creates an action, initializing its properties from the parent
+	 * application's resource bundle. The name of the action is found using the
+	 * specified key.  If keys exist with the names:
+	 * <ul>
+	 *    <li><code>key + ".Mnemonic"</code>
+	 *    <li><code>key + ".Accelerator"</code>
+	 *    <li><code>key + ".ShortDesc"</code>
+	 * </ul>
+	 * then those properties are set as well.
+	 *
+	 * @param app The parent application.
+	 * @param key The key in the bundle for the name of this action.
+	 * @param icon The name of the icon resource for this action, or
+	 *        <code>null</code> for no icon.
+	 */
+	public StandardAction(GUIApplication app, String key, String icon) {
 		this(app, app.getResourceBundle(), key);
+		if (icon!=null) {
+			setIcon(icon);
+		}
 	}
 
 

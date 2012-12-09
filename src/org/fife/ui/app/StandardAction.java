@@ -9,10 +9,12 @@
  */
 package org.fife.ui.app;
 
+import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
 
@@ -33,19 +35,66 @@ public abstract class StandardAction extends AbstractAction {
 
 
 	/**
-	 * Creates an action, initializing its properties from a resource bundle.
-	 * The name of the action is found using the specified key.  If keys exist
-	 * with the names <code>key + ".Mnemonic"</code>,
-	 * <code>key + ".Accelerator"</code> or <code>key + ".ShortDesc"</code>,
+	 * Creates the action.  The parent class should call
+	 * {@link #setName(String)}, {@link #setIcon(String)}, or whatever other
+	 * methods are necessary to set this action up.
+	 *
+	 * @param app The parent application.
+	 */
+	public StandardAction(GUIApplication app) {
+		this.app = app;
+	}
+
+
+	/**
+	 * Creates an action, initializing its properties from the parent
+	 * application's resource bundle. The name of the action is found using the
+	 * specified key.  If keys exist with the names:
+	 * <ul>
+	 *    <li><code>key + ".Mnemonic"</code>
+	 *    <li><code>key + ".Accelerator"</code>
+	 *    <li><code>key + ".ShortDesc"</code>
+	 * </ul>
 	 * then those properties are set as well.
 	 *
 	 * @param app The parent application.
-	 * @param msg The bundle to localize from.
+	 * @param key The key in the bundle for the name of this action.
+	 */
+	public StandardAction(GUIApplication app, String key) {
+		this(app, app.getResourceBundle(), key);
+	}
+
+
+	/**
+	 * Creates an action, initializing its properties from a resource bundle.
+	 * The name of the action is found using the specified key.  If keys exist
+	 * with the names:
+	 * <ul>
+	 *    <li><code>key + ".Mnemonic"</code>
+	 *    <li><code>key + ".Accelerator"</code>
+	 *    <li><code>key + ".ShortDesc"</code>
+	 * </ul>
+	 * then those properties are set as well.
+	 *
+	 * @param app The parent application.
+	 * @param msg The bundle to localize from.  If this is <code>null</code>,
+	 *        then <code>app.getResourceBundle()</code> is used.
 	 * @param key The key in the bundle for the name of this action.
 	 */
 	public StandardAction(GUIApplication app, ResourceBundle msg, String key) {
-		super(msg.getString(key));
-		this.app = app;
+
+		this(app);
+		if (msg==null) {
+			msg = app.getResourceBundle();
+		}
+
+		// TODO: Use msg.containsKey() when we drop 1.4/1.5 support
+		try {
+			setName(msg.getString(key));
+		} catch (MissingResourceException mre) {
+			// Swallow
+		}
+
 		// TODO: Use msg.containsKey() when we drop 1.4/1.5 support
 		try {
 			String mnemonicKey = key + ".Mnemonic";
@@ -53,81 +102,27 @@ public abstract class StandardAction extends AbstractAction {
 		} catch (MissingResourceException mre) {
 			// Swallow
 		}
+
+		// TODO: Use msg.containsKey() when we drop 1.4/1.5 support
 		try {
 			String accelKey = key + ".Accelerator";
 			String temp = msg.getString(accelKey);
 			if (temp!=null) {
-				// Use meta on OS X instead of ctrl
-				if (app.getOS()==GUIApplication.OS_MAC_OSX &&
-						((temp.startsWith("control ") ||
-							temp.startsWith("ctrl ")) ||
-							temp.startsWith("default "))) {
-					int space = temp.indexOf(' ');
-					temp = "meta" + temp.substring(space);
-				}
-				else if (temp.startsWith("default ")) {
-					int space = temp.indexOf(' ');
-					temp = "control" + temp.substring(space);
-				}
+				temp = massageAcceleratorString(temp);
 				KeyStroke ks = KeyStroke.getKeyStroke(temp);
 				setAccelerator(ks);
 			}
 		} catch (MissingResourceException mre) {
 			// Swallow
 		}
+
+		// TODO: Use msg.containsKey() when we drop 1.4/1.5 support
 		try {
 			String shortDescKey = key + ".ShortDesc";
 			setShortDescription(msg.getString(shortDescKey));
 		} catch (MissingResourceException mre) {
 			// Swallow
 		}
-	}
-
-
-	/**
-	 * Constructor.
-	 *
-	 * @param app The parent application.
-	 * @param name The name of the action.
-	 */
-	public StandardAction(GUIApplication app, String name) {
-		super(name);
-		this.app = app;
-	}
-
-
-	/**
-	 * Constructor.
-	 *
-	 * @param app The parent application.
-	 * @param name The name of the action.
-	 * @param icon The icon associated with the action.
-	 */
-	public StandardAction(GUIApplication app, String name, Icon icon) {
-		super(name);
-		this.app = app;
-		setIcon(icon);
-	}
-
-
-	/**
-	 * Constructor.
-	 *
-	 * @param app The parent application.
-	 * @param name The name of the action.
-	 * @param icon The icon associated with the action.
-	 * @param desc The description of the action.
-	 * @param mnemonic The mnemonic for the action.
-	 * @param accelerator The accelerator key for the action.
-	 */
-	public StandardAction(GUIApplication app, String name, Icon icon,
-					String desc, int mnemonic, KeyStroke accelerator) {
-		super(name);
-		this.app = app;
-		setIcon(icon);
-		setShortDescription(desc);
-		setAccelerator(accelerator);
-		setMnemonic(mnemonic);
 	}
 
 
@@ -198,6 +193,33 @@ public abstract class StandardAction extends AbstractAction {
 
 
 	/**
+	 * Ensures an accelerator string uses the right modifier key for the
+	 * current OS.
+	 *
+	 * @param accelerator The accelerator string, for example,
+	 *        <code>"ctrl S"</code>.
+	 * @return A (possibly) modified version of that string.
+	 */
+	private String massageAcceleratorString(String accelerator) {
+
+		// Use meta on OS X instead of ctrl
+		if (app.getOS()==GUIApplication.OS_MAC_OSX &&
+				((accelerator.startsWith("control ") ||
+					accelerator.startsWith("ctrl ")) ||
+					accelerator.startsWith("default "))) {
+			int space = accelerator.indexOf(' ');
+			accelerator = "meta" + accelerator.substring(space);
+		}
+		else if (accelerator.startsWith("default ")) {
+			int space = accelerator.indexOf(' ');
+			accelerator = "control" + accelerator.substring(space);
+		}
+		
+		return accelerator;
+	}
+
+
+	/**
 	 * Sets the accelerator for this action.
 	 *
 	 * @param accelerator The new accelerator, or <code>null</code> for none.
@@ -213,12 +235,41 @@ public abstract class StandardAction extends AbstractAction {
 	 *
 	 * @param icon The icon.
 	 * @see #getIcon()
+	 * @see #setIcon(String)
+	 * @see #setIcon(URL)
 	 */
 	public void setIcon(Icon icon) {
 		putValue(SMALL_ICON, icon);
 	}
 
 
+	/**
+	 * Sets the icon of this action.  This method is equivalent to:
+	 * <pre>setIcon(getClass().getResource(res))</pre>.
+	 *
+	 * @param res The resource containing the icon.
+	 * @see #getIcon()
+	 * @see #setIcon(URL)
+	 * @see #setIcon(Icon)
+	 */
+	public void setIcon(String res) {
+		setIcon(getClass().getResource(res));
+	}
+	
+	
+	/**
+	 * Sets the icon of this action.
+	 *
+	 * @param res The resource containing the icon.
+	 * @see #getIcon()
+	 * @see #setIcon(String)
+	 * @see #setIcon(Icon)
+	 */
+	public void setIcon(URL res) {
+		setIcon(new ImageIcon(res));
+	}
+	
+	
 	/**
 	 * Sets the mnemonic for this action.
 	 *

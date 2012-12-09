@@ -17,9 +17,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.Action;
-import javax.swing.Icon;
 import javax.swing.JMenuBar;
-import javax.swing.KeyStroke;
 
 import org.fife.help.HelpDialog;
 import org.fife.ui.AboutDialog;
@@ -339,6 +337,17 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * Creates a new <code>AboutAction</code>.
 		 *
 		 * @param app The GUI application that owns this action.
+		 * @param nameKey The key for the name of the action (and the possible
+		 *        root of keys for description, mnemonic, etc.).
+		 */
+		public AboutAction(GUIApplication app, String nameKey) {
+			super(app, nameKey);
+		}
+
+		/**
+		 * Creates a new <code>AboutAction</code>.
+		 *
+		 * @param app The GUI application that owns this action.
 		 * @param msg The resource bundle to localize from.
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
@@ -346,31 +355,6 @@ public interface GUIApplication extends GUIApplicationConstants {
 		public AboutAction(GUIApplication app, ResourceBundle msg,
 							String nameKey) {
 			super(app, msg, nameKey);
-		}
-
-		/**
-		 * Creates a new <code>AboutAction</code>.
-		 *
-		 * @param app The GUI application that owns this action.
-		 * @param text The text associated with the action.
-		 */
-		public AboutAction(GUIApplication app, String text) {
-			super(app, text);
-		}
-
-		/**
-		 * Creates a new <code>AboutAction</code>.
-		 *
-		 * @param app The parent application.
-		 * @param text The text associated with the action.
-		 * @param icon The icon associated with the action.
-		 * @param desc The description of the action.
-		 * @param mnemonic The mnemonic for the action.
-		 * @param accelerator The accelerator key for the action.
-		 */
-		public AboutAction(GUIApplication app, String text, Icon icon,
-					String desc, int mnemonic, KeyStroke accelerator) {
-			super(app, text, icon, desc, mnemonic, accelerator);
 		}
 
 		/**
@@ -401,6 +385,17 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * Creates a new <code>ExitAction</code>.
 		 *
 		 * @param app The GUI application that owns this action.
+		 * @param nameKey The key for the name of the action (and the possible
+		 *        root of keys for description, mnemonic, etc.).
+		 */
+		public ExitAction(GUIApplication app, String nameKey) {
+			super(app, nameKey);
+		}
+
+		/**
+		 * Creates a new <code>ExitAction</code>.
+		 *
+		 * @param app The GUI application that owns this action.
 		 * @param msg The resource bundle to localize from.
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
@@ -408,31 +403,6 @@ public interface GUIApplication extends GUIApplicationConstants {
 		public ExitAction(GUIApplication app, ResourceBundle msg,
 						String nameKey) {
 			super(app, msg, nameKey);
-		}
-
-		/**
-		 * Creates a new <code>ExitAction</code>.
-		 *
-		 * @param app The GUI application that owns this action.
-		 * @param text The text associated with the action.
-		 */
-		public ExitAction(GUIApplication app, String text) {
-			super(app, text);
-		}
-
-		/**
-		 * Creates a new <code>ExitAction</code>.
-		 *
-		 * @param app The GUI application that owns this action.
-		 * @param text The text associated with the action.
-		 * @param icon The icon associated with the action.
-		 * @param desc The description of the action.
-		 * @param mnemonic The mnemonic for the action.
-		 * @param accelerator The accelerator key for the action.
-		 */
-		public ExitAction(GUIApplication app, String text, Icon icon,
-					String desc, int mnemonic, KeyStroke accelerator) {
-			super(app, text, icon, desc, mnemonic, accelerator);
 		}
 
 		/**
@@ -460,6 +430,17 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * Creates a new <code>HelpAction</code>.
 		 *
 		 * @param app The GUI application that owns this action.
+		 * @param nameKey The key for the name of the action (and the possible
+		 *        root of keys for description, mnemonic, etc.).
+		 */
+		public HelpAction(GUIApplication app, String nameKey) {
+			super(app, nameKey);
+		}
+
+		/**
+		 * Creates a new <code>HelpAction</code>.
+		 *
+		 * @param app The GUI application that owns this action.
 		 * @param msg The resource bundle to localize from.
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
@@ -467,31 +448,6 @@ public interface GUIApplication extends GUIApplicationConstants {
 		public HelpAction(GUIApplication app, ResourceBundle msg,
 									String nameKey) {
 			super(app, msg, nameKey);
-		}
-
-		/**
-		 * Creates a new <code>HelpAction</code>.
-		 *
-		 * @param app The GUI application that owns this action.
-		 * @param text The text associated with the action.
-		 */
-		public HelpAction(GUIApplication app, String text) {
-			super(app, text);
-		}
-
-		/**
-		 * Creates a new <code>HelpAction</code>.
-		 *
-		 * @param app The GUI application that owns this action.
-		 * @param text The text associated with the action.
-		 * @param icon The icon associated with the action.
-		 * @param desc The description of the action.
-		 * @param mnemonic The mnemonic for the action.
-		 * @param accelerator The accelerator key for the action.
-		 */
-		public HelpAction(GUIApplication app, String text, Icon icon,
-					String desc, int mnemonic, KeyStroke accelerator) {
-			super(app, text, icon, desc, mnemonic, accelerator);
 		}
 
 		/**
@@ -537,6 +493,17 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * Creates a new <code>ToggleStatusBarAction</code>.
 		 *
 		 * @param app The GUI application that owns this action.
+		 * @param nameKey The key for the name of the action (and the possible
+		 *        root of keys for description, mnemonic, etc.).
+		 */
+		public ToggleStatusBarAction(GUIApplication app, String nameKey) {
+			super(app, nameKey);
+		}
+
+		/**
+		 * Creates a new <code>ToggleStatusBarAction</code>.
+		 *
+		 * @param app The GUI application that owns this action.
 		 * @param msg The resource bundle to localize from.
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
@@ -544,31 +511,6 @@ public interface GUIApplication extends GUIApplicationConstants {
 		public ToggleStatusBarAction(GUIApplication app, ResourceBundle msg,
 								String nameKey) {
 			super(app, msg, nameKey);
-		}
-
-		/**
-		 * Creates a new <code>ToggleStatusBarAction</code>.
-		 *
-		 * @param app The GUI application that owns this action.
-		 * @param text The text associated with the action.
-		 */
-		public ToggleStatusBarAction(GUIApplication app, String text) {
-			super(app, text);
-		}
-
-		/**
-		 * Creates a new <code>ToggleStatusBarAction</code>.
-		 *
-		 * @param app The GUI application that owns this action.
-		 * @param text The text associated with the action.
-		 * @param icon The icon associated with the action.
-		 * @param desc The description of the action.
-		 * @param mnemonic The mnemonic for the action.
-		 * @param accelerator The accelerator key for the action.
-		 */
-		public ToggleStatusBarAction(GUIApplication app, String text,
-			Icon icon, String desc, int mnemonic, KeyStroke accelerator) {
-			super(app, text, icon, desc, mnemonic, accelerator);
 		}
 
 		/**
@@ -595,6 +537,17 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * Creates a new <code>ToggleToolBarAction</code>.
 		 *
 		 * @param app The GUI application that owns this action.
+		 * @param nameKey The key for the name of the action (and the possible
+		 *        root of keys for description, mnemonic, etc.).
+		 */
+		public ToggleToolBarAction(GUIApplication app, String nameKey) {
+			super(app, nameKey);
+		}
+
+		/**
+		 * Creates a new <code>ToggleToolBarAction</code>.
+		 *
+		 * @param app The GUI application that owns this action.
 		 * @param msg The resource bundle to localize from.
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
@@ -602,31 +555,6 @@ public interface GUIApplication extends GUIApplicationConstants {
 		public ToggleToolBarAction(GUIApplication app, ResourceBundle msg,
 								String nameKey) {
 			super(app, msg, nameKey);
-		}
-
-		/**
-		 * Creates a new <code>ToggleToolBarAction</code>.
-		 *
-		 * @param app The GUI application that owns this action.
-		 * @param text The text associated with the action.
-		 */
-		public ToggleToolBarAction(GUIApplication app, String text) {
-			super(app, text);
-		}
-
-		/**
-		 * Creates a new <code>ToggleToolBarAction</code>.
-		 *
-		 * @param app The GUI application that owns this action.
-		 * @param text The text associated with the action.
-		 * @param icon The icon associated with the action.
-		 * @param desc The description of the action.
-		 * @param mnemonic The mnemonic for the action.
-		 * @param accelerator The accelerator key for the action.
-		 */
-		public ToggleToolBarAction(GUIApplication app, String text, Icon icon,
-				String desc, int mnemonic, KeyStroke accelerator) {
-			super(app, text, icon, desc, mnemonic, accelerator);
 		}
 
 		/**

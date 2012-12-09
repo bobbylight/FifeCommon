@@ -158,7 +158,7 @@ public class ThirdPartyLookAndFeelManager {
 			}
 			sb.append(files[i].getPath());
 		}
-		System.out.println("--- " + sb.toString());
+		//System.out.println("--- " + sb.toString());
 		return sb.length()==0 ? null : sb.toString();
 	}
 
@@ -278,10 +278,17 @@ public class ThirdPartyLookAndFeelManager {
 								"attribute: '" + attr + "'");
 						}
 					}
-					if (name==null || className==null || jars==null) {
-						throw new IOException("XML error: LookAndFeel " +
-							"must have attributes 'name', 'class' and " +
-							"'jar'.");
+					if (name==null) {
+						throw new IOException("lookandfeels.xml: At least one " +
+								"LookAndFeel had no 'name' attribute.");
+					}
+					if (className==null) {
+						throw new IOException("lookandfeels.xml: LookandFeel " +
+							name + " is missing required 'className' attribute.");
+					}
+					if (jars==null) {
+						throw new IOException("lookandfeels.xml: LookandFeel " +
+							name + " is missing required 'jars' or 'dir' attribute.");
 					}
 					boolean add = true;
 					if (minVersion>0) {

@@ -822,8 +822,8 @@ public abstract class AbstractGUIApplication extends JFrame
 	 *
 	 * @param key The key into the resource bundle.
 	 * @return The localized text.
-	 * @see #getString(String, String)
-	 * @see #getString(String, String[])
+	 * @see #getString(String, Object)
+	 * @see #getString(String, Object[])
 	 * @see #getResourceBundle()
 	 */
 	public String getString(String key) {
@@ -838,11 +838,11 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @param param A parameter in the localized text.
 	 * @return The localized text.
 	 * @see #getString(String)
-	 * @see #getString(String, String[])
+	 * @see #getString(String, Object[])
 	 * @see #getResourceBundle()
 	 */
-	public String getString(String key, String param) {
-		return getString(key, new String[] { param });
+	public String getString(String key, Object param) {
+		return getString(key, new Object[] { param });
 	}
 
 
@@ -854,12 +854,12 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @param param2 Another parameter in the localized text.
 	 * @return The localized text.
 	 * @see #getString(String)
-	 * @see #getString(String, String)
-	 * @see #getString(String, String[])
+	 * @see #getString(String, Object)
+	 * @see #getString(String, Object[])
 	 * @see #getResourceBundle()
 	 */
-	public String getString(String key, String param1, String param2) {
-		return getString(key, new String[] { param1, param2 });
+	public String getString(String key, Object param1, Object param2) {
+		return getString(key, new Object[] { param1, param2 });
 	}
 
 
@@ -872,13 +872,13 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @param param3 Another parameter in the localized text.
 	 * @return The localized text.
 	 * @see #getString(String)
-	 * @see #getString(String, String)
-	 * @see #getString(String, String[])
+	 * @see #getString(String, Object)
+	 * @see #getString(String, Object[])
 	 * @see #getResourceBundle()
 	 */
-	public String getString(String key, String param1, String param2,
-						String param3) {
-		return getString(key, new String[] { param1, param2, param3 });
+	public String getString(String key, Object param1, Object param2,
+						Object param3) {
+		return getString(key, new Object[] { param1, param2, param3 });
 	}
 
 
@@ -889,10 +889,10 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @param params Parameters for the localized text.
 	 * @return The localized text.
 	 * @see #getString(String)
-	 * @see #getString(String, String)
+	 * @see #getString(String, Object)
 	 * @see #getResourceBundle()
 	 */
-	public String getString(String key, String[] params) {
+	public String getString(String key, Object[] params) {
 		String text = getResourceBundle().getString(key);
 		return MessageFormat.format(text, params);
 	}

@@ -7,7 +7,9 @@
 	
 		1. compile:            Compiles all org.fife classes into ${class-dir}.
 		2. make-common-jar:    Creates the jar file.
-		3. create-jni-headers: Creates header files for win32 and x64 versions
+		3. make-common-jar-source-zip: Creates a zip file useful for Eclipse
+		                       code completion for this library.
+		4. create-jni-headers: Creates header files for win32 and x64 versions
 		                       of the FileIOExtras class (native file
 		                       operations for file choosers, etc.).
 
@@ -63,6 +65,20 @@
 				<attribute name="Class-Path" value="rsyntaxtextarea.jar"/>
 			</manifest>
 		</jar>
+	</target>
+
+
+	<!-- Builds a zip file containing all source files for fife.common.jar. -->
+	<!-- This is useful for Eclipse code completion when creating           -->
+	<!-- applications with this library.                                    -->
+	<target name="make-common-jar-source-zip"
+		description="Builds the source zip for this library.">
+		<delete file="./fife.common_Source.zip" quiet="true"/>
+		<zip destfile="./fife.common_Source.zip">
+			<fileset dir="${source-dir}">
+				<exclude name="**/.svn/**"/>
+			</fileset>
+		</zip>
 	</target>
 
 

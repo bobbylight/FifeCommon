@@ -770,8 +770,8 @@ public abstract class AbstractGUIApplication extends JFrame
 	 *
 	 * @return The resource bundle.
 	 * @see #getString(String)
-	 * @see #getString(String, String)
-	 * @see #getString(String, String[])
+	 * @see #getString(String, Object)
+	 * @see #getString(String, Object[])
 	 */
 	public ResourceBundle getResourceBundle() {
 		if (resourceBundle==null) {

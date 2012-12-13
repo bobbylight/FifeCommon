@@ -262,8 +262,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 			Box topPanel = Box.createVerticalBox();
 			JPanel temp = new JPanel(new BorderLayout());
 			temp.setBorder(BorderFactory.createEmptyBorder(0,0,5,0));
-			JLabel label = UIUtil.createLabel(msg,
-								"Directory.Text", "Directory.Mnemonic");
+			JLabel label = UIUtil.createLabel(msg, "Directory");
 			JPanel temp2 = new JPanel(new BorderLayout());
 			temp2.add(label);
 			if (orientation.isLeftToRight()) { // Space between label and text field.

@@ -121,8 +121,7 @@ public class FontDialog extends JDialog implements ActionListener,
 		fontList.setSelectionModel(new RListSelectionModel());
 		fontList.getSelectionModel().addListSelectionListener(this);
 		JScrollPane fontListScrollPane = new RScrollPane(fontList);
-		fontChooserLabel = UIUtil.createLabel(msg, "FontLabel",
-											"FontLabelMnemonic");
+		fontChooserLabel = UIUtil.createLabel(msg, "FontLabel");
 		fontChooserPanel.add(fontChooserLabel);
 		fontChooserPanel.add(fontListScrollPane);
 		fontChooserLabel.setAlignmentX(alignment);
@@ -139,7 +138,7 @@ public class FontDialog extends JDialog implements ActionListener,
 		fontSizeList.setSelectionModel(new RListSelectionModel());
 		fontSizeList.getSelectionModel().addListSelectionListener(this);
 		JScrollPane fontSizeListScrollPane = new RScrollPane(fontSizeList);
-		sizeLabel = UIUtil.createLabel(msg, "SizeLabel", "SizeLabelMnemonic");
+		sizeLabel = UIUtil.createLabel(msg, "SizeLabel");
 		fontSizePanel.add(sizeLabel);
 		fontSizePanel.add(fontSizeListScrollPane);
 		sizeLabel.setAlignmentX(alignment);

@@ -84,6 +84,7 @@ public class ModifiableTable extends JPanel {
 	private RButton moveUpButton;
 	private RButton moveDownButton;
 	private RowHandler rowHandler;
+	private int firstMovableRow;
 	private Listener listener;
 	private EventListenerList listenerList;
 
@@ -385,7 +386,7 @@ public class ModifiableTable extends JPanel {
 			}
 			/**
 			 * Overridden so that, if this component is disabled, the table
-			 * also appears disabled (see Sun bug 4113508).
+			 * also appears disabled (why doesn't this happen by default???).
 			 */
 			public Component prepareRenderer(TableCellRenderer renderer,
 											int row, int column) {
@@ -477,6 +478,23 @@ public class ModifiableTable extends JPanel {
 	 */
 	public Vector getDataVector() {
 		return ((DefaultTableModel)getTable().getModel()).getDataVector();
+	}
+
+
+	/**
+	 * Returns the "first movable row."  If this property is set to a value
+	 * greater than <code>0</code>, then the rows
+	 * <code>0</code> through <code>getFirstMovableRow()-1</code> can not be
+	 * moved up or down, and other rows cannot be moved up into them.<p>
+	 * 
+	 * This property is ignored if this modifiable table is not displaying the
+	 * "move up" and "move down" buttons.
+	 *
+	 * @return The first movable row.
+	 * @see #setFirstMovableRow(int)
+	 */
+	public int getFirstMovableRow() {
+		return firstMovableRow;
 	}
 
 
@@ -592,7 +610,7 @@ public class ModifiableTable extends JPanel {
 	protected void removeRow() {
 		if (rowHandler!=null) {
 			int row = table.getSelectedRow();
-			if (rowHandler.shouldRemoveRow(row)) {
+			if (rowHandler.canRemoveRow(row)) {
 				DefaultTableModel model = (DefaultTableModel)table.
 													getModel();
 				model.removeRow(row);
@@ -634,6 +652,27 @@ public class ModifiableTable extends JPanel {
 			}
 			table.setEnabled(enabled);
 		}
+	}
+
+
+	/**
+	 * Sets the "first movable row."  If this property is set to a value
+	 * greater than <code>0</code>, then the rows
+	 * <code>0</code> through <code>getFirstMovableRow()-1</code> can not be
+	 * moved up or down, and other rows cannot be moved up into them.<p>
+	 * 
+	 * Typically, if this is modified, you'll also want to ensure your
+	 * <code>RowHandler</code> forbids the removal of the unmovable rows.<p>
+	 * 
+	 * This property is ignored if this modifiable table is not displaying the
+	 * "move up" and "move down" buttons.
+	 * 
+	 * @param firstMovableRow The first movable row.  This should be greater
+	 *        than <code>0</code>.
+	 * @see #getFirstMovableRow()
+	 */
+	public void setFirstMovableRow(int firstMovableRow) {
+		this.firstMovableRow = Math.max(0, firstMovableRow);
 	}
 
 
@@ -702,15 +741,17 @@ public class ModifiableTable extends JPanel {
 			int row = table.getSelectedRow();
 			boolean selection = row>-1;
 			if (modifyButton!=null) {
-				modifyButton.setEnabled(selection);
+				boolean canModify = rowHandler.canModifyRow(row);
+				modifyButton.setEnabled(selection && canModify);
 			}
 			if (removeButton!=null) {
-				boolean canRemove = rowHandler.shouldRemoveRow(row);
+				boolean canRemove = rowHandler.canRemoveRow(row);
 				removeButton.setEnabled(selection && canRemove);
 			}
 			if (moveUpButton!=null) {
-				moveUpButton.setEnabled(selection && row>0);
-				moveDownButton.setEnabled(selection && row<table.getRowCount()-1);
+				moveUpButton.setEnabled(selection && row>getFirstMovableRow());
+				moveDownButton.setEnabled(selection &&
+						row>=getFirstMovableRow() && row<table.getRowCount()-1);
 			}
 		}
 

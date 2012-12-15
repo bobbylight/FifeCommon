@@ -18,8 +18,31 @@ package org.fife.ui.modifiabletable;
  *
  * @author Robert Futrell
  * @version 1.0
+ * @see AbstractRowHandler
  */
 public interface RowHandler {
+
+
+	/**
+	 * Called when the user selects a row in the table.  If this method returns
+	 * <code>false</code>, the "Modify" button is disabled.
+	 *
+	 * @param row The row that might be modified.
+	 * @return Whether the row should be modified.
+	 * @see #canRemoveRow(int)
+	 */
+	public boolean canModifyRow(int row);
+
+
+	/**
+	 * Called when the user selects a row in the table.  If this method returns
+	 * <code>false</code>, then the "Remove" button is disabled.
+	 *
+	 * @param row The row that might be removed.
+	 * @return Whether the row should be removed.
+	 * @see #canModifyRow(int)
+	 */
+	public boolean canRemoveRow(int row);
 
 
 	/**
@@ -32,17 +55,6 @@ public interface RowHandler {
 	 *         <code>null</code>.
 	 */
 	public Object[] getNewRowInfo(Object[] oldData);
-
-
-	/**
-	 * Called when the user chooses to remove a row in the table.  This method
-	 * gives the program a chance to veto the removal, prompt the user to
-	 * validate the removal, etc.
-	 *
-	 * @param row The row that might be removed.
-	 * @return Whether the row should be removed.
-	 */
-	public boolean shouldRemoveRow(int row);
 
 
 	/**

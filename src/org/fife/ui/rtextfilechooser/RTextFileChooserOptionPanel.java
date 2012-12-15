@@ -547,7 +547,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	 * Handles the addition, removal, and modifying of rows in the color
 	 * table.
 	 */
-	class FileChooserRowHandler implements RowHandler {
+	class FileChooserRowHandler extends AbstractRowHandler {
 
 		private ExtensionColorMappingDialog dialog;
 
@@ -565,7 +565,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 			return null;
 		}
 
-		public boolean shouldRemoveRow(int row) {
+		public boolean canRemoveRow(int row) {
 			// Row 0 is always "<Defualt>," which the user cannot remove.
 			return row>0;
 		}

@@ -38,10 +38,10 @@ import org.fife.ui.EscapableDialog;
 import org.fife.ui.OptionsDialogPanel;
 import org.fife.ui.ResizableFrameContentPane;
 import org.fife.ui.UIUtil;
+import org.fife.ui.modifiabletable.AbstractRowHandler;
 import org.fife.ui.modifiabletable.ModifiableTable;
 import org.fife.ui.modifiabletable.ModifiableTableChangeEvent;
 import org.fife.ui.modifiabletable.ModifiableTableListener;
-import org.fife.ui.modifiabletable.RowHandler;
 
 
 /**
@@ -382,7 +382,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 	 * Handles the addition, removal, and modifying of rows in the Favorites
 	 * table.
 	 */
-	class FavoritesRowHandler implements RowHandler {
+	class FavoritesRowHandler extends AbstractRowHandler {
 
 		private EditFavoriteDialog dialog;
 
@@ -398,12 +398,8 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 			return null;
 		}
 
-		public boolean shouldRemoveRow(int row) {
-			return true;
-		}
-
 		/**
-		 * Not an override.  Implements <code>RowHandler#updateUI()</code>.
+		 * Overridden to update the UI of the cached dialog, if necessary.
 		 */
 		public void updateUI() {
 			if (dialog!=null) {

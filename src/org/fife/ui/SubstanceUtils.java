@@ -18,8 +18,9 @@ import javax.swing.UIManager;
 
 
 /**
- * Utility methods for interfacing with Substance 6.1 in applications that
- * only require Java 1.4 or later (Substance 6 requires Java 6).
+ * Utility methods for interfacing with Substance 7.2.1 (Insubstantial) in
+ * applications that only require Java 1.4 or later (Substance 6 requires
+ * Java 6).
  *
  * @author Robert Futrell
  * @version 1.0

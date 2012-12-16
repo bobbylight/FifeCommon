@@ -11,11 +11,17 @@ package org.fife.ui.breadcrumbbar;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.util.Map;
+
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
 import javax.swing.JComponent;
 import javax.swing.plaf.basic.BasicButtonUI;
+
+import org.fife.ui.SubstanceUtils;
+import org.fife.ui.UIUtil;
 
 
 /**
@@ -74,7 +80,15 @@ class BreadcrumbBarButtonUI extends BasicButtonUI {
 			g.fillRect(0,b.getHeight()/2, b.getWidth(),b.getHeight()/2);
 		}
 
+		boolean substance = SubstanceUtils.isSubstanceInstalled();
+		Map oldHints = null;
+		if (substance) {
+			oldHints = UIUtil.setNativeRenderingHints((Graphics2D)g);
+		}
 		super.paint(g, c);
+		if (oldHints!=null) {
+			((Graphics2D)g).setRenderingHints(oldHints);
+		}
 
 //		g.setColor(java.awt.Color.BLACK);
 //		g.drawRect(0, 0, c.getWidth()-1, c.getHeight()-1);

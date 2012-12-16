@@ -1431,7 +1431,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	public FileTypeInfo getFileTypeInfoFor(File file) {
 
 		if (file.isDirectory()) {
-			tempInfo.labelTextColor = Color.BLACK;
+			tempInfo.labelTextColor = defaultFileColor;
 		}
 		else {
 			// If there's an extension, check for a custom color.

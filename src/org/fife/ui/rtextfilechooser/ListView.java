@@ -342,12 +342,12 @@ class ListView extends JList implements RTextFileChooserView {
 				else {
 					Color fg = null;
 					if (isSelected) {
-						fg = UIManager.getColor("List.selectionForeground");
+						fg = list.getSelectionForeground();
 					}
 					else {
 						fg = getForegroundColor(file, info);
 						if (fg==null) { // Special care for this case.
-							fg = UIManager.getColor("List.foreground");
+							fg = list.getSelectionForeground();
 						}
 					}
 					String color = UIUtil.getHTMLFormatForColor(fg);

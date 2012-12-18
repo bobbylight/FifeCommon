@@ -15,6 +15,7 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -428,6 +429,20 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 * Sets the options panels available on this options dialog.
 	 *
 	 * @param optionsPanels The options panels to be available.
+	 * @see #setOptionsPanels(OptionsDialogPanel[])
+	 */
+	public void setOptionsPanels(List optionsPanels) {
+		int count = optionsPanels.size();
+		OptionsDialogPanel[] panels = new OptionsDialogPanel[count];
+		setOptionsPanels((OptionsDialogPanel[])optionsPanels.toArray(panels));
+	}
+
+
+	/**
+	 * Sets the options panels available on this options dialog.
+	 *
+	 * @param optionsPanels The options panels to be available.
+	 * @see #setOptionsPanels(List)
 	 */
 	public void setOptionsPanels(OptionsDialogPanel[] optionsPanels) {
 

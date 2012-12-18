@@ -16,6 +16,7 @@ import java.awt.Container;
 import java.awt.Graphics2D;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
+import java.awt.event.ActionListener;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -25,6 +26,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -140,33 +142,82 @@ public class UIUtil {
 	 */
 	public static final JLabel createLabel(ResourceBundle msg, String key) {
 		JLabel label = new JLabel(msg.getString(key));
-		String mnemonicKey = key + ".Mnemonic";
-		try {
-			Object mnemonic = msg.getObject(mnemonicKey);
-			if (mnemonic instanceof String) {
-				label.setDisplayedMnemonic((int)((String)mnemonic).charAt(0));
-			}
-		} catch (MissingResourceException mre) {
-			// Swallow.  TODO: When we drop 1.4/1.5 support, use containsKey().
-		}
+		label.setDisplayedMnemonic(getMnemonic(msg, key + ".Mnemonic"));
 		return label;
 	}
 
 
 	/**
-	 * Returns an <code>JRadioButton</code> with the specified text and
-	 * mnemonic.
+	 * Returns a <code>JRadioButton</code> with the specified properties.
 	 *
-	 * @param bundle The resource bundle in which to get the int.
-	 * @param textKey The key into the bundle containing the string text value.
-	 * @param mnemonicKey The key into the bundle containing a single-char
-	 *        <code>String</code> value for the mnemonic.
+	 * @param msg The resource bundle in which to get properties.
+	 * @param keyRoot The key into the bundle containing the radio button's
+	 *        label.  If another property is defined with the name
+	 *        <code>keyRoot + ".Mnemonic"</code>, it is used for the
+	 *        mnemonic for the radio button.
+	 * @param bg If non-<code>null</code>, the radio button is added to the
+	 *        button group.
 	 * @return The <code>JRadioButton</code>.
+	 * @see #createRadio(ResourceBundle, String, ButtonGroup, ActionListener)
+	 * @see #createRadio(ResourceBundle, String, ButtonGroup, ActionListener, boolean)
 	 */
-	public static final JRadioButton createRadioButton(ResourceBundle bundle,
-								String textKey, String mnemonicKey) {
-		JRadioButton radio = new JRadioButton(bundle.getString(textKey));
-		radio.setMnemonic((int)bundle.getString(mnemonicKey).charAt(0));
+	public static final JRadioButton createRadio(ResourceBundle msg,
+				String keyRoot, ButtonGroup bg) {
+		return createRadio(msg, keyRoot, bg, null, false);
+	}
+
+
+	/**
+	 * Returns a <code>JRadioButton</code> with the specified properties.
+	 *
+	 * @param msg The resource bundle in which to get properties.
+	 * @param keyRoot The key into the bundle containing the radio button's
+	 *        label.  If another property is defined with the name
+	 *        <code>keyRoot + ".Mnemonic"</code>, it is used for the
+	 *        mnemonic for the radio button.
+	 * @param bg If non-<code>null</code>, the radio button is added to the
+	 *        button group.
+	 * @param listener If non-<code>null</code>, the listener is added to
+	 *        the radio button.
+	 * @return The <code>JRadioButton</code>.
+	 * @see #createRadio(ResourceBundle, String, ButtonGroup)
+	 * @see #createRadio(ResourceBundle, String, ButtonGroup, ActionListener, boolean)
+	 */
+	public static final JRadioButton createRadio(ResourceBundle msg,
+				String keyRoot, ButtonGroup bg, ActionListener listener) {
+		return createRadio(msg, keyRoot, bg, listener, false);
+	}
+
+
+	/**
+	 * Returns a <code>JRadioButton</code> with the specified properties.
+	 *
+	 * @param msg The resource bundle in which to get properties.
+	 * @param keyRoot The key into the bundle containing the radio button's
+	 *        label.  If another property is defined with the name
+	 *        <code>keyRoot + ".Mnemonic"</code>, it is used for the
+	 *        mnemonic for the radio button.
+	 * @param bg If non-<code>null</code>, the radio button is added to the
+	 *        button group.
+	 * @param listener If non-<code>null</code>, the listener is added to
+	 *        the radio button.
+	 * @param selected Whether the radio button is initially selected.
+	 * @return The <code>JRadioButton</code>.
+	 * @see #createRadio(ResourceBundle, String, ButtonGroup)
+	 * @see #createRadio(ResourceBundle, String, ButtonGroup, ActionListener)
+	 */
+	public static final JRadioButton createRadio(ResourceBundle msg,
+				String keyRoot, ButtonGroup bg, ActionListener listener,
+				boolean selected) {
+		JRadioButton radio = new JRadioButton(msg.getString(keyRoot));
+		radio.setMnemonic(getMnemonic(msg, keyRoot + ".Mnemonic"));
+		if (bg!=null) {
+			bg.add(radio);
+		}
+		if (listener!=null) {
+			radio.addActionListener(listener);
+		}
+		radio.setSelected(selected);
 		return radio;
 	}
 
@@ -184,7 +235,7 @@ public class UIUtil {
 	public static final RButton createRButton(ResourceBundle bundle,
 								String textKey, String mnemonicKey) {
 		RButton b = new RButton(bundle.getString(textKey));
-		b.setMnemonic((int)bundle.getString(mnemonicKey).charAt(0));
+		b.setMnemonic(getMnemonic(bundle, mnemonicKey));
 		return b;
 	}
 
@@ -202,7 +253,7 @@ public class UIUtil {
 	public static final RButton createRButton(Action action,
 							ResourceBundle bundle, String mnemonicKey) {
 		RButton b = new RButton(action);
-		b.setMnemonic((int)bundle.getString(mnemonicKey).charAt(0));
+		b.setMnemonic(getMnemonic(bundle, mnemonicKey));
 		return b;
 	}
 
@@ -459,6 +510,27 @@ public class UIUtil {
 
 
 	/**
+	 * Returns the mnemonic specified by the given key in a resource bundle.
+	 * 
+	 * @param msg The resource bundle.
+	 * @param key The key for the mnemonic.
+	 * @return The mnemonic, or <code>0</code> if not found.
+	 */
+	public static final int getMnemonic(ResourceBundle msg, String key) {
+		int mnemonic = 0;
+		try {
+			Object value = msg.getObject(key);
+			if (value instanceof String) {
+				mnemonic = (int)((String)value).charAt(0);
+			}
+		} catch (MissingResourceException mre) {
+			// Swallow.  TODO: When we drop 1.4/1.5 support, use containsKey().
+		}
+		return mnemonic;
+	}
+
+
+	/**
 	 * Returns whether or not this operating system should use non-opaque
 	 * components in tabbed panes to show off, for example, a gradient effect.
 	 *
@@ -527,7 +599,7 @@ public class UIUtil {
 	 *
 	 * @param parent The container whose layout is <code>SpringLayout</code>.
 	 * @param rows The number of rows of components to make in the container.
-	 * @param cols The umber of columns of components to make.
+	 * @param cols The number of columns of components to make.
 	 * @param initialX The x-location to start the grid at.
 	 * @param initialY The y-location to start the grid at.
 	 * @param xPad The x-padding between cells.

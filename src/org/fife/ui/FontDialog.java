@@ -278,7 +278,7 @@ public class FontDialog extends JDialog implements ActionListener,
 	 * @return The button.
 	 */
 	private JButton createButton(ResourceBundle msg, String keyRoot) {
-		JButton button = UIUtil.createRButton(msg, keyRoot,
+		JButton button = UIUtil.createButton(msg, keyRoot,
 												keyRoot+"ButtonMnemonic");
 		button.setActionCommand(keyRoot);
 		button.addActionListener(this);

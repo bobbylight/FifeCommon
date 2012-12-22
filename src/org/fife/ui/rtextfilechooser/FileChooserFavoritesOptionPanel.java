@@ -297,11 +297,11 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 			JPanel buttonPanel = new JPanel();
 			buttonPanel.setBorder(BorderFactory.createEmptyBorder(5,5,0,5));
 			temp = new JPanel(new GridLayout(1,2, 5,5));
-			okButton = UIUtil.createRButton(msg,
+			okButton = UIUtil.createButton(msg,
 								"OK.Text", "OK.Mnemonic");
 			okButton.addActionListener(this);
 			temp.add(okButton);
-			cancelButton = UIUtil.createRButton(msg,
+			cancelButton = UIUtil.createButton(msg,
 								"Cancel.Text", "Cancel.Mnemonic");
 			cancelButton.addActionListener(this);
 			temp.add(cancelButton);

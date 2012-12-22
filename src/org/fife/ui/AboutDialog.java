@@ -118,11 +118,11 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 		// Add the OK and license buttons.
 		JPanel buttonPanel = new JPanel();
 		temp = new JPanel(new GridLayout(1,2, 5,0));
-		okButton = UIUtil.createRButton(msg, "OK", "OKButtonMnemonic");
+		okButton = UIUtil.createButton(msg, "OK", "OKButtonMnemonic");
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
 		temp.add(okButton);
-		licenseButton = UIUtil.createRButton(msg, "License",
+		licenseButton = UIUtil.createButton(msg, "License",
 										"LicenseButtonMnemonic");
 		licenseButton.setActionCommand("License");
 		licenseButton.addActionListener(this);
@@ -270,7 +270,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 			RScrollPane scrollPane = new RScrollPane(textArea);
 			cp.add(scrollPane);
 			JPanel buttonPanel = new JPanel();
-			RButton okButton = UIUtil.createRButton(msg, "OK",
+			JButton okButton = UIUtil.createButton(msg, "OK",
 											"OKButtonMnemonic");
 			okButton.addActionListener(this);
 			buttonPanel.add(okButton);

@@ -27,6 +27,7 @@ import java.util.ResourceBundle;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -132,6 +133,87 @@ public class UIUtil {
 
 
 	/**
+	 * Returns a button with the specified text.  If another property is
+	 * defined in the resource bundle with key
+	 * <code>textKey + ".Mnemonic"</code>, then it will be used for the mnemonic
+	 * of the button.
+	 *
+	 * @param bundle The resource bundle in which to get the int.
+	 * @param textKey The key into the bundle containing the string text value.
+	 * @return The button.
+	 * @see #createButton(ResourceBundle, String, String)
+	 * @see #createButton(ResourceBundle, String, ActionListener)
+	 * @see #createButton(ResourceBundle, String, String, ActionListener)
+	 */
+	public static final JButton createButton(ResourceBundle bundle,
+			String textKey) {
+		return createButton(bundle, textKey, textKey + ".Mnemonic");
+	}
+
+
+	/**
+	 * Returns a button with the specified text.  If another property is
+	 * defined in the resource bundle with key
+	 * <code>textKey + ".Mnemonic"</code>, then it will be used for the mnemonic
+	 * of the button.
+	 *
+	 * @param bundle The resource bundle in which to get the int.
+	 * @param textKey The key into the bundle containing the string text value.
+	 * @param listener If non-<code>null</code>, this listener will be
+	 *        added to the button.
+	 * @return The button.
+	 * @see #createButton(ResourceBundle, String, String)
+	 * @see #createButton(ResourceBundle, String, String, ActionListener)
+	 */
+	public static final JButton createButton(ResourceBundle bundle,
+			String textKey, ActionListener listener) {
+		return createButton(bundle, textKey, textKey + ".Mnemonic", listener);
+	}
+
+
+	/**
+	 * Returns a button with the specified text and mnemonic.
+	 *
+	 * @param bundle The resource bundle in which to get the int.
+	 * @param textKey The key into the bundle containing the string text value.
+	 * @param mnemonicKey The key into the bundle containing a single-char
+	 *        <code>String</code> value for the mnemonic.
+	 * @return The button.
+	 * @see #createButton(ResourceBundle, String)
+	 * @see #createButton(ResourceBundle, String, ActionListener)
+	 * @see #createButton(ResourceBundle, String, String, ActionListener)
+	 */
+	public static final JButton createButton(ResourceBundle bundle,
+								String textKey, String mnemonicKey) {
+		return createButton(bundle, textKey, mnemonicKey, null);
+	}
+
+
+	/**
+	 * Returns a button with the specified text and mnemonic.
+	 *
+	 * @param bundle The resource bundle in which to get the int.
+	 * @param textKey The key into the bundle containing the string text value.
+	 * @param mnemonicKey The key into the bundle containing a single-char
+	 *        <code>String</code> value for the mnemonic.
+	 * @param listener If non-<code>null</code>, this listener will be
+	 *        added to the button.
+	 * @return The button.
+	 * @see #createButton(ResourceBundle, String)
+	 * @see #createButton(ResourceBundle, String, ActionListener)
+	 */
+	public static final JButton createButton(ResourceBundle bundle,
+			String textKey, String mnemonicKey, ActionListener listener) {
+		RButton b = new RButton(bundle.getString(textKey));
+		b.setMnemonic(getMnemonic(bundle, mnemonicKey));
+		if (listener!=null) {
+			b.addActionListener(listener);
+		}
+		return b;
+	}
+
+
+	/**
 	 * Returns an <code>JLabel</code> with the specified text.  If another
 	 * property with name <code>getString(textKey) + ".Mnemonic"</code> is
 	 * defined, it is used as the mnemonic for the label.
@@ -141,8 +223,28 @@ public class UIUtil {
 	 * @return The <code>JLabel</code>.
 	 */
 	public static final JLabel createLabel(ResourceBundle msg, String key) {
+		return createLabel(msg, key, null);
+	}
+
+
+	/**
+	 * Returns an <code>JLabel</code> with the specified text.  If another
+	 * property with name <code>getString(textKey) + ".Mnemonic"</code> is
+	 * defined, it is used as the mnemonic for the label.
+	 *
+	 * @param msg The resource bundle.
+	 * @param key The key into the bundle containing the string text value.
+	 * @param labelFor If non-<code>null</code>, the label is a label for
+	 *        that specific component.
+	 * @return The <code>JLabel</code>.
+	 */
+	public static final JLabel createLabel(ResourceBundle msg, String key,
+			Component labelFor) {
 		JLabel label = new JLabel(msg.getString(key));
 		label.setDisplayedMnemonic(getMnemonic(msg, key + ".Mnemonic"));
+		if (labelFor!=null) {
+			label.setLabelFor(labelFor);
+		}
 		return label;
 	}
 
@@ -219,24 +321,6 @@ public class UIUtil {
 		}
 		radio.setSelected(selected);
 		return radio;
-	}
-
-
-	/**
-	 * Returns an <code>org.fife.ui.RButton</code> with the specified text and
-	 * mnemonic.
-	 *
-	 * @param bundle The resource bundle in which to get the int.
-	 * @param textKey The key into the bundle containing the string text value.
-	 * @param mnemonicKey The key into the bundle containing a single-char
-	 *        <code>String</code> value for the mnemonic.
-	 * @return The <code>RButton</code>.
-	 */
-	public static final RButton createRButton(ResourceBundle bundle,
-								String textKey, String mnemonicKey) {
-		RButton b = new RButton(bundle.getString(textKey));
-		b.setMnemonic(getMnemonic(bundle, mnemonicKey));
-		return b;
 	}
 
 

@@ -23,12 +23,13 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ResourceBundle;
+
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
 import org.fife.ui.EscapableDialog;
-import org.fife.ui.RButton;
 import org.fife.ui.ResizableFrameContentPane;
 import org.fife.ui.RScrollPane;
 import org.fife.ui.UIUtil;
@@ -53,8 +54,8 @@ import org.fife.ui.UIUtil;
  */
 public class RDirectoryChooser extends EscapableDialog {
 
-	private RButton okButton;
-	private RButton cancelButton;
+	private JButton okButton;
+	private JButton cancelButton;
 	private DirectoryTree directoryTree;
 
 	private String chosenDirectory;
@@ -172,12 +173,12 @@ public class RDirectoryChooser extends EscapableDialog {
 		// Add a panel with the OK and Cancel buttons.
 		JPanel buttonPanel = new JPanel();
 		JPanel temp = new JPanel(new GridLayout(1,2, 5,0));
-		okButton = UIUtil.createRButton(msg, "OK", "OKMnemonic");
+		okButton = UIUtil.createButton(msg, "OK", "OKMnemonic");
 		okButton.setEnabled(false);
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(listener);
 		temp.add(okButton);
-		cancelButton = UIUtil.createRButton(msg, "Cancel", "CancelMnemonic");
+		cancelButton = UIUtil.createButton(msg, "Cancel", "CancelMnemonic");
 		cancelButton.setActionCommand("Cancel");
 		cancelButton.addActionListener(listener);
 		temp.add(cancelButton);

@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import javax.swing.Action;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -58,6 +59,19 @@ public class MenuBar extends JMenuBar {
 
 
 	/**
+	 * Returns a check box menu item configured from an action.
+	 *
+	 * @param action The action associated with the menu item.
+	 * @return The menu item.
+	 */
+	protected JCheckBoxMenuItem createCheckBoxMenuItem(Action action) {
+		JCheckBoxMenuItem item = new JCheckBoxMenuItem(action);
+		item.setToolTipText(null);
+		return item;
+	}
+
+
+	/**
 	 * Returns an <code>JMenu</code> with the specified text.  Further, if
 	 * there is an entry in the specified resource bundle with name
 	 * <code>textKey + ".Mnemonic"</code>, it is taken to contain the
@@ -81,14 +95,14 @@ public class MenuBar extends JMenuBar {
 
 
 	/**
-	 * Returns an <code>JMenu</code> with the specified text.  Further, if
+	 * Returns a menu item with the specified text.  Further, if
 	 * there is an entry in the specified resource bundle with name
 	 * <code>textKey + ".Mnemonic"</code>, it is taken to contain the
 	 * mnemonic for the menu.
 	 *
 	 * @param msg The resource bundle in which to get the text.
 	 * @param textKey The key into the bundle containing the string text value.
-	 * @return The <code>JMenu</code>.
+	 * @return The menu item.
 	 */
 	protected JMenuItem createMenuItem(ResourceBundle msg, String textKey) {
 		JMenuItem item = new JMenuItem(msg.getString(textKey));

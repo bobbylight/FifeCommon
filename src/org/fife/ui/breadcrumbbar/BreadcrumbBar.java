@@ -475,7 +475,7 @@ tb.addChangeListener(new ChangeListener() {
 		// Reset background color on LaF changes, since it is LaF-dependent.
 		Color bg = UIManager.getColor("TextField.background");
 		if (bg==null) { // Some LaF's might not define UIManager stuff
-			bg = SystemColor.text;
+			bg = new JTextField().getBackground(); // Better match
 		}
 		setBackground(bg);
 		iconLabel.setBackground(bg);

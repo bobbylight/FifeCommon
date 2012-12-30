@@ -30,11 +30,13 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import javax.swing.Action;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.LookAndFeel;
 import javax.swing.MenuElement;
 import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
@@ -121,7 +123,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	/**
 	 * The About dialog.
 	 */
-	private AboutDialog aboutDialog;
+	private JDialog aboutDialog;
 
 	/**
 	 * The toolbar.
@@ -355,7 +357,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @return The About dialog.
 	 * @see #getAboutDialog()
 	 */
-	protected AboutDialog createAboutDialog() {
+	protected JDialog createAboutDialog() {
 		return new AboutDialog(this);
 	}
 
@@ -558,7 +560,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @see org.fife.ui.AboutDialog
 	 * @see #createAboutDialog()
 	 */
-	public AboutDialog getAboutDialog() {
+	public JDialog getAboutDialog() {
 		if (aboutDialog==null) {
 			aboutDialog = createAboutDialog();
 			aboutDialog.setLocationRelativeTo(this);
@@ -1292,6 +1294,25 @@ public abstract class AbstractGUIApplication extends JFrame
 			toolBar.setVisible(visible);
 			firePropertyChange(TOOL_BAR_VISIBLE_PROPERTY, !visible,
 												visible);
+		}
+	}
+
+
+	/**
+	 * Updates the look and feel for all components and windows in
+	 * this <code>RText</code> instance.  This method assumes that
+	 * <code>UIManager.setLookAndFeel(lnf)</code> has already been called.<p>
+	 * 
+	 * Subclasses should override this method to update any child
+	 * dialogs or windows, and be sure to call the super implementation
+	 * as well.
+	 *
+	 * @param lnf The new look and feel.  You can usually ignore this
+	 *        parameter, as the LookAndFeel has already been installed.
+	 */
+	public void updateLookAndFeel(LookAndFeel lnf) {
+		if (aboutDialog!=null) {
+			SwingUtilities.updateComponentTreeUI(aboutDialog);
 		}
 	}
 

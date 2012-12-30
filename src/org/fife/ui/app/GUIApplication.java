@@ -17,10 +17,10 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.Action;
+import javax.swing.JDialog;
 import javax.swing.JMenuBar;
 
 import org.fife.help.HelpDialog;
-import org.fife.ui.AboutDialog;
 import org.fife.ui.CustomizableToolBar;
 import org.fife.ui.StatusBar;
 
@@ -113,7 +113,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @return The About dialog.
 	 * @see org.fife.ui.AboutDialog
 	 */
-	public AboutDialog getAboutDialog();
+	public JDialog getAboutDialog();
 
 
 	/**

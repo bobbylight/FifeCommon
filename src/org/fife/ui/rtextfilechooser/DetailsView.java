@@ -500,6 +500,21 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 
 	/**
+	 * Overridden to refresh our cell renderers on LAF changes.
+	 */
+	public void updateUI() {
+		super.updateUI();
+		TableColumnModel tcm = getColumnModel();
+		for (int i=0; i<getColumnCount(); i++) {
+			TableCellRenderer r = tcm.getColumn(i).getCellRenderer();
+			if (r instanceof JComponent) {
+				((JComponent)r).updateUI();
+			}
+		}
+	}
+
+
+	/**
 	 * A list of attributes for a batch of files, to update the table view
 	 * with.
 	 */

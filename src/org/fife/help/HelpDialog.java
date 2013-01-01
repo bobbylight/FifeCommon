@@ -213,7 +213,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		editorPane.getDocument().putProperty("IgnoreCharsetDirective", Boolean.TRUE);
 
 		// Create contents subpanel for the left-component of the split pane.
-		JPanel tocPanel = UIUtil.createTabbedPanePanel();
+		JPanel tocPanel = UIUtil.newTabbedPanePanel();
 		tocPanel.setLayout(new BoxLayout(tocPanel, BoxLayout.Y_AXIS));
 		tocPanel.setBorder(UIUtil.getEmpty5Border());
 		tocTree = new JTree(root);
@@ -227,13 +227,13 @@ public class HelpDialog extends JFrame implements ActionListener {
 		tocPanel.add(scrollPane);
 
 		// Create the index subpanel for the left-component of the split pane.
-		JPanel indexPanel = UIUtil.createTabbedPanePanel();
+		JPanel indexPanel = UIUtil.newTabbedPanePanel();
 		indexPanel.setLayout(new BorderLayout());
 		indexPanel.setBorder(UIUtil.getEmpty5Border());
-		JPanel indexInputPanel = UIUtil.createTabbedPanePanel();
+		JPanel indexInputPanel = UIUtil.newTabbedPanePanel();
 		indexInputPanel.setLayout(new BoxLayout(indexInputPanel, BoxLayout.Y_AXIS));
 		keywordToFindLabel = new JLabel(msg.getString("KeywordLabel"));
-		JPanel ilPanel = UIUtil.createTabbedPanePanel();
+		JPanel ilPanel = UIUtil.newTabbedPanePanel();
 		ilPanel.setLayout(new BorderLayout());
 		ilPanel.add(keywordToFindLabel, BorderLayout.LINE_START);
 		indexField = new JTextField();
@@ -250,15 +250,15 @@ public class HelpDialog extends JFrame implements ActionListener {
 		JScrollPane indexScrollPane = new RScrollPane(1,1, indexList);
 		indexScrollPane.setPreferredSize(new Dimension(100,200));
 		indexScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		JPanel indexButtonPanel = UIUtil.createTabbedPanePanel();
+		JPanel indexButtonPanel = UIUtil.newTabbedPanePanel();
 		indexButtonPanel.setLayout(new BoxLayout(indexButtonPanel, BoxLayout.LINE_AXIS));
-		indexDisplayButton = UIUtil.createTabbedPaneButton(msg.getString("Display"));
+		indexDisplayButton = UIUtil.newTabbedPaneButton(msg.getString("Display"));
 		indexDisplayButton.setActionCommand("Display");
 		indexDisplayButton.addActionListener(this);
 		indexButtonPanel.add(Box.createHorizontalGlue());
 		indexButtonPanel.add(indexDisplayButton);
 		indexPanel.add(indexInputPanel, BorderLayout.NORTH);
-		JPanel temp = UIUtil.createTabbedPanePanel();
+		JPanel temp = UIUtil.newTabbedPanePanel();
 		temp.setLayout(new BorderLayout());
 		temp.setBorder(border8080);
 		temp.add(indexScrollPane);
@@ -267,29 +267,29 @@ public class HelpDialog extends JFrame implements ActionListener {
 		indexList.setSelectedIndex(0);
 
 		// Create the search subpanel for the left-component of the split pane.
-		JPanel searchPanel = UIUtil.createTabbedPanePanel();
+		JPanel searchPanel = UIUtil.newTabbedPanePanel();
 		searchPanel.setLayout(new BorderLayout());
 		searchPanel.setBorder(UIUtil.getEmpty5Border());
-		JPanel searchInputPanel = UIUtil.createTabbedPanePanel();
+		JPanel searchInputPanel = UIUtil.newTabbedPanePanel();
 		searchInputPanel.setLayout(new BoxLayout(searchInputPanel, BoxLayout.Y_AXIS));
 		keywordToFindLabel2 = new JLabel(msg.getString("KeywordLabel"));
-		JPanel slPanel = UIUtil.createTabbedPanePanel();
+		JPanel slPanel = UIUtil.newTabbedPanePanel();
 		slPanel.setLayout(new BorderLayout());
 		slPanel.add(keywordToFindLabel2, BorderLayout.LINE_START);
 		searchField = new JTextField();
 		searchField.setMaximumSize(new Dimension(3000,20));
 		searchField.getDocument().addDocumentListener(listener);
 		searchField.addKeyListener(listener);
-		listTopicsButton = UIUtil.createTabbedPaneButton(msg.getString("ListTopics"));
+		listTopicsButton = UIUtil.newTabbedPaneButton(msg.getString("ListTopics"));
 		listTopicsButton.setActionCommand("ListTopics");
 		listTopicsButton.addActionListener(this);
 		listTopicsButton.setEnabled(false);
-		JPanel ltbPanel = UIUtil.createTabbedPanePanel();
+		JPanel ltbPanel = UIUtil.newTabbedPanePanel();
 		ltbPanel.setLayout(new BoxLayout(ltbPanel, BoxLayout.LINE_AXIS));
 		ltbPanel.add(Box.createHorizontalGlue());
 		ltbPanel.add(listTopicsButton);
 		topicToDisplayLabel = new JLabel(msg.getString("TopicToDisplay"));
-		JPanel stlPanel = UIUtil.createTabbedPanePanel();
+		JPanel stlPanel = UIUtil.newTabbedPanePanel();
 		stlPanel.setLayout(new BorderLayout());
 		stlPanel.add(topicToDisplayLabel, BorderLayout.LINE_START);
 		searchInputPanel.add(slPanel);
@@ -305,16 +305,16 @@ public class HelpDialog extends JFrame implements ActionListener {
 		JScrollPane searchScrollPane = new RScrollPane(1,1, searchList);
 		searchScrollPane.setPreferredSize(new Dimension(100,200));
 		searchScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		JPanel searchButtonPanel = UIUtil.createTabbedPanePanel();
+		JPanel searchButtonPanel = UIUtil.newTabbedPanePanel();
 		searchButtonPanel.setLayout(new BoxLayout(searchButtonPanel, BoxLayout.LINE_AXIS));
-		searchDisplayButton = UIUtil.createTabbedPaneButton(msg.getString("Display"));
+		searchDisplayButton = UIUtil.newTabbedPaneButton(msg.getString("Display"));
 		searchDisplayButton.setActionCommand("Display");
 		searchDisplayButton.addActionListener(this);
 		searchDisplayButton.setEnabled(false);
 		searchButtonPanel.add(Box.createHorizontalGlue());
 		searchButtonPanel.add(searchDisplayButton);
 		searchPanel.add(searchInputPanel, BorderLayout.NORTH);
-		temp = UIUtil.createTabbedPanePanel();
+		temp = UIUtil.newTabbedPanePanel();
 		temp.setLayout(new BorderLayout());
 		temp.setBorder(border8080);
 		temp.add(searchScrollPane);

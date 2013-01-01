@@ -85,8 +85,8 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 		contentPane.add(tabbedPane);
 
 		// Add a panel to the tabbed pane about the Java environment.
-		JPanel temp = UIUtil.createTabbedPanePanel();
-		temp = UIUtil.createTabbedPanePanel();
+		JPanel temp = UIUtil.newTabbedPanePanel();
+		temp = UIUtil.newTabbedPanePanel();
 		temp.setLayout(new BorderLayout());
 		temp.setBorder(UIUtil.getEmpty5Border());
 		temp.add(new JLabel(msg.getString("EnvironInfo")),
@@ -118,11 +118,11 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 		// Add the OK and license buttons.
 		JPanel buttonPanel = new JPanel();
 		temp = new JPanel(new GridLayout(1,2, 5,0));
-		okButton = UIUtil.createButton(msg, "OK", "OKButtonMnemonic");
+		okButton = UIUtil.newButton(msg, "OK", "OKButtonMnemonic");
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
 		temp.add(okButton);
-		licenseButton = UIUtil.createButton(msg, "License",
+		licenseButton = UIUtil.newButton(msg, "License",
 										"LicenseButtonMnemonic");
 		licenseButton.setActionCommand("License");
 		licenseButton.addActionListener(this);
@@ -270,7 +270,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 			RScrollPane scrollPane = new RScrollPane(textArea);
 			cp.add(scrollPane);
 			JPanel buttonPanel = new JPanel();
-			JButton okButton = UIUtil.createButton(msg, "OK",
+			JButton okButton = UIUtil.newButton(msg, "OK",
 											"OKButtonMnemonic");
 			okButton.addActionListener(this);
 			buttonPanel.add(okButton);

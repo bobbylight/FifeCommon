@@ -24,7 +24,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -56,7 +55,6 @@ public class UIUtil {
 	private static boolean desktopCreationAttempted;
 	private static Object desktop;
 	private static final Object LOCK_DESKTOP_CREATION = new Object();
-
 
 	/*
 	 * -1 => Not yet determined, 0 => no, 1 => yes.
@@ -129,266 +127,6 @@ public class UIUtil {
 
 		return success;
 
-	}
-
-
-	/**
-	 * Returns a button with the specified text.  If another property is
-	 * defined in the resource bundle with key
-	 * <code>textKey + ".Mnemonic"</code>, then it will be used for the mnemonic
-	 * of the button.
-	 *
-	 * @param bundle The resource bundle in which to get the int.
-	 * @param textKey The key into the bundle containing the string text value.
-	 * @return The button.
-	 * @see #createButton(ResourceBundle, String, String)
-	 * @see #createButton(ResourceBundle, String, ActionListener)
-	 * @see #createButton(ResourceBundle, String, String, ActionListener)
-	 */
-	public static final JButton createButton(ResourceBundle bundle,
-			String textKey) {
-		return createButton(bundle, textKey, textKey + ".Mnemonic");
-	}
-
-
-	/**
-	 * Returns a button with the specified text.  If another property is
-	 * defined in the resource bundle with key
-	 * <code>textKey + ".Mnemonic"</code>, then it will be used for the mnemonic
-	 * of the button.
-	 *
-	 * @param bundle The resource bundle in which to get the int.
-	 * @param textKey The key into the bundle containing the string text value.
-	 * @param listener If non-<code>null</code>, this listener will be
-	 *        added to the button.
-	 * @return The button.
-	 * @see #createButton(ResourceBundle, String, String)
-	 * @see #createButton(ResourceBundle, String, String, ActionListener)
-	 */
-	public static final JButton createButton(ResourceBundle bundle,
-			String textKey, ActionListener listener) {
-		return createButton(bundle, textKey, textKey + ".Mnemonic", listener);
-	}
-
-
-	/**
-	 * Returns a button with the specified text and mnemonic.
-	 *
-	 * @param bundle The resource bundle in which to get the int.
-	 * @param textKey The key into the bundle containing the string text value.
-	 * @param mnemonicKey The key into the bundle containing a single-char
-	 *        <code>String</code> value for the mnemonic.
-	 * @return The button.
-	 * @see #createButton(ResourceBundle, String)
-	 * @see #createButton(ResourceBundle, String, ActionListener)
-	 * @see #createButton(ResourceBundle, String, String, ActionListener)
-	 */
-	public static final JButton createButton(ResourceBundle bundle,
-								String textKey, String mnemonicKey) {
-		return createButton(bundle, textKey, mnemonicKey, null);
-	}
-
-
-	/**
-	 * Returns a button with the specified text and mnemonic.
-	 *
-	 * @param bundle The resource bundle in which to get the int.
-	 * @param textKey The key into the bundle containing the string text value.
-	 * @param mnemonicKey The key into the bundle containing a single-char
-	 *        <code>String</code> value for the mnemonic.
-	 * @param listener If non-<code>null</code>, this listener will be
-	 *        added to the button.
-	 * @return The button.
-	 * @see #createButton(ResourceBundle, String)
-	 * @see #createButton(ResourceBundle, String, ActionListener)
-	 */
-	public static final JButton createButton(ResourceBundle bundle,
-			String textKey, String mnemonicKey, ActionListener listener) {
-		RButton b = new RButton(bundle.getString(textKey));
-		b.setMnemonic(getMnemonic(bundle, mnemonicKey));
-		if (listener!=null) {
-			b.addActionListener(listener);
-		}
-		return b;
-	}
-
-
-	/**
-	 * Returns an <code>JLabel</code> with the specified text.  If another
-	 * property with name <code>getString(textKey) + ".Mnemonic"</code> is
-	 * defined, it is used as the mnemonic for the label.
-	 *
-	 * @param msg The resource bundle.
-	 * @param key The key into the bundle containing the string text value.
-	 * @return The <code>JLabel</code>.
-	 */
-	public static final JLabel createLabel(ResourceBundle msg, String key) {
-		return createLabel(msg, key, null);
-	}
-
-
-	/**
-	 * Returns an <code>JLabel</code> with the specified text.  If another
-	 * property with name <code>getString(textKey) + ".Mnemonic"</code> is
-	 * defined, it is used as the mnemonic for the label.
-	 *
-	 * @param msg The resource bundle.
-	 * @param key The key into the bundle containing the string text value.
-	 * @param labelFor If non-<code>null</code>, the label is a label for
-	 *        that specific component.
-	 * @return The <code>JLabel</code>.
-	 */
-	public static final JLabel createLabel(ResourceBundle msg, String key,
-			Component labelFor) {
-		JLabel label = new JLabel(msg.getString(key));
-		label.setDisplayedMnemonic(getMnemonic(msg, key + ".Mnemonic"));
-		if (labelFor!=null) {
-			label.setLabelFor(labelFor);
-		}
-		return label;
-	}
-
-
-	/**
-	 * Returns a <code>JRadioButton</code> with the specified properties.
-	 *
-	 * @param msg The resource bundle in which to get properties.
-	 * @param keyRoot The key into the bundle containing the radio button's
-	 *        label.  If another property is defined with the name
-	 *        <code>keyRoot + ".Mnemonic"</code>, it is used for the
-	 *        mnemonic for the radio button.
-	 * @param bg If non-<code>null</code>, the radio button is added to the
-	 *        button group.
-	 * @return The <code>JRadioButton</code>.
-	 * @see #createRadio(ResourceBundle, String, ButtonGroup, ActionListener)
-	 * @see #createRadio(ResourceBundle, String, ButtonGroup, ActionListener, boolean)
-	 */
-	public static final JRadioButton createRadio(ResourceBundle msg,
-				String keyRoot, ButtonGroup bg) {
-		return createRadio(msg, keyRoot, bg, null, false);
-	}
-
-
-	/**
-	 * Returns a <code>JRadioButton</code> with the specified properties.
-	 *
-	 * @param msg The resource bundle in which to get properties.
-	 * @param keyRoot The key into the bundle containing the radio button's
-	 *        label.  If another property is defined with the name
-	 *        <code>keyRoot + ".Mnemonic"</code>, it is used for the
-	 *        mnemonic for the radio button.
-	 * @param bg If non-<code>null</code>, the radio button is added to the
-	 *        button group.
-	 * @param listener If non-<code>null</code>, the listener is added to
-	 *        the radio button.
-	 * @return The <code>JRadioButton</code>.
-	 * @see #createRadio(ResourceBundle, String, ButtonGroup)
-	 * @see #createRadio(ResourceBundle, String, ButtonGroup, ActionListener, boolean)
-	 */
-	public static final JRadioButton createRadio(ResourceBundle msg,
-				String keyRoot, ButtonGroup bg, ActionListener listener) {
-		return createRadio(msg, keyRoot, bg, listener, false);
-	}
-
-
-	/**
-	 * Returns a <code>JRadioButton</code> with the specified properties.
-	 *
-	 * @param msg The resource bundle in which to get properties.
-	 * @param keyRoot The key into the bundle containing the radio button's
-	 *        label.  If another property is defined with the name
-	 *        <code>keyRoot + ".Mnemonic"</code>, it is used for the
-	 *        mnemonic for the radio button.
-	 * @param bg If non-<code>null</code>, the radio button is added to the
-	 *        button group.
-	 * @param listener If non-<code>null</code>, the listener is added to
-	 *        the radio button.
-	 * @param selected Whether the radio button is initially selected.
-	 * @return The <code>JRadioButton</code>.
-	 * @see #createRadio(ResourceBundle, String, ButtonGroup)
-	 * @see #createRadio(ResourceBundle, String, ButtonGroup, ActionListener)
-	 */
-	public static final JRadioButton createRadio(ResourceBundle msg,
-				String keyRoot, ButtonGroup bg, ActionListener listener,
-				boolean selected) {
-		JRadioButton radio = new JRadioButton(msg.getString(keyRoot));
-		radio.setMnemonic(getMnemonic(msg, keyRoot + ".Mnemonic"));
-		if (bg!=null) {
-			bg.add(radio);
-		}
-		if (listener!=null) {
-			radio.addActionListener(listener);
-		}
-		radio.setSelected(selected);
-		return radio;
-	}
-
-
-	/**
-	 * Returns an <code>org.fife.ui.RButton</code> created from the specified
-	 * action and with the specified mnemonic.
-	 *
-	 * @param action The action for the button.
-	 * @param bundle The resource bundle in which to get the int.
-	 * @param mnemonicKey The key into the bundle containing a single-char
-	 *        <code>String</code> value for the mnemonic.
-	 * @return The <code>RButton</code>.
-	 */
-	public static final RButton createRButton(Action action,
-							ResourceBundle bundle, String mnemonicKey) {
-		RButton b = new RButton(action);
-		b.setMnemonic(getMnemonic(bundle, mnemonicKey));
-		return b;
-	}
-
-
-	/**
-	 * Returns a button to add to a panel in a tabbed pane.  This method
-	 * checks system properties to determine the operating system this JVM is
-	 * running in; if it is determined that this OS paints its tabbed panes
-	 * in a special way (such as the gradient tabbed panes in Windows XP),
-	 * then the button returned is not opaque.  Otherwise, a regular (opaque)
-	 * button is returned.
-	 *
-	 * @return A button to add to a <code>JTabbedPane</code>.
-	 * @see #createTabbedPanePanel
-	 */
-	public static RButton createTabbedPaneButton(String text) {
-		RButton button = new RButton(text);
-		if (getUseNonOpaqueTabbedPaneComponents())
-			button.setOpaque(false);
-		return button;
-	}
-
-
-	/**
-	 * Returns an opaque panel so we get the cool gradient effect on Windows
-	 * XP and Vista.
-	 *
-	 * @return A panel to add to a <code>JTabbedPane</code>.
-	 * @see #createTabbedPaneButton(String)
-	 */
-	public static JPanel createTabbedPanePanel() {
-		JPanel panel = new JPanel();
-		if (getUseNonOpaqueTabbedPaneComponents())
-			panel.setOpaque(false);
-		return panel;
-	}
-
-
-	/**
-	 * Returns an opaque panel so we get the cool gradient effect on Windows
-	 * XP and Vista.
-	 *
-	 * @param layout The layout for the panel.
-	 * @return A panel to add to a <code>JTabbedPane</code>.
-	 * @see #createTabbedPaneButton(String)
-	 */
-	public static JPanel createTabbedPanePanel(LayoutManager layout) {
-		JPanel panel = new JPanel(layout);
-		if (getUseNonOpaqueTabbedPaneComponents())
-			panel.setOpaque(false);
-		return panel;
 	}
 
 
@@ -742,6 +480,261 @@ public class UIUtil {
 		pCons.setConstraint(SpringLayout.SOUTH, y);
 		pCons.setConstraint(SpringLayout.EAST, x);
 
+	}
+
+
+	/**
+	 * Returns the default key for a button or menu item's mnemonic, based
+	 * on its root key.
+	 * 
+	 * @param key The key.
+	 * @return The mnemonic key.
+	 */
+	private static final String mnemonicKey(String key) {
+		return key + ".Mnemonic";
+	}
+
+
+	/**
+	 * Returns a button with the specified text.  If another property is
+	 * defined in the resource bundle with key
+	 * <code>key + ".Mnemonic"</code>, then it will be used for the mnemonic
+	 * of the button.
+	 *
+	 * @param bundle The resource bundle for localizing the button.
+	 * @param key The key into the bundle containing the string text value.
+	 * @return The button.
+	 * @see #newButton(ResourceBundle, String, String)
+	 * @see #newButton(ResourceBundle, String, ActionListener)
+	 * @see #newButton(ResourceBundle, String, String, ActionListener)
+	 */
+	public static final JButton newButton(ResourceBundle bundle, String key) {
+		return newButton(bundle, key, mnemonicKey(key));
+	}
+
+
+	/**
+	 * Returns a button with the specified text.  If another property is
+	 * defined in the resource bundle with key
+	 * <code>key + ".Mnemonic"</code>, then it will be used for the mnemonic
+	 * of the button.
+	 *
+	 * @param bundle The resource bundle for localizing the button.
+	 * @param key The key into the bundle containing the string text value.
+	 * @param listener If non-<code>null</code>, this listener will be
+	 *        added to the button.
+	 * @return The button.
+	 * @see #newButton(ResourceBundle, String, String)
+	 * @see #newButton(ResourceBundle, String, String, ActionListener)
+	 */
+	public static final JButton newButton(ResourceBundle bundle,
+			String key, ActionListener listener) {
+		return newButton(bundle, key, mnemonicKey(key), listener);
+	}
+
+
+	/**
+	 * Returns a button with the specified text and mnemonic.
+	 *
+	 * @param bundle The resource bundle for localizing the button.
+	 * @param textKey The key into the bundle containing the string text value.
+	 * @param mnemonicKey The key into the bundle containing a single-char
+	 *        <code>String</code> value for the mnemonic.
+	 * @return The button.
+	 * @see #newButton(ResourceBundle, String)
+	 * @see #newButton(ResourceBundle, String, ActionListener)
+	 * @see #newButton(ResourceBundle, String, String, ActionListener)
+	 */
+	public static final JButton newButton(ResourceBundle bundle,
+								String textKey, String mnemonicKey) {
+		return newButton(bundle, textKey, mnemonicKey, null);
+	}
+
+
+	/**
+	 * Returns a button with the specified text and mnemonic.
+	 *
+	 * @param bundle The resource bundle for localizing the button.
+	 * @param textKey The key into the bundle containing the string text value.
+	 * @param mnemonicKey The key into the bundle containing a single-char
+	 *        <code>String</code> value for the mnemonic.
+	 * @param listener If non-<code>null</code>, this listener will be
+	 *        added to the button.
+	 * @return The button.
+	 * @see #newButton(ResourceBundle, String)
+	 * @see #newButton(ResourceBundle, String, ActionListener)
+	 */
+	public static final JButton newButton(ResourceBundle bundle,
+			String textKey, String mnemonicKey, ActionListener listener) {
+		RButton b = new RButton(bundle.getString(textKey));
+		b.setMnemonic(getMnemonic(bundle, mnemonicKey));
+		if (listener!=null) {
+			b.addActionListener(listener);
+		}
+		return b;
+	}
+
+
+	/**
+	 * Returns an <code>JLabel</code> with the specified text.  If another
+	 * property with name <code>key + ".Mnemonic"</code> is defined, it is
+	 * used as the mnemonic for the label.
+	 *
+	 * @param msg The resource bundle.
+	 * @param key The key into the bundle containing the string text value.
+	 * @return The <code>JLabel</code>.
+	 */
+	public static final JLabel newLabel(ResourceBundle msg, String key) {
+		return newLabel(msg, key, null);
+	}
+
+
+	/**
+	 * Returns an <code>JLabel</code> with the specified text.  If another
+	 * property with name <code>key + ".Mnemonic"</code> is defined, it is
+	 * used as the mnemonic for the label.
+	 *
+	 * @param msg The resource bundle.
+	 * @param key The key into the bundle containing the string text value.
+	 * @param labelFor If non-<code>null</code>, the label is a label for
+	 *        that specific component.
+	 * @return The <code>JLabel</code>.
+	 */
+	public static final JLabel newLabel(ResourceBundle msg, String key,
+			Component labelFor) {
+		JLabel label = new JLabel(msg.getString(key));
+		label.setDisplayedMnemonic(getMnemonic(msg, mnemonicKey(key)));
+		if (labelFor!=null) {
+			label.setLabelFor(labelFor);
+		}
+		return label;
+	}
+
+
+	/**
+	 * Returns a radio button with the specified properties.
+	 *
+	 * @param msg The resource bundle in which to get properties.
+	 * @param keyRoot The key into the bundle containing the radio button's
+	 *        label.  If another property is defined with the name
+	 *        <code>keyRoot + ".Mnemonic"</code>, it is used for the
+	 *        mnemonic for the radio button.
+	 * @param bg If non-<code>null</code>, the radio button is added to the
+	 *        button group.
+	 * @return The <code>JRadioButton</code>.
+	 * @see #newRadio(ResourceBundle, String, ButtonGroup, ActionListener)
+	 * @see #newRadio(ResourceBundle, String, ButtonGroup, ActionListener, boolean)
+	 */
+	public static final JRadioButton newRadio(ResourceBundle msg,
+				String keyRoot, ButtonGroup bg) {
+		return newRadio(msg, keyRoot, bg, null, false);
+	}
+
+
+	/**
+	 * Returns a radio button with the specified properties.
+	 *
+	 * @param msg The resource bundle in which to get properties.
+	 * @param keyRoot The key into the bundle containing the radio button's
+	 *        label.  If another property is defined with the name
+	 *        <code>keyRoot + ".Mnemonic"</code>, it is used for the
+	 *        mnemonic for the radio button.
+	 * @param bg If non-<code>null</code>, the radio button is added to the
+	 *        button group.
+	 * @param listener If non-<code>null</code>, the listener is added to
+	 *        the radio button.
+	 * @return The <code>JRadioButton</code>.
+	 * @see #newRadio(ResourceBundle, String, ButtonGroup)
+	 * @see #newRadio(ResourceBundle, String, ButtonGroup, ActionListener, boolean)
+	 */
+	public static final JRadioButton newRadio(ResourceBundle msg,
+				String keyRoot, ButtonGroup bg, ActionListener listener) {
+		return newRadio(msg, keyRoot, bg, listener, false);
+	}
+
+
+	/**
+	 * Returns a radio button with the specified properties.
+	 *
+	 * @param msg The resource bundle in which to get properties.
+	 * @param keyRoot The key into the bundle containing the radio button's
+	 *        label.  If another property is defined with the name
+	 *        <code>keyRoot + ".Mnemonic"</code>, it is used for the
+	 *        mnemonic for the radio button.
+	 * @param bg If non-<code>null</code>, the radio button is added to the
+	 *        button group.
+	 * @param listener If non-<code>null</code>, the listener is added to
+	 *        the radio button.
+	 * @param selected Whether the radio button is initially selected.
+	 * @return The <code>JRadioButton</code>.
+	 * @see #newRadio(ResourceBundle, String, ButtonGroup)
+	 * @see #newRadio(ResourceBundle, String, ButtonGroup, ActionListener)
+	 */
+	public static final JRadioButton newRadio(ResourceBundle msg,
+				String keyRoot, ButtonGroup bg, ActionListener listener,
+				boolean selected) {
+		JRadioButton radio = new JRadioButton(msg.getString(keyRoot));
+		radio.setMnemonic(getMnemonic(msg, mnemonicKey(keyRoot)));
+		if (bg!=null) {
+			bg.add(radio);
+		}
+		if (listener!=null) {
+			radio.addActionListener(listener);
+		}
+		radio.setSelected(selected);
+		return radio;
+	}
+
+
+	/**
+	 * Returns a button to add to a panel in a tabbed pane.  This method
+	 * checks system properties to determine the operating system this JVM is
+	 * running in; if it is determined that this OS paints its tabbed panes
+	 * in a special way (such as the gradient tabbed panes in Windows XP),
+	 * then the button returned is not opaque.  Otherwise, a regular (opaque)
+	 * button is returned.
+	 *
+	 * @return A button to add to a <code>JTabbedPane</code>.
+	 * @see #newTabbedPanePanel()
+	 */
+	public static RButton newTabbedPaneButton(String text) {
+		RButton button = new RButton(text);
+		if (getUseNonOpaqueTabbedPaneComponents())
+			button.setOpaque(false);
+		return button;
+	}
+
+
+	/**
+	 * Returns an opaque panel so we get the cool gradient effect on Windows
+	 * XP and Vista.
+	 *
+	 * @return A panel to add to a <code>JTabbedPane</code>.
+	 * @see #newTabbedPanePanel(LayoutManager)
+	 * @see #newTabbedPaneButton(String)
+	 */
+	public static JPanel newTabbedPanePanel() {
+		JPanel panel = new JPanel();
+		if (getUseNonOpaqueTabbedPaneComponents())
+			panel.setOpaque(false);
+		return panel;
+	}
+
+
+	/**
+	 * Returns an opaque panel so we get the cool gradient effect on Windows
+	 * XP and Vista.
+	 *
+	 * @param layout The layout for the panel.
+	 * @return A panel to add to a <code>JTabbedPane</code>.
+	 * @see #newTabbedPanePanel()
+	 * @see #newTabbedPaneButton(String)
+	 */
+	public static JPanel newTabbedPanePanel(LayoutManager layout) {
+		JPanel panel = new JPanel(layout);
+		if (getUseNonOpaqueTabbedPaneComponents())
+			panel.setOpaque(false);
+		return panel;
 	}
 
 

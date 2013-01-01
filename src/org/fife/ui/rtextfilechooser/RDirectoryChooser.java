@@ -173,12 +173,12 @@ public class RDirectoryChooser extends EscapableDialog {
 		// Add a panel with the OK and Cancel buttons.
 		JPanel buttonPanel = new JPanel();
 		JPanel temp = new JPanel(new GridLayout(1,2, 5,0));
-		okButton = UIUtil.createButton(msg, "OK", "OKMnemonic");
+		okButton = UIUtil.newButton(msg, "OK", "OKMnemonic");
 		okButton.setEnabled(false);
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(listener);
 		temp.add(okButton);
-		cancelButton = UIUtil.createButton(msg, "Cancel", "CancelMnemonic");
+		cancelButton = UIUtil.newButton(msg, "Cancel", "CancelMnemonic");
 		cancelButton.setActionCommand("Cancel");
 		cancelButton.addActionListener(listener);
 		temp.add(cancelButton);

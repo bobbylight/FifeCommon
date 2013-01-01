@@ -268,8 +268,8 @@ public class ModifiableTable extends JPanel {
 		JPanel buttonPanel = null;
 
 		if (Boolean.getBoolean(PROPERTY_PANELS_NON_OPAQUE)) {
-			panel = UIUtil.createTabbedPanePanel();
-			buttonPanel = UIUtil.createTabbedPanePanel(new BorderLayout());
+			panel = UIUtil.newTabbedPanePanel();
+			buttonPanel = UIUtil.newTabbedPanePanel(new BorderLayout());
 		}
 		else {
 			panel = new JPanel();

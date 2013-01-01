@@ -27,6 +27,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
@@ -530,6 +531,15 @@ public abstract class OptionsDialogPanel extends JPanel {
 
 			g.setColor(Color.BLUE);
 			font = UIManager.getFont("Label.font");
+			if (font==null) {
+				// This is quite expensive for a repaint, but not sure of any
+				// other way to do this.  All Swing's "standard" LAFs define
+				// the Label.font property, as do all Substance looks, so
+				// usually we won't hit this condition.
+				// TODO: Find a more performant way to do this, but note that
+				// LAF changes at runtime cause changes if you cache anything...
+				font = new JLabel().getFont();
+			}
 			FontMetrics fm = c.getFontMetrics(font);
 			int titleWidth = fm.stringWidth(title);
 			int middleY = y + HEIGHT/2;

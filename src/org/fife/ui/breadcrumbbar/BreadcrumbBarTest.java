@@ -47,7 +47,10 @@ public class BreadcrumbBarTest extends JFrame implements PropertyChangeListener{
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				String laf = UIManager.getSystemLookAndFeelClassName();
+				String substanceClass = "org.pushingpixels.substance.api.skin.SubstanceGraphiteGlassLookAndFeel";
+				UIManager.installLookAndFeel("Substance", substanceClass);
+				//String laf = UIManager.getSystemLookAndFeelClassName();
+				String laf = substanceClass;
 				try {
 					UIManager.setLookAndFeel(laf);
 				} catch (Exception e) {

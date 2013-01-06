@@ -10,6 +10,7 @@
 package org.fife.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.Action;
@@ -44,7 +45,7 @@ public abstract class RecentFilesMenu extends JMenu {
 	 * @param name The name for this menu item, e.g. "Recent Files".
 	 */
 	public RecentFilesMenu(String name) {
-		this(name, (String[])null);
+		this(name, (List)null);
 	}
 
 
@@ -73,14 +74,8 @@ public abstract class RecentFilesMenu extends JMenu {
 	 * @param initialContents The initial contents of this menu.
 	 */
 	public RecentFilesMenu(String name, String[] initialContents) {
-		super(name);
-		this.maxFileHistorySize = DEFAULT_MAX_SIZE;
-		fileHistory = new ArrayList(maxFileHistorySize);
-		if (initialContents!=null) {
-			for (int i=0; i<initialContents.length; i++) {
-				addFileToFileHistory(initialContents[i]);
-			}
-		}
+		this(name, initialContents!=null ?
+				Arrays.asList(initialContents) : (List)null);
 	}
 
 
@@ -144,9 +139,23 @@ public abstract class RecentFilesMenu extends JMenu {
 	 *
 	 * @param index The index of the file.
 	 * @return The file.
+	 * @see #getFileHistory()
 	 */
 	public String getFileFullPath(int index) {
 		return (String)fileHistory.get(index);
+	}
+
+
+	/**
+	 * Returns an ordered copy of the recent files.  This can be used
+	 * to save them when closing an application.
+	 *
+	 * @return The file history.  This will be an empty list if no files
+	 *         have been opened.
+	 * @see #getFileFullPath(int)
+	 */
+	public List getFileHistory() {
+		return new ArrayList(fileHistory);
 	}
 
 

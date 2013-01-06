@@ -32,7 +32,6 @@ import javax.swing.UIManager;
 import javax.swing.text.JTextComponent;
 
 import org.fife.ui.EscapableDialog;
-import org.fife.ui.RButton;
 import org.fife.ui.ResizableFrameContentPane;
 import org.fife.ui.RScrollPane;
 import org.fife.ui.SelectableLabel;
@@ -215,7 +214,7 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 		//contentPane.add(textPanel);
 
 		JPanel buttonPanel = new JPanel(new GridLayout(1,2, 5,5));
-		RButton okButton = new RButton(msg.getString("Close"));
+		JButton okButton = new JButton(msg.getString("Close"));
 		okButton.setMnemonic(msg.getString("CloseMnemonic").charAt(0));
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

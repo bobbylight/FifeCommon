@@ -51,9 +51,9 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	private DefaultMutableTreeNode root;
 	private JScrollPane optionTreeScrollPane;
 
-	private RButton okButton;
-	private RButton applyButton;
-	private RButton cancelButton;
+	private JButton okButton;
+	private JButton applyButton;
+	private JButton cancelButton;
 
 	private JPanel currentOptionPanel;
 	private CardLayout currentOptionPanelLayout;
@@ -125,13 +125,13 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setBorder(new BevelDividerBorder(SwingConstants.TOP, 15));
 		JPanel temp = new JPanel(new GridLayout(1,3, 5,0));
-		okButton = new RButton(msg.getString("OK"));
+		okButton = new JButton(msg.getString("OK"));
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
-		cancelButton = new RButton(msg.getString("Cancel"));
+		cancelButton = new JButton(msg.getString("Cancel"));
 		cancelButton.setActionCommand("Cancel");
 		cancelButton.addActionListener(this);
-		applyButton = new RButton(msg.getString("Apply"));
+		applyButton = new JButton(msg.getString("Apply"));
 		applyButton.setActionCommand("Apply");
 		applyButton.addActionListener(this);
 		applyButton.setEnabled(false);	// Until they make a change.

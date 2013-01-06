@@ -29,6 +29,15 @@ import javax.swing.KeyStroke;
 public abstract class StandardAction extends AbstractAction {
 
 	/**
+	 * A property specific to StandardActions (though other custom actions can
+	 * certainly use it) that stores the default accelerator for the action.
+	 * <code>KeyStroke</code>s should be stored with this key.
+	 */
+	public static final String DEFAULT_ACCELERATOR =
+			"StandardAction.DefaultAccelerator";
+
+
+	/**
 	 * The parent GUI application.
 	 */
 	private GUIApplication app;
@@ -55,7 +64,9 @@ public abstract class StandardAction extends AbstractAction {
 	 *    <li><code>key + ".Accelerator"</code>
 	 *    <li><code>key + ".ShortDesc"</code>
 	 * </ul>
-	 * then those properties are set as well.
+	 * then those properties are set as well.  Further, if an accelerator is
+	 * defined, it is set as both the action's active accelerator and default
+	 * accelerator.
 	 *
 	 * @param app The parent application.
 	 * @param key The key in the bundle for the name of this action.
@@ -74,7 +85,9 @@ public abstract class StandardAction extends AbstractAction {
 	 *    <li><code>key + ".Accelerator"</code>
 	 *    <li><code>key + ".ShortDesc"</code>
 	 * </ul>
-	 * then those properties are set as well.
+	 * then those properties are set as well.  Further, if an accelerator is
+	 * defined, it is set as both the action's active accelerator and default
+	 * accelerator.
 	 *
 	 * @param app The parent application.
 	 * @param key The key in the bundle for the name of this action.
@@ -98,7 +111,9 @@ public abstract class StandardAction extends AbstractAction {
 	 *    <li><code>key + ".Accelerator"</code>
 	 *    <li><code>key + ".ShortDesc"</code>
 	 * </ul>
-	 * then those properties are set as well.
+	 * then those properties are set as well.  Further, if an accelerator is
+	 * defined, it is set as both the action's active accelerator and default
+	 * accelerator.
 	 *
 	 * @param app The parent application.
 	 * @param msg The bundle to localize from.  If this is <code>null</code>,
@@ -135,6 +150,7 @@ public abstract class StandardAction extends AbstractAction {
 				temp = massageAcceleratorString(temp);
 				KeyStroke ks = KeyStroke.getKeyStroke(temp);
 				setAccelerator(ks);
+				setDefaultAccelerator(ks);
 			}
 		} catch (MissingResourceException mre) {
 			// Swallow
@@ -168,6 +184,21 @@ public abstract class StandardAction extends AbstractAction {
 	 */
 	public GUIApplication getApplication() {
 		return app;
+	}
+
+
+	/**
+	 * Returns the default accelerator for this action.  This is the
+	 * accelerator that should be restored if the user chooses to "restore
+	 * defaults" in the options dialog.
+	 *
+	 * @return The default accelerator.
+	 * @see #setDefaultAccelerator(KeyStroke)
+	 * @see #getAccelerator()
+	 * @see #DEFAULT_ACCELERATOR
+	 */
+	public KeyStroke getDefaultAccelerator() {
+		return (KeyStroke)getValue(DEFAULT_ACCELERATOR);
 	}
 
 
@@ -218,27 +249,25 @@ public abstract class StandardAction extends AbstractAction {
 
 	/**
 	 * Ensures an accelerator string uses the right modifier key for the
-	 * current OS.
+	 * current OS.  If the modifier "default" is found, it is replaced
+	 * with the appropriate default shortcut modifier.
 	 *
 	 * @param accelerator The accelerator string, for example,
-	 *        <code>"ctrl S"</code>.
+	 *        <code>"default O"</code> or <code>"ctrl SPACE"</code>.
 	 * @return A (possibly) modified version of that string.
 	 */
 	private String massageAcceleratorString(String accelerator) {
 
-		// Use meta on OS X instead of ctrl
-		if (app.getOS()==GUIApplication.OS_MAC_OSX &&
-				((accelerator.startsWith("control ") ||
-					accelerator.startsWith("ctrl ")) ||
-					accelerator.startsWith("default "))) {
-			int space = accelerator.indexOf(' ');
-			accelerator = "meta" + accelerator.substring(space);
+		final String DEFAULT = "default ";
+		int index = accelerator.indexOf(DEFAULT);
+
+		if (index>-1) {
+			String replacement = app.getOS()==GUIApplication.OS_MAC_OSX ?
+					"meta " : "control ";
+			accelerator = accelerator.substring(0, index) + replacement +
+					accelerator.substring(index + DEFAULT.length());
 		}
-		else if (accelerator.startsWith("default ")) {
-			int space = accelerator.indexOf(' ');
-			accelerator = "control" + accelerator.substring(space);
-		}
-		
+
 		return accelerator;
 	}
 
@@ -248,9 +277,26 @@ public abstract class StandardAction extends AbstractAction {
 	 *
 	 * @param accelerator The new accelerator, or <code>null</code> for none.
 	 * @see #getAccelerator()
+	 * @see #setDefaultAccelerator(KeyStroke)
 	 */
 	public void setAccelerator(KeyStroke accelerator) {
 		putValue(ACCELERATOR_KEY, accelerator);
+	}
+
+
+	/**
+	 * Sets the default accelerator for this action.  Applications typically
+	 * won't call this method directly, as the default accelerator is usually
+	 * set from the properties file we're loaded from.
+	 * 
+	 * @param accelerator The new default accelerator, which may be
+	 *        <code>null</code>.
+	 * @see #getDefaultAccelerator()
+	 * @see #setAccelerator(KeyStroke)
+	 * @see #DEFAULT_ACCELERATOR
+	 */
+	public void setDefaultAccelerator(KeyStroke accelerator) {
+		putValue(DEFAULT_ACCELERATOR, accelerator);
 	}
 
 

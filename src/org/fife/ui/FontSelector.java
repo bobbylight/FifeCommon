@@ -35,7 +35,7 @@ public class FontSelector extends JPanel implements ActionListener {
 	private JComponent labelComp;
 	private FontTextField field;
 	private boolean underline;
-	private RButton browseButton;
+	private JButton browseButton;
 	private boolean underlineSelectable;
 	private boolean colorSelectable;
 	private Color fontColor;
@@ -83,7 +83,7 @@ public class FontSelector extends JPanel implements ActionListener {
 				break;
 		}
 
-		browseButton = new RButton(msg.getString("Browse"));
+		browseButton = new JButton(msg.getString("Browse"));
 		browseButton.addActionListener(this);
 
 		if (labelComp!=null) {

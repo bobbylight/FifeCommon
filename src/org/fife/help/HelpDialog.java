@@ -51,7 +51,6 @@ import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 
-import org.fife.ui.RButton;
 import org.fife.ui.RListSelectionModel;
 import org.fife.ui.RScrollPane;
 import org.fife.ui.RTreeSelectionModel;
@@ -349,14 +348,12 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 		// Make the toolbar.
 		JToolBar toolBar = new JToolBar();
-		backButton = new RButton(msg.getString("Back"));
+		backButton = UIUtil.newButton(msg, "Back", this);
 		backButton.setActionCommand("Back");
-		backButton.addActionListener(this);
 		backButton.setEnabled(false);
 		toolBar.add(backButton);
-		forwardButton = new RButton(msg.getString("Forward"));
+		forwardButton = UIUtil.newButton(msg, "Forward", this);
 		forwardButton.setActionCommand("Forward");
-		forwardButton.addActionListener(this);
 		forwardButton.setEnabled(false);
 		toolBar.add(forwardButton);
 		toolBar.setFloatable(false);

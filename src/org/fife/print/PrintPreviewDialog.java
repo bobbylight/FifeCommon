@@ -52,7 +52,6 @@ import javax.swing.border.MatteBorder;
 
 import org.fife.ui.EscapableDialog;
 import org.fife.ui.UIUtil;
-import org.fife.ui.RButton;
 import org.fife.ui.RScrollPane;
 import org.fife.ui.StatusBar;
 
@@ -130,21 +129,21 @@ public class PrintPreviewDialog extends EscapableDialog
 		setContentPane(contentPane);
 		contentPane.add(topPanel, BorderLayout.NORTH);
 		contentPane.add(new StatusBar(""), BorderLayout.SOUTH);
-		printButton = new RButton(msg.getString("Print"));
+		printButton = new JButton(msg.getString("Print"));
 		printButton.setActionCommand("Print");
 		printButton.addActionListener(this);
 		toolBarPanel.add(printButton);
-		prevPageButton = new RButton(msg.getString("PrevPage"));
+		prevPageButton = new JButton(msg.getString("PrevPage"));
 		prevPageButton.setEnabled(false);
 		prevPageButton.setActionCommand("PrevPage");
 		prevPageButton.addActionListener(this);
 		toolBarPanel.add(prevPageButton);
-		nextPageButton = new RButton(msg.getString("NextPage"));
+		nextPageButton = new JButton(msg.getString("NextPage"));
 		nextPageButton.setActionCommand("NextPage");
 		nextPageButton.addActionListener(this);
 		toolBarPanel.add(nextPageButton);
 
-		closeButton = new RButton(msg.getString("Close"));
+		closeButton = new JButton(msg.getString("Close"));
 		closeButton.setActionCommand("Close");
 		closeButton.addActionListener(this);
 		toolBarPanel.add(closeButton);

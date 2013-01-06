@@ -20,6 +20,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -28,7 +30,6 @@ import javax.swing.JLabel;
 import javax.swing.BoxLayout;
 import javax.swing.Box;
 
-import org.fife.ui.RButton;
 import org.fife.ui.RListSelectionModel;
 import org.fife.ui.ResizableFrameContentPane;
 import org.fife.ui.RScrollPane;
@@ -82,12 +83,12 @@ class TopicsFoundDialog extends JDialog {
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel,BoxLayout.LINE_AXIS));
 		buttonPanel.add(Box.createHorizontalGlue());
-		RButton button = new RButton(msg.getString("Display"));
+		JButton button = new JButton(msg.getString("Display"));
 		button.setActionCommand("Display");
 		button.addActionListener(listener);
 		buttonPanel.add(button);
 		buttonPanel.add(Box.createHorizontalStrut(3));
-		button = new RButton(msg.getString("Cancel"));
+		button = new JButton(msg.getString("Cancel"));
 		button.setActionCommand("Cancel");
 		button.addActionListener(listener);
 		buttonPanel.add(button);

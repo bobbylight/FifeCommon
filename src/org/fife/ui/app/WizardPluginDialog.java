@@ -20,6 +20,7 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -29,7 +30,6 @@ import javax.swing.border.BevelBorder;
 import javax.swing.text.StyleContext;
 
 import org.fife.ui.BevelDividerBorder;
-import org.fife.ui.RButton;
 import org.fife.ui.UIUtil;
 
 
@@ -46,10 +46,10 @@ public class WizardPluginDialog extends JDialog {
 	private CardLayout infoPanelLayout;
 	private JPanel infoPanel;
 
-	private RButton cancelButton;
-	private RButton backButton;
-	private RButton nextButton;
-	private RButton finishedButton;
+	private JButton cancelButton;
+	private JButton backButton;
+	private JButton nextButton;
+	private JButton finishedButton;
 
 	private WizardPlugin plugin;
 	private WizardDialogInfoPanel[] panels;
@@ -111,20 +111,20 @@ public class WizardPluginDialog extends JDialog {
 							new BevelDividerBorder(SwingConstants.TOP),
 							UIUtil.getEmpty5Border()));
 		JPanel temp = new JPanel(new GridLayout(1,4, 5,5));
-		cancelButton = new RButton(msg.getString("Button.Cancel"));
+		cancelButton = new JButton(msg.getString("Button.Cancel"));
 		cancelButton.setActionCommand("Cancel");
 		cancelButton.addActionListener(listener);
 		temp.add(cancelButton);
-		backButton = new RButton(msg.getString("Button.Back"));
+		backButton = new JButton(msg.getString("Button.Back"));
 		backButton.setActionCommand("Back");
 		backButton.addActionListener(listener);
 		backButton.setEnabled(false);
 		temp.add(backButton);
-		nextButton = new RButton(msg.getString("Button.Next"));
+		nextButton = new JButton(msg.getString("Button.Next"));
 		nextButton.setActionCommand("Next");
 		nextButton.addActionListener(listener);
 		temp.add(nextButton);
-		finishedButton = new RButton(msg.getString("Button.Finished"));
+		finishedButton = new JButton(msg.getString("Button.Finished"));
 		finishedButton.setActionCommand("Finished");
 		finishedButton.addActionListener(listener);
 		finishedButton.setEnabled(false);

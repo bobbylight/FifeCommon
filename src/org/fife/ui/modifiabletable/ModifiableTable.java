@@ -23,6 +23,7 @@ import java.util.ResourceBundle;
 import java.util.Vector;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.JPanel;
@@ -35,7 +36,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.DefaultTableModel;
 
-import org.fife.ui.RButton;
 import org.fife.ui.RScrollPane;
 import org.fife.ui.UIUtil;
 
@@ -78,11 +78,11 @@ public class ModifiableTable extends JPanel {
 										"ModifiableTable.nonOpaquePanels";
 
 	private JTable table;
-	private RButton addButton;
-	private RButton removeButton;
-	private RButton modifyButton;
-	private RButton moveUpButton;
-	private RButton moveDownButton;
+	private JButton addButton;
+	private JButton removeButton;
+	private JButton modifyButton;
+	private JButton moveUpButton;
+	private JButton moveDownButton;
 	private RowHandler rowHandler;
 	private int firstMovableRow;
 	private Listener listener;
@@ -282,14 +282,14 @@ public class ModifiableTable extends JPanel {
 		// Gather the desired buttons.
 		int buttonCount = 0;
 		if ((buttons&ADD)==ADD) {
-			addButton = new RButton(msg.getString("Button.Add"));
+			addButton = new JButton(msg.getString("Button.Add"));
 			addButton.setActionCommand(ADD_COMMAND);
 			addButton.addActionListener(listener);
 			panel.add(addButton);
 			buttonCount++;
 		}
 		if ((buttons&REMOVE)==REMOVE) {
-			removeButton = new RButton(msg.getString("Button.Remove"));
+			removeButton = new JButton(msg.getString("Button.Remove"));
 			removeButton.setActionCommand(REMOVE_COMMAND);
 			removeButton.addActionListener(listener);
 			removeButton.setEnabled(false);
@@ -297,7 +297,7 @@ public class ModifiableTable extends JPanel {
 			buttonCount++;
 		}
 		if ((buttons&MODIFY)==MODIFY) {
-			modifyButton = new RButton(msg.getString("Button.Modify"));
+			modifyButton = new JButton(msg.getString("Button.Modify"));
 			modifyButton.setActionCommand(MODIFY_COMMAND);
 			modifyButton.addActionListener(listener);
 			modifyButton.setEnabled(false);
@@ -305,12 +305,12 @@ public class ModifiableTable extends JPanel {
 			buttonCount++;
 		}
 		if ((buttons&MOVE_UP_DOWN)==MOVE_UP_DOWN) {
-			moveUpButton = new RButton(msg.getString("Button.MoveUp"));
+			moveUpButton = new JButton(msg.getString("Button.MoveUp"));
 			moveUpButton.setActionCommand(MOVE_UP_COMMAND);
 			moveUpButton.addActionListener(listener);
 			moveUpButton.setEnabled(false);
 			panel.add(moveUpButton);
-			moveDownButton = new RButton(msg.getString("Button.MoveDown"));
+			moveDownButton = new JButton(msg.getString("Button.MoveDown"));
 			moveDownButton.setActionCommand(MOVE_DOWN_COMMAND);
 			moveDownButton.addActionListener(listener);
 			moveDownButton.setEnabled(false);
@@ -323,7 +323,7 @@ public class ModifiableTable extends JPanel {
 		if (customButtons!=null) {
 			for (Iterator i=customButtons.iterator(); i.hasNext(); ) {
 				Action a = (Action)i.next();
-				RButton extraButton = new RButton(a);
+				JButton extraButton = new JButton(a);
 				panel.add(extraButton);
 				buttonCount++;
 			}

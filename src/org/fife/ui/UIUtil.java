@@ -566,7 +566,7 @@ public class UIUtil {
 	 */
 	public static final JButton newButton(ResourceBundle bundle,
 			String textKey, String mnemonicKey, ActionListener listener) {
-		RButton b = new RButton(bundle.getString(textKey));
+		JButton b = new JButton(bundle.getString(textKey));
 		b.setMnemonic(getMnemonic(bundle, mnemonicKey));
 		if (listener!=null) {
 			b.addActionListener(listener);
@@ -697,8 +697,8 @@ public class UIUtil {
 	 * @return A button to add to a <code>JTabbedPane</code>.
 	 * @see #newTabbedPanePanel()
 	 */
-	public static RButton newTabbedPaneButton(String text) {
-		RButton button = new RButton(text);
+	public static JButton newTabbedPaneButton(String text) {
+		JButton button = new JButton(text);
 		if (getUseNonOpaqueTabbedPaneComponents())
 			button.setOpaque(false);
 		return button;

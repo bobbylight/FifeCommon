@@ -190,7 +190,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private FileFilter filterToSelect;
 
 	private FileTypeInfo tempInfo;	// Used internally.
-	private Color defaultFileColor;	// Default color for filenames.
 	private HashMap customColors;		// Mapping of extensions to colors.
 	private boolean showHiddenFiles;
 	private Color hiddenFileColor;
@@ -317,7 +316,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		// We need to do this after all components are added above.
 		FileChooserPreferences prefs = FileChooserPreferences.load();
 		tempInfo = new FileTypeInfo(null, null);
-		setDefaultFileColor(prefs.defaultFileColor);
 		customColors = prefs.customColors;
 		setShowHiddenFiles(prefs.showHiddenFiles);
 		setHiddenFileColor(prefs.hiddenFileColor);
@@ -1159,10 +1157,16 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * Returns the color used to paint the name of files with unknown type.
 	 *
 	 * @return The color used.
-	 * @see #setDefaultFileColor
 	 */
 	public Color getDefaultFileColor() {
-		return defaultFileColor;
+		// We cheat here and return a label's foreground if our view has not
+		// yet been created.  This happens when the user opens the options
+		// dialog before this component.  This isn't a big deal since, in
+		// practice, all LookAndFeels set list/table foregrounds to the same
+		// value as label foregrounds, and the option panel doesn't allow the
+		// user to change the value.
+		return view!=null ? view.getDefaultFileColor() :
+			new JLabel().getForeground();
 	}
 
 
@@ -1431,7 +1435,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	public FileTypeInfo getFileTypeInfoFor(File file) {
 
 		if (file.isDirectory()) {
-			tempInfo.labelTextColor = defaultFileColor;
+			tempInfo.labelTextColor = getDefaultFileColor();
 		}
 		else {
 			// If there's an extension, check for a custom color.
@@ -1440,12 +1444,12 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			if (extension!=null && extension.length()>0) {
 				Color color = getColorForExtension(extension);
 				if (color==null)
-					color = defaultFileColor;
+					color = getDefaultFileColor();
 				tempInfo.labelTextColor = color;
 			}
 			// No extension => use defaults.
 			else {
-				tempInfo.labelTextColor = defaultFileColor;
+				tempInfo.labelTextColor = getDefaultFileColor();
 			}
 		}
 
@@ -2231,17 +2235,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 */
 	public void setCustomTitle(String title) {
 		customTitle = title;
-	}
-
-
-	/**
-	 * Sets the color used for unknown file types.
-	 *
-	 * @param color The color.
-	 * @see #getDefaultFileColor
-	 */
-	public void setDefaultFileColor(final Color color) {
-		defaultFileColor = color;
 	}
 
 

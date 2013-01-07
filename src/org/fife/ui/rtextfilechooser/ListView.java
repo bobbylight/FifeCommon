@@ -124,6 +124,14 @@ class ListView extends JList implements RTextFileChooserView {
 
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public Color getDefaultFileColor() {
+		return getForeground();
+	}
+
+
+	/**
 	 * Returns the number of files currently being displayed.
 	 *
 	 * @return The number of files currently being displayed.

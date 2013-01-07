@@ -529,7 +529,8 @@ public class ModifiableTable extends JPanel {
 	protected void modifyRow() {
 		if (rowHandler!=null) {
 			int selectedRow = table.getSelectedRow();
-			if (selectedRow>-1) { // Should always be true
+			if (selectedRow>-1 && // Should always be true
+					rowHandler.canModifyRow(selectedRow)) {
 				Object[] oldData = getContentsOfRow(selectedRow);
 				Object[] newData = rowHandler.getNewRowInfo(oldData);
 				if (newData!=null) {

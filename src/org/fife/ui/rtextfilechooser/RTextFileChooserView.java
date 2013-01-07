@@ -10,6 +10,7 @@
  */
 package org.fife.ui.rtextfilechooser;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
 import java.util.Vector;
@@ -45,6 +46,14 @@ interface RTextFileChooserView extends FileSelector {
 	 * @param file The file that is to be visible.
 	 */
 	public void ensureFileIsVisible(File file);
+
+
+	/**
+	 * Returns the color used to paint the name of files with unknown type.
+	 *
+	 * @return The color used.
+	 */
+	public Color getDefaultFileColor();
 
 
 	/**

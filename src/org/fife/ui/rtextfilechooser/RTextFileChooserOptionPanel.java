@@ -200,9 +200,6 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		String style = openFilesStyleCombo.getSelectedSpecialItem();
 		chooser.setOpenFilesStyle(Integer.parseInt(style));
 
-		// Do row 0... guaranteed to be "default" color.
-		chooser.setDefaultFileColor((Color)colorTableModel.getValueAt(0,1));
-
 		// Do all of the other colors.
 		int rowCount = colorTableModel.getRowCount();
 		for (int i=1; i<rowCount; i++) {
@@ -551,6 +548,11 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 
 		private ExtensionColorMappingDialog dialog;
 
+		public boolean canModifyRow(int row) {
+			// Row 0 is always "<Default>," which the user can't modify/remove.
+			return row>0;
+		}
+
 		public Object[] getNewRowInfo(Object[] oldData) {
 			if (dialog==null)
 				dialog = new ExtensionColorMappingDialog(getOptionsDialog());
@@ -563,11 +565,6 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 				return new Object[] { dialog.getExtension(),dialog.getColor() };
 			}
 			return null;
-		}
-
-		public boolean canRemoveRow(int row) {
-			// Row 0 is always "<Defualt>," which the user cannot remove.
-			return row>0;
 		}
 
 		/**

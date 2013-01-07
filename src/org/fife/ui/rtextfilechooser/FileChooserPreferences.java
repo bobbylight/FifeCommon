@@ -30,7 +30,6 @@ class FileChooserPreferences {
 	public boolean fileSystemAware;
 	public boolean autoCompleteFileNames;
 	public Color hiddenFileColor;
-	public Color defaultFileColor;
 	public HashMap customColors;
 	public boolean styleOpenFiles;
 	public int openFilesStyle;
@@ -38,7 +37,6 @@ class FileChooserPreferences {
 
 	private static final String FTI_PREFIX				= "fti_";
 	private static final String AUTO_COMPLETE_KEY		= "autoComplete";
-	private static final String DEFAULT_COLOR_KEY		= "defaultcolor";
 	private static final String FILE_SYSTEM_AWARE_KEY		= "fileSystemAware";
 	private static final String HIDDEN_FILE_COLOR_KEY		= "hiddenfilecolor";
 	private static final String OPEN_FILES_STYLE_KEY		= "openFilesStyle";
@@ -73,7 +71,6 @@ class FileChooserPreferences {
 	private static FileChooserPreferences generate(RTextFileChooser chooser) {
 		FileChooserPreferences prefs = new FileChooserPreferences();
 		prefs.customColors = chooser.getCustomColorsMap();
-		prefs.defaultFileColor = chooser.getDefaultFileColor();
 		prefs.hiddenFileColor = chooser.getHiddenFileColor();
 		prefs.showHiddenFiles = chooser.getShowHiddenFiles();
 		prefs.fileSystemAware = chooser.getFileSystemAware();
@@ -103,10 +100,6 @@ class FileChooserPreferences {
 
 			fprefs.customColors = FileChooserPreferences.
 											loadCustomColorsMap();
-
-			// Get the default color.
-			fprefs.defaultFileColor = new Color(
-					prefs.getInt(DEFAULT_COLOR_KEY, DEFAULT_COLOR_INT));
 
 			// Get the hidden file color.
 			fprefs.hiddenFileColor = new Color(
@@ -210,9 +203,6 @@ class FileChooserPreferences {
 			prefs.putInt(FTI_PREFIX+key, c.getRGB());
 		}
 
-		// Do default color.
-		prefs.putInt(DEFAULT_COLOR_KEY, fcp.defaultFileColor.getRGB());
-
 		// Do hidden file color.
 		prefs.putInt(HIDDEN_FILE_COLOR_KEY, fcp.hiddenFileColor.getRGB());
 
@@ -235,7 +225,6 @@ class FileChooserPreferences {
 		hiddenFileColor = DEFAULT_HIDDEN_FILE_COLOR;
 		fileSystemAware = true;
 		autoCompleteFileNames = true;
-		defaultFileColor = DEFAULT_COLOR;
 		customColors = null;
 		styleOpenFiles = true;
 		openFilesStyle = RTextFileChooser.STYLE_UNDERLINE;

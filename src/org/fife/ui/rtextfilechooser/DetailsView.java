@@ -10,6 +10,7 @@
  */
 package org.fife.ui.rtextfilechooser;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
@@ -223,6 +224,15 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		im.put(KeyStroke.getKeyStroke("shift DELETE"), "none");
 
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Color getDefaultFileColor() {
+		return getForeground();
+	}
+
 
 	private int getDisplayCount() {
 		synchronized (ATTRIBUTES_LOCK) {

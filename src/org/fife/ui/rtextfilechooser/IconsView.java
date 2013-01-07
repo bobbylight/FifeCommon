@@ -40,8 +40,10 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	private static final int SPACING			= 10;	// Spacing between icons.
 	private static final int DEFAULT_ICON_WIDTH	= 64;
 	private static final int DEFAULT_ROW_SIZE	= 5;		// Default # of icons per row.
-	private RTextFileChooser chooser;
 
+	private RTextFileChooser chooser;
+	private Color selectionForeground;
+	private Color selectionBackground;
 	private MouseListener mouseListener;
 
 
@@ -53,8 +55,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	public IconsView(RTextFileChooser chooser) {
 
 		this.chooser = chooser;
-
-		setBackground(UIManager.getColor("List.background"));
+		setImportantColors();
 
 		ComponentOrientation orientation = chooser.getComponentOrientation();
 		applyComponentOrientation(orientation);
@@ -114,6 +115,14 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	 */
 	public void ensureFileIsVisible(File file) {
 		System.err.println("Not implemented!");
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Color getDefaultFileColor() {
+		return getForeground();
 	}
 
 
@@ -278,6 +287,21 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 
 
 	/**
+	 * Sets important colors that aren't quite right for some LookAndFeels
+	 * (since we do custom painting) after the LaF is changed.
+	 */
+	private void setImportantColors() {
+		// More foolproof to use actual components, as not all LAFs will
+		// set "List.foreground", etc.
+		setForeground(new JLabel().getForeground());
+		JList list = new JList();
+		setBackground(list.getBackground());
+		selectionForeground = list.getSelectionForeground();
+		selectionBackground = list.getSelectionBackground();
+	}
+
+
+	/**
 	 * Sets whether or not this view allows the selection of multiple files.
 	 *
 	 * @param enabled Whether or not to allow the selection of multiple
@@ -319,7 +343,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 
 	public void setUI(DesktopPaneUI ui) {
 		super.setUI(ui);
-		setBackground(UIManager.getColor("List.background"));
+		setImportantColors();
 	}
 
 
@@ -332,13 +356,11 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 			setToolTipText("freaky"); // We must do this for tooltips to work (???).
 		}
 
-		// For some reason the tooltip location is goobered, even with this method
-		// (it seems to be ignored?).
 		public Point getToolTipLocation(MouseEvent e) {
 			Point p = e.getPoint();
 			p.x += 10;
 			p.y += 10;
-			return new Point(0,0);//p; <-- ?? Being ignored!
+			return p;
 		}
 
 		public String getToolTipText(MouseEvent e) {
@@ -374,7 +396,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 				Icon icon = getIcon();
 				int iconHeight = icon.getIconHeight();
 				g.fillRect(0,0, bounds.width,iconHeight);
-				g.setColor(UIManager.getColor("List.selectionBackground"));
+				g.setColor(selectionBackground);
 				g.fillRect(0,iconHeight+1,bounds.width,bounds.height-iconHeight);
 			}
 			getUI().paint(g, this);
@@ -471,7 +493,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 			if (selected) {
 
 				// Set colors.
-				label.setForeground(UIManager.getColor("List.selectionForeground"));
+				label.setForeground(selectionForeground);
 
 				// Set text to display.
 				String text = file.getName();

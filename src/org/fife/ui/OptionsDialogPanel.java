@@ -11,7 +11,6 @@
 package org.fife.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Container;
@@ -529,7 +528,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 			// Try to use the rendering hint set that is "native".
 			Map old = UIUtil.setNativeRenderingHints(g2d);
 
-			g.setColor(Color.BLUE);
+			g.setColor(UIUtil.getHyperlinkForeground());
 			font = UIManager.getFont("Label.font");
 			if (font==null) {
 				// This is quite expensive for a repaint, but not sure of any

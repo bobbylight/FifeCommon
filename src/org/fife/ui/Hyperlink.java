@@ -12,6 +12,7 @@ package org.fife.ui;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
+import javax.swing.plaf.LabelUI;
 
 import org.fife.ui.UIUtil;
 
@@ -76,15 +77,7 @@ public class Hyperlink extends JLabel {
 		return this.text;
 	}
 
-/*
-protected void paintBorder(java.awt.Graphics g) {
-	if (isFocusOwner()) {
-		Rectangle bounds = getBounds();
-		g.setColor(Color.RED);
-		javax.swing.plaf.basic.BasicGraphicsUtils.drawDashedRect(g, 0,0, bounds.width,bounds.height);
-	}
-}
-*/
+
 	protected void processMouseEvent(MouseEvent e) {
 		if (e.getButton()==MouseEvent.BUTTON1) {
 			switch (e.getID()) {
@@ -94,10 +87,7 @@ protected void paintBorder(java.awt.Graphics g) {
 									provideErrorFeedback(this);
 					}
 					break;
-/*				case MouseEvent.MOUSE_PRESSED:
-					requestFocusInWindow();
-					break;
-*/			}
+			}
 		}
 		super.processMouseEvent(e);
 	}
@@ -122,10 +112,15 @@ protected void paintBorder(java.awt.Graphics g) {
 	 */
 	public void setText(String text) {
 		this.text = text;
-		text = "<html><body><a href=\"" + address + "\">" + text +
-				"</a></body></html>";
+		text = "<html><body><u>" + text + "</u>";
 		super.setText(text);
 		setToolTipText(address);
+	}
+
+
+	public void setUI(LabelUI ui) {
+		super.setUI(ui);
+		setForeground(UIUtil.getHyperlinkForeground());
 	}
 
 

@@ -62,6 +62,12 @@ public class UIUtil {
 	private static int nonOpaqueTabbedPaneComponents = -1;
 
 	/**
+	 * Used for the color of hyperlinks when a LookAndFeel uses light text
+	 * against a dark background.
+	 */
+	private static final Color LIGHT_HYPERLINK_FG = new Color(0xd8ffff);
+
+	/**
 	 * A very common border that can be shared across many components.
 	 */
 	private static final Border EMPTY_5_BORDER		=
@@ -315,19 +321,54 @@ public class UIUtil {
 	 *         <code>null</code>, <code>#000000</code> is returned.
 	 */
 	public static final String getHTMLFormatForColor(Color color) {
+
 		if (color==null) {
 			return "#000000";
 		}
-		String hexRed = Integer.toHexString(color.getRed());
-		if (hexRed.length()==1)
-			hexRed = "0" + hexRed;
-		String hexGreen = Integer.toHexString(color.getGreen());
-		if (hexGreen.length()==1)
-			hexGreen = "0" + hexGreen;
-		String hexBlue = Integer.toHexString(color.getBlue());
-		if (hexBlue.length()==1)
-			hexBlue = "0" + hexBlue;
-		return "#" + hexRed + hexGreen + hexBlue;
+
+		StringBuffer sb = new StringBuffer("#");
+		int r = color.getRed();
+		if (r<16) {
+			sb.append('0');
+		}
+		sb.append(Integer.toHexString(r));
+
+		int g = color.getGreen();
+		if (g<16) {
+			sb.append('0');
+		}
+		sb.append(Integer.toHexString(g));
+
+		int b = color.getBlue();
+		if (b<16) {
+			sb.append('0');
+		}
+		sb.append(Integer.toHexString(b));
+
+		return sb.toString();
+
+	}
+
+
+	/**
+	 * Returns the color to use for hyperlink-style components.  This method
+	 * will return <code>Color.blue</code> unless it appears that the current
+	 * LookAndFeel uses light text on a dark background, in which case a
+	 * brighter alternative is returned.
+	 *
+	 * @return The color to use for hyperlinks.
+	 */
+	public static final Color getHyperlinkForeground() {
+
+		// This property is defined by all standard LaFs, even Nimbus (!),
+		// but you never know what crazy LaFs there are...
+		Color fg = UIManager.getColor("Label.foreground");
+		if (fg==null) {
+			fg = new JLabel().getForeground();
+		}
+
+		return isLightForeground(fg) ? LIGHT_HYPERLINK_FG : Color.blue;
+
 	}
 
 
@@ -405,6 +446,11 @@ public class UIUtil {
 
 		}
 
+	}
+
+
+	private static final boolean isLightForeground(Color fg) {
+		return fg.getRed()>0xa0 && fg.getGreen()>0xa0 && fg.getBlue()>0xa0;
 	}
 
 

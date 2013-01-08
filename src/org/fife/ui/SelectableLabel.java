@@ -26,47 +26,18 @@ import javax.swing.text.html.HTMLDocument;
  */
 public class SelectableLabel extends JTextPane {
 
+	/**
+	 * The color to use when rendering hyperlinks.  If non-<code>null</code>,
+	 * this overrides Swing's default.
+	 */
+	private Color hyperlinkForeground;
+
 
 	/**
 	 * Constructor.
 	 */
 	public SelectableLabel() {
 		this(null);
-	}
-
-
-	/**
-	 * Returns a hex string for the specified color, suitable for HTML.
-	 *
-	 * @param c The color.
-	 * @return The string representation, in the form "<code>#rrggbb</code>",
-	 *         or <code>null</code> if <code>c</code> is <code>null</code>.
-	 */
-	private static final String getHexString(Color c) {
-
-		if (c==null) {
-			return null;
-		}
-
-		StringBuffer sb = new StringBuffer("#");
-		int r = c.getRed();
-		if (r<16) {
-			sb.append('0');
-		}
-		sb.append(Integer.toHexString(r));
-		int g = c.getGreen();
-		if (g<16) {
-			sb.append('0');
-		}
-		sb.append(Integer.toHexString(g));
-		int b = c.getBlue();
-		if (b<16) {
-			sb.append('0');
-		}
-		sb.append(Integer.toHexString(b));
-
-		return sb.toString();
-
 	}
 
 
@@ -117,6 +88,19 @@ public class SelectableLabel extends JTextPane {
 
 
 	/**
+	 * Sets the color to use for hyperlinks, when HTML is displayed in this
+	 * component.  This can be used to override the default color used
+	 * by Swing, if you think a custom color looks better in your LookAndFeel.
+	 *
+	 * @param fg The new foreground.  Setting this to <code>null</code> will
+	 *        cause the default color to be used.
+	 */
+	public void setHyperlinkForeground(Color fg) {
+		this.hyperlinkForeground = fg;
+	}
+
+
+	/**
 	 * Sets the text displayed by this label.
 	 *
 	 * @param text The text to display.  If this begins with
@@ -156,22 +140,38 @@ public class SelectableLabel extends JTextPane {
 	 */
 	private void updateDefaultHtmlFont() {
 
+		Color fg = UIManager.getColor("Label.foreground");
 		Font font = UIManager.getFont("Label.font");
-		// This property is defined by all standard LaFs, even Nimbus (!), but
-		// you never know what crazy LaFs there are...
+		// These properties are defined by all standard LaFs, even Nimbus (!),
+		// but you never know what crazy LaFs there are...
 		if (font==null) {
 			font = new JLabel().getFont();
+		}
+		if (fg==null) {
+			fg = new JLabel().getForeground();
 		}
 
 		// When rendering HTML, the JEditorPane foreground color is ignored;
 		// we have to set it in the CSS as well.  This is only needed for
 		// LAF's whose label color isn't (extremely close to) black.
-		Color fg = getForeground();
+		HTMLDocument doc = (HTMLDocument)getDocument();
 		String bodyRule = "body { font-family: " + font.getFamily() +
 						"; font-size: " + font.getSize() + "pt" +
-						"; color: " + getHexString(fg) + "; }";
-		((HTMLDocument)getDocument()).getStyleSheet().addRule(bodyRule);
+						"; color: " + UIUtil.getHTMLFormatForColor(fg) + "; }";
+		doc.getStyleSheet().addRule(bodyRule);
 
+		// If this LaF looks to be light-text-on-dark-background,
+		// use a light color for hyperlinks.
+		Color linkFG = hyperlinkForeground;
+		if (linkFG==null) {
+			linkFG = UIUtil.getHyperlinkForeground();
+		}
+		if (linkFG!=null) {
+			String aRule = "a { color: " +
+					UIUtil.getHTMLFormatForColor(linkFG) + "; }";
+			doc.getStyleSheet().addRule(aRule);
+		}
+		
 	}
 
 

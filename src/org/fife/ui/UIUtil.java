@@ -17,6 +17,7 @@ import java.awt.Graphics2D;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,6 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.ListCellRenderer;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
@@ -390,6 +392,30 @@ public class UIUtil {
 			// Swallow.  TODO: When we drop 1.4/1.5 support, use containsKey().
 		}
 		return mnemonic;
+	}
+
+
+	/**
+	 * Returns a pretty string value for a KeyStroke, suitable for display as
+	 * the keystroke's value in a GUI.
+	 *
+	 * @param keyStroke The keystroke.
+	 * @return The string value of the keystroke.
+	 */
+	public static String getPrettyStringFor(KeyStroke keyStroke) {
+
+		if (keyStroke==null)
+			return "";
+
+		String string = KeyEvent.getKeyModifiersText(keyStroke.getModifiers());
+		if (string!=null && string.length()>0)
+			string += "+";
+		int keyCode = keyStroke.getKeyCode();
+		if (keyCode!=KeyEvent.VK_SHIFT && keyCode!=KeyEvent.VK_CONTROL &&
+			keyCode!=KeyEvent.VK_ALT && keyCode!=KeyEvent.VK_META)
+			string += KeyEvent.getKeyText(keyCode);
+		return  string;
+
 	}
 
 

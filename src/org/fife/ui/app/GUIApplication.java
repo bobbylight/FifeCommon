@@ -16,6 +16,8 @@ import java.awt.Frame;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import java.util.SortedSet;
+
 import javax.swing.Action;
 import javax.swing.JDialog;
 import javax.swing.JMenuBar;
@@ -59,7 +61,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @param key The key with which to fetch the action via
 	 *        <code>getAction</code>.
 	 * @param action The action to add.
-	 * @see #getAction
+	 * @see #getAction(String)
 	 */
 	public void addAction(String key, Action action);
 
@@ -121,17 +123,27 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 *
 	 * @return The action, or <code>null</code> if no action exists for the
 	 *         specified key.
-	 * @see #addAction
+	 * @see #addAction(String, Action)
+	 * @see #getActions()
 	 */
 	public Action getAction(String key);
 
 
 
 	/**
+	 * Returns the keys of all actions known to this application.
+	 *
+	 * @return The action keys.
+	 * @see #getAction(String)
+	 */
+	public SortedSet getActionKeys();
+
+
+	/**
 	 * Returns the actions of this GUI application as an array.
 	 *
 	 * @return The actions.
-	 * @see #getAction
+	 * @see #getAction(String)
 	 */
 	public Action[] getActions();
 

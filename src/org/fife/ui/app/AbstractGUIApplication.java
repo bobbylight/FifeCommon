@@ -21,13 +21,13 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.SortedSet;
+
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -75,8 +75,8 @@ import com.apple.osxadapter.NativeMacApp;
  * </ul>
  *
  * @author Robert Futrell
- * @version 0.5
- * @see org.fife.ui.app.AbstractPluggableGUIApplication
+ * @version 0.6
+ * @see AbstractPluggableGUIApplication
  */
 public abstract class AbstractGUIApplication extends JFrame
 							implements GUIApplication, NativeMacApp {
@@ -138,7 +138,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	/**
 	 * The map of actions for this application.
 	 */
-	private HashMap actionMap;
+	private ActionRegistry actions;
 
 	/**
 	 * This application's resource bundle.
@@ -311,22 +311,13 @@ public abstract class AbstractGUIApplication extends JFrame
 
 
 	/**
-	 * Adds an action to this application's action map.
-	 *
-	 * @param key The key with which to fetch the action via
-	 *        <code>getAction</code>.
-	 * @param action The action to add.
-	 * @see #createActions
-	 * @see #getAction
+	 * {@inheritDoc}
+	 * 
+	 * @see #createActions(GUIApplicationPreferences)
+	 * @see #getAction(String)
 	 */
 	public void addAction(String key, Action action) {
-		if (action==null)
-			throw new NullPointerException("action cannot be null");
-		else if (key==null)
-			throw new NullPointerException("key cannot be null");
-		if (actionMap==null)
-			actionMap = new HashMap();
-		actionMap.put(key, action);
+		actions.addAction(key, action);
 	}
 
 
@@ -369,8 +360,8 @@ public abstract class AbstractGUIApplication extends JFrame
 	 *
 	 * @param prefs The preferences for this GUI application.  This may
 	 *        contain information such as accelerators, etc.
-	 * @see #addAction
-	 * @see #getAction
+	 * @see #addAction(String, Action)
+	 * @see #getAction(String)
 	 */
 	protected void createActions(GUIApplicationPreferences prefs) {
 	}
@@ -399,8 +390,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @param prefs This GUI application's preferences.
 	 * @return The menu bar.
 	 */
-	protected abstract JMenuBar createMenuBar(
-								GUIApplicationPreferences prefs);
+	protected abstract JMenuBar createMenuBar(GUIApplicationPreferences prefs);
 
 
 	/**
@@ -570,40 +560,31 @@ public abstract class AbstractGUIApplication extends JFrame
 
 
 	/**
-	 * Returns one of this application's actions.
-	 *
-	 * @return The action, or <code>null</code> if no action exists for the
-	 *         specified key.
-	 * @see #addAction
-	 * @see #createActions
+	 * {@inheritDoc}
+	 * 
+	 * @see #addAction(String, Action)
+	 * @see #createActions(GUIApplicationPreferences)
 	 */
 	public Action getAction(String key) {
-		return (Action)actionMap.get(key);
+		return actions.getAction(key);
 	}
 
 
 	/**
-	 * Returns the actions of this GUI application as an array.  This array
-	 * is unique, so you can sort it, etc.
+	 * {@inheritDoc}
 	 *
-	 * @return The actions.  <code>null</code> is returned if the action
-	 *         map has not yet been initialized.
-	 * @see #getAction
+	 * @see #getAction(String)
+	 */
+	public SortedSet getActionKeys() {
+		return actions.getActionKeys();
+	}
+
+
+	/**
+	 * {@inheritDoc}
 	 */
 	public Action[] getActions() {
-		if (actionMap==null)
-			return null;
-		Set keySet = actionMap.keySet();
-		int size = keySet.size();
-		Action[] array = new Action[size];
-		int j = 0;
-		for (Iterator i=keySet.iterator(); i.hasNext(); ) {
-			array[j++] = (Action)actionMap.get(i.next());
-		}
-		// Sanity check.
-		if (j!=size)
-			throw new InternalError("Error in getActions!");
-		return array;
+		return actions.getActions();
 	}
 
 
@@ -943,6 +924,27 @@ public abstract class AbstractGUIApplication extends JFrame
 
 
 	/**
+	 * Loads saved (customized) shortcuts for this application's actions from
+	 * a file.  Implementations are expected to call this method after creating
+	 * their actions via {@link #createActions(GUIApplicationPreferences)} to
+	 * restore any user customizations to shortcuts (assuming the application
+	 * allows them).<p>
+	 * 
+	 * If an IO error occurs, an error is displayed to the user.
+	 *
+	 * @param file The file to load from.
+	 * @see #saveActionShortcuts(File)
+	 */
+	protected void loadActionShortcuts(File file) {
+		try {
+			actions.loadShortcuts(file);
+		} catch (IOException ioe) {
+			displayException(ioe);
+		}
+	}
+
+
+	/**
 	 * Loads the preferences for this GUI application.  If this application
 	 * does not use preferences or something, <code>null</code> is
 	 * goes wrong, <code>null</code> is returned.
@@ -1024,7 +1026,7 @@ public abstract class AbstractGUIApplication extends JFrame
 				displayException(e);
 			}
 
-		} // End of if (getOS()==OS_MAC_OSX).
+		}
 
 	}
 
@@ -1040,7 +1042,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	/**
 	 * This is called in the GUI application's constructor.  It is a chance
 	 * for subclasses to do initialization of stuff that will be needed
-	 * by the class before the appliction is displayed on-screen.
+	 * by the class before the application is displayed on-screen.
 	 *
 	 * @param prefs The preferences of the application.
 	 * @param splashScreen The "splash screen" for this application.  This
@@ -1174,6 +1176,26 @@ public abstract class AbstractGUIApplication extends JFrame
 
 
 	/**
+	 * Saves the (customized) shortcuts for this application's actions from a
+	 * file.  Implementations are expected to call this method when shutting
+	 * down, to save any user customizations to shortcuts (assuming the
+	 * application allows them).</p>
+	 * 
+	 * If an IO error occurs, an error is displayed to the user.
+	 *
+	 * @param file The file to save to.
+	 * @see #loadActionShortcuts(File)
+	 */
+	protected void saveActionShortcuts(File file) {
+		try {
+			actions.saveShortcuts(file);
+		} catch (IOException ioe) {
+			displayException(ioe);
+		}
+	}
+
+
+	/**
 	 * This method sets the content pane.  It is overridden so it does not
 	 * meddle with the status bar, toolbar, etc.
 	 *
@@ -1211,7 +1233,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @param language The language to use.  If <code>null</code>,
 	 *        English will be used.
 	 */
-	public void setLanguage(final String language) {
+	public void setLanguage(String language) {
 		this.language = language==null ? "en" : language;
 	}
 
@@ -1383,6 +1405,7 @@ public abstract class AbstractGUIApplication extends JFrame
 				UIManager.getLookAndFeelDefaults().put("ClassLoader", cl);
 			}
 
+			actions = new ActionRegistry();
 			createActions(prefs);
 
 			// Create the status bar.

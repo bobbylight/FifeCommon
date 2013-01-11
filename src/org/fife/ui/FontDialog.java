@@ -117,7 +117,6 @@ public class FontDialog extends JDialog implements ActionListener,
 		// Create a panel for choosing the font.
 		Box fontChooserPanel = Box.createVerticalBox();
 		fontList = new JList(createFontListModel());
-		fontList.setCellRenderer(new FontListCellRenderer());
 		fontList.setSelectionModel(new RListSelectionModel());
 		fontList.getSelectionModel().addListSelectionListener(this);
 		JScrollPane fontListScrollPane = new RScrollPane(fontList);
@@ -217,21 +216,21 @@ public class FontDialog extends JDialog implements ActionListener,
 	// What to do when some property of the prospective new font changes.
 	public void actionPerformed(ActionEvent e) {
 
-		String actionCommand = e.getActionCommand();
+		String command = e.getActionCommand();
 
-		if (actionCommand.equals("Bold")) {
+		if (command.equals("Bold")) {
 			properties ^= Font.BOLD;
 			Font newFont = sampleTextLabel.getFont().deriveFont(properties, size);
 			sampleTextLabel.setFont(newFont);
 		}
 
-		else if (actionCommand.equals("Italic")) {
+		else if (command.equals("Italic")) {
 			properties ^= Font.ITALIC;
 			Font newFont = sampleTextLabel.getFont().deriveFont(properties, size);
 			sampleTextLabel.setFont(newFont);
 		}
 
-		else if (actionCommand.equals("Underline")) {
+		else if (command.equals("Underline")) {
 			//properties ^= Font.CENTER_BASELINE;
 			//Font newFont = sampleLabel.getFont().deriveFont(properties, size);
 			//sampleTextLabel.setFont(newFont);
@@ -245,7 +244,7 @@ public class FontDialog extends JDialog implements ActionListener,
 			}
 		}
 
-		else if (actionCommand.equals("Color")) {
+		else if (command.equals("Color")) {
 			Color tempColor = JColorChooser.showDialog(this, "Font Color",
 									sampleTextLabel.getForeground());
 			if (tempColor != null) {
@@ -254,13 +253,13 @@ public class FontDialog extends JDialog implements ActionListener,
 			}
 		}
 
-		else if (actionCommand.equals("OK")) {
+		else if (command.equals("OK")) {
 			selectedFont = sampleTextLabel.getFont();
 			selectedColor = sampleTextLabel.getForeground();
 			this.setVisible(false);
 		}
 
-		else if (actionCommand.equals("Cancel")) {
+		else if (command.equals("Cancel")) {
 			selectedFont = null;
 			selectedColor = null;
 			this.setVisible(false);
@@ -648,30 +647,12 @@ public class FontDialog extends JDialog implements ActionListener,
 			return compareTo(obj)==0;
 		}
 
-	}
-
-
-	/**
-	 * A renderer for the font list.  This writes known monospaced fonts in
-	 * bold.
-	 *
-	 * @author Robert Futrell
-	 * @version 1.0
-	 */
-	private static class FontListCellRenderer extends DefaultListCellRenderer {
-
-		public Component getListCellRendererComponent(JList list,
-			Object value, int index, boolean selected, boolean focused) {
-			super.getListCellRendererComponent(list, value, index, selected,
-										focused);
-			FontInfo fi = (FontInfo)value;
-			if (fi.monospaced) {
-				setText("<html><b>" + fi.fontFamily + "</b>");
+		public String toString() {
+			String value = fontFamily;
+			if (monospaced) {
+				value = "<html><b>" + value + "</b>";
 			}
-			else {
-				setText(fi.fontFamily);
-			}
-			return this;
+			return value;
 		}
 
 	}

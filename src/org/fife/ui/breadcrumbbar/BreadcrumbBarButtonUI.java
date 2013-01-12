@@ -9,7 +9,6 @@
  */
 package org.fife.ui.breadcrumbbar;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
@@ -36,6 +35,11 @@ class BreadcrumbBarButtonUI extends BasicButtonUI {
 
 	public BreadcrumbBarButtonUI() {
 		colors = new BreadcrumbBarButtonColorSet();
+	}
+
+
+	public BreadcrumbBarButtonColorSet getColorSet() {
+		return colors;
 	}
 
 

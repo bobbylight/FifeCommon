@@ -33,6 +33,11 @@ public class BreadcrumbBarToggleButtonUI extends BasicToggleButtonUI {
 	}
 
 
+	public BreadcrumbBarButtonColorSet getColorSet() {
+		return colors;
+	}
+
+
 	protected void installDefaults(AbstractButton b) {
 		super.installDefaults(b);
 		b.setMargin(new Insets(5, 3, 5, 3));
@@ -55,12 +60,17 @@ public class BreadcrumbBarToggleButtonUI extends BasicToggleButtonUI {
 			g.fillRect(0,0, b.getWidth(),b.getHeight()/2);
 			g.setColor(colors.pressedC2);
 			g.fillRect(0,b.getHeight()/2, b.getWidth(),b.getHeight()/2);
+			c.setForeground(colors.pressedFG);
 		}
 		else if (model.isRollover() || model.isArmed()) {
 			g.setColor(colors.rolloverC1);
 			g.fillRect(0,0, b.getWidth(),b.getHeight()/2);
 			g.setColor(colors.rolloverC2);
 			g.fillRect(0,b.getHeight()/2, b.getWidth(),b.getHeight()/2);
+			c.setForeground(colors.rolloverFG);
+		}
+		else {
+			c.setForeground(colors.defaultFG);
 		}
 
 		super.paint(g, c);

@@ -14,10 +14,7 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 
 
 public class BreadcrumbBarTest extends JFrame implements PropertyChangeListener{
@@ -78,18 +75,6 @@ public class BreadcrumbBarTest extends JFrame implements PropertyChangeListener{
 					e.printStackTrace();
 				}
 				new BreadcrumbBarTest().setVisible(true);
-				JTextField textField = new JTextField();
-				Border border = textField.getBorder();
-				if (border instanceof CompoundBorder) {
-					CompoundBorder cb = (CompoundBorder)border;
-					Border b1 = cb.getInsideBorder();
-					Border b2 = cb.getOutsideBorder();
-					System.out.println("b1 == " + b1);
-					System.out.println("b2 == " + b2);
-				}
-				else {
-					System.out.println(border);
-				}
 			}
 		});
 	}

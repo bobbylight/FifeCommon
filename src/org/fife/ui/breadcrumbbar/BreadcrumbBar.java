@@ -16,16 +16,18 @@ import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -76,9 +78,10 @@ public class BreadcrumbBar extends JComponent {
 	private FSATextField dirField;
 	private JToggleButton backButton;
 	private Listener listener;
-	private Icon horizArrowIcon;
-	private Icon downArrowIcon;
+	private HorizArrowIcon horizArrowIcon;
+	private DownArrowIcon downArrowIcon;
 	private Icon backIcon;
+	private BufferedImage backImage;
 
 	static final String ARROW_ACTIVATED		= "arrowActivatedPropety";
 	static final String ARROW_SELECTED		= "arrowSelected";
@@ -103,10 +106,8 @@ public class BreadcrumbBar extends JComponent {
 		buttonPanel.setOpaque(false); // See color of BreadcrumbBar.
 		add(buttonPanel);
 
-		boolean ltr = getComponentOrientation().isLeftToRight();
-		horizArrowIcon = loadIcon(ltr ? "right.png":"left.png");
-		backIcon = loadIcon(ltr ? "back.png" : "forward.png");
-		downArrowIcon = loadIcon("down.png");
+		horizArrowIcon = new HorizArrowIcon();
+		downArrowIcon = new DownArrowIcon();
 
 		setShownLocation(new File("."));
 		updateBorderAndBackground();
@@ -131,19 +132,13 @@ public class BreadcrumbBar extends JComponent {
 		// Only re-load icons if necessary.
 		if (!o.equals(old)) {
 			// Fix horizontal arrow for this orientation.
-			boolean ltr = o.isLeftToRight();
-			Icon oldHorizIcon = horizArrowIcon;
 			Icon oldBackIcon = backIcon;
-			horizArrowIcon = loadIcon(ltr ? "right.png" : "left.png");
-			backIcon = loadIcon(ltr ? "back.png" : "forward.png");
+			backIcon = createBackIcon();
 			for (int i=0; i<buttonPanel.getComponentCount(); i++) {
 				Component c = buttonPanel.getComponent(i);
 				if (c instanceof AbstractButton) {
 					AbstractButton b = (AbstractButton)c;
-					if (b.getIcon()==oldHorizIcon) {
-						b.setIcon(horizArrowIcon);
-					}
-					else if (b.getIcon()==oldBackIcon) {
+					if (b.getIcon()==oldBackIcon) {
 						b.setIcon(backIcon);
 					}
 				}
@@ -158,6 +153,21 @@ public class BreadcrumbBar extends JComponent {
 		JToggleButton b = new BreadcrumbBarToggleButton(backIcon);
 		b.addActionListener(listener);
 		return b;
+	}
+
+
+	/**
+	 * Creates and returns the "back" icon, with colors appropriate for the
+	 * current Look and Feel.
+	 *
+	 * @return The back icon.
+	 * @see #getBackIcon()
+	 */
+	private Icon createBackIcon() {
+		String img = getComponentOrientation().isLeftToRight() ?
+					"back.png" : "forward.png";
+		backImage = loadImage(img);
+		return new ImageIcon(backImage);
 	}
 
 
@@ -213,13 +223,18 @@ tb.addChangeListener(new ChangeListener() {
 	}
 
 
-	private FSATextField createDirField() {
-		FSATextField dirField = new FSATextField(true, ".");
+	private void configureDirField(FSATextField dirField) {
 		dirField.setBorder(null);
 		Dimension size = dirField.getPreferredSize();
 		size.height = buttonPanel.getHeight();
 		dirField.setPreferredSize(size);
 		dirField.applyComponentOrientation(getComponentOrientation());
+	}
+
+
+	private FSATextField createDirField() {
+		FSATextField dirField = new FSATextField(true, ".");
+		configureDirField(dirField);
 		dirField.addActionListener(listener);
 		dirField.addKeyListener(listener);
 		return dirField;
@@ -263,12 +278,11 @@ tb.addChangeListener(new ChangeListener() {
 	 * Lazily creates and returns the "back" icon.
 	 *
 	 * @return The back icon.
+	 * @see #createBackIcon()
 	 */
 	private Icon getBackIcon() {
 		if (backIcon==null) {
-			String img = getComponentOrientation().isLeftToRight() ?
-					"back.png" : "forward.png";
-			backIcon = loadIcon(img);
+			backIcon = createBackIcon();
 		}
 		return backIcon;
 	}
@@ -335,31 +349,31 @@ tb.addChangeListener(new ChangeListener() {
 
 
 	/**
-	 * Loads an icon for a breadcrumb bar button.
+	 * Loads an image for a breadcrumb bar button.
 	 *
 	 * @param name The name of the image to load.
-	 * @return An icon of the iamge.
+	 * @return The image
 	 */
-	private static Icon loadIcon(String name) {
+	private static final BufferedImage loadImage(String name) {
 
-		Icon icon = null;
+		BufferedImage image = null;
 
 		name = pkg + name;
 		ClassLoader cl = BreadcrumbBar.class.getClassLoader();
 
 		try {
 			InputStream in = cl.getResourceAsStream(name);
-			if (in==null) { // Possibly debugging in Eclipse
-				in = new FileInputStream("src/" + name);
-			}
+//			if (in==null) { // Possibly debugging in Eclipse
+//				in = new FileInputStream("src/" + name);
+//			}
 			BufferedInputStream bin = new BufferedInputStream(in);
-			icon = new ImageIcon(ImageIO.read(bin));
+			image = ImageIO.read(bin);
 			bin.close();
 		} catch (IOException ioe) { // Never happens
 			ioe.printStackTrace();
 		}
 
-		return icon;
+		return image;
 
 	}
 
@@ -406,6 +420,23 @@ tb.addChangeListener(new ChangeListener() {
 		}
 
 	}
+
+
+//	private static final void replaceColor(BufferedImage image, Color oldColor,
+//										Color newColor) {
+//
+//		int[] imgArray = ((DataBufferInt)image.getRaster().
+//				getDataBuffer()).getData();
+//		int o = oldColor.getRGB();
+//		int n = newColor.getRGB();
+//		
+//		for (int i=0; i<imgArray.length; i++) {
+//			if (imgArray[i]==o) {
+//				imgArray[i] = n;
+//			}
+//		}
+//
+//	}
 
 
 	/**
@@ -480,11 +511,23 @@ tb.addChangeListener(new ChangeListener() {
 		iconLabel.setBackground(bg);
 
 		// Reset border on LaF changes, since it is LaF-dependent.
-		Border b = UIManager.getBorder("TextField.border");
-		if (b==null) { // e.g. Nimbus
-			b = BorderFactory.createLineBorder(Color.BLACK);
+		Border border = UIManager.getBorder("TextField.border");
+		if (border==null) { // e.g. Nimbus
+			border = BorderFactory.createLineBorder(Color.BLACK);
 		}
-		setBorder(b);
+		setBorder(border);
+
+		Icon oldBackIcon = backIcon;
+		backIcon = createBackIcon();
+		for (int i=0; i<buttonPanel.getComponentCount(); i++) {
+			Component c = buttonPanel.getComponent(i);
+			if (c instanceof AbstractButton) {
+				AbstractButton b = (AbstractButton)c;
+				if (b.getIcon()==oldBackIcon) {
+					b.setIcon(backIcon);
+				}
+			}
+		}
 
 	}
 
@@ -499,11 +542,12 @@ tb.addChangeListener(new ChangeListener() {
 		updateBorderAndBackground();
 		listener.updateUI();
 
-		if (getMode()==BREADCRUMB_MODE && dirField!=null) {
-			dirField.updateUI();
-		}
-		else if (getMode()==TEXT_FIELD_MODE) {
+		if (buttonPanel!=null) {
 			buttonPanel.updateUI();
+		}
+		if (dirField!=null) {
+			dirField.updateUI();
+			configureDirField(dirField); // Depends on buttonPanel being updated
 		}
 
 	}
@@ -527,6 +571,83 @@ tb.addChangeListener(new ChangeListener() {
 
 		public void popupMenuCanceled(PopupMenuEvent e) {
 			source.setSelected(false);
+		}
+
+	}
+
+
+	private class DownArrowIcon implements Icon {
+
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+
+			Color fg = c.getForeground();
+			g.setColor(fg);
+
+			((Graphics2D)g).translate(x, y);
+			g.drawLine(0,3, 6,3);
+			g.drawLine(1,4, 5,4);
+			g.drawLine(2,5, 4,5);
+			g.drawLine(3,6, 3,6);
+			((Graphics2D)g).translate(-x, -y);
+
+		}
+
+		public int getIconWidth() {
+			return 8;
+		}
+
+		public int getIconHeight() {
+			return 10;
+		}
+
+	}
+
+
+	private class HorizArrowIcon implements Icon {
+
+		private final int brighten(int component) {
+			return component<230 ? (component+20) : component;
+		}
+
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+
+			Color fg = c.getForeground();
+			g.setColor(fg);
+			Color highlight = new Color(brighten(fg.getRed()),
+					brighten(fg.getGreen()), brighten(fg.getBlue()));
+
+			((Graphics2D)g).translate(x, y);
+			ComponentOrientation o = getComponentOrientation();
+			if (o.isLeftToRight()) {
+				g.drawLine(2,1, 2,6);
+				g.drawLine(3,2, 3,5);
+				g.drawLine(4,3, 4,4);
+				g.setColor(highlight);
+				g.drawLine(2,0, 2,0);
+				g.drawLine(3,1, 3,1);
+				g.drawLine(4,2, 4,2);
+				g.drawLine(5,3, 5,3);
+			}
+			else {
+				g.drawLine(5,1, 5,6);
+				g.drawLine(4,2, 4,5);
+				g.drawLine(3,3, 3,4);
+				g.setColor(highlight);
+				g.drawLine(5,0, 5,0);
+				g.drawLine(4,1, 4,1);
+				g.drawLine(3,2, 3,2);
+				g.drawLine(2,3, 2,3);
+			}
+			((Graphics2D)g).translate(-x, -y);
+
+		}
+
+		public int getIconWidth() {
+			return 8;
+		}
+
+		public int getIconHeight() {
+			return 8;
 		}
 
 	}

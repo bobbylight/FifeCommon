@@ -14,7 +14,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.util.Map;
-
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
 import javax.swing.JComponent;
@@ -32,6 +31,13 @@ import org.fife.ui.UIUtil;
  */
 class BreadcrumbBarButtonUI extends BasicButtonUI {
 
+	private BreadcrumbBarButtonColorSet colors;
+
+
+	public BreadcrumbBarButtonUI() {
+		colors = new BreadcrumbBarButtonColorSet();
+	}
+
 
 	protected void installDefaults(AbstractButton b) {
 		super.installDefaults(b);
@@ -40,44 +46,45 @@ class BreadcrumbBarButtonUI extends BasicButtonUI {
 		b.setRolloverEnabled(true); // Not true by default
 		b.setFocusable(false); // Prevent JRootPane default button issues
 		b.setOpaque(false);
+		colors.initialize(b);
+		b.putClientProperty("breadcrumbBorderColor", colors.borderColor);
 	}
-   
+
 
 	public void paint(Graphics g, JComponent c) {
 
 		AbstractButton b = (AbstractButton)c;
 		ButtonModel model = b.getModel();
 		if (Boolean.TRUE==b.getClientProperty(BreadcrumbBar.ARROW_SELECTED)) {
-			Color c1 = new Color(194, 228, 246);
-			Color c2 = new Color(146, 204, 235);
-			g.setColor(c1);
+			g.setColor(colors.pressedC1);
 			g.fillRect(0,0, b.getWidth(),b.getHeight()/2);
-			g.setColor(c2);
+			g.setColor(colors.pressedC2);
 			g.fillRect(0,b.getHeight()/2, b.getWidth(),b.getHeight()/2);
+			c.setForeground(colors.pressedFG);
 		}
 		else if (Boolean.TRUE==b.getClientProperty(BreadcrumbBar.ARROW_ACTIVATED)) {
-			Color c1 = new Color(240,240,240);
-			Color c2 = new Color(212,212,212);
-			g.setColor(c1);
+			g.setColor(colors.nonArrowArrowArmedC1);
 			g.fillRect(0,0, b.getWidth(),b.getHeight()/2);
-			g.setColor(c2);
+			g.setColor(colors.nonArrowArrowArmedC2);
 			g.fillRect(0,b.getHeight()/2, b.getWidth(),b.getHeight()/2);
+			c.setForeground(colors.pressedFG);
 		}
 		else if (model.isPressed()) {
-			Color c1 = new Color(194, 228, 246);
-			Color c2 = new Color(146, 204, 235);
-			g.setColor(c1);
+			g.setColor(colors.pressedC1);
 			g.fillRect(0,0, b.getWidth(),b.getHeight()/2);
-			g.setColor(c2);
+			g.setColor(colors.pressedC2);
 			g.fillRect(0,b.getHeight()/2, b.getWidth(),b.getHeight()/2);
+			c.setForeground(colors.pressedFG);
 		}
 		else if (model.isRollover() || model.isArmed()) {
-			Color c1 = new Color(223, 242, 252);
-			Color c2 = new Color(177, 223, 249);
-			g.setColor(c1);
+			g.setColor(colors.rolloverC1);
 			g.fillRect(0,0, b.getWidth(),b.getHeight()/2);
-			g.setColor(c2);
+			g.setColor(colors.rolloverC2);
 			g.fillRect(0,b.getHeight()/2, b.getWidth(),b.getHeight()/2);
+			c.setForeground(colors.rolloverFG);
+		}
+		else {
+			c.setForeground(colors.defaultFG);
 		}
 
 		boolean substance = SubstanceUtils.isSubstanceInstalled();

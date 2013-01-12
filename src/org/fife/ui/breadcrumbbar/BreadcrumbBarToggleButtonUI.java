@@ -9,7 +9,6 @@
  */
 package org.fife.ui.breadcrumbbar;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Insets;
 import javax.swing.AbstractButton;
@@ -26,6 +25,13 @@ import javax.swing.plaf.basic.BasicToggleButtonUI;
  */
 public class BreadcrumbBarToggleButtonUI extends BasicToggleButtonUI {
 
+	private BreadcrumbBarButtonColorSet colors;
+
+
+	public BreadcrumbBarToggleButtonUI() {
+		colors = new BreadcrumbBarButtonColorSet();
+	}
+
 
 	protected void installDefaults(AbstractButton b) {
 		super.installDefaults(b);
@@ -34,6 +40,8 @@ public class BreadcrumbBarToggleButtonUI extends BasicToggleButtonUI {
 		b.setFocusable(false); // Prevent JRootPane default button issues
 		b.setBorder(new ButtonBorder());
 		b.setOpaque(false);
+		colors.initialize(b);
+		b.putClientProperty("breadcrumbBorderColor", colors.borderColor);
 	}
    
 
@@ -43,19 +51,15 @@ public class BreadcrumbBarToggleButtonUI extends BasicToggleButtonUI {
 		ButtonModel model = b.getModel();
 
 		if (model.isSelected() || model.isPressed()) {
-			Color c1 = new Color(194, 228, 246);
-			Color c2 = new Color(146, 204, 235);
-			g.setColor(c1);
+			g.setColor(colors.pressedC1);
 			g.fillRect(0,0, b.getWidth(),b.getHeight()/2);
-			g.setColor(c2);
+			g.setColor(colors.pressedC2);
 			g.fillRect(0,b.getHeight()/2, b.getWidth(),b.getHeight()/2);
 		}
 		else if (model.isRollover() || model.isArmed()) {
-			Color c1 = new Color(223, 242, 252);
-			Color c2 = new Color(177, 223, 249);
-			g.setColor(c1);
+			g.setColor(colors.rolloverC1);
 			g.fillRect(0,0, b.getWidth(),b.getHeight()/2);
-			g.setColor(c2);
+			g.setColor(colors.rolloverC2);
 			g.fillRect(0,b.getHeight()/2, b.getWidth(),b.getHeight()/2);
 		}
 

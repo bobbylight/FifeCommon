@@ -611,7 +611,10 @@ public class ModifiableTable extends JPanel {
 	protected void removeRow() {
 		if (rowHandler!=null) {
 			int row = table.getSelectedRow();
-			if (rowHandler.canRemoveRow(row)) {
+			if (row==-1) { // Should never happen
+				UIManager.getLookAndFeel().provideErrorFeedback(this);
+			}
+			else if (rowHandler.canRemoveRow(row)) {
 				DefaultTableModel model = (DefaultTableModel)table.
 													getModel();
 				model.removeRow(row);

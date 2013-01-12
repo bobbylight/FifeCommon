@@ -854,8 +854,12 @@ System.out.println("DEBUG: *** parent is null");
 		getDocument().addDocumentListener(this);
 
 		// Update the scroll pane in the drop-down window.
-		if (popupWindow!=null)
+		if (popupWindow!=null) {
 			SwingUtilities.updateComponentTreeUI(popupWindow);
+		}
+		else if (contentPane!=null) { // It's null first time through
+			SwingUtilities.updateComponentTreeUI(contentPane);
+		}
 
 		// Install extra key actions.
 		installExtraKeyActions();

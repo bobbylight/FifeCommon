@@ -9,11 +9,13 @@
  */
 package org.fife.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
@@ -28,6 +30,7 @@ import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -135,6 +138,45 @@ public class UIUtil {
 
 		return success;
 
+	}
+
+
+	/**
+	 * Creates a "footer" containing two buttons (typically OK and Cancel)
+	 * for a dialog.
+	 * 
+	 * @param ok The OK button.
+	 * @param cancel The Cancel button.
+	 * @return The footer component for the dialog.
+	 * @see #createButtonFooter(Container) 
+	 */
+	public static final Container createButtonFooter(JButton ok,
+											JButton cancel) {
+		JPanel temp = new JPanel(new GridLayout(1,2, 5,5));
+		temp.add(ok);
+		temp.add(cancel);
+		return createButtonFooter(temp);
+	}
+
+
+	/**
+	 * Creates a "footer" component, typically containing buttons, for a
+	 * dialog.
+	 *  
+	 * @param buttons The container of buttons, or whatever components that
+	 *        should be in the footer component.
+	 * @return The footer component for the dialog.
+	 * @see #createButtonFooter(JButton, JButton) 
+	 */
+	public static final Container createButtonFooter(Container buttons) {
+		JPanel panel = new JPanel(new BorderLayout());
+		ComponentOrientation o = buttons.getComponentOrientation();
+		final int PADDING = 8;
+		int left = o.isLeftToRight() ? 0 : PADDING;
+		int right = o.isLeftToRight() ? PADDING : 0;
+		panel.setBorder(BorderFactory.createEmptyBorder(10, left, 0, right));
+		panel.add(buttons, BorderLayout.LINE_END);
+		return panel;
 	}
 
 
@@ -564,6 +606,24 @@ public class UIUtil {
 	 */
 	private static final String mnemonicKey(String key) {
 		return key + ".Mnemonic";
+	}
+
+
+	/**
+	 * Returns a check box with the specified text.  If another property is
+	 * defined in the resource bundle with key
+	 * <code>key + ".Mnemonic"</code>, then it will be used for the mnemonic
+	 * of the check box.
+	 *
+	 * @param bundle The resource bundle for localizing the check box.
+	 * @param key The key into the bundle containing the string text value.
+	 * @return The check box.
+	 */
+	public static final JCheckBox newCheckBox(ResourceBundle bundle,
+			String key) {
+		JCheckBox cb = new JCheckBox(bundle.getString(key));
+		cb.setMnemonic(getMnemonic(bundle, mnemonicKey(key)));
+		return cb;
 	}
 
 

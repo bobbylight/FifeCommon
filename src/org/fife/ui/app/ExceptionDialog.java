@@ -12,10 +12,10 @@ package org.fife.ui.app;
 
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
+import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
@@ -213,7 +213,6 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 		textPanel.add(new RScrollPane(textArea));
 		//contentPane.add(textPanel);
 
-		JPanel buttonPanel = new JPanel(new GridLayout(1,2, 5,5));
 		JButton okButton = new JButton(msg.getString("Close"));
 		okButton.setMnemonic(msg.getString("CloseMnemonic").charAt(0));
 		okButton.addActionListener(new ActionListener() {
@@ -221,11 +220,8 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 				setVisible(false);
 			}
 		});
-		buttonPanel.add(okButton);
-		buttonPanel.add(detailsButton);
-		JPanel bottomPanel = new JPanel();
-		bottomPanel.add(buttonPanel);
-		contentPane.add(bottomPanel, BorderLayout.SOUTH);
+		Container buttons = UIUtil.createButtonFooter(okButton, detailsButton);
+		contentPane.add(buttons, BorderLayout.SOUTH);
 
 		setContentPane(contentPane);
 		getRootPane().setDefaultButton(okButton);

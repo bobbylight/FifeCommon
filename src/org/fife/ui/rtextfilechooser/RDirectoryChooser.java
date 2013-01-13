@@ -12,6 +12,7 @@ package org.fife.ui.rtextfilechooser;
 
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
+import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dialog;
 import java.awt.Frame;
@@ -171,19 +172,15 @@ public class RDirectoryChooser extends EscapableDialog {
 		contentPane.add(treePanel);
 
 		// Add a panel with the OK and Cancel buttons.
-		JPanel buttonPanel = new JPanel();
-		JPanel temp = new JPanel(new GridLayout(1,2, 5,0));
 		okButton = UIUtil.newButton(msg, "OK", "OKMnemonic");
 		okButton.setEnabled(false);
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(listener);
-		temp.add(okButton);
 		cancelButton = UIUtil.newButton(msg, "Cancel", "CancelMnemonic");
 		cancelButton.setActionCommand("Cancel");
 		cancelButton.addActionListener(listener);
-		temp.add(cancelButton);
-		buttonPanel.add(temp);
-		contentPane.add(buttonPanel, BorderLayout.SOUTH);
+		Container buttons = UIUtil.createButtonFooter(okButton, cancelButton);
+		contentPane.add(buttons, BorderLayout.SOUTH);
 
 		// Get ready to go!
 		setContentPane(contentPane);

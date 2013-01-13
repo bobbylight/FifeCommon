@@ -16,7 +16,6 @@ import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -455,18 +454,13 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 			contentPane.add(topPanel, BorderLayout.NORTH);
 
 			// Panel containing buttons for the bottom.
-			JPanel buttonPanel = new JPanel();
-			buttonPanel.setBorder(BorderFactory.createEmptyBorder(5,5,0,5));
-			temp = new JPanel(new GridLayout(1,2, 5,5));
 			okButton = UIUtil.newButton(msg, "OK.Text", "OK.Mnemonic");
 			okButton.addActionListener(this);
-			temp.add(okButton);
 			cancelButton = UIUtil.newButton(msg,
 								"Cancel.Text", "Cancel.Mnemonic");
 			cancelButton.addActionListener(this);
-			temp.add(cancelButton);
-			buttonPanel.add(temp);
-			contentPane.add(buttonPanel, BorderLayout.SOUTH);
+			Container buttons=UIUtil.createButtonFooter(okButton, cancelButton);
+			contentPane.add(buttons, BorderLayout.SOUTH);
 
 			// Get ready to go.
 			setTitle(msg.getString("Title"));

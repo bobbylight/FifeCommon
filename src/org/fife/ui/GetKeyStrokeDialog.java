@@ -14,10 +14,10 @@ import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Dialog;
 import java.awt.Frame;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -96,15 +96,14 @@ public class GetKeyStrokeDialog extends JDialog {
 		temp.add(textField);
 		contentPane.add(temp);
 
-		temp = new JPanel(new GridLayout(1,2, 5,5));
 		JButton ok = UIUtil.newButton(msg, "OK", listener);
 		ok.setActionCommand("OK");
-		temp.add(ok);
 		JButton cancel = UIUtil.newButton(msg, "Cancel", listener);
 		cancel.setActionCommand("Cancel");
-		temp.add(cancel);
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.add(temp);
+		JPanel buttonPanel = (JPanel)UIUtil.createButtonFooter(ok, cancel);
+		buttonPanel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createEmptyBorder(10, 0, 5, 0),
+				buttonPanel.getBorder()));
 
 		JPanel realCP = new ResizableFrameContentPane(new BorderLayout());
 		realCP.add(contentPane, BorderLayout.NORTH);

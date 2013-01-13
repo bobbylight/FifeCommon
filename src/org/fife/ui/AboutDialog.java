@@ -12,10 +12,10 @@ package org.fife.ui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
+import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -116,19 +116,15 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 		}
 
 		// Add the OK and license buttons.
-		JPanel buttonPanel = new JPanel();
-		temp = new JPanel(new GridLayout(1,2, 5,0));
 		okButton = UIUtil.newButton(msg, "OK", "OKButtonMnemonic");
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
-		temp.add(okButton);
 		licenseButton = UIUtil.newButton(msg, "License",
 										"LicenseButtonMnemonic");
 		licenseButton.setActionCommand("License");
 		licenseButton.addActionListener(this);
-		temp.add(licenseButton);
-		buttonPanel.add(temp);
-		contentPane.add(buttonPanel, BorderLayout.SOUTH);
+		Container buttons = UIUtil.createButtonFooter(okButton, licenseButton);
+		contentPane.add(buttons, BorderLayout.SOUTH);
 
 		// Put everything into a neat little package.
 		getRootPane().setDefaultButton(okButton);
@@ -269,12 +265,11 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 			textArea.setCaretPosition(0);
 			RScrollPane scrollPane = new RScrollPane(textArea);
 			cp.add(scrollPane);
-			JPanel buttonPanel = new JPanel();
 			JButton okButton = UIUtil.newButton(msg, "OK",
 											"OKButtonMnemonic");
 			okButton.addActionListener(this);
-			buttonPanel.add(okButton);
-			cp.add(buttonPanel, BorderLayout.SOUTH);
+			Container buttons = UIUtil.createButtonFooter(okButton);
+			cp.add(buttons, BorderLayout.SOUTH);
 			setModal(true);
 			applyComponentOrientation(o);
 			getRootPane().setDefaultButton(okButton);

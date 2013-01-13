@@ -12,8 +12,8 @@ package org.fife.ui.rtextfilechooser;
 
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
+import java.awt.Container;
 import java.awt.Frame;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -260,19 +260,11 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 
 			// Panel containing main stuff.
 			Box topPanel = Box.createVerticalBox();
-			JPanel temp = new JPanel(new BorderLayout());
+			JPanel temp = new JPanel(new BorderLayout(5, 0));
 			temp.setBorder(BorderFactory.createEmptyBorder(0,0,5,0));
 			JLabel label = UIUtil.newLabel(msg, "Directory");
-			JPanel temp2 = new JPanel(new BorderLayout());
-			temp2.add(label);
-			if (orientation.isLeftToRight()) { // Space between label and text field.
-				temp2.setBorder(BorderFactory.createEmptyBorder(0,0,0,5));
-			}
-			else {
-				temp2.setBorder(BorderFactory.createEmptyBorder(0,5,0,0));
-			}
-			temp.add(temp2, BorderLayout.LINE_START);
-			dirField = new JTextField(40);
+			temp.add(label, BorderLayout.LINE_START);
+			dirField = new JTextField(35);
 			dirField.getDocument().addDocumentListener(this);
 			label.setLabelFor(dirField);
 			temp.add(dirField);
@@ -281,32 +273,19 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 													charAt(0));
 			browseButton.setActionCommand("Browse");
 			browseButton.addActionListener(this);
-			temp2 = new JPanel(new BorderLayout());
-			temp2.add(browseButton);
-			if (orientation.isLeftToRight()) { // Space between text field and button.
-				temp2.setBorder(BorderFactory.createEmptyBorder(0,5,0,0));
-			}
-			else {
-				temp2.setBorder(BorderFactory.createEmptyBorder(0,0,0,5));
-			}
-			temp.add(temp2, BorderLayout.LINE_END);
+			temp.add(browseButton, BorderLayout.LINE_END);
 			topPanel.add(temp);
 			contentPane.add(topPanel, BorderLayout.NORTH);
 
 			// Panel containing buttons for the bottom.
-			JPanel buttonPanel = new JPanel();
-			buttonPanel.setBorder(BorderFactory.createEmptyBorder(5,5,0,5));
-			temp = new JPanel(new GridLayout(1,2, 5,5));
 			okButton = UIUtil.newButton(msg,
 								"OK.Text", "OK.Mnemonic");
 			okButton.addActionListener(this);
-			temp.add(okButton);
 			cancelButton = UIUtil.newButton(msg,
 								"Cancel.Text", "Cancel.Mnemonic");
 			cancelButton.addActionListener(this);
-			temp.add(cancelButton);
-			buttonPanel.add(temp);
-			contentPane.add(buttonPanel, BorderLayout.SOUTH);
+			Container buttons=UIUtil.createButtonFooter(okButton, cancelButton);
+			contentPane.add(buttons, BorderLayout.SOUTH);
 
 			// Get ready to go.
 			setTitle(msg.getString("Title"));

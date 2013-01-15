@@ -15,6 +15,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,6 +28,7 @@ import javax.swing.tree.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
+import org.fife.ui.SubstanceUtils;
 import org.fife.ui.ToolTipTree;
 
 
@@ -75,7 +77,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	private FileSystemTreeActions.RefreshAction refreshAction;
 	private Actions.PropertiesAction propertiesAction;
 
-	private FileSystemTreeRenderer cellRenderer;
+	private TreeCellRenderer cellRenderer;
 
 	/**
 	 * Whether we're running in a Java 6 or higher JVM.
@@ -236,6 +238,31 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		popup.applyComponentOrientation(getComponentOrientation());
 		return popup;
 
+	}
+
+
+	/**
+	 * Creates and returns a renderer to use for the nodes in this tree.
+	 *
+	 * @return The renderer to use.
+	 */
+	private TreeCellRenderer createTreeCellRenderer() {
+		if (SubstanceUtils.isSubstanceInstalled()) {
+			// Use reflection to avoid compile-time dependencies form this
+			// class to Substance.
+			String clazzName =
+				"org.fife.ui.rtextfilechooser.SubstanceFileSystemTreeRenderer";
+			try {
+				Class clazz = Class.forName(clazzName);
+				Constructor cons = clazz.getConstructor(
+						new Class[] { FileSystemTree.class });
+				return (TreeCellRenderer)cons.newInstance(new Object[] {this});
+			} catch (Exception e) {
+				e.printStackTrace();
+				// Fall through
+			}
+		}
+		return new FileSystemTreeRenderer();
 	}
 
 
@@ -569,7 +596,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		treeModel = new FileSystemTreeModel(root);
 		setModel(treeModel);
 
-		cellRenderer = new FileSystemTreeRenderer();
+		cellRenderer = createTreeCellRenderer();
 		setCellRenderer(cellRenderer);
 
 		// Make everything look nice.
@@ -789,7 +816,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			// so we cannot simply call cellRenderer.updateUI(),
 			// unfortunately; we must create a new one ourselves.
 			//SwingUtilities.updateComponentTreeUI(cellRenderer);
-			cellRenderer = new FileSystemTreeRenderer();
+			cellRenderer = createTreeCellRenderer();
 			setCellRenderer(cellRenderer);
 		}
 

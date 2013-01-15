@@ -32,17 +32,33 @@
 	<property name="debug"            value="true"/>
 	<property name="debuglevel"       value="lines,vars,source"/>
 	<property name="java-level"       value="1.4"/>
-
+	<property file="build.properties"/>
+	
 
 	<!-- Compiles all common org.fife classes.  -->
 	<target name="compile" description="Compile the source.">
 		<delete includeEmptyDirs="true" quiet="true" dir="${class-dir}"/>
 		<mkdir dir="${class-dir}"/>
+		<!-- Most stuff only requires Java 1.4. -->
 		<javac srcdir="${source-dir}" destdir="${class-dir}"
-			classpath="extra:lib/rsyntaxtextarea.jar:lib/autocomplete.jar"
-			includeantruntime="false"
-			deprecation="yes" debug="${debug}" debuglevel="${debuglevel}"
-			source="${java-level}" target="${java-level}"/>
+				classpath="extra"
+				includeantruntime="false"
+				deprecation="yes" debug="${debug}" debuglevel="${debuglevel}"
+				source="${java-level}" target="${java-level}">
+			<include name="**/*.java"/>
+			<exclude name="**/*Substance*.java"/>
+			<include name="**/SubstanceUtils.java"/>
+		</javac>
+		<!-- Dynamically loaded stuff that requires Java 6. -->
+		<javac srcdir="${source-dir}" destdir="${class-dir}"
+				classpath="lib/substance/substance-7.2.1.jar"
+				includeantruntime="false"
+				deprecation="yes" debug="${debug}" debuglevel="${debuglevel}"
+				fork="true" executable="${javac.16}"
+				source="${java-level}" target="${java-level}">
+			<include name="**/*Substance*.java"/>
+			<exclude name="**/SubstanceUtils.java"/>
+		</javac>
 	</target>
 
 

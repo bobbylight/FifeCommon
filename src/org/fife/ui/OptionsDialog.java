@@ -23,7 +23,6 @@ import javax.swing.text.JTextComponent;
 import javax.swing.tree.*;
 
 
-
 /**
  * An options dialog similar to those found in many Microsoft Windows
  * applications.  An <code>OptionsDialog</code> contains a list on its left-hand
@@ -99,11 +98,11 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 				// Must set new cell renderer each time lnf changes as
 				// DefaultTreeCellRenderer is "buggy" in that it caches
 				// colors, fonts, icons, etc.
-				setCellRenderer(new OptionTreeCellRenderer());
+				setCellRenderer(createTreeCellRenderer());
 			}
 		};
 		optionTree.setSelectionModel(new RTreeSelectionModel());
-		optionTree.setCellRenderer(new OptionTreeCellRenderer());
+		optionTree.setCellRenderer(createTreeCellRenderer());
 		optionTree.setShowsRootHandles(true);
 		optionTree.setRootVisible(false);
 		//optionTree.setSelectionRow(0); // Must call this later.
@@ -215,6 +214,28 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 			key = panel.getName() + "-" + key;
 		}
 		return key;
+	}
+
+
+	/**
+	 * Creates and returns a renderer to use for the nodes in this tree.
+	 *
+	 * @return The renderer to use.
+	 */
+	private TreeCellRenderer createTreeCellRenderer() {
+		if (SubstanceUtils.isSubstanceInstalled()) {
+			//  Use reflection to avoid compile-time dependencies form this
+			// class to Substance.
+			String clazzName = "org.fife.ui.SubstanceOptionsDialogTreeRenderer";
+			try {
+				Class clazz = Class.forName(clazzName);
+				return (TreeCellRenderer)clazz.newInstance();
+			} catch (Exception e) {
+				e.printStackTrace();
+				// Fall through
+			}
+		}
+		return new OptionTreeCellRenderer();
 	}
 
 

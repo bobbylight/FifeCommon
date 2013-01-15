@@ -55,13 +55,44 @@ public class FontDialog extends JDialog implements ActionListener,
 
 
 	/**
-	 * Creates a new font dialog with <code>null</code> as owner, with initial
-	 * selection of a 10-point monospaced font.  Underline and font color
-	 * options will not be available for selection.
+	 * Creates a new font dialog from which the user can choose the font
+	 * property "underline" and the font color.
+	 *
+	 * @param owner The window for which you are picking a font.
+	 * @param title The title of this dialog (e.g., "Font").
+	 * @param initialSelection The font that this dialog initially has
+	 *        selected.  A <code>null</code> value defaults to
+	 *        <code>owner</code>'s font.
+	 * @param initialColor The color to use for the font initially.  A
+	 *        <code>null</code> value defaults to black.
 	 */
-	public FontDialog() {
-		this(null, null, new Font("Monospaced", Font.PLAIN, 10),
-			Color.BLACK, false, false);
+	public FontDialog(Dialog owner, String title, Font initialSelection,
+					Color initialColor) {
+		this(owner, title, initialSelection, initialColor, true, true);
+	}
+
+
+	/**
+	 * Creates a new font dialog.
+	 *
+	 * @param owner The window for which you are picking a font.
+	 * @param title The title of this dialog (e.g., "Font").
+	 * @param initialSelection The font that this dialog initially has
+	 *        selected.  A <code>null</code> value defaults to
+	 *        <code>owner</code>'s font.
+	 * @param initialColor The color to use for the font initially.  A
+	 *        <code>null</code> value defaults to black.
+	 * @param underlineSelectable Whether or not the user can select
+	 *        "underline" as a property for the font being chosen.
+	 * @param colorSelectable Whether or not the user can change the font's
+	 *        color from here.
+	 */
+	public FontDialog(Dialog owner, String title, Font initialSelection,
+					Color initialColor, boolean underlineSelectable,
+					boolean colorSelectable) {
+		super(owner);
+		init(owner, title, initialSelection, initialColor, underlineSelectable,
+				colorSelectable);
 	}
 
 
@@ -82,6 +113,7 @@ public class FontDialog extends JDialog implements ActionListener,
 		this(owner, title, initialSelection, initialColor, true, true);
 	}
 
+
 	/**
 	 * Creates a new font dialog.
 	 *
@@ -100,8 +132,15 @@ public class FontDialog extends JDialog implements ActionListener,
 	public FontDialog(Frame owner, String title, Font initialSelection,
 					Color initialColor, boolean underlineSelectable,
 					boolean colorSelectable) {
-
 		super(owner);
+		init(owner, title, initialSelection, initialColor, underlineSelectable,
+				colorSelectable);
+	}
+
+
+	private void init(Window owner, String title, Font initialSelection,
+			Color initialColor, boolean underlineSelectable,
+			boolean colorSelectable) {
 
 		ComponentOrientation orientation = ComponentOrientation.
 									getOrientation(getLocale());

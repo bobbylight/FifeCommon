@@ -106,13 +106,24 @@ public class FontSelector extends JPanel implements ActionListener {
 		// If the user clicked the "Browse" button for fonts...
 		if (e.getSource()==browseButton) {
 
-			FontDialog fd = new FontDialog(null, msg.getString("Font"),
+			Window parent = SwingUtilities.getWindowAncestor(this);
+			FontDialog fd = null;
+			if (parent instanceof Frame) {
+				fd = new FontDialog((Frame)parent, msg.getString("Font"),
 									field.getDisplayedFont(),
 									fontColor,
 									underlineSelectable,
 									colorSelectable);
+			}
+			else {
+				fd = new FontDialog((Dialog)parent, msg.getString("Font"),
+						field.getDisplayedFont(),
+						fontColor,
+						underlineSelectable,
+						colorSelectable);
+			}
 			fd.setUnderlineSelected(underline);
-			fd.setLocationRelativeTo(null);
+			fd.setLocationRelativeTo(parent);
 			fd.setVisible(true);
 			Font f = fd.getSelectedFont();
 			if (f!=null) {

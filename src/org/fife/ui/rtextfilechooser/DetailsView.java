@@ -14,11 +14,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -26,13 +22,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.*;
 
 import org.fife.ui.FileExplorerTableModel;
-import org.fife.ui.UIUtil;
 
 
 /**
@@ -118,12 +112,12 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		// gray-highlighted.
 		int columnCount = getColumnCount();
 		TableColumnModel columnModel = getColumnModel();
-		getColumnModel().getColumn(0).setCellRenderer(new FileNameColumnRenderer());
-		for (int i=1; i<columnCount-2; i++) {
-			columnModel.getColumn(i).setCellRenderer(new DefaultTableCellRenderer());
+		TableCellRenderer renderer = FileChooserViewRendererFactory.createTableFileNameRenderer(chooser);
+		getColumnModel().getColumn(0).setCellRenderer(renderer);
+		for (int i=1; i<columnCount; i++) {
+			renderer = FileChooserViewRendererFactory.createDefaultTableRenderer();
+			columnModel.getColumn(i).setCellRenderer(renderer);
 		}
-		columnModel.getColumn(columnCount-2).setCellRenderer(new FileSizeColumnRenderer());
-		columnModel.getColumn(columnCount-1).setCellRenderer(new DateCellRenderer());
 		sorter.setColumnComparator(File.class, new FileComparator());
 
 		ComponentOrientation orientation = chooser.getComponentOrientation();
@@ -171,10 +165,11 @@ class DetailsView extends JTable implements RTextFileChooserView {
 				int row = batch.getStart() + i;
 				FileAttributes attrs = batch.getAttributes(i);
 				model.setValueAt(attrs.status, row, 2);
-				Long size = new Long(attrs.size);
-				model.setValueAt(size, row, 3);
-				Long modified = new Long(attrs.modified);
-				model.setValueAt(modified, row, 4);
+				FileSizeWrapper sizeWrapper = new FileSizeWrapper(attrs.size);
+				model.setValueAt(sizeWrapper, row, 3);
+				FileModifiedWrapper modWrapper = new FileModifiedWrapper(
+						attrs.modified);
+				model.setValueAt(modWrapper, row, 4);
 			}
 
 		}
@@ -637,27 +632,6 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 
 	/**
-	 * Renders the "last modified" column.
-	 */
-	private static class DateCellRenderer extends DefaultTableCellRenderer {
-
-		public Component getTableCellRendererComponent(JTable table,
-								Object value, boolean isSelected,
-								boolean hasFocus, int row, int column) {
-
-			super.getTableCellRendererComponent(table, value, isSelected,
-								hasFocus, row, column);
-			if (value!=null) { // Will be null before Thread gets to us
-				setText(Utilities.getLastModifiedString(
-									((Long)value).longValue()));
-			}
-			return this;
-		}
-
-	}
-
-
-	/**
 	 * Table model for the details view.
 	 */
 	class DetailsViewModel extends DefaultTableModel {
@@ -708,9 +682,9 @@ class DetailsView extends JTable implements RTextFileChooserView {
 				case 0:	// File name
 					return File.class;
 				case 3: // Size
-					// Fall through
+					return FileSizeWrapper.class;
 				case 4: // Last modified
-					return Long.class;
+					return FileModifiedWrapper.class;
 				default:
 					return Object.class;
 			}
@@ -724,8 +698,8 @@ class DetailsView extends JTable implements RTextFileChooserView {
 			tempVector.add(0, file);
 			tempVector.add(1, description);
 			tempVector.add(2, null);//status);
-			tempVector.add(3, null);//new Long(length));
-			tempVector.add(4, null);//new Long(file.lastModified()));
+			tempVector.add(3, null);//new FileSizeWrapper(length));
+			tempVector.add(4, null);//new FileModifiedWrapper(file.lastModified()));
 			return tempVector;
 		}
 
@@ -793,121 +767,59 @@ class DetailsView extends JTable implements RTextFileChooserView {
 			return ((Comparable)f1).compareTo(f2);
 		}
 
-	};
+	}
 
 
 	/**
-	 * Renderer used for columns displaying <code>File</code>s in a
-	 * <code>JTable</code>.
+	 * A simple wrapper for the "date modified" column, so we don't have to
+	 * have two different renderers for Substance vs. all other LookAndFeels.
 	 */
-	private class FileNameColumnRenderer extends DefaultTableCellRenderer {
+	private static class FileModifiedWrapper implements Comparable {
 
-		private Rectangle paintTextR = new Rectangle();
-		private Rectangle paintIconR = new Rectangle();
-		private Rectangle paintViewR = new Rectangle();
-		private boolean isAlreadyOpened;
+		private long modified;
 
-
-		public void paintComponent(Graphics g) {
-
-			String text = getText();
-			Icon icon = getIcon();
-			FontMetrics fm = g.getFontMetrics();
-
-			paintViewR.x = paintViewR.y = 0;
-			paintViewR.width = getWidth();
-			paintViewR.height = getHeight();
-
-			g.setColor(getBackground());
-			g.fillRect(paintViewR.x,paintViewR.y, paintViewR.width,paintViewR.height);
-
-			paintIconR.x = paintIconR.y = paintIconR.width = paintIconR.height = 0;
-			paintTextR.x = paintTextR.y = paintTextR.width = paintTextR.height = 0;
-
-			String clippedText = 
-					SwingUtilities.layoutCompoundLabel(this,
-										fm,
-										text,
-										icon,
-										getVerticalAlignment(),
-										getHorizontalAlignment(),
-										getVerticalTextPosition(),
-										getHorizontalTextPosition(),
-										paintViewR,
-										paintIconR,
-										paintTextR,
-										getIconTextGap());
-
-			if (icon != null)
-				icon.paintIcon(this, g, paintIconR.x, paintIconR.y);
-
-			if (text != null) {
-				Map old = UIUtil.setNativeRenderingHints((Graphics2D)g);
-				int textX = paintTextR.x;
-				int textY = paintTextR.y + fm.getAscent();
-				g.setColor(getForeground());
-				g.drawString(clippedText, textX,textY);
-				if (isAlreadyOpened && chooser.getStyleOpenFiles()) {
-					g.drawLine(textX, textY+2, textX+paintTextR.width, textY+2);
-				}
-				if (old!=null) {
-					((Graphics2D)g).addRenderingHints(old);
-				}
-			}
-
+		public FileModifiedWrapper(long modified) {
+			this.modified = modified;
 		}
 
-
-		public Component getTableCellRendererComponent(JTable table, Object value,
-									boolean isSelected, boolean hasFocus,
-									int row, int column) 
-		{
-
-			super.getTableCellRendererComponent(table, value, isSelected,
-										hasFocus, row, column);
-
-			File file = (File)value;
-			String fileName = file.getName();
-
-			isAlreadyOpened = chooser.isOpenedFile(file);
-
-			setText(fileName);
-
-			// Set the image according to the file type.
-			FileTypeInfo info = chooser.getFileTypeInfoFor(file);
-			setIcon(info.icon);
-			if (!isSelected) {
-				if (chooser.getShowHiddenFiles() && file.isHidden())
-					setForeground(chooser.getHiddenFileColor());
-				else 
-					setForeground(info.labelTextColor);
+		public int compareTo(Object o) {
+			FileModifiedWrapper w2 = (FileModifiedWrapper)o;
+			if (modified==w2.modified) {
+				return 0;
 			}
+			return modified<w2.modified ? -1 : 1;
+		}
 
-			return this;
-
+		public String toString() {
+			return modified==-1 ? "" :
+				Utilities.getLastModifiedString(modified);
 		}
 
 	}
 
 
 	/**
-	 * Renderer for the "file size" column.
+	 * A simple wrapper for the file size column, so we don't have to have
+	 * two different renderers for Substance vs. all other LookAndFeels.
 	 */
-	private static class FileSizeColumnRenderer extends DefaultTableCellRenderer {
+	private static class FileSizeWrapper implements Comparable {
 
-		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean selected, boolean focused,
-				int row, int col) {
-			super.getTableCellRendererComponent(table, value, selected,
-												focused, row, col);
-			if (value!=null) { // is null before Thread gets to it
-				Long l = (Long)value;
-				long size = l.longValue();
-				String text = size==-1 ? "" :
-								Utilities.getFileSizeStringFor(size, true);
-				setText(text);
+		private long size;
+
+		public FileSizeWrapper(long size) {
+			this.size = size;
+		}
+
+		public int compareTo(Object o) {
+			FileSizeWrapper w2 = (FileSizeWrapper)o;
+			if (size==w2.size) {
+				return 0;
 			}
-			return this;
+			return size<w2.size ? -1 : 1;
+		}
+
+		public String toString() {
+			return size==-1 ? "" : Utilities.getFileSizeStringFor(size, true);
 		}
 
 	}

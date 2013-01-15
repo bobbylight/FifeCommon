@@ -10,7 +10,6 @@
 package org.fife.ui.rtextfilechooser;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -22,8 +21,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Vector;
 import javax.swing.*;
-
-import org.fife.ui.UIUtil;
 
 
 /**
@@ -51,7 +48,8 @@ class ListView extends JList implements RTextFileChooserView {
 		this.chooser = chooser;
 
 		// Just some other stuff to keep things looking nice.
-		ListViewCellRenderer cellRenderer = new ListViewCellRenderer();
+		ListCellRenderer cellRenderer =
+				FileChooserViewRendererFactory.createListViewRenderer(chooser);
 		setCellRenderer(cellRenderer);
 		setLayoutOrientation(JList.VERTICAL_WRAP);
 		addComponentListener(new ComponentAdapter() {
@@ -301,92 +299,6 @@ class ListView extends JList implements RTextFileChooserView {
 
 			}
 
-		}
-
-	}
-
-
-	/**
-	 * The renderer for the list view.
-	 */
-	class ListViewCellRenderer extends DefaultListCellRenderer {
-
-		private boolean isAlreadyOpened;
-
-		public ListViewCellRenderer() {
-			setOpaque(true);
-		}
-
-		private final Color getForegroundColor(File file, FileTypeInfo fti) {
-			Color color = null;
-			if (chooser.getShowHiddenFiles() && file.isHidden()) {
-				color = chooser.getHiddenFileColor();
-			}
-			else {
-				color = fti.labelTextColor;
-			}
-			return color;
-		}
-
-		public Component getListCellRendererComponent(JList list, Object value,
-										int index, boolean isSelected,
-										boolean cellHasFocus) {
-
-			super.getListCellRendererComponent(list, value, index,
-										isSelected, cellHasFocus);
-			File file = (File)value;
-			FileTypeInfo info = chooser.getFileTypeInfoFor(file);
-			String fileName = file.getName();
-
-			isAlreadyOpened = chooser.isOpenedFile(file);
-
-			// Set the text to display.  Make sure we underline already-
-			// opened files.
-			String text = fileName;
-			if (isAlreadyOpened && chooser.getStyleOpenFiles()) {
-				if (info.labelTextColor==null) {
-					text = chooser.addOpenFileStyleHtml(fileName);
-				}
-				else {
-					Color fg = null;
-					if (isSelected) {
-						fg = list.getSelectionForeground();
-					}
-					else {
-						fg = getForegroundColor(file, info);
-						if (fg==null) { // Special care for this case.
-							fg = list.getSelectionForeground();
-						}
-					}
-					String color = UIUtil.getHTMLFormatForColor(fg);
-					text = "<font color=\"" + color + "\">" +
-									fileName + "</font>";
-					text = chooser.addOpenFileStyleHtml(text);
-				}
-			}
-			setText(text);
-
-			// Set the image according to the file type.
-			setIcon(info.icon);
-			if (!isSelected) {
-				setForeground(getForegroundColor(file, info));
-			}
-
-			return this;
-
-		}
-
-		public void setBounds(int x, int y, int width, int height) {
-			// TODO: For RTL locales the code below makes the cell renderer
-			// content left-aligned.  Come up with a way to keep it right-
-			// aligned in this case.
-			if (getComponentOrientation().isLeftToRight()) {
-				int w2 = Math.min(width, this.getPreferredSize().width+4);
-				super.setBounds(x, y, w2, height); 
-			}
-			else {
-				super.setBounds(x,y, width,height);
-			}
 		}
 
 	}

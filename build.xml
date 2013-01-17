@@ -51,7 +51,7 @@
 		</javac>
 		<!-- Dynamically loaded stuff that requires Java 6. -->
 		<javac srcdir="${source-dir}" destdir="${class-dir}"
-				classpath="lib/substance/substance-7.2.1.jar"
+				classpath="${class-dir}:lib/substance/substance-7.2.1.jar"
 				includeantruntime="false"
 				deprecation="yes" debug="${debug}" debuglevel="${debuglevel}"
 				fork="true" executable="${javac.16}"

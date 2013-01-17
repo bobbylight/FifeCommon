@@ -43,12 +43,10 @@ public class MenuBar extends JMenuBar {
 	 * Adds an "extra" menu to this menu bar.
 	 *
 	 * @param menu The menu to add.
-	 * @see #getExtraMenuInsertionIndex
 	 */
 	public void addExtraMenu(JMenu menu) {
 		add(menu, getExtraMenuInsertionIndex());
 	}
-
 
 	private void configureMenuItem(JMenuItem item, String desc) {
 		// Since these menu items are often configured with Actions, we must
@@ -203,10 +201,18 @@ public class MenuBar extends JMenuBar {
 	 * Returns the index at which to insert an "extra" menu.
 	 *
 	 * @return The index.
-	 * @see #addExtraMenu
+	 * @see #addExtraMenu(JMenu)
 	 */
-	protected int getExtraMenuInsertionIndex() {
-		return getMenuCount()-1;
+	private int getExtraMenuInsertionIndex() {
+		// Substance adds one of those search LafWidget thingies as the last
+		// "menu item," which is returned as null from getMenu(menuCount-1).
+		// So for Substance, we need add extra menus one item further "left."
+		int count = getMenuCount();
+		if (count==0) {
+			return 0;
+		}
+		JMenu menu = getMenu(count-1);
+		return menu!=null ? (count-1) : (count-2);
 	}
 
 

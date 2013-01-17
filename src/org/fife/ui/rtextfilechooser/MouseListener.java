@@ -110,14 +110,47 @@ class MouseListener extends MouseAdapter {
 				chooser.updateSelectedEncoding();
 			}
 
-			// If they RMB-click (or middle-mouse-button click), do the
-			// popup menu.
-			else if (!wasButton1 && clickCount==1) {
+			else if (e.isPopupTrigger()) {
 				Point p = e.getPoint();
 				chooser.displayPopupMenu((JComponent)view, p.x,p.y);
-			} // End of else if (!wasButton1 && clickCount==1).
+			}
 
-		} // End of if (e.getSource()==listView).
+		}
+
+	}
+
+
+	public void mousePressed(MouseEvent e) {
+
+		// Don't listen to clicks from other objects.  This is a hack to
+		// avoid some problems with views that contain actual components
+		// and not renderers, like the "icon view."
+		Object source = e.getSource();
+		if (!(source instanceof RTextFileChooserView)) {
+			return;
+		}
+
+		if (e.isPopupTrigger()) {
+			Point p = e.getPoint();
+			chooser.displayPopupMenu((JComponent)source, p.x,p.y);
+		}
+	}
+
+
+	public void mouseReleased(MouseEvent e) {
+
+		// Don't listen to clicks from other objects.  This is a hack to
+		// avoid some problems with views that contain actual components
+		// and not renderers, like the "icon view."
+		Object source = e.getSource();
+		if (!(source instanceof RTextFileChooserView)) {
+			return;
+		}
+
+		if (e.isPopupTrigger()) {
+			Point p = e.getPoint();
+			chooser.displayPopupMenu((JComponent)source, p.x,p.y);
+		}
 
 	}
 

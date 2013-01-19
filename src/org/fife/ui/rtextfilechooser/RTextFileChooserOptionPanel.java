@@ -40,12 +40,13 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import org.fife.ui.OptionsDialogPanel;
 import org.fife.ui.RColorSwatchesButton;
 import org.fife.ui.ResizableFrameContentPane;
 import org.fife.ui.SpecialValueComboBox;
-import org.fife.ui.TextColorCellRenderer;
+import org.fife.ui.SubstanceUtils;
 import org.fife.ui.UIUtil;
 import org.fife.ui.modifiabletable.*;
 
@@ -80,6 +81,9 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	private static String defaultColorString;
 	private SpecialValueComboBox openFilesStyleCombo;
 	private JCheckBox styleOpenFilesCheckBox;
+
+	private static final String SUBSTANCE_RENDERER_CLASS =
+			"org.fife.ui.rtextfilechooser.SubstanceTextColorCellRenderer";
 
 	private static final String MAPPING_DIALOG_BUNDLE	=
 				"org.fife.ui.rtextfilechooser.ExtensionColorMappingDialog";
@@ -131,7 +135,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		JTable colorTable = modifiableTable.getTable();
 		colorTable.setPreferredScrollableViewportSize(new Dimension(300,200));
 		colorTable.getColumnModel().getColumn(1).setCellRenderer(
-							new TextColorCellRenderer("filename.ext"));
+				createTextColorCellRenderer());
 		customColorsPanel.add(modifiableTable);
 		add(customColorsPanel);
 
@@ -258,6 +262,30 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 
 		return panel;
 
+	}
+
+
+	/**
+	 * Creates and returns a renderer to use for the "example" file name
+	 * rendering column.
+	 *
+	 * @return The cell renderer.
+	 */
+	private TableCellRenderer createTextColorCellRenderer() {
+		TableCellRenderer renderer = null;
+		if (SubstanceUtils.isSubstanceInstalled()) {
+			// Use reflection to avoid hard dependency on Substance.
+			try {
+				Class clazz = Class.forName(SUBSTANCE_RENDERER_CLASS);
+				renderer = (TableCellRenderer)clazz.newInstance();
+			} catch (Exception e) { // Never happens
+				e.printStackTrace();
+			}
+		}
+		if (renderer==null) {
+			renderer = new TextColorCellRenderer();
+		}
+		return renderer;
 	}
 
 

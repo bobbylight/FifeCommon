@@ -37,6 +37,7 @@ import javax.swing.table.DefaultTableModel;
 import org.fife.ui.EscapableDialog;
 import org.fife.ui.OptionsDialogPanel;
 import org.fife.ui.ResizableFrameContentPane;
+import org.fife.ui.SubstanceUtils;
 import org.fife.ui.UIUtil;
 import org.fife.ui.modifiabletable.AbstractRowHandler;
 import org.fife.ui.modifiabletable.ModifiableTable;
@@ -67,6 +68,9 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 
 	private static final String EDIT_FAVORITES_DIALOG_MSG =
 					"org.fife.ui.rtextfilechooser.EditFavoriteDialog";
+
+	private static final String SUBSTANCE_TABLE_RENDERER_CLASS =
+		"org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer";
 
 
 	/**
@@ -113,7 +117,19 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 		// Explicitly use a DefaultTableCellRenderer in case some future
 		// version of Java uses a different one.  We'll manipulate it
 		// later.
-		DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+		DefaultTableCellRenderer r = null;
+		if (SubstanceUtils.isSubstanceInstalled()) {
+			// Use reflection to avoid hard dependency on Substance
+			try {
+				Class clazz = Class.forName(SUBSTANCE_TABLE_RENDERER_CLASS);
+				r = (DefaultTableCellRenderer)clazz.newInstance();
+			} catch (Exception e) { // Never happens
+				e.printStackTrace();
+			}
+		}
+		if (r==null) { // All other LaFs, or Substance freakishly fails
+			r = new DefaultTableCellRenderer();
+		}
 		r.setIcon(FileChooserIconManager.createFolderIcon());
 		ComponentOrientation orientation = ComponentOrientation.
 									getOrientation(getLocale());

@@ -60,16 +60,26 @@ public class ColorCellRenderer extends DefaultTableCellRenderer {
 
 
 	/**
-	 * Returns the tooltip text for this renderer, which is the RGB value
+	 * Returns the tool tip text for this renderer, which is the RGB value
 	 * of the renderer pointed to.
 	 *
-	 * @return The tooltip text.
+	 * @return The tool tip text.
 	 */
 	public String getToolTipText() {
-		Color color = getDisplayedColor();
+		return getToolTipText(getDisplayedColor());
+	}
+
+
+	/**
+	 * Returns the tool tip text for a renderer displaying this color.
+	 *
+	 * @param color The color.
+	 * @return The tool tip text.
+	 */
+	public static String getToolTipText(Color color) {
 		return "RGB: " + color.getRed() + ", " +
-					color.getGreen() + ", " +
-					color.getBlue();
+				color.getGreen() + ", " +
+				color.getBlue();
 	}
 
 

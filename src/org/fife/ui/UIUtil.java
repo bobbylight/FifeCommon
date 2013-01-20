@@ -517,6 +517,14 @@ public class UIUtil {
 	}
 
 
+	/**
+	 * Returns whether the specified color is "light" to use as a foreground.
+	 * Colors that return <code>true</code> indicate that the current Look and
+	 * Feel probably uses light text colors on a dark background.
+	 *
+	 * @param fg The foreground color.
+	 * @return Whether it is a "light" foreground color.
+	 */
 	private static final boolean isLightForeground(Color fg) {
 		return fg.getRed()>0xa0 && fg.getGreen()>0xa0 && fg.getBlue()>0xa0;
 	}

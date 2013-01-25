@@ -18,8 +18,6 @@
 	Date:     02jun2009
 
 -->
-
-
 <project name="Common" default="make-common-jar" basedir=".">
 
 	<description>org.fife.* common classes build file</description>
@@ -40,6 +38,7 @@
 		<delete includeEmptyDirs="true" quiet="true" dir="${class-dir}"/>
 		<mkdir dir="${class-dir}"/>
 		<!-- Most stuff only requires Java 1.4. -->
+		<echo>Compiling most common classes with: ${java.version} (1.4 is recommended)</echo>
 		<javac srcdir="${source-dir}" destdir="${class-dir}"
 				classpath="extra"
 				includeantruntime="false"
@@ -50,6 +49,7 @@
 			<include name="**/SubstanceUtils.java"/>
 		</javac>
 		<!-- Dynamically loaded stuff that requires Java 6. -->
+		<echo>Compiling dynamically loaded classes with compiler: ${javac.16}</echo>
 		<javac srcdir="${source-dir}" destdir="${class-dir}"
 				classpath="${class-dir}:lib/substance/substance-7.2.1.jar"
 				includeantruntime="false"

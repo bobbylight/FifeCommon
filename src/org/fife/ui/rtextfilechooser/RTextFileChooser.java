@@ -489,7 +489,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		filterCombo = new JComboBox();
 		filterCombo.setMaximumRowCount(12);
-		filterCombo.setRenderer(new FileFilterComboRenderer());
 		filterLabel.setLabelFor(filterCombo);
 		filterCombo.addItemListener(itemListener);
 
@@ -2946,26 +2945,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	}
 
 
-	/**
-	 * Renderer for the file filter combo box.  Makes the file filters
-	 * display all nice and pretty.
-	 */
-	private static class FileFilterComboRenderer
-							extends DefaultListCellRenderer {
-
-		public Component getListCellRendererComponent(JList list, Object value,
-						int index, boolean selected, boolean hasFocus) {
-			super.getListCellRendererComponent(list, value, index,
-										selected, hasFocus);
-			FileFilter filter = (FileFilter)value;
-			setText(filter.getDescription());
-			return this;
-		}
-
-	}
-
-
-// NOTE: Too slow to use.  Especially noticable when files being rendered
+// NOTE: Too slow to use.  Especially noticeable when files being rendered
 // are on a network mounted drive.
 //	/**
 //	 * Renderer for the dropdown of the "File Name" FSATextField.

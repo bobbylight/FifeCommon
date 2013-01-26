@@ -47,4 +47,16 @@ public class HTMLFileFilter extends FileFilter {
 		return "HTML files (*.htm, *.html)";
 	}
 
+
+	/**
+	 * Overridden to return the description of this file filter, that way we
+	 * render nicely in combo boxes.
+	 *
+	 * @return A string representation of this filter.
+	 */
+	public String toString() {
+		return getDescription();
+	}
+
+
 }

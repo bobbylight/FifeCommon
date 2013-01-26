@@ -244,4 +244,15 @@ public class ExtensionFileFilter extends FileFilter {
 	}
 
 
+	/**
+	 * Overridden to return the description of this file filter, that way we
+	 * render nicely in combo boxes.
+	 *
+	 * @return A string representation of this filter.
+	 */
+	public String toString() {
+		return getDescription();
+	}
+
+
 }

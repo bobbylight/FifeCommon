@@ -162,6 +162,7 @@ public abstract class Prefs {
 	 * @param file The file.
 	 * @throws IOException If an IO error occurs.
 	 * @see #load(InputStream)
+	 * @see #load(Properties)
 	 */
 	public void load(File file) throws IOException {
 		BufferedInputStream in = new BufferedInputStream(
@@ -181,11 +182,26 @@ public abstract class Prefs {
 	 *        this stream.
 	 * @throws IOException If an IO error occurs.
 	 * @see #load(File)
+	 * @see #load(Properties)
 	 */
 	public void load(InputStream in) throws IOException {
-
 		Properties props = new Properties();
 		props.load(in);
+		load(props);
+	}
+
+
+	/**
+	 * Loads this preferences class from a properties object.  This is useful
+	 * if you have multiple preferences objects stored in a single instance
+	 * of <code>Properties</code>.
+	 *
+	 * @param file The file.
+	 * @throws IOException If an IO error occurs.
+	 * @see #load(File)
+	 * @see #load(InputStream)
+	 */
+	public void load(Properties props) throws IOException {
 
 		Class clazz = getClass();
 		Field[] fields = clazz.getFields();
@@ -327,6 +343,7 @@ public abstract class Prefs {
 	 *
 	 * @param file The file to save to.
 	 * @throws IOException If an IO error occurs.
+	 * @see #save(Properties)
 	 * @see #save(OutputStream)
 	 */
 	public void save(File file) throws IOException {
@@ -341,19 +358,20 @@ public abstract class Prefs {
 
 
 	/**
-	 * Saves these preferences to an output stream.  The stream will still be
-	 * open after this call is made.
+	 * Saves these preferences to a properties object.  Useful if you want to
+	 * save multiple instances of <code>Prefs</code> into a single
+	 * <code>Properties</code>.
 	 *
-	 * @param out The stream to write to.
+	 * @param file The file to save to.
 	 * @throws IOException If an IO error occurs.
 	 * @see #save(File)
+	 * @see #save(OutputStream)
 	 */
-	public void save(OutputStream out) throws IOException {
+	public void save(Properties props) throws IOException {
 
 		Class clazz = getClass();
 		Field[] fields = clazz.getFields();
 
-		Properties props = new Properties();
 		for (int i=0; i<fields.length; i++) {
 			try {
 
@@ -433,9 +451,24 @@ public abstract class Prefs {
 			}
 		}
 
+	}
+
+
+	/**
+	 * Saves these preferences to an output stream.  The stream will still be
+	 * open after this call is made.
+	 *
+	 * @param out The stream to write to.
+	 * @throws IOException If an IO error occurs.
+	 * @see #save(File)
+	 * @see #save(Properties)
+	 */
+	public void save(OutputStream out) throws IOException {
+		Class clazz = getClass();
+		Properties props = new Properties();
+		save(props);
 		String header = "Preferences for the " + clazz.getName() + " class";
 		props.store(out, header);
-
 	}
 
 

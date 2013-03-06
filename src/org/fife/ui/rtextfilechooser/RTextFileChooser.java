@@ -85,7 +85,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	public static final int STYLE_ITALIC			= 1;
 	public static final int STYLE_UNDERLINE			= 2;
 
-	static final boolean IGNORE_CASE				= RTextFileChooser.getIgnoreCase();
+	static final boolean IGNORE_CASE = Utilities.isCaseSensitiveFileSystem();
 
 	private FileSystemView fileSystemView;
 	private ItemListener itemListener;
@@ -1504,24 +1504,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			favoritesIcon = new ImageIcon(cl.getResource(path + "book.png"));
 		}
 
-	}
-
-
-	/**
-	 * Returns whether or not the current OS is case-insensitive (e.g.,
-	 * is Windows or OS X).
-	 *
-	 * @return Whether or not the underlying OS is case-insensitive.
-	 */
-	private static final boolean getIgnoreCase() {
-		String os = System.getProperty("os.name");
-		boolean ignoreCase = false;
-		if (os!=null) {
-			os = os.toLowerCase();
-			ignoreCase =	os.indexOf("windows")>-1   ||
-						os.indexOf("mac os x")>-1;
-		}
-		return ignoreCase;
 	}
 
 

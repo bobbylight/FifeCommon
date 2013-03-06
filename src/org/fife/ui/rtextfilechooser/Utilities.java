@@ -40,7 +40,6 @@ public class Utilities {
 	private static final String EXTENSION_FILTER	= "ExtensionFileFilter";
 	private static final String IGNORE_CASE		= "ignoreCase";
 	private static final String NAME			= "name";
-	private static final String ROOT_ELEMENT	= "ExtraFileFilters";
 	private static final String SHOW_EXTENSIONS	= "showExtensions";
 
 	/**
@@ -118,7 +117,7 @@ InputSource is = new InputSource(new FileReader(file));
 			} catch (Exception e) {
 				throw new IOException("XML error:  Error parsing file");
 			}
-			initializeFromXMLFile(doc, chooser);
+			initializeFromXMLFile(doc.getDocumentElement(), chooser);
 			return true;
 		}
 
@@ -264,112 +263,114 @@ InputSource is = new InputSource(new FileReader(file));
 	 * @param chooser The file chooser to which to add file filters.
 	 * @throws IOException If an I/O error occurs.
 	 */
-	private static void initializeFromXMLFile(Node node,
+	private static void initializeFromXMLFile(Element root,
 						RTextFileChooser chooser) throws IOException {
 
-		if (node==null)
-			throw new IOException("XML error:  node==null!");
+		if (root==null) {
+			throw new IOException("XML error:  null root node received!");
+		}
 
-		int type = node.getNodeType();
-		switch (type) {
+		NodeList filterList = root.getElementsByTagName(EXTENSION_FILTER);
+		int childCount = filterList==null ? 0 : filterList.getLength();
+		for (int i=0; i<childCount; i++) {
+			Element filterElem = (Element)filterList.item(i);
+			parseExtensionFilterXml(chooser, filterElem);
+		}
 
-			// The document node is ???
-			case Node.DOCUMENT_NODE:
-				initializeFromXMLFile(
-							((Document)node).getDocumentElement(),
-							chooser);
-				break;
+	}
 
-			// Handle element nodes.
-			case Node.ELEMENT_NODE:
 
-				String nodeName = node.getNodeName();
+	/**
+	 * Returns whether or not the current OS is case-sensitive.  Windows and
+	 * OS X will return <code>false</code>, other OSes will return
+	 * <code>true</code>.
+	 *
+	 * @return Whether or not the underlying OS is case-sensitive.
+	 */
+	public static final boolean isCaseSensitiveFileSystem() {
+		String os = System.getProperty("os.name");
+		boolean caseSensitive = false;
+		if (os!=null) {
+			os = os.toLowerCase();
+			caseSensitive = os.indexOf("windows")==-1 &&
+						os.indexOf("mac os x")==-1;
+		}
+		return caseSensitive;
+	}
 
-				// Might be the "topmost" node.
-				if (nodeName.equals(ROOT_ELEMENT)) {
-					NodeList childNodes = node.getChildNodes();
-					int childCount = childNodes==null ? 0 :
-											childNodes.getLength();
-					for (int i=0; i<childCount; i++) {
-						Node n = childNodes.item(i);
-						initializeFromXMLFile(n, chooser);
-					}
+
+	/**
+	 * Used in reading file filters from an XML file and adding them to a file
+	 * chooser.
+	 *
+	 * @param chooser The file chooser.
+	 * @param elem An XML element that specifies a file extension.
+	 * @throws IOException If an IO error occurs.
+	 */
+	private static void parseExtensionFilterXml(RTextFileChooser chooser,
+			Element elem) throws IOException {
+
+		// Child elements are the extensions accepted by this filter.
+		NodeList extElems = elem.getElementsByTagName(EXTENSION);
+		int extElemCount = extElems==null ? 0 : extElems.getLength();
+		ArrayList extList = new ArrayList(extElemCount/3);
+
+		for (int i=0; i<extElemCount; i++) {
+			Node extElem = extElems.item(i);
+			// TODO: Replace with this when we move to Java 5.
+			//String extension = ((Element)extElem).getTextContent();
+			//extList.add(extension);
+			StringBuffer sb = new StringBuffer();
+			NodeList childTextNodes = extElem.getChildNodes();
+			if (childTextNodes==null || childTextNodes.getLength()==0) {
+				throw new IOException("Extension tag requires child text");
+			}
+			int childCount = childTextNodes.getLength();
+			for (int j=0; j<childCount; j++) {
+				Node child = childTextNodes.item(j);
+				short type = child.getNodeType();
+				if (type==Node.TEXT_NODE || type==Node.CDATA_SECTION_NODE) {
+					sb.append(child.getNodeValue());
 				}
+			}
+			extList.add(sb.toString());
+		}
 
-				// Might be a filter definition
-				else if (nodeName.equals(EXTENSION_FILTER)) {
-					// Children are the extensions accepted by
-					// this filter (or whitespace nodes).
-					NodeList childNodes = node.getChildNodes();
-					int childCount = childNodes==null ? 0 :
-									childNodes.getLength();
-					ArrayList extList = new ArrayList(childCount/3);
-					for (int i=0; i<childCount; i++) {
-						Node node2 = childNodes.item(i);
-						if (EXTENSION.equals(node2.getNodeName())) {
-							NodeList cn2 = node2.getChildNodes();
-							if (cn2==null || cn2.getLength()==0)
-								throw new IOException("No child " +
-									"nodes for Extension tag");
-							int childCount2 = cn2.getLength();
-							for (int j=0; j<childCount2; j++) {
-								Node n3 = cn2.item(j);
-								if (n3.getNodeType()==Node.TEXT_NODE)
-									extList.add(n3.getNodeValue());
-							}
-						}
-					}
-					String[] extensions = new String[extList.size()];
-					extensions = (String[])extList.toArray(extensions);
-					// name, ignore-case, and show-extensions.
-					String name = null;
-					boolean ignoreCase = true;
-					boolean showExtensions = true;
-					NamedNodeMap attributes = node.getAttributes();
-					int attributeCount = attributes==null ? 0 :
-										attributes.getLength();
-					for (int i=0; i<attributeCount; i++) {
-						Node node2 = attributes.item(i);
-						nodeName = node2.getNodeName();
-						String nodeValue = node2.getNodeValue();
-						if (nodeName.equals(NAME))
-							name = nodeValue;
-						else if (nodeName.equals(IGNORE_CASE))
-							ignoreCase = Boolean.valueOf(nodeValue).
-												booleanValue();
-						else if (nodeName.equals(SHOW_EXTENSIONS))
-							showExtensions = Boolean.valueOf(nodeValue).
-												booleanValue();
-						else
-							throw new IOException("XML error: unknown " +
-								"attribute: '" + nodeName + "'");
-					}
-					chooser.addChoosableFileFilter(
-						new ExtensionFileFilter(name, extensions,
-							ignoreCase ?
-									ExtensionFileFilter.NO_CASE_CHECK :
-									ExtensionFileFilter.CASE_CHECK,
-							showExtensions));
-				}
+		String[] extensions = new String[extList.size()];
+		extensions = (String[])extList.toArray(extensions);
 
-				// Anything else is an error.
-				else {
-					throw new IOException("XML error:  Unknown element " +
-						"node: " + nodeName);
-				}
+		// Get the name, ignore-case, and show-extensions.
+		String name = null;
+		boolean ignoreCase = true;
+		boolean showExtensions = true;
 
-				break;
+		NamedNodeMap attributes = elem.getAttributes();
+		int attributeCount = attributes==null ? 0 : attributes.getLength();
+		for (int i=0; i<attributeCount; i++) {
+			Node node2 = attributes.item(i);
+			String nodeName = node2.getNodeName();
+			String nodeValue = node2.getNodeValue();
+			if (NAME.equals(nodeName)) {
+				name = nodeValue;
+			}
+			else if (IGNORE_CASE.equals(nodeName)) {
+				ignoreCase = Boolean.valueOf(nodeValue).booleanValue();
+			}
+			else if (SHOW_EXTENSIONS.equals(nodeName)) {
+				showExtensions = Boolean.valueOf(nodeValue).booleanValue();
+			}
+			else {
+				throw new IOException("XML error: unknown attribute: '" +
+					nodeName + "'");
+			}
+		}
 
-			// Whitespace nodes.
-			case Node.TEXT_NODE:
-				break;
-
-			// An error occurred?
-			default:
-				throw new IOException("XML error:  Unknown node type: " +
-					type);
-
-		} // End of switch (type).
+		chooser.addChoosableFileFilter(
+			new ExtensionFileFilter(name, extensions,
+				ignoreCase ?
+						ExtensionFileFilter.NO_CASE_CHECK :
+						ExtensionFileFilter.CASE_CHECK,
+				showExtensions));
 
 	}
 

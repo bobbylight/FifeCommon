@@ -48,7 +48,7 @@ public class RColorButton extends JButton {
 	 * @param color The initial color for the button.
 	 */
 	public RColorButton(Color color) {
-		this(color, 50,20);
+		this(color, 40,12);
 	}
 
 

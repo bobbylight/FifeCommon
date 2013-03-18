@@ -563,7 +563,8 @@ public class ModifiableTable extends JPanel {
 
 		int selectedRow = table.getSelectedRow();
 
-		if ((selectedRow+amt)>=0 && (selectedRow+amt)<table.getRowCount()) {
+		if (selectedRow>=0 && (selectedRow+amt)>=0 &&
+				(selectedRow+amt)<table.getRowCount()) {
 			Object[] row1 = getContentsOfRow(selectedRow+amt);
 			Object[] row2 = getContentsOfRow(selectedRow);
 			int colCount = row1.length;
@@ -642,18 +643,7 @@ public class ModifiableTable extends JPanel {
 			if (addButton!=null) {
 				addButton.setEnabled(enabled);
 			}
-			if (modifyButton!=null) {
-				modifyButton.setEnabled(enabled);
-			}
-			if (moveDownButton!=null) {
-				moveDownButton.setEnabled(enabled);
-			}
-			if (moveUpButton!=null) {
-				moveUpButton.setEnabled(enabled);
-			}
-			if (removeButton!=null) {
-				removeButton.setEnabled(enabled);
-			}
+			listener.valueChanged(null);
 			table.setEnabled(enabled);
 		}
 	}
@@ -743,7 +733,7 @@ public class ModifiableTable extends JPanel {
 			if (rowHandler==null)
 				return;
 			int row = table.getSelectedRow();
-			boolean selection = row>-1;
+			boolean selection = row>-1 && isEnabled();
 			if (modifyButton!=null) {
 				boolean canModify = rowHandler.canModifyRow(row);
 				modifyButton.setEnabled(selection && canModify);

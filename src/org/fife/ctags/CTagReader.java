@@ -252,7 +252,7 @@ public class CTagReader {
 	 * containing the key of the desired extension field. If no such field
 	 * of the specified key exists, the function will return null.
 	 */
-	private String readFieldValue(final TagEntry entry, final String key) {
+	private static final String readFieldValue(TagEntry entry, String key) {
 
 		if (key.equals("kind"))
 			return entry.kind;
@@ -338,14 +338,12 @@ public class CTagReader {
 			else if (key.equals("TAG_PROGRAM_VERSION"))
 				programVersion = value;
 
-			if (info!=null) {
-				info.format = format;
-				info.sort = sortMethod;
-				info.author = programAuthor;
-				info.name = programName;
-				info.url = programUrl;
-				info.version = programVersion;
-			}
+			info.format = format;
+			info.sort = sortMethod;
+			info.author = programAuthor;
+			info.name = programName;
+			info.url = programUrl;
+			info.version = programVersion;
 
 		} // End of while (true).
 

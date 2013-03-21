@@ -727,7 +727,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 	 * @param path The path to the file for which to guess the content type.
 	 * @return The content type.
 	 */
-	private String guessContentType(String path) {
+	private static final String guessContentType(String path) {
 		if (path!=null) {
 			String lower = path.toLowerCase();
 			if (lower.endsWith("html") || lower.endsWith("htm") ||
@@ -1381,7 +1381,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 	 * @return Whether the specified node is an Attribute node with the
 	 *         specified name.
 	 */
-	private final boolean validateAttributeNode(Node node, String name) {
+	private static final boolean validateAttributeNode(Node node, String name) {
 		return (node!=null && node.getNodeType()==Node.ATTRIBUTE_NODE &&
 				node.getNodeName().equals(name));
 	}

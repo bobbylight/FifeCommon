@@ -122,7 +122,7 @@ public abstract class Prefs {
 	 *        representing black is returned.
 	 * @return The string.
 	 */
-	private String getColorString(Color c) {
+	private static final String getColorString(Color c) {
 		String str;
 		if (c==null) {
 			str = "$ff000000";
@@ -137,7 +137,7 @@ public abstract class Prefs {
 	}
 
 
-	private boolean isPrimitiveNumberType(Class type) {
+	private static final boolean isPrimitiveNumberType(Class type) {
 		return int.class==type || long.class==type || short.class==type ||
 				byte.class==type || float.class==type || double.class==type;
 	}
@@ -149,7 +149,7 @@ public abstract class Prefs {
 	 * @param field The field.
 	 * @return Whether the field should be saved.
 	 */
-	private boolean isSavable(Field field) {
+	private static final boolean isSavable(Field field) {
 		int mods = field.getModifiers();
 		return (mods&Modifier.PUBLIC)==Modifier.PUBLIC &&
 				(mods&(Modifier.TRANSIENT|Modifier.FINAL))==0;
@@ -306,14 +306,14 @@ public abstract class Prefs {
 					else if (File.class==type){
 						// Empty value => still use default
 						if (value.length()>0) {
-							obj = new File((String)value);
+							obj = new File(value);
 						}
 					}
 
 					else if (KeyStroke.class==type) {
 						if (value.length()>0) {
 							// returns null if formatted incorrectly
-							obj = KeyStroke.getKeyStroke((String)value);
+							obj = KeyStroke.getKeyStroke(value);
 						}
 					}
 

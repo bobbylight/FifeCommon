@@ -116,7 +116,7 @@ class ListViewSubstanceCellRenderer extends SubstanceDefaultListCellRenderer {
 	}
 
 
-	private boolean substanceAndRollover(JList list, int index) {
+	private static final boolean substanceAndRollover(JList list, int index) {
 		// Already know we're Substance if this renderer is installed...
 		SubstanceListUI ui = (SubstanceListUI)list.getUI();
 		ComponentState state = ui.getCellState(index, list);

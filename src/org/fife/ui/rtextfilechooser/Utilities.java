@@ -200,15 +200,12 @@ InputSource is = new InputSource(new FileReader(file));
 		String str = null;
 
 		if (reportInKB) {
-
 			String suffix = " bytes";
 			if (size>=1024) {
 				size /= 1024;
 				suffix = " KB";
 			}
-
 			str = fileSizeFormat.format(size) + suffix;
-
 		}
 
 		else {

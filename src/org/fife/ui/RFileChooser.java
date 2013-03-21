@@ -12,7 +12,6 @@
 package org.fife.ui;
 
 import java.io.File;
-import java.io.Serializable;
 import java.awt.Component;
 import java.awt.HeadlessException;
 import javax.swing.JFileChooser;
@@ -26,7 +25,7 @@ import javax.swing.JFileChooser;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RFileChooser extends JFileChooser implements Serializable {
+public class RFileChooser extends JFileChooser {
 
 	private static final long serialVersionUID = 1L;
 

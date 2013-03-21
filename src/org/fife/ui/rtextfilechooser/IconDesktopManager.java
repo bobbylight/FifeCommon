@@ -13,7 +13,6 @@ package org.fife.ui.rtextfilechooser;
 
 import java.awt.*;
 import java.beans.PropertyVetoException;
-import java.io.Serializable;
 import javax.swing.*;
 
 
@@ -27,7 +26,7 @@ import javax.swing.*;
  * @author Robert Futrell
  * @version 0.1
  */
-class IconDesktopManager extends DefaultDesktopManager implements Serializable {
+class IconDesktopManager extends DefaultDesktopManager {
 
 	private static final long serialVersionUID = 1L;
 

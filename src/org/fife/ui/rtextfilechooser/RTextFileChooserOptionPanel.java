@@ -271,7 +271,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	 *
 	 * @return The cell renderer.
 	 */
-	private TableCellRenderer createTextColorCellRenderer() {
+	private static final TableCellRenderer createTextColorCellRenderer() {
 		TableCellRenderer renderer = null;
 		if (SubstanceUtils.isSubstanceInstalled()) {
 			// Use reflection to avoid hard dependency on Substance.

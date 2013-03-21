@@ -118,7 +118,7 @@ class PluginLoader {
 	 * @param attrs The main manifest attributes.
 	 * @return The priority with which to load the plugin.
 	 */
-	private int getLoadPriority(Attributes attrs) {
+	private static final int getLoadPriority(Attributes attrs) {
 
 		int priority = 2;
 

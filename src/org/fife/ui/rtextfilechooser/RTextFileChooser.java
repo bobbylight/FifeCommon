@@ -823,7 +823,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	}
 
 
-	private boolean containsFilesAndDirectories(Object[] files) {
+	private static final boolean containsFilesAndDirectories(Object[] files) {
 		int num = files.length;
 		boolean containsFile = false;
 		boolean containsDirectory = false;
@@ -839,7 +839,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	}
 
 
-	private boolean containsOnlyDirectories(Object[] files) {
+	private static final boolean containsOnlyDirectories(Object[] files) {
 		int num = files.length;
 		for (int i=0; i<num; i++) {
 			if (!((File)files[i]).isDirectory())
@@ -1513,7 +1513,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @param key The key.
 	 * @return The mnemonic.
 	 */
-	private int getMnemonic(String key) {
+	private static final int getMnemonic(String key) {
 
 		Object value = UIManager.get(key);
 

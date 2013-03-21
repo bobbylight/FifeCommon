@@ -12,7 +12,6 @@ package org.fife.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.Serializable;
 import java.util.ResourceBundle;
 import javax.swing.*;
 
@@ -24,8 +23,7 @@ import javax.swing.*;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RScrollPane extends JScrollPane implements ActionListener,
-												Serializable {
+public class RScrollPane extends JScrollPane implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 

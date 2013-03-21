@@ -137,7 +137,7 @@ public abstract class StandardAction extends AbstractAction {
 		// TODO: Use msg.containsKey() when we drop 1.4/1.5 support
 		try {
 			String mnemonicKey = key + ".Mnemonic";
-			setMnemonic((int)msg.getString(mnemonicKey).charAt(0));
+			setMnemonic(msg.getString(mnemonicKey).charAt(0));
 		} catch (MissingResourceException mre) {
 			// Swallow
 		}

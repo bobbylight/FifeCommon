@@ -201,7 +201,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 	}
 
 
-	private String getModifiedBsdText() {
+	private static final String getModifiedBsdText() {
 		String text = null;
 		try {
 			text = IOUtil.readFully(AboutDialog.class. // Subclasses

@@ -428,7 +428,7 @@ public class UIUtil {
 		try {
 			Object value = msg.getObject(key);
 			if (value instanceof String) {
-				mnemonic = (int)((String)value).charAt(0);
+				mnemonic = ((String)value).charAt(0);
 			}
 		} catch (MissingResourceException mre) {
 			// Swallow.  TODO: When we drop 1.4/1.5 support, use containsKey().

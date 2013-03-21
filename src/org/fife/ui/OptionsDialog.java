@@ -208,7 +208,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 * @param panel The options panel.
 	 * @return The key.
 	 */
-	private String createKeyForPanel(OptionsDialogPanel panel) {
+	private static final String createKeyForPanel(OptionsDialogPanel panel) {
 		String key = panel.getName();
 		while ((panel=panel.getParentPanel())!=null) {
 			key = panel.getName() + "-" + key;
@@ -222,7 +222,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 *
 	 * @return The renderer to use.
 	 */
-	private TreeCellRenderer createTreeCellRenderer() {
+	private static final TreeCellRenderer createTreeCellRenderer() {
 		if (SubstanceUtils.isSubstanceInstalled()) {
 			//  Use reflection to avoid compile-time dependencies form this
 			// class to Substance.

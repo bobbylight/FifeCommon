@@ -355,7 +355,7 @@ public interface Actions {
 
 		}
 
-		private Object getDesktop() {
+		private static final Object getDesktop() {
 
 			try {
 

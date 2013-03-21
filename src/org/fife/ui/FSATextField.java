@@ -1008,12 +1008,10 @@ System.out.println("DEBUG: *** parent is null");
 			return count>0 ? text : null;
 		}
 
-		else {
-			lastCount = -1;
-			lastSeparator = 0;
-			setPopupVisible(false);
-			return null;
-		}
+		lastCount = -1;
+		lastSeparator = 0;
+		setPopupVisible(false);
+		return null;
 
 	}
 

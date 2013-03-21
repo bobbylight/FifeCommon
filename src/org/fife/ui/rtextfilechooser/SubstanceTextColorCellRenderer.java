@@ -83,7 +83,8 @@ class SubstanceTextColorCellRenderer extends SubstanceDefaultTableCellRenderer {
 	}
 
 
-	private boolean substanceAndRollover(JTable table, int row, int col) {
+	private static final boolean substanceAndRollover(JTable table, int row,
+			int col) {
 		// Already know we're Substance if this renderer is installed...
 		SubstanceTableUI ui = (SubstanceTableUI)table.getUI();
 		TableCellId cellId = new TableCellId(row, col);

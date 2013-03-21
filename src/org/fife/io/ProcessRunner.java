@@ -172,35 +172,38 @@ public class ProcessRunner implements Runnable {
 	 *
 	 * @param env The map to append the environment variables to.
 	 */
-	private void getEnvironmentNative(Map env) {
+	private static final void getEnvironmentNative(Map env) {
 
 		String command = File.separatorChar=='\\' ?
 									"cmd /c set" : "/bin/sh -c env";
 
 		Process p = null;
-		StreamReaderThread stdoutThread = null;
-		Thread stderrThread = null;
+		try {
+			p = Runtime.getRuntime().exec(command);
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			return;
+		}
+
+		// Create threads to read the stdout and stderr of the external
+		// process.  If we do not do it this way, the process may
+		// deadlock.
+		InputStream errStream = p.getErrorStream();
+		InputStream outStream = p.getInputStream();
+		StreamReaderThread stdoutThread = new StreamReaderThread(p, outStream,
+													null, true);
+		Thread stderrThread = new StreamReaderThread(p, errStream, null, false);
+		stdoutThread.start();
+		stderrThread.start();
 		String vars = null;
 
 		try {
 
-			p = Runtime.getRuntime().exec(command);
-
-			// Create threads to read the stdout and stderr of the external
-			// process.  If we do not do it this way, the process may
-			// deadlock.
-			InputStream errStream = p.getErrorStream();
-			InputStream outStream = p.getInputStream();
-			stdoutThread = new StreamReaderThread(p, outStream, null, true);
-			stderrThread = new StreamReaderThread(p, errStream, null, false);
-			stdoutThread.start();
-			stderrThread.start();
-
-			rc = p.waitFor();
+			p.waitFor();
 			p = null;
 
-			// Don't interrupt reader threads;
-			// just wait for them to terminate normally.
+			// Don't interrupt reader threads; just wait for them to terminate
+			// normally.
 			//stdoutThread.interrupt();
 			//stderrThread.interrupt();
 			stdoutThread.join();
@@ -208,20 +211,10 @@ public class ProcessRunner implements Runnable {
 
 			vars = stdoutThread.getStreamOutput();
 			
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-			// IOE can only happen in Runtime.exec(), so stdoutThread and
-			// stderrThread are always null if we get here
-			//stdoutThread.interrupt();
-			//stderrThread.interrupt();
 		} catch (InterruptedException ie) {
 			ie.printStackTrace();
-			if (stdoutThread!=null) {
-				stdoutThread.interrupt();
-			}
-			if (stderrThread!=null) {
-				stderrThread.interrupt();
-			}
+			stdoutThread.interrupt();
+			stderrThread.interrupt();
 		} finally {
 			if (p!=null) {
 				p.destroy();
@@ -321,25 +314,31 @@ public class ProcessRunner implements Runnable {
 		clearLastOutput(); // In case we throw an exception, clear output.
 
 		Process proc = null;
-		StreamReaderThread stdoutThread = null;
-		StreamReaderThread stderrThread = null;
+		String[] envp = createEnvVarArray();
+		try {
+			proc = Runtime.getRuntime().exec(commandLine, envp, dir);
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			lastError = ioe;
+			if (outputListener!=null) {
+				outputListener.processCompleted(proc, rc, lastError);
+			}
+			return;
+		}
+
+		// Create threads to read the stdout and stderr of the external
+		// process.  If we do not do it this way, the process may
+		// deadlock.
+		InputStream errStream = proc.getErrorStream();
+		InputStream outStream = proc.getInputStream();
+		StreamReaderThread stdoutThread = new StreamReaderThread(proc,
+										outStream, outputListener, true);
+		StreamReaderThread stderrThread = new StreamReaderThread(proc,
+										errStream, outputListener, false);
+		stdoutThread.start();
+		stderrThread.start();
 
 		try {
-
-			String[] envp = createEnvVarArray();
-			proc = Runtime.getRuntime().exec(commandLine, envp, dir);
-
-			// Create threads to read the stdout and stderr of the external
-			// process.  If we do not do it this way, the process may
-			// deadlock.
-			InputStream errStream = proc.getErrorStream();
-			InputStream outStream = proc.getInputStream();
-			stdoutThread = new StreamReaderThread(proc, outStream,
-													outputListener, true);
-			stderrThread = new StreamReaderThread(proc, errStream,
-													outputListener, false);
-			stdoutThread.start();
-			stderrThread.start();
 
 			rc = proc.waitFor();
 			proc = null;
@@ -353,24 +352,11 @@ public class ProcessRunner implements Runnable {
 			stdout = stdoutThread.getStreamOutput();
 			stderr = stderrThread.getStreamOutput();
 
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-			// IOE can only happen in Runtime.exec(), so stdoutThread and
-			// stderrThread are always null if we get here
-			//stdoutThread.interrupt();
-			//stderrThread.interrupt();
-			lastError = ioe;
-			// TODO: ???
 		} catch (InterruptedException ie) {
 			//ie.printStackTrace();
-			if (stdoutThread!=null) {
-				stdoutThread.interrupt();
-			}
-			if (stderrThread!=null) {
-				stderrThread.interrupt();
-			}
+			stdoutThread.interrupt();
+			stderrThread.interrupt();
 			lastError = ie;
-			// TODO: ???
 		} finally {
 			if (proc!=null) {
 				proc.destroy();
@@ -477,10 +463,10 @@ public class ProcessRunner implements Runnable {
 		 * 
 		 * @param p The running process.
 		 * @param in The stream (stdout or stderr) to read from.
-		 * @param listener A listener to send notification to as
-		 *        output is read.  This can be <code>null</code>.
-		 * @param isStdout Whether this thread is reading stdout (as
-		 *        opposed to stderr).
+		 * @param listener A listener to send notification to as output is
+		 *        read.  This can be <code>null</code>.
+		 * @param isStdout Whether this thread is reading stdout (as opposed
+		 *        to stderr).
 		 */
 		public StreamReaderThread(Process p, InputStream in,
 							ProcessRunnerOutputListener listener,

@@ -12,7 +12,6 @@ package org.fife.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.Serializable;
 import java.util.ResourceBundle;
 import java.util.HashSet;
 import javax.swing.*;
@@ -29,7 +28,7 @@ import javax.swing.border.*;
  * @version 1.0
  */
 public class FontDialog extends JDialog implements ActionListener,
-								ListSelectionListener, Serializable {
+								ListSelectionListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -347,7 +346,7 @@ public class FontDialog extends JDialog implements ActionListener,
 	 *
 	 * @return The list model.
 	 */
-	private DefaultListModel createFontListModel() {
+	private static final DefaultListModel createFontListModel() {
 
 		// Get available fonts from the system.
 		String[] families = GraphicsEnvironment.
@@ -684,6 +683,10 @@ public class FontDialog extends JDialog implements ActionListener,
 
 		public boolean equals(Object obj) {
 			return compareTo(obj)==0;
+		}
+
+		public int hashCode() {
+			return fontFamily.hashCode() + (monospaced ? 1 : 0);
 		}
 
 		public String toString() {

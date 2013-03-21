@@ -447,7 +447,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 * @return The child node representing the specified file, or
 	 *         <code>null</code> if none of the children specified the file.
 	 */
-	private FileSystemTreeNode getChildRepresentingFile(
+	private static final FileSystemTreeNode getChildRepresentingFile(
 								FileSystemTreeNode node, Object file) {
 		if (file==null)
 			return null;

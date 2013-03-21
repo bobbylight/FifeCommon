@@ -241,14 +241,15 @@ tb.addChangeListener(new ChangeListener() {
 	}
 
 
-	private JMenuItem createMenuItem(File root, String name, Icon icon) {
+	private static final JMenuItem createMenuItem(File root, String name,
+			Icon icon) {
 		JMenuItem item = new JMenuItem(name, icon);
 		item.putClientProperty(PROPERTY_LOCATION, root);
 		return item;
 	}
 
 
-	private void displayRelativeTo(JPopupMenu popup, Component c) {
+	private static final void displayRelativeTo(JPopupMenu popup, Component c) {
 		int x = 0;
 		if (!popup.getComponentOrientation().isLeftToRight()) {
 			x = c.getWidth() - popup.getPreferredSize().width;
@@ -288,7 +289,7 @@ tb.addChangeListener(new ChangeListener() {
 	}
 
 
-	private Icon getIcon(File dir) {
+	private static final Icon getIcon(File dir) {
 		Icon icon = null;
 		try {
 			icon = fsv.getSystemIcon(dir);
@@ -320,7 +321,7 @@ tb.addChangeListener(new ChangeListener() {
 	}
 
 
-	private String getName(File dir) {
+	private static final String getName(File dir) {
 		return FileDisplayNames.get().getName(dir);
 	}
 

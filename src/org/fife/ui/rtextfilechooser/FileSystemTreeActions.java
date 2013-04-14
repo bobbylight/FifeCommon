@@ -1,3 +1,12 @@
+/*
+ * 04/13/2013
+ *
+ * FileSystemTreeActions - Actions in a File System Tree.
+ * Copyright (C) 2013 Robert Futrell
+ * http://fifesoft.com/rtext
+ * Licensed under a modified BSD license.
+ * See the included license file for details.
+ */
 package org.fife.ui.rtextfilechooser;
 
 import java.awt.Component;
@@ -571,17 +580,7 @@ class FileSystemTreeActions {
 
 
 	/**
-	 * Pastes files into the currently selected directory.<p>
-	 *
-	 * This action is currently pretty weak, and is only capable of pasting
-	 * single files.  In the future, it would be easy to add the ability to
-	 * paste multiple files and/or directories, but we need a way for the
-	 * FileSystemTree to specify a handler for name collisions (e.g. files
-	 * already existing).<p>
-	 * 
-	 * At the moment, if the selection is more than one file, or a directory,
-	 * or if the destination file already exists, the system beeps and the
-	 * copy does not occur.
+	 * Pastes files into the currently selected directory.
 	 */
 	static class PasteAction extends AbstractTreeAction {
 
@@ -597,12 +596,12 @@ class FileSystemTreeActions {
 
 		public void actionPerformed(ActionEvent e) {
 
-			TreePath path = tree.getSelectionPath();
-			boolean copied = false;
+			final TreePath path = tree.getSelectionPath();
+			boolean copying = false;
 
 			if (path!=null) { // Should always be true.
 
-				FileSystemTreeNode node = (FileSystemTreeNode)path.
+				final FileSystemTreeNode node = (FileSystemTreeNode)path.
 							getLastPathComponent();
 				File destDir = node.getFile();
 
@@ -612,43 +611,38 @@ class FileSystemTreeActions {
 					Transferable contents = clip.getContents(null);
 					DataFlavor accepted = DataFlavor.javaFileListFlavor;
 
-					if (contents.isDataFlavorSupported(accepted)) {
+					try {
 
-						try {
-
-							List files = (List)contents.
-												getTransferData(accepted);
-							if (files!=null && files.size()==1) {
-
-								File toCopy = (File)files.get(0);
-								if (toCopy.isFile()) {
-									File dest = new File(destDir,
-														toCopy.getName());
-									if (!dest.exists()) {
-										Utilities.copyFile(toCopy, dest);
-										tree.refreshChildren(node);
-										((DefaultTreeModel)tree.getModel()).
-															reload(node);
-										tree.setSelectedFile(dest);
-										copied = true;
-									}
-								}
-
+						List files = (List)contents.getTransferData(accepted);
+						Window parent = SwingUtilities.getWindowAncestor(tree);
+						FilePasteCallback callback =
+								new DefaultFilePasteCallback(parent) {
+							public void pasteOperationCompleted(int pasteCount){
+								super.pasteOperationCompleted(pasteCount);
+								tree.refreshChildren(node);
+								((DefaultTreeModel)tree.getModel()).
+													reload(node);
+								tree.expandPath(path);
 							}
+						};
 
-						} catch (UnsupportedFlavorException ufe) {
-							ufe.printStackTrace(); // Never happens
-						} catch (IOException ioe) {
-							ioe.printStackTrace();
+						if (files!=null && files.size()>0) {
+							FilePasteThread.paste(parent,
+										files, destDir, callback);
+							copying = true;
 						}
 
+					} catch (UnsupportedFlavorException ufe) {
+						ufe.printStackTrace(); // Never happens
+					} catch (IOException ioe) {
+						ioe.printStackTrace();
 					}
 
 				}
 
 			}
 
-			if (!copied) {
+			if (!copying) {
 				UIManager.getLookAndFeel().provideErrorFeedback(tree);
 			}
 
@@ -656,9 +650,9 @@ class FileSystemTreeActions {
 
 		/**
 		 * Returns whether the system clipboard contents are "valid" for this
-		 * action to be enabled.  Currently this verifies that the contents
-		 * are just a single file.  Applications can enable this action based
-		 * on the return value of this method.
+		 * action to be enabled (e.g., whether it's a list of files to copy).
+		 * Applications can enable this action based on the return value of
+		 * this method.
 		 *
 		 * @return Whether the contents of the clipboard are "valid" for this
 		 *         action to be used.
@@ -667,19 +661,7 @@ class FileSystemTreeActions {
 			Clipboard clip = tree.getToolkit().getSystemClipboard();
 			Transferable contents = clip.getContents(null);
 			DataFlavor accepted = DataFlavor.javaFileListFlavor;
-			if (contents.isDataFlavorSupported(accepted)) {
-				try {
-					List files = (List)contents.getTransferData(accepted);
-					if (files!=null && files.size()==1) {
-						return ((File)files.get(0)).isFile();
-					}
-				} catch (UnsupportedFlavorException ufe) {
-					ufe.printStackTrace(); // Never happens
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				}
-			}
-			return false;
+			return contents.isDataFlavorSupported(accepted);
 		}
 
 	}

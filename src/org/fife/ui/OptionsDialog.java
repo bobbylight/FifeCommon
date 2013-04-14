@@ -121,8 +121,6 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		setOptionsPanels(optionsPanels);
 
 		// Create a panel with buttons.
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setBorder(new BevelDividerBorder(SwingConstants.TOP, 15));
 		JPanel temp = new JPanel(new GridLayout(1,3, 5,0));
 		okButton = new JButton(msg.getString("OK"));
 		okButton.setActionCommand("OK");
@@ -134,10 +132,17 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		applyButton.setActionCommand("Apply");
 		applyButton.addActionListener(this);
 		applyButton.setEnabled(false);	// Until they make a change.
+		UIUtil.ensureDefaultButtonWidth(okButton);
+		UIUtil.ensureDefaultButtonWidth(cancelButton);
+		UIUtil.ensureDefaultButtonWidth(applyButton);
 		temp.add(okButton);
 		temp.add(cancelButton);
 		temp.add(applyButton);
-		buttonPanel.add(temp);
+		JComponent buttonPanel = (JComponent)UIUtil.createButtonFooter(
+				temp, -1, 30);
+		buttonPanel.setBorder(BorderFactory.createCompoundBorder(
+				new BevelDividerBorder(SwingConstants.TOP, 15),
+				buttonPanel.getBorder()));
 
 		// Create a panel containing the two above panels.
 		JPanel rightPanel = new JPanel();

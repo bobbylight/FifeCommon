@@ -173,6 +173,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private Actions.CopyAction copyAction;
 	private Actions.DeleteAction deleteAction;
 	private Actions.DeleteAction hardDeleteAction;
+	private Actions.PasteAction pasteAction;
 	private Actions.RefreshAction refreshAction;
 	private Actions.RenameAction renameAction;
 	private Actions.UpOneLevelAction upOneLevelAction;
@@ -527,6 +528,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		acceptButton = new JButton();
 		acceptButton.setActionCommand("AcceptButtonPressed");
 		acceptButton.addActionListener(this);
+		UIUtil.ensureButtonWidth(acceptButton, 80);
 		temp.add(acceptButton);
 
 		String cancelText = UIManager.getString("FileChooser.cancelButtonText");
@@ -537,6 +539,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		cancelButton.setToolTipText(cancelToolTip);
 		cancelButton.setActionCommand("CancelButtonPressed");
 		cancelButton.addActionListener(this);
+		UIUtil.ensureButtonWidth(cancelButton, 80);
 		temp.add(cancelButton);
 
 		JPanel bottomButtonPanel = new JPanel(new BorderLayout());
@@ -871,6 +874,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		copyAction = new Actions.CopyAction(this);
 		deleteAction = new Actions.DeleteAction(this, false);
 		hardDeleteAction = new Actions.DeleteAction(this, true);
+		pasteAction = new Actions.PasteAction(this);
 		refreshAction = new Actions.RefreshAction(this);
 		upOneLevelAction = new Actions.UpOneLevelAction(this);
 		propertiesAction = new Actions.PropertiesAction(this);
@@ -939,13 +943,14 @@ public class RTextFileChooser extends ResizableFrameContentPane
 				((JMenuItem)getComponent(2)).setEnabled(filesSelected);
 				((JMenuItem)getComponent(4)).setEnabled(filesSelected);
 				((JMenuItem)getComponent(5)).setEnabled(filesSelected);
+				((JMenuItem)getComponent(6)).setEnabled(filesSelected);
 
 				// Only enable the "Up one level" item if we can actually
 				// go up a level.
-				JMenuItem upOneLevel = (JMenuItem)getComponent(7);
+				JMenuItem upOneLevel = (JMenuItem)getComponent(8);
 				upOneLevel.setEnabled(upOneLevelButton.isEnabled());
 
-				((JMenuItem)getComponent(11)).setEnabled(filesSelected);
+				((JMenuItem)getComponent(12)).setEnabled(filesSelected);
 
 				super.show(c, x,y);
 
@@ -965,6 +970,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		popupMenu.add(new JMenuItem(renameAction));
 		popupMenu.addSeparator();
 		popupMenu.add(new JMenuItem(copyAction));
+		popupMenu.add(new JMenuItem(pasteAction));
 		popupMenu.add(new JMenuItem(deleteAction));
 		popupMenu.addSeparator();
 		popupMenu.add(new JMenuItem(upOneLevelAction));
@@ -1685,20 +1691,21 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			}
 		);
 
-		// Have F2 rename the currently selected file.
 		KeyStroke ks = (KeyStroke)renameAction.getValue(Action.ACCELERATOR_KEY);
 		inputMap.put(ks, "OnRename");
    		actionMap.put("OnRename", renameAction);
 
-		// Have Delete delete the currently selected file(s).
 		ks = (KeyStroke)deleteAction.getValue(Action.ACCELERATOR_KEY);
 		inputMap.put(ks, "OnDelete");
 		actionMap.put("OnDelete", deleteAction);
 
-		// Have Delete delete the currently selected file(s).
 		ks = (KeyStroke)hardDeleteAction.getValue(Action.ACCELERATOR_KEY);
 		inputMap.put(ks, "OnHardDelete");
 		actionMap.put("OnHardDelete", hardDeleteAction);
+
+		ks = (KeyStroke)pasteAction.getValue(Action.ACCELERATOR_KEY);
+		inputMap.put(ks, "OnPaste");
+		actionMap.put("OnPaste", pasteAction);
 
 		// Have Backspace go "up one level."
 		// This causes problems on OS X (action occurs even it back space is

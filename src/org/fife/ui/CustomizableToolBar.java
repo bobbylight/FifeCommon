@@ -111,6 +111,14 @@ public class CustomizableToolBar extends JToolBar {
 	}
 
 
+	public void addNotify() {
+		super.addNotify();
+		if (WebLookAndFeelUtils.isWebLookAndFeelInstalled()) {
+			WebLookAndFeelUtils.fixToolbarButtons(this);
+		}
+	}
+
+
 	/**
 	 * Creates a button to add to this tool bar.
 	 *
@@ -278,6 +286,14 @@ public class CustomizableToolBar extends JToolBar {
 					mi.setText(text);
 				}
 			}
+		}
+	}
+
+
+	public void setUI(ToolBarUI ui) {
+		super.setUI(ui);
+		if (WebLookAndFeelUtils.isWebLookAndFeelInstalled()) {
+			WebLookAndFeelUtils.fixToolbarButtons(this);
 		}
 	}
 

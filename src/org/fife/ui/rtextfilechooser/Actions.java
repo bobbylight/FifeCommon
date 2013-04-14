@@ -13,15 +13,20 @@ import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
@@ -229,6 +234,81 @@ public interface Actions {
 
 		protected String getString(String key) {
 			return msg.getString(key);
+		}
+
+	}
+
+
+	/**
+	 * Pastes files into the currently selected directory.
+	 */
+	static class PasteAction extends FileChooserAction {
+
+		public PasteAction(RTextFileChooser chooser) {
+			super(chooser);
+			putValue(NAME, getString("Paste"));
+			int mod = chooser.getToolkit().getMenuShortcutKeyMask();
+			putValue(ACCELERATOR_KEY,
+					KeyStroke.getKeyStroke(KeyEvent.VK_V, mod));
+		}
+
+		public void actionPerformed(ActionEvent e) {
+
+			File destDir = chooser.getCurrentDirectory();
+			boolean copying = false;
+
+			if (destDir.isDirectory()) { // Should always be true
+
+				Clipboard clip = chooser.getToolkit().getSystemClipboard();
+				Transferable contents = clip.getContents(null);
+				DataFlavor accepted = DataFlavor.javaFileListFlavor;
+
+				try {
+
+					List files = (List)contents.getTransferData(accepted);
+					Window parent = SwingUtilities.getWindowAncestor(chooser);
+					FilePasteCallback callback =
+							new DefaultFilePasteCallback(parent) {
+						public void pasteOperationCompleted(int pasteCount){
+							super.pasteOperationCompleted(pasteCount);
+							chooser.refreshView();
+						}
+					};
+
+					if (files!=null && files.size()>0) {
+						FilePasteThread.paste(parent,
+									files, destDir, callback);
+						copying = true;
+					}
+
+				} catch (UnsupportedFlavorException ufe) {
+					ufe.printStackTrace(); // Never happens
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+
+			}
+
+			if (!copying) {
+				UIManager.getLookAndFeel().provideErrorFeedback(chooser);
+			}
+
+		}
+
+		/**
+		 * Returns whether the system clipboard contents are "valid" for this
+		 * action to be enabled (e.g., whether it's a list of files to copy).
+		 * Applications can enable this action based on the return value of
+		 * this method.
+		 *
+		 * @return Whether the contents of the clipboard are "valid" for this
+		 *         action to be used.
+		 */
+		public boolean isClipboardContentValid() {
+			Clipboard clip = chooser.getToolkit().getSystemClipboard();
+			Transferable contents = clip.getContents(null);
+			DataFlavor accepted = DataFlavor.javaFileListFlavor;
+			return contents.isDataFlavorSupported(accepted);
 		}
 
 	}

@@ -20,7 +20,6 @@ import javax.swing.DefaultListSelectionModel;
  * the user should be required to have exactly one selection.
  *
  * @author Robert Futrell
- *
  * @version 1.0
  */
 public class RListSelectionModel extends DefaultListSelectionModel {

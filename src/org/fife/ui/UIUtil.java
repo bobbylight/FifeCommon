@@ -14,6 +14,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
@@ -77,6 +78,12 @@ public class UIUtil {
 	 */
 	private static final Border EMPTY_5_BORDER		=
 							BorderFactory.createEmptyBorder(5,5,5,5);
+
+	/**
+	 * Buttons look better when they have a minimum width.  Windows does this
+	 * automatically, for example.
+	 */
+	private static final int DEFAULT_BUTTON_SIZE = 85;
 
 
 	/**
@@ -151,11 +158,35 @@ public class UIUtil {
 	 * @see #createButtonFooter(Container) 
 	 */
 	public static final Container createButtonFooter(JButton ok,
-											JButton cancel) {
+			JButton cancel) {
+		return createButtonFooter(ok, cancel, -1);
+	}
+
+
+	/**
+	 * Creates a "footer" containing two buttons (typically OK and Cancel)
+	 * for a dialog.
+	 * 
+	 * @param ok The OK button.
+	 * @param cancel The Cancel button.
+	 * @param topPadding The amount of padding to place above the buttons.  If
+	 *        this is less than <code>0</code>, a default value of 10 pixels
+	 *        is used.
+	 * @return The footer component for the dialog.
+	 * @see #createButtonFooter(Container) 
+	 */
+	public static final Container createButtonFooter(JButton ok,
+			JButton cancel, int topPadding) {
 		JPanel temp = new JPanel(new GridLayout(1,2, 5,5));
 		temp.add(ok);
 		temp.add(cancel);
-		return createButtonFooter(temp);
+		// The GridLayout forces the two buttons to be the same size, so we
+		// ensure that at least one of the buttons is >= 85 pixels.
+		Dimension prefSize = ok.getPreferredSize();
+		if (prefSize.width<DEFAULT_BUTTON_SIZE) {
+			ensureDefaultButtonWidth(cancel);
+		}
+		return createButtonFooter(temp, topPadding);
 	}
 
 
@@ -169,14 +200,76 @@ public class UIUtil {
 	 * @see #createButtonFooter(JButton, JButton) 
 	 */
 	public static final Container createButtonFooter(Container buttons) {
+		return createButtonFooter(buttons, -1);
+	}
+
+
+	/**
+	 * Creates a "footer" component, typically containing buttons, for a
+	 * dialog.
+	 *  
+	 * @param buttons The container of buttons, or whatever components that
+	 *        should be in the footer component.
+	 * @param topPadding The amount of padding to place above the buttons.  If
+	 *        this is less than <code>0</code>, a default value of 10 pixels
+	 *        is used.
+	 * @return The footer component for the dialog.
+	 * @see #createButtonFooter(JButton, JButton) 
+	 * @see #createButtonFooter(Container, int, int)
+	 */
+	public static final Container createButtonFooter(Container buttons,
+			int topPadding) {
+		return createButtonFooter(buttons, topPadding, -1);
+	}
+
+
+	/**
+	 * Creates a "footer" component, typically containing buttons, for a
+	 * dialog.
+	 *  
+	 * @param buttons The container of buttons, or whatever components that
+	 *        should be in the footer component.
+	 * @param topPadding The amount of padding to place above the buttons.  If
+	 *        this is less than <code>0</code>, a default value of 10 pixels
+	 *        is used.
+	 * @param sidePadding The amount of padding to place to the side of the
+	 *        buttons.  If this is less than <code>0</code>, a default value of
+	 *        8 pixels is used.
+	 * @return The footer component for the dialog.
+	 * @see #createButtonFooter(JButton, JButton)
+	 * @see #createButtonFooter(Container, int)
+	 */
+	public static final Container createButtonFooter(Container buttons,
+			int topPadding, int sidePadding) {
+
+		if (topPadding<0) {
+			topPadding = 10;
+		}
+		if (sidePadding<0) {
+			sidePadding = 8;
+		}
+
+		// If it's just a single button, size it
+		if (buttons instanceof JButton) {
+			JButton button = (JButton)buttons;
+			Dimension preferredSize = button.getPreferredSize();
+			if (preferredSize.width<DEFAULT_BUTTON_SIZE) {
+				preferredSize.width = DEFAULT_BUTTON_SIZE;
+				button.setPreferredSize(preferredSize);
+			}
+		}
+
 		JPanel panel = new JPanel(new BorderLayout());
 		ComponentOrientation o = buttons.getComponentOrientation();
-		final int PADDING = 8;
-		int left = o.isLeftToRight() ? 0 : PADDING;
-		int right = o.isLeftToRight() ? PADDING : 0;
-		panel.setBorder(BorderFactory.createEmptyBorder(10, left, 0, right));
+		int left = o.isLeftToRight() ? 0 : sidePadding;
+		int right = o.isLeftToRight() ? sidePadding : 0;
+
+		panel.setBorder(BorderFactory.createEmptyBorder(topPadding, left, 0,
+							right));
 		panel.add(buttons, BorderLayout.LINE_END);
+
 		return panel;
+
 	}
 
 
@@ -204,6 +297,38 @@ public class UIUtil {
 
 		return new Color(red, green, blue);
 
+	}
+
+
+	/**
+	 * Ensures a button has a specific minimum width.  This can be useful if
+	 * you have a dialog with very small-labeled buttons, such as "OK", for
+	 * example.  Often, very small buttons look unprofessional, so artificially
+	 * widening them helps.
+	 *
+	 * @param button The button to possibly elongate.
+	 * @param width The minimum (preferred) width for the button.
+	 * @see #ensureDefaultButtonWidth(JButton)
+	 */
+	public static final void ensureButtonWidth(JButton button, int width) {
+		Dimension prefSize = button.getPreferredSize();
+		if (prefSize.width<width) {
+			prefSize.width = width;
+			button.setPreferredSize(prefSize);
+		}
+	}
+
+
+	/**
+	 * Ensures a button has a specific minimum width, similar to what Windows
+	 * does.  This usually makes the UI look a little better, especially with
+	 * small buttons such as those displaying an "OK" label, for example.
+	 *
+	 * @param button The button to possibly elongate.
+	 * @see #ensureButtonWidth(JButton, int)
+	 */
+	public static final void ensureDefaultButtonWidth(JButton button) {
+		ensureButtonWidth(button, DEFAULT_BUTTON_SIZE);
 	}
 
 

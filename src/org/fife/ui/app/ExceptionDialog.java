@@ -27,7 +27,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.text.JTextComponent;
 
@@ -165,6 +164,7 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 		setTitle(msg.getString("Title"));
 
 		JPanel contentPane =new ResizableFrameContentPane(new BorderLayout());
+		contentPane.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 
 		JPanel topPanel = new JPanel(new BorderLayout());
 		Icon icon = UIManager.getIcon("OptionPane.errorIcon");
@@ -270,20 +270,6 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 		JPanel cp = (JPanel)getContentPane(); // Okay cast since we made it
 		cp.setPreferredSize(null);
 		pack(); // Resize for new message
-	}
-
-
-	public void setVisible(final boolean visible) {
-		if (visible) {
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					ExceptionDialog.super.setVisible(visible);
-				}
-			});
-		}
-		else {
-			super.setVisible(visible);
-		}
 	}
 
 

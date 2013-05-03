@@ -196,7 +196,7 @@ public abstract class Prefs {
 	 * if you have multiple preferences objects stored in a single instance
 	 * of <code>Properties</code>.
 	 *
-	 * @param file The file.
+	 * @param props The properties to load from.
 	 * @throws IOException If an IO error occurs.
 	 * @see #load(File)
 	 * @see #load(InputStream)
@@ -362,7 +362,7 @@ public abstract class Prefs {
 	 * save multiple instances of <code>Prefs</code> into a single
 	 * <code>Properties</code>.
 	 *
-	 * @param file The file to save to.
+	 * @param props The properties to save to.
 	 * @throws IOException If an IO error occurs.
 	 * @see #save(File)
 	 * @see #save(OutputStream)

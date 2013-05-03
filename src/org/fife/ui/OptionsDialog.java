@@ -139,7 +139,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		temp.add(cancelButton);
 		temp.add(applyButton);
 		JComponent buttonPanel = (JComponent)UIUtil.createButtonFooter(
-				temp, -1, 30);
+				temp, -1, 10);
 		buttonPanel.setBorder(BorderFactory.createCompoundBorder(
 				new BevelDividerBorder(SwingConstants.TOP, 15),
 				buttonPanel.getBorder()));

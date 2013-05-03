@@ -14,7 +14,7 @@ import java.io.File;
 
 /**
  * Listens as a copy/paste operation is performed by an instance of
- * {@link FilePasteThread}.  Implementations can display a progress bar in the
+ * FilePasteThread.  Implementations can display a progress bar in the
  * UI, or a <code>ProgressMonitor</code>, to keep the user updated on the
  * operation's progress.
  *

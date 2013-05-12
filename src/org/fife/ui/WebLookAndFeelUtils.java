@@ -56,7 +56,6 @@ public class WebLookAndFeelUtils {
 
 			for (int i=0; i<toolBar.getComponentCount(); i++) {
 				Component comp = toolBar.getComponent(i);
-System.out.println("--- " + comp);
 				if (comp instanceof JButton) {
 					JButton button = (JButton)comp;
 					fixToolbarButtonImpl(button);
@@ -77,7 +76,8 @@ System.out.println("--- " + comp);
 
 		ButtonUI ui = button.getUI();
 
-		if (ui.getClass().getName().equals(BUTTON_UI_CLASS_NAME)) {
+		String clazzName = ui.getClass().getName();
+		if (BUTTON_UI_CLASS_NAME.equals(clazzName)) {
 
 			Class clazz = ui.getClass();
 			Class[] params = { boolean.class };

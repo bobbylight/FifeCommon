@@ -117,7 +117,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 	private JList searchList;			// List of all found documents on Search panel.
 	private JButton searchDisplayButton;	// Display button on the "Search" tab.
 	private JButton listTopicsButton;		// Button to display help topics matching searchString.
-	private JTextField searchField;		// Text field tp type a string to search for.
+	private JTextField searchField;		// Text field to type a string to search for.
 
 	private JButton backButton;
 	private JButton forwardButton;

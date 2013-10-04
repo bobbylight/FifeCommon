@@ -42,6 +42,7 @@ public class RListSelectionModel extends DefaultListSelectionModel {
 	 * example. We don't want them to be able to have nothing selected in our
 	 * list, so this method simply does nothing.
 	 */
+	@Override
 	public void removeSelectionInterval(int index0, int index1) {
 	}
 

@@ -37,7 +37,7 @@ public abstract class AbstractPluggableGUIApplication
 	/**
 	 * List of installed plug-ins.
 	 */
-	private List pluginList;
+	private List<Plugin> pluginList;
 
 	/**
 	 * The class loader used for plugin stuff.
@@ -96,7 +96,7 @@ public abstract class AbstractPluggableGUIApplication
 	public final void addPlugin(Plugin plugin) {
 
 		if (pluginList==null) {
-			pluginList = new ArrayList(1);
+			pluginList = new ArrayList<Plugin>(1);
 		}
 		pluginList.add(plugin);
 
@@ -133,6 +133,7 @@ public abstract class AbstractPluggableGUIApplication
 	 *        content.  This panel should be added to the returned panel.
 	 * @return The panel.
 	 */
+	@Override
 	JPanel createMainContentPanel(JPanel actualContentPane) {
 		MainContentPanel mcp = new MainContentPanel();
 		mcp.setContentPanel(actualContentPane);
@@ -155,7 +156,7 @@ public abstract class AbstractPluggableGUIApplication
 		int count = pluginList==null ? 0 : pluginList.size();
 		Plugin[] plugins = new Plugin[count];
 		if (count>0)
-			plugins = (Plugin[])pluginList.toArray(plugins);
+			plugins = pluginList.toArray(plugins);
 		return plugins;
 	}
 
@@ -222,6 +223,7 @@ public abstract class AbstractPluggableGUIApplication
 	 */
 	private void loadPlugins() {
 		new Thread() {
+			@Override
 			public void run() {
 				try {
 					pluginLoader = new PluginLoader(
@@ -253,6 +255,7 @@ public abstract class AbstractPluggableGUIApplication
 	 * @param splashScreen The "splash screen" for this application.  This
 	 *        value may be <code>null</code>.
 	 */
+	@Override
 	protected void preDisplayInit(GUIApplicationPreferences prefs,
 								SplashScreen splashScreen) {
 		loadPlugins();
@@ -290,6 +293,7 @@ public abstract class AbstractPluggableGUIApplication
 	 * @param contentPane The new content pane.
 	 * @see #getContentPane
 	 */
+	@Override
 	public void setContentPane(Container contentPane) {
 		if (contentPane!=null && !contentPane.equals(actualContentPane)) {
 			MainContentPanel mcp = (MainContentPanel)mainContentPanel;

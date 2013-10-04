@@ -156,6 +156,7 @@ public class GetKeyStrokeDialog extends JDialog {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setVisible(boolean visible) {
 		if (visible) {
 			canceled = true; // Default to canceled.

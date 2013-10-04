@@ -11,8 +11,7 @@ package org.fife.ui.rtextfilechooser;
 
 import java.awt.Color;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.Map;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -30,7 +29,7 @@ class FileChooserPreferences {
 	public boolean fileSystemAware;
 	public boolean autoCompleteFileNames;
 	public Color hiddenFileColor;
-	public HashMap customColors;
+	public Map<String, Color> customColors;
 	public boolean styleOpenFiles;
 	public int openFilesStyle;
 	public int viewMode;
@@ -136,9 +135,9 @@ class FileChooserPreferences {
 	 *
 	 * @return The mapping.
 	 */
-	private static HashMap loadCustomColorsMap() {
+	private static Map<String, Color> loadCustomColorsMap() {
 
-		HashMap map = new HashMap();
+		Map<String, Color> map = new HashMap<String, Color>();
 
 		try {
 
@@ -196,10 +195,9 @@ class FileChooserPreferences {
 		}
 
 		// First, save all color/file extension mappings.
-		Set keys = fcp.customColors.keySet();
-		for (Iterator i=keys.iterator(); i.hasNext(); ) {
-			String key = (String)i.next();
-			Color c = (Color)fcp.customColors.get(key);
+		for (Map.Entry<String, Color> entry : fcp.customColors.entrySet()) {
+			String key = entry.getKey();
+			Color c = entry.getValue();
 			prefs.putInt(FTI_PREFIX+key, c.getRGB());
 		}
 

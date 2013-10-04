@@ -19,7 +19,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.Vector;
+import java.util.List;
 import javax.swing.*;
 
 
@@ -53,6 +53,7 @@ class ListView extends JList implements RTextFileChooserView {
 		setCellRenderer(cellRenderer);
 		setLayoutOrientation(JList.VERTICAL_WRAP);
 		addComponentListener(new ComponentAdapter() {
+			@Override
 			public void componentResized(ComponentEvent e) {
 				setVisibleRowCount(-1);
 			}
@@ -187,6 +188,7 @@ class ListView extends JList implements RTextFileChooserView {
 	 * @param e The mouse event.
 	 * @return The tool tip.
 	 */
+	@Override
 	public String getToolTipText(MouseEvent e) {
 		String tip = null;
 		Point p = e.getPoint();
@@ -236,17 +238,15 @@ class ListView extends JList implements RTextFileChooserView {
 
 
 	/**
-	 * Sets the files displayed by this view.
-	 *
-	 * @param files A vector containing the files to display.
+	 * {@inheritDoc}
 	 */
-	public void setDisplayedFiles(Vector files) {
+	public void setDisplayedFiles(List<File> files) {
 		// setListData() replaces our ListModel, with a non-DefaultListModel
 		// model, which we don't want to do
 		//setListData(files);
 		DefaultListModel model = new DefaultListModel();
-		for (int i=0; i<files.size(); i++) {
-			model.addElement(files.get(i));
+		for (File file : files) {
+			model.addElement(file);
 		}
 		setModel(model);
 	}
@@ -344,6 +344,7 @@ class ListView extends JList implements RTextFileChooserView {
 
 		}
 
+		@Override
 		public void keyTyped(KeyEvent e) {
 
 			if (getModel().getSize()==0) {

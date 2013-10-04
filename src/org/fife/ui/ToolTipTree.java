@@ -57,7 +57,7 @@ public class ToolTipTree extends JTree {
 	}
 
 
-	public ToolTipTree(Hashtable value) {
+	public ToolTipTree(Hashtable<?, ?> value) {
 		super(value);
 		initialize();
 	}
@@ -87,7 +87,7 @@ public class ToolTipTree extends JTree {
 	}
 
 
-	public ToolTipTree(Vector value) {
+	public ToolTipTree(Vector<?> value) {
 		super(value);
 		initialize();
 	}
@@ -100,6 +100,7 @@ public class ToolTipTree extends JTree {
 	 * @param e The mouse event.
 	 * @return The location for the tooltip.
 	 */
+	@Override
 	public Point getToolTipLocation(MouseEvent e) {
 		Point p = null;
 		int row = getRowForLocation(e.getX(), e.getY());
@@ -150,6 +151,7 @@ public class ToolTipTree extends JTree {
 	 *
 	 * @return The tooltip text.
 	 */
+	@Override
 	public String getToolTipText(MouseEvent e) {
 		String tip = null;
 		int x = e.getX();

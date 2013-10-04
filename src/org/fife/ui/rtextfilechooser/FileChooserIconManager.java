@@ -12,6 +12,8 @@ package org.fife.ui.rtextfilechooser;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
@@ -28,11 +30,11 @@ class FileChooserIconManager {
 
 	private static final FileSystemView fileSystemView = FileSystemView.
 												getFileSystemView();
-	private HashMap iconCache;
+	private Map<File, Icon> iconCache;
 
 
 	public FileChooserIconManager() {
-		iconCache = new HashMap(50);
+		iconCache = new HashMap<File, Icon>(50);
 		createDefaultIcons();
 	}
 
@@ -153,7 +155,7 @@ class FileChooserIconManager {
 
 			// First check to see if we've already got this
 			// icon and cached it.
-			icon = (Icon)iconCache.get(f);
+			icon = iconCache.get(f);
 			if (icon!=null)
 				return icon;
 
@@ -220,7 +222,7 @@ class FileChooserIconManager {
 	 * @return The old icon, or <code>null</code> if there was none.
 	 */
 	public Icon removeIconFor(File file) {
-		return (Icon)iconCache.remove(file);
+		return iconCache.remove(file);
 	}
 
 

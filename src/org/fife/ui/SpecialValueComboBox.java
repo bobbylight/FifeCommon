@@ -10,7 +10,8 @@
  */
 package org.fife.ui;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JComboBox;
 
 
@@ -27,14 +28,14 @@ public class SpecialValueComboBox extends JComboBox {
 
 	private static final long serialVersionUID = 1L;
 
-	private Vector values;
+	private List<String> values;
 
 
 	/**
 	 * Constructor.
 	 */
 	public SpecialValueComboBox() {
-		values = new Vector(1);
+		values = new ArrayList<String>(1);
 	}
 
 
@@ -71,7 +72,7 @@ public class SpecialValueComboBox extends JComboBox {
 	 * @return The special item.
 	 */
 	public String getSpecialItemAt(int index) {
-		return (String)values.get(index);
+		return values.get(index);
 	}
 
 

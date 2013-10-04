@@ -93,6 +93,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		root = new DefaultMutableTreeNode(msg.getString("Options"));
 		treeModel = new DefaultTreeModel(root);
 		optionTree = new JTree(treeModel) {
+			@Override
 			public void updateUI() {
 				super.updateUI();
 				// Must set new cell renderer each time lnf changes as
@@ -233,7 +234,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 			// class to Substance.
 			String clazzName = "org.fife.ui.SubstanceOptionsDialogTreeRenderer";
 			try {
-				Class clazz = Class.forName(clazzName);
+				Class<?> clazz = Class.forName(clazzName);
 				return (TreeCellRenderer)clazz.newInstance();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -248,6 +249,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 * Called when the Escape key is pressed in this dialog.  Subclasses
 	 * can override to handle any custom "Cancel" logic.
 	 */
+	@Override
 	protected void escapePressed() {
 		cancelButton.doClick();
 	}
@@ -457,10 +459,10 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 * @param optionsPanels The options panels to be available.
 	 * @see #setOptionsPanels(OptionsDialogPanel[])
 	 */
-	public void setOptionsPanels(List optionsPanels) {
+	public void setOptionsPanels(List<OptionsDialogPanel> optionsPanels) {
 		int count = optionsPanels.size();
 		OptionsDialogPanel[] panels = new OptionsDialogPanel[count];
-		setOptionsPanels((OptionsDialogPanel[])optionsPanels.toArray(panels));
+		setOptionsPanels(optionsPanels.toArray(panels));
 	}
 
 
@@ -575,7 +577,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 			}
 		}
 
-		for (Enumeration e=node.children(); e.hasMoreElements(); ) {
+		for (Enumeration<?> e=node.children(); e.hasMoreElements(); ) {
 			node = (DefaultMutableTreeNode)e.nextElement();
 			if (setSelectedOptionsPanelImpl(name, node)) {
 				return true;
@@ -594,14 +596,15 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 */
 	private void setVisibleOptionPanel(OptionsDialogPanel panel) {
 
-		for (Enumeration e=root.depthFirstEnumeration(); e.hasMoreElements(); ) {
-				DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode)e.nextElement();
-				OptionsDialogPanel panel2 = (OptionsDialogPanel)dmtn.getUserObject();
-				if (panel2==panel) {
-					TreePath path = new TreePath(dmtn.getPath());
-					optionTree.setSelectionPath(path);
-					break;
-				}
+		Enumeration<?> e = root.depthFirstEnumeration();
+		while (e.hasMoreElements()) {
+			DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode)e.nextElement();
+			OptionsDialogPanel panel2 = (OptionsDialogPanel)dmtn.getUserObject();
+			if (panel2==panel) {
+				TreePath path = new TreePath(dmtn.getPath());
+				optionTree.setSelectionPath(path);
+				break;
+			}
 		}
 
 /*
@@ -639,6 +642,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 *
 	 * @param visible Whether or not this dialog should be visible.
 	 */
+	@Override
 	public void setVisible(boolean visible) {
 		if (visible) {
 			UIUtil.expandAllNodes(optionTree);
@@ -688,6 +692,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 */
 	private static class OptionTreeCellRenderer extends DefaultTreeCellRenderer{
 
+		@Override
 		public Component getTreeCellRendererComponent(JTree tree, Object value,
 						boolean sel, boolean expanded, boolean leaf, int row,
 						boolean focused) {

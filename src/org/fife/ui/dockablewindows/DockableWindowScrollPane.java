@@ -51,6 +51,7 @@ public class DockableWindowScrollPane extends RScrollPane {
 	 *
 	 * @param b This parameter is ignored.
 	 */
+	@Override
 	public void setBorder(Border b) {
 		super.setBorder(null);
 	}

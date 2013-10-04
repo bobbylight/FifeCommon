@@ -168,7 +168,8 @@ public final class ShadowPopupFactory extends PopupFactory {
      *
      * @see Options#isPopupDropShadowActive()
      */
-    public Popup getPopup(Component owner, Component contents, int x, int y)
+    @Override
+	public Popup getPopup(Component owner, Component contents, int x, int y)
             throws IllegalArgumentException {
         Popup popup = super.getPopup(owner, contents, x, y);
         return Options.isPopupDropShadowActive()

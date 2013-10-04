@@ -269,6 +269,7 @@ public class TagEntry {
 	 *
 	 * @return A string representation of this <code>TagEntry</code>.
 	 */
+	@Override
 	public String toString() {
 		return name;
 	}

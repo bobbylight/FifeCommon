@@ -161,6 +161,7 @@ public class StatusBar extends StatusBarPanel implements MouseListener {
 	 *
 	 * @param o The new orientation.
 	 */
+	@Override
 	public void applyComponentOrientation(ComponentOrientation o) {
 		super.applyComponentOrientation(o);
 		setBorder(getStatusBarBorder());

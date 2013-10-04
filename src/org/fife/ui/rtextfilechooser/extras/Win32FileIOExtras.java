@@ -70,6 +70,7 @@ class Win32FileIOExtras extends FileIOExtras {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean moveToRecycleBin(Window parent, String[] files,
 						boolean confirmation, boolean silent) {
 		long hwnd = parent!=null ? getHwnd(parent) : 0;
@@ -103,6 +104,7 @@ class Win32FileIOExtras extends FileIOExtras {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean showFilePropertiesDialog(Window parent, String file) {
 		long hwnd = parent!=null ? getHwnd(parent) : 0;
 		return showFilePropertiesDialogImpl(hwnd, file);

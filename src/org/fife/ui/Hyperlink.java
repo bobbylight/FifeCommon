@@ -78,6 +78,7 @@ public class Hyperlink extends JLabel {
 	}
 
 
+	@Override
 	protected void processMouseEvent(MouseEvent e) {
 		if (e.getButton()==MouseEvent.BUTTON1) {
 			switch (e.getID()) {
@@ -110,6 +111,7 @@ public class Hyperlink extends JLabel {
 	 * @param text The new text.
 	 * @see #getText()
 	 */
+	@Override
 	public void setText(String text) {
 		this.text = text;
 		text = "<html><body><u>" + text + "</u>";
@@ -118,6 +120,7 @@ public class Hyperlink extends JLabel {
 	}
 
 
+	@Override
 	public void setUI(LabelUI ui) {
 		super.setUI(ui);
 		setForeground(UIUtil.getHyperlinkForeground());

@@ -15,11 +15,13 @@ import javax.swing.plaf.basic.BasicSplitPaneUI;
 public class CleanSplitPaneUI extends BasicSplitPaneUI {
 
 
+	@Override
 	public BasicSplitPaneDivider createDefaultDivider() {
 		return new EmptySplitPaneDivider(this);
 	}
 
 
+	@Override
 	protected void installDefaults() {
 		super.installDefaults();
 		splitPane.setBorder(null);
@@ -35,6 +37,7 @@ public class CleanSplitPaneUI extends BasicSplitPaneUI {
 			super(ui);
 		}
 
+		@Override
 		public void paint(Graphics g) {
 			g.setColor(getBackground());
 			g.fillRect(0, 0, getWidth(), getHeight());

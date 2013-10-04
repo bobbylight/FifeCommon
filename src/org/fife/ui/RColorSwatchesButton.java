@@ -120,6 +120,7 @@ public class RColorSwatchesButton extends RColorButton {
 	 *         displays a popup menu with color swatches, with an item that
 	 *         pops up a <code>JColorChooser</code>.
 	 */
+	@Override
 	public ActionListener createActionListener() {
 		return new SwatchesActionListener();
 	}
@@ -128,6 +129,7 @@ public class RColorSwatchesButton extends RColorButton {
 	/**
 	 * Overridden so the popup menu gets its LnF updated too.
 	 */
+	@Override
 	public void updateUI() {
 
 		super.updateUI();
@@ -239,6 +241,7 @@ public class RColorSwatchesButton extends RColorButton {
 	 */
 	protected class PopupListener extends RColorButtonActionListener {
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			Object source = e.getSource();
@@ -285,20 +288,24 @@ public class RColorSwatchesButton extends RColorButton {
 			UIManager.put(prefix + ".borderPainted", Boolean.FALSE);
 		}
 
+		@Override
 		public Dimension getMaximumSize(JComponent c) {
 			return getPreferredSize(c);
 		}
 
+		@Override
 		protected Dimension getPreferredMenuItemSize(JComponent c,
 					Icon checkIcon, Icon arrowIcon, int defaultTextIconGap)
 		{
 			return getPreferredSize(c);
 		}
 
+		@Override
 		public Dimension getPreferredSize(JComponent c) {
 			return SWATCH_MENUITEM_SIZE;
 		}
 
+		@Override
 		public void paint(Graphics g, JComponent c) {
 
 			JMenuItem menuItem = (JMenuItem)c;

@@ -52,7 +52,7 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 	/**
 	 * A list of the (possibly) cropped titles for each tab.
 	 */
-	private List croppedTitlesList;
+	private List<String> croppedTitlesList;
 
 	private Paint unselectedTabPaint;
 
@@ -63,13 +63,14 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 	 * Constructor.
 	 */
 	public DockedWindowTabbedPaneUI() {
-		croppedTitlesList = new ArrayList();
+		croppedTitlesList = new ArrayList<String>();
 	}
 
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected int calculateTabHeight(int tabPlacement, int tabIndex,
 									int fontHeight) {
 		int height = super.calculateTabHeight(tabPlacement,tabIndex,fontHeight);
@@ -88,6 +89,7 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 	 * @see TabbedPaneLayout
 	 * @see javax.swing.JTabbedPane#getTabLayoutPolicy
 	 */
+	@Override
 	protected LayoutManager createLayoutManager() {
 		return new PluginTabbedPaneLayout();
 	}
@@ -113,6 +115,7 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 	 * @param c The tabbed pane.
 	 * @return The minimum size for this tabbed pane.
 	 */
+	@Override
 	public Dimension getMinimumSize(JComponent c) {
 		return new Dimension(60, 64);
 	}
@@ -122,6 +125,7 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 	 * Caches insets, colors, fonts, etc.  This method is overridden so we
 	 * can set custom values for insets.
 	 */
+	@Override
 	protected void installDefaults() {
 
 		// Nimbus sets this value to false, but we need it to be true, so that
@@ -143,6 +147,7 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 	 * Arranges the text, icon, etc. on a tab, and caches the "cropped"
 	 * version of the tab's title, if necessary.
 	 */
+	@Override
 	protected void layoutLabel(int tabPlacement, 
 						FontMetrics metrics, int tabIndex,
 						String title, Icon icon,
@@ -192,12 +197,14 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 	}
 
 
+	@Override
 	protected void paintContentBorderTopEdge(Graphics g, int tabPlacement,
 									int selectedIndex, 
 									int x, int y, int w, int h) {
 	}
 
 
+	@Override
 	protected void paintContentBorderBottomEdge(Graphics g, int tabPlacement,
 									int selectedIndex, 
 									int x, int y, int w, int h) {
@@ -233,6 +240,7 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 	}
 
 
+	@Override
 	protected void paintContentBorderLeftEdge(Graphics g, int tabPlacement,
 										int selectedIndex, 
 										int x, int y, int w, int h) {
@@ -243,6 +251,7 @@ g.drawLine(x,y, x,y2);
 	}
 
 
+	@Override
 	protected void paintContentBorderRightEdge(Graphics g, int tabPlacement,
 										int selectedIndex, 
 										int x, int y, int w, int h) {
@@ -252,7 +261,8 @@ int y2 = y + h - 1;// - contentBorderInsets.bottom;
 g.drawLine(x+w-1,y, x+w-1,y2);
 	}
 
-    protected void paintTab(Graphics g, int tabPlacement,
+    @Override
+	protected void paintTab(Graphics g, int tabPlacement,
             Rectangle[] rects, int tabIndex, 
             Rectangle iconRect, Rectangle textRect) {
     	super.paintTab(g, tabPlacement, rects, tabIndex, iconRect, textRect);
@@ -261,6 +271,7 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 	/**
 	 * Paints the background of a tab.
 	 */
+	@Override
 	protected void paintTabBackground(Graphics g, int tabPlacement,
 			int tabIndex, int x, int y, int w, int h, boolean isSelected) {
 		if (isSelected) {
@@ -307,6 +318,7 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 	/**
 	 * Paints the border of a tab.
 	 */
+	@Override
 	protected void paintTabBorder(Graphics g, int tabPlacement, int tabIndex,
 						int x, int y, int w, int h, boolean isSelected) {
 
@@ -356,13 +368,14 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 	/**
 	 * Paints the text on a tab (the tab's title).
 	 */
+	@Override
 	protected void paintText(Graphics g, int tabPlacement,
 						Font font, FontMetrics metrics, int tabIndex,
 						String title, Rectangle textRect, 
 						boolean isSelected) {
 
 		// Get our (probably) cropped title; don't use the uncropped one.
-		title = (String)croppedTitlesList.get(tabIndex);
+		title = croppedTitlesList.get(tabIndex);
 		g.setFont(font);
 
 		Color fg = tabPane.getForegroundAt(tabIndex);
@@ -404,14 +417,17 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 		public PluginTabbedPaneLayout() {
 		}
 
+		@Override
 		protected int preferredTabAreaHeight(int tabPlacement, int width) {
 			return calculateMaxTabHeight(tabPlacement);
 		}
 
+		@Override
 		protected int preferredTabAreaWidth(int tabPlacement, int height) {
 			return calculateMaxTabWidth(tabPlacement);
 		}
 
+		@Override
 		public void layoutContainer(Container parent) {
 
 			int tabPlacement = tabPane.getTabPlacement();
@@ -472,6 +488,7 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 		 * @param tabPlacement Always <code>JTabbedPane.BOTTOM</code>.
 		 * @param tabCount The number of tabs.
 		 */
+		@Override
 		protected void calculateTabRects(int tabPlacement, int tabCount) {
 
 			FontMetrics metrics = getFontMetrics();

@@ -86,6 +86,7 @@ public class StatusBarPanel extends JPanel {
 	 *
 	 * @param g The graphics context with which to paint.
 	 */
+	@Override
 	protected void paintComponent(Graphics g) {
 
 		super.paintComponent(g); // Fill in background.

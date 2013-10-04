@@ -147,6 +147,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 	 * @throws IllegalArgumentException If <code>owner</code> is not a
 	 *         {@link FileChooserOwner}.
 	 */
+	@Override
 	protected void doApplyImpl(Frame owner) {
 		if (!(owner instanceof FileChooserOwner)) {
 			throw new IllegalArgumentException(
@@ -160,6 +161,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected OptionsPanelCheckResult ensureValidInputsImpl() {
 		return null;
 	}
@@ -172,6 +174,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 	 * bonus, if this component is a <code>JTextComponent</code>, its
 	 * text is selected for easy changing.
 	 */
+	@Override
 	public JComponent getTopJComponent() {
 		return modifiableTable;
 	}
@@ -222,6 +225,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 	 *         {@link FileChooserOwner}.
 	 * @see #setValues(Frame)
 	 */
+	@Override
 	protected void setValuesImpl(Frame owner) {
 		if (!(owner instanceof FileChooserOwner)) {
 			throw new IllegalArgumentException(
@@ -236,6 +240,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 	 * Updates this panel's UI in response to a LaF change.  This is
 	 * overridden to update the table's renderer.
 	 */
+	@Override
 	public void updateUI() {
 		if (modifiableTable!=null) {
 			// We explicitly set a DefaultTableCellRenderer, so this cast
@@ -396,6 +401,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 		/**
 		 * Overridden to update the UI of the cached dialog, if necessary.
 		 */
+		@Override
 		public void updateUI() {
 			if (dialog!=null) {
 				SwingUtilities.updateComponentTreeUI(dialog);
@@ -419,10 +425,12 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 			columnNames[0] = favoriteHeader;
 		}
 
+		@Override
 		public int getColumnCount() {
 			return columnNames.length;
 		}
 
+		@Override
 		public String getColumnName(int column) {
 			return columnNames[column];
 		}
@@ -433,9 +441,8 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 			for (int i=0; i<favorites.length; i++) {
 				// DefaultTableModel uses Vectors internally, so we'll
 				// use them here too.
-				Vector v = new Vector(2);
-				String favorite = favorites[i];
-				v.add(favorite);
+				Vector<String> v = new Vector<String>(1);
+				v.add(favorites[i]);
 				addRow(v);
 			}
 		}

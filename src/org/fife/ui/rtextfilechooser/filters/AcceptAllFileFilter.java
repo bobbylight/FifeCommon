@@ -23,11 +23,13 @@ import javax.swing.filechooser.FileFilter;
 public class AcceptAllFileFilter extends FileFilter {
 
 
+	@Override
 	public boolean accept(File f) {
 		return true;
 	}
 
 
+	@Override
 	public String getDescription() {
 		return UIManager.getString("FileChooser.acceptAllFileFilterText");
 	}
@@ -39,6 +41,7 @@ public class AcceptAllFileFilter extends FileFilter {
 	 *
 	 * @return A string representation of this filter.
 	 */
+	@Override
 	public String toString() {
 		return getDescription();
 	}

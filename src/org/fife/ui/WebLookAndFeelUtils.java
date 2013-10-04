@@ -79,8 +79,8 @@ public class WebLookAndFeelUtils {
 		String clazzName = ui.getClass().getName();
 		if (BUTTON_UI_CLASS_NAME.equals(clazzName)) {
 
-			Class clazz = ui.getClass();
-			Class[] params = { boolean.class };
+			Class<?> clazz = ui.getClass();
+			Class<?>[] params = { boolean.class };
 			Method m = clazz.getDeclaredMethod("setRolloverDecoratedOnly", params);
 			m.invoke(ui, new Object[] { Boolean.TRUE });
 			params = new Class[] { int.class };
@@ -111,8 +111,8 @@ public class WebLookAndFeelUtils {
 			// Perhaps it has to do with the frame "fading in"?
 			//WebLookandFeel.setDecorateFrames(true);
 			//WebLookAndFeel.setDecorateDialogs(true);
-			Class clazz = Class.forName(LAF_CLASS_NAME, true, cl);
-			Class[] classes = { boolean.class };
+			Class<?> clazz = Class.forName(LAF_CLASS_NAME, true, cl);
+			Class<?>[] classes = { boolean.class };
 			//Method m = clazz.getDeclaredMethod("setDecorateFrames", classes);
 			//m.invoke(null, new Object[] { Boolean.TRUE });
 			Method m = clazz.getDeclaredMethod("setDecorateDialogs", classes);

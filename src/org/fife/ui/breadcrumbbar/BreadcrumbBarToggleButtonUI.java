@@ -38,6 +38,7 @@ public class BreadcrumbBarToggleButtonUI extends BasicToggleButtonUI {
 	}
 
 
+	@Override
 	protected void installDefaults(AbstractButton b) {
 		super.installDefaults(b);
 		b.setMargin(new Insets(5, 3, 5, 3));
@@ -50,6 +51,7 @@ public class BreadcrumbBarToggleButtonUI extends BasicToggleButtonUI {
 	}
    
 
+	@Override
 	public void paint(Graphics g, JComponent c) {
 
 		AbstractButton b = (AbstractButton)c;

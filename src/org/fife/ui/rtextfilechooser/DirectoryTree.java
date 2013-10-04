@@ -42,6 +42,7 @@ public class DirectoryTree extends FileSystemTree {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void configurePopupMenuActions() {
 		super.configurePopupMenuActions();
 		newFileAction.setEnabled(false);
@@ -55,10 +56,11 @@ public class DirectoryTree extends FileSystemTree {
 	 * @param files The array of files to filter and sort.
 	 * @return The filtered and sorted array of directories.
 	 */
+	@Override
 	protected File[] filterAndSort(File[] files) {
 
 		int num = files.length;
-		ArrayList dirList = new ArrayList();
+		ArrayList<File> dirList = new ArrayList<File>();
 
 		// First, separate the directories from regular files so we can
 		// sort them individually.  This part could be made more compact,
@@ -71,7 +73,7 @@ public class DirectoryTree extends FileSystemTree {
 		Collections.sort(dirList);
 
 		File[] fileArray = new File[dirList.size()];
-		return (File[])dirList.toArray(fileArray);
+		return dirList.toArray(fileArray);
 
 	}
 

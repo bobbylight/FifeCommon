@@ -50,6 +50,7 @@ public class ColorCellRenderer extends DefaultTableCellRenderer {
 	/**
 	 * Returns the component (this object itself) to use to display the cell.
 	 */
+	@Override
 	public Component getTableCellRendererComponent(JTable table, Object color,
 								boolean isSelected, boolean hasFocus,
 								int row, int column) {
@@ -65,6 +66,7 @@ public class ColorCellRenderer extends DefaultTableCellRenderer {
 	 *
 	 * @return The tool tip text.
 	 */
+	@Override
 	public String getToolTipText() {
 		return getToolTipText(getDisplayedColor());
 	}

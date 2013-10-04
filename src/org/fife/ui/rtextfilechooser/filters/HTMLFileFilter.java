@@ -30,6 +30,7 @@ public class HTMLFileFilter extends FileFilter {
 	 * @param f The file to check.
 	 * @return Whether the file passes this filter.
 	 */
+	@Override
 	public boolean accept(File f) {
 		// Accept all directories
 		if (f.isDirectory()) {
@@ -43,6 +44,7 @@ public class HTMLFileFilter extends FileFilter {
 
 
 	// The description of this filter.
+	@Override
 	public String getDescription() {
 		return "HTML files (*.htm, *.html)";
 	}
@@ -54,6 +56,7 @@ public class HTMLFileFilter extends FileFilter {
 	 *
 	 * @return A string representation of this filter.
 	 */
+	@Override
 	public String toString() {
 		return getDescription();
 	}

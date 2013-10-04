@@ -40,6 +40,7 @@ class ButtonBorder extends BasicBorders.MarginBorder {
 	/**
 	 * Paints this border.
 	 */
+	@Override
 	public void paintBorder(Component c, Graphics g, int x, int y,
 							int w, int h) {
 		AbstractButton b = (AbstractButton)c;

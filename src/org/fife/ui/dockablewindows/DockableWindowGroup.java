@@ -225,6 +225,7 @@ class DockableWindowGroup extends JPanel {
 			return popup;
 		}
 
+		@Override
 		protected void paintComponent(Graphics g) {
 			// As of Java 6, still no way for custom LaF's to pick up on
 			// Swing's (i.e. the OS's) default AA settings without
@@ -235,6 +236,7 @@ class DockableWindowGroup extends JPanel {
 			g2d.setRenderingHints(old);
 		}
 
+		@Override
 		protected void processMouseEvent(MouseEvent e) {
 			if (SwingUtilities.isRightMouseButton(e)) {
 				if (e.isPopupTrigger()) {
@@ -255,6 +257,7 @@ class DockableWindowGroup extends JPanel {
 			}
 		}
 
+		@Override
 		public void setSelectedIndex(int index) {
 			super.setSelectedIndex(index);
 			final DockableWindow dwind = (DockableWindow)getSelectedComponent();
@@ -265,6 +268,7 @@ class DockableWindowGroup extends JPanel {
 			});
 		}
 
+		@Override
 		public void setUI(TabbedPaneUI ui) {
 			// Keep using tabbed pane ui so laf stays the same, but need to
 			// set a new one to pick up new tabbed pane colors, fonts, etc.
@@ -314,6 +318,7 @@ class DockableWindowGroup extends JPanel {
 					Math.max((int)(c.getBlue() *FACTOR), 0));
 		}
 
+		@Override
 		public Dimension getMinimumSize() {
 			// So we don't keep "dockable window" panels from getting small.
 			Dimension d = getPreferredSize();
@@ -321,6 +326,7 @@ class DockableWindowGroup extends JPanel {
 			return d;
 		}
 
+		@Override
 		public Dimension getPreferredSize() {
 			Dimension d = super.getPreferredSize();
 			d.height = 20;
@@ -333,6 +339,7 @@ class DockableWindowGroup extends JPanel {
 					laf.endsWith("MetalLookAndFeel");
 		}
 
+		@Override
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			Graphics2D g2d = (Graphics2D)g;
@@ -428,6 +435,7 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 			label.setForeground(c);
 		}
 
+		@Override
 		public void updateUI() {
 			super.updateUI();
 			if (label!=null) {

@@ -389,6 +389,7 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	 *
 	 * @return A string representation of this dockable window.
 	 */
+	@Override
 	public String toString() {
 		return "[DockableWindow: " +
 				"name=" + getDockableWindowName() +

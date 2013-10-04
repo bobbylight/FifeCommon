@@ -107,6 +107,7 @@ public class SelectableLabel extends JTextPane {
 	 *        "<code>&lt;html&gt;</code>", the text will be rendered as
 	 *        HTML.
 	 */
+	@Override
 	public void setText(String text) {
 		if (text!=null && text.startsWith("<html>")) {
 			setContentType("text/html");
@@ -123,6 +124,7 @@ public class SelectableLabel extends JTextPane {
 	 * Overridden to keep our special properties, to keep us looking like
 	 * a label across <code>LookAndFeels</code>.
 	 */
+	@Override
 	public void setUI(TextUI ui) {
 		super.setUI(ui);
 		labelize();

@@ -82,6 +82,7 @@ public class HelpTreeNode {
 	/**
 	 * Returns the title of this node.
 	 */
+	@Override
 	public String toString() {
 		return title;
 	}

@@ -28,6 +28,7 @@ class BreadcrumbBarToggleButton extends JToggleButton {
 	}
 
 
+	@Override
 	public void setUI(ButtonUI ui) {
 		super.setUI(new BreadcrumbBarToggleButtonUI());
 	}

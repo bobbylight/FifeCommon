@@ -25,7 +25,7 @@ import javax.swing.filechooser.FileSystemView;
  */
 public class FileDisplayNames {
 
-	private Map rootNameCache;
+	private Map<File, String> rootNameCache;
 
 	private static final FileDisplayNames INSTANCE = new FileDisplayNames();
 
@@ -34,10 +34,10 @@ public class FileDisplayNames {
 	 * Private constructor to prevent instantiation.
 	 */
 	private FileDisplayNames() {
-		rootNameCache = new HashMap();
-		for (Iterator i=RootManager.getInstance().iterator(); i.hasNext(); ) {
-			File aRoot = (File)i.next();
-			addCachedRootName(aRoot);
+		rootNameCache = new HashMap<File, String>();
+		Iterator<File> i = RootManager.getInstance().iterator();
+		while (i.hasNext()) {
+			addCachedRootName(i.next());
 		}
 	}
 
@@ -83,7 +83,7 @@ public class FileDisplayNames {
 	public String getName(File file) {
 		if (file==null)
 			return null;
-		String name = (String)rootNameCache.get(file);
+		String name = rootNameCache.get(file);
 		if (name!=null)
 			return name;
 		name = FileSystemView.getFileSystemView().getSystemDisplayName(file);

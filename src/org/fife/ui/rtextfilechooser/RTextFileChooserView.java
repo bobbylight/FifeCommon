@@ -13,7 +13,7 @@ package org.fife.ui.rtextfilechooser;
 import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
-import java.util.Vector;
+import java.util.List;
 
 
 /**
@@ -96,10 +96,10 @@ interface RTextFileChooserView extends FileSelector {
 	/**
 	 * Sets the files displayed by this view.
 	 *
-	 * @param files A vector containing the files to display.  These files
+	 * @param files The list of files to display.  These files
 	 *        are not necessarily sorted by file name.
 	 */
-	public void setDisplayedFiles(Vector files);
+	public void setDisplayedFiles(List<File> files);
 
 
 	/**

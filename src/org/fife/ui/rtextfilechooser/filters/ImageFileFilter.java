@@ -48,6 +48,7 @@ public class ImageFileFilter extends FileFilter {
 	 * @param f The file to check.
 	 * @return Whether the file is an image file.
 	 */
+	@Override
 	public boolean accept(File f) {
 
 		// Accept the "file" if it is a directory.
@@ -71,6 +72,7 @@ public class ImageFileFilter extends FileFilter {
 	 *
 	 * @return The description.
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -96,6 +98,7 @@ public class ImageFileFilter extends FileFilter {
 	 *
 	 * @return A string representation of this filter.
 	 */
+	@Override
 	public String toString() {
 		return getDescription();
 	}

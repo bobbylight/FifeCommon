@@ -58,6 +58,7 @@ public class KeyStrokeCellRenderer extends DefaultTableCellRenderer {
 	}
 
 
+	@Override
 	public Component getTableCellRendererComponent(JTable table,
 							Object value, boolean selected, boolean focused,
 							int row, int column) {

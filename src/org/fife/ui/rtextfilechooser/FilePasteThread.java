@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -95,6 +96,7 @@ class FilePasteThread extends GUIWorkerThread {
 	}
 
 
+	@Override
 	public Object construct() {
 
 		if (files == null || files.size() == 0) {
@@ -388,6 +390,7 @@ class FilePasteThread extends GUIWorkerThread {
 	}
 
 
+	@Override
 	public void finished() {
 		if (callback!=null) {
 			callback.pasteOperationCompleted(pasteCount);
@@ -703,7 +706,7 @@ class FilePasteThread extends GUIWorkerThread {
 			Icon icon = null;
 
 			try {
-				Class sfClazz = Class.forName("sun.awt.shell.ShellFolder");
+				Class<?> sfClazz = Class.forName("sun.awt.shell.ShellFolder");
 				Method m = sfClazz.getMethod("getShellFolder",
 						new Class[] { File.class });
 				Object shellFolder = m.invoke(null, new Object[] { file });
@@ -876,7 +879,7 @@ class FilePasteThread extends GUIWorkerThread {
 
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-		List files = new java.util.ArrayList();
+		List<File> files = new ArrayList<File>();
 		files.add(new File("C:/temp/test.java"));
 		files.add(new File("C:/temp/FilePasteTestInput"));
 
@@ -885,6 +888,7 @@ class FilePasteThread extends GUIWorkerThread {
 
 		Dialog parent = null;
 		FilePasteCallback callback = new DefaultFilePasteCallback(parent) {
+			@Override
 			public void pasteOperationCompleted(int pasteCount) {
 				super.pasteOperationCompleted(pasteCount);
 				System.exit(0);

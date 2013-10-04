@@ -113,6 +113,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 	/**
 	 * Overridden so we can keep track of what is added to the popup menu.
 	 */
+	@Override
 	public void addSeparator() {
 		addComponent(new JPopupMenu.Separator());
 	}
@@ -124,6 +125,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 	 *
 	 * @param o The new component orientation.
 	 */
+	@Override
 	public void applyComponentOrientation(ComponentOrientation o) {
 		super.applyComponentOrientation(o);
 		for (Iterator i=children.iterator(); i.hasNext(); ) {
@@ -136,6 +138,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Dimension getPreferredSize() {
 		refresh();
 		return super.getPreferredSize();
@@ -147,6 +150,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 	 *
 	 * @param e The event.
 	 */
+	@Override
 	protected void processMouseWheelEvent(MouseWheelEvent e) {
 		if (getComponent(0)==previousItem) { // i.e., scroll arrows are visible
 			int amt = e.getUnitsToScroll()>0 ? 1 : -1;
@@ -201,6 +205,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setVisible(boolean visible) {
 		if (visible) {
 			refresh();
@@ -224,6 +229,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 			setIcon(null);
 		}
 
+		@Override
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			Icon icon = isEnabled() ? arrowIcon : disabledArrowIcon;
@@ -237,12 +243,14 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 
 	private static class MenuMouseAdapter extends MouseAdapter {
 		   
+		@Override
 		public void mouseEntered(MouseEvent e) {
 			JMenuItem item = (JMenuItem)e.getSource();
 			Timer timer = (Timer)item.getClientProperty(PROPERTY_TIMER);
 			timer.start();
 		}
 
+		@Override
 		public void mouseExited(MouseEvent e) {
 			JMenuItem item = (JMenuItem)e.getSource();
 			Timer timer = (Timer)item.getClientProperty(PROPERTY_TIMER);

@@ -691,14 +691,17 @@ public class PrintPreviewDialog extends EscapableDialog
 			enableEvents(AWTEvent.MOUSE_EVENT_MASK);
 		}
 
+		@Override
 		public Dimension getMaximumSize() {
 			return getPreferredSize();
 		}
 
+		@Override
 		public Dimension getMinimumSize() {
 			return getPreferredSize();
 		}
 
+		@Override
 		public Dimension getPreferredSize() {
 			Insets ins = getInsets();
 			return new Dimension(width+ins.left+ins.right,
@@ -709,10 +712,12 @@ public class PrintPreviewDialog extends EscapableDialog
 			return sourceImage;
 		}
 
+		@Override
 		public void paintComponent(Graphics g) {
 			g.drawImage(drawImage, 0, 0, this);
 		}
 
+		@Override
 		protected void processMouseEvent(MouseEvent e) {
 			if (e.getID()==MouseEvent.MOUSE_PRESSED &&
 					e.getClickCount()==1 &&

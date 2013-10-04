@@ -18,8 +18,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.Vector;
@@ -276,7 +275,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		if (SubstanceUtils.isSubstanceInstalled()) {
 			// Use reflection to avoid hard dependency on Substance.
 			try {
-				Class clazz = Class.forName(SUBSTANCE_RENDERER_CLASS);
+				Class<?> clazz = Class.forName(SUBSTANCE_RENDERER_CLASS);
 				renderer = (TableCellRenderer)clazz.newInstance();
 			} catch (Exception e) { // Never happens
 				e.printStackTrace();
@@ -298,6 +297,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	 * @throws IllegalArgumentException If <code>owner</code> is not a
 	 *         {@link FileChooserOwner}.
 	 */
+	@Override
 	protected void doApplyImpl(Frame owner) {
 		if (!(owner instanceof FileChooserOwner)) {
 			throw new IllegalArgumentException(
@@ -311,6 +311,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected OptionsPanelCheckResult ensureValidInputsImpl() {
 		// They can't input invalid stuff on this options panel.
 		return null;
@@ -326,6 +327,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	 *
 	 * @return The top <code>JComponent</code>.
 	 */
+	@Override
 	public JComponent getTopJComponent() {
 		return hiddenFilesCheckBox;
 	}
@@ -385,6 +387,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	 *         {@link FileChooserOwner}.
 	 * @see #setValues(Frame)
 	 */
+	@Override
 	protected void setValuesImpl(Frame owner) {
 		if (!(owner instanceof FileChooserOwner)) {
 			throw new IllegalArgumentException(
@@ -408,20 +411,18 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 
 		public void initCustomColorTable(RTextFileChooser chooser) {
 			setRowCount(0);
-			Vector v = new Vector(2);
+			Vector<Object> v = new Vector<Object>(2);
 			v.add(defaultColorString);
 			v.add(chooser.getDefaultFileColor());
 			addRow(v);
-			HashMap map = chooser.getCustomColorsMap();
-			Set keySet = map.keySet();
+			Map<String, Color> map = chooser.getCustomColorsMap();
+			Set<String> keySet = map.keySet();
 			if (keySet!=null) {
-				for (Iterator it=keySet.iterator(); it.hasNext(); ) {
+				for (String extension : keySet) {
 					// DefaultTableModel uses Vectors internally.
-					v = new Vector(2);
-					String extension = (String)it.next();
-					Color c = (Color)map.get(extension);
+					v = new Vector<Object>(2);
 					v.add(extension);
-					v.add(c);
+					v.add(map.get(extension));
 					addRow(v);
 				}
 			}
@@ -531,6 +532,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 			colorChooser.setColor(color);
 		}
 
+		@Override
 		public void setVisible(boolean visible) {
 			if (visible) {
 				String extension = extensionField.getText();
@@ -570,6 +572,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 
 		private ExtensionColorMappingDialog dialog;
 
+		@Override
 		public boolean canModifyRow(int row) {
 			// Row 0 is always "<Default>," which the user can't modify/remove.
 			return row>0;
@@ -592,6 +595,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		/**
 		 * Not an override.  Implements <code>RowHandler#updateUI()</code>.
 		 */
+		@Override
 		public void updateUI() {
 			if (dialog!=null) {
 				SwingUtilities.updateComponentTreeUI(dialog);

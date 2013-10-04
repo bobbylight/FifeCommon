@@ -48,6 +48,7 @@ class DetailsViewFileNameRenderer extends DefaultTableCellRenderer {
 	}
 
 
+	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 
@@ -76,6 +77,7 @@ class DetailsViewFileNameRenderer extends DefaultTableCellRenderer {
 	}
 
 
+	@Override
 	public void paintComponent(Graphics g) {
 
 		String text = getText();

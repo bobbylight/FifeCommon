@@ -77,6 +77,7 @@ public class RColorButton extends JButton {
 	 *         <code>RColorButton</code>, the returned listener displays a
 	 *         <code>JColorChooser</code>.
 	 */
+	@Override
 	public ActionListener createActionListener() {
 		return new RColorButtonActionListener();
 	}

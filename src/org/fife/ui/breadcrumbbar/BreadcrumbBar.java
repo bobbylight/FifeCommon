@@ -120,6 +120,7 @@ public class BreadcrumbBar extends JComponent {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void applyComponentOrientation(ComponentOrientation o) {
 
 		ComponentOrientation old = getComponentOrientation();
@@ -379,6 +380,7 @@ tb.addChangeListener(new ChangeListener() {
 	}
 
 
+	@Override
 	protected void paintComponent(java.awt.Graphics g) {
 		g.setColor(getBackground());
 		g.fillRect(0,0, getWidth(),getHeight());
@@ -536,6 +538,7 @@ tb.addChangeListener(new ChangeListener() {
 	/**
 	 * Overridden to ensure even non-visible components get updated.
 	 */
+	@Override
 	public void updateUI() {
 
 		super.updateUI();
@@ -660,7 +663,7 @@ tb.addChangeListener(new ChangeListener() {
 	private class Listener extends MouseAdapter implements ActionListener,
 									KeyListener {
 
-		private List rootMenuItems;
+		private List<JMenuItem> rootMenuItems;
 
 		public void actionPerformed(ActionEvent e) {
 
@@ -743,19 +746,19 @@ tb.addChangeListener(new ChangeListener() {
 				}
 			}
 			else { // roots
-				List roots = getRoots();
+				List<JMenuItem> roots = getRoots();
 				for (int i=0; i<roots.size(); i++) {
-					popup.addComponent((Component)roots.get(i));
+					popup.addComponent(roots.get(i));
 				}
 			}
 
 		}
 
-		private List getRoots() {
+		private List<JMenuItem> getRoots() {
 
 			if (rootMenuItems==null) {
 
-				rootMenuItems = new ArrayList(5);
+				rootMenuItems = new ArrayList<JMenuItem>(5);
 
 //				File[] rootFiles = fsv.getRoots();
 //				if (rootFiles!=null) { // Windows
@@ -800,6 +803,7 @@ tb.addChangeListener(new ChangeListener() {
 		public void keyTyped(KeyEvent e) {
 		}
 
+		@Override
 		public void mouseClicked(MouseEvent e) {
 			setMode(TEXT_FIELD_MODE);
 		}
@@ -807,7 +811,7 @@ tb.addChangeListener(new ChangeListener() {
 		public void updateUI() {
 			int count = rootMenuItems==null ? 0 : rootMenuItems.size();
 			for (int i=0; i<count; i++) {
-				JMenuItem item = (JMenuItem)rootMenuItems.get(i);
+				JMenuItem item = rootMenuItems.get(i);
 				SwingUtilities.updateComponentTreeUI(item);
 			}
 		}

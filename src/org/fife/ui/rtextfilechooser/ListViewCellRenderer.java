@@ -48,6 +48,7 @@ class ListViewCellRenderer extends DefaultListCellRenderer {
 	}
 
 
+	@Override
 	public Component getListCellRendererComponent(JList list, Object value,
 									int index, boolean isSelected,
 									boolean cellHasFocus) {
@@ -97,6 +98,7 @@ class ListViewCellRenderer extends DefaultListCellRenderer {
 	}
 
 
+	@Override
 	public void setBounds(int x, int y, int width, int height) {
 		// TODO: For RTL locales the code below makes the cell renderer
 		// content left-aligned.  Come up with a way to keep it right-

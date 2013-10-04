@@ -141,6 +141,7 @@ public class TitledPanel extends JPanel {
 			this.gradientWidth = gradientWidth;
 		}
 
+		@Override
 		protected void paintComponent(Graphics g) {
 			Rectangle bounds = getBounds();
 			int w = 0;

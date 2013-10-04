@@ -170,6 +170,7 @@ class TopicsFoundDialog extends JDialog {
 		public void keyTyped(KeyEvent e) {
 		}
 
+		@Override
 		public void mouseClicked(MouseEvent e) {
 			if (e.getClickCount()==2) {
 				selectedIndex = choicesList.getSelectedIndex();

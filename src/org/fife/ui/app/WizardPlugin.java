@@ -128,13 +128,16 @@ public abstract class WizardPlugin implements Plugin, GUIApplicationConstants {
 	 */
 	public Icon getSideIcon() {
 		return new ImageIcon() {
+			@Override
 			public int getIconHeight() {
 				return 300;
 			}
+			@Override
 			public int getIconWidth() {
 				return 120;
 			}
 			// FIXME:  Make me a gradient.
+			@Override
 			public void paintIcon(Component c, Graphics g, int x, int y) {
 				g.setColor(Color.BLUE);
 				g.fillRect(x,y, getIconWidth(),getIconHeight());

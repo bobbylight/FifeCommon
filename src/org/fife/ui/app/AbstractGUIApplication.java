@@ -575,7 +575,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 *
 	 * @see #getAction(String)
 	 */
-	public SortedSet getActionKeys() {
+	public SortedSet<String> getActionKeys() {
 		return actions.getActionKeys();
 	}
 
@@ -596,6 +596,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @throws UnsupportedOperationException always.
 	 * @see #setContentPane
 	 */
+	@Override
 	public Container getContentPane() {
 		//throw new UnsupportedOperationException("Use the add() methods!");
 		return actualContentPane;
@@ -956,12 +957,10 @@ public abstract class AbstractGUIApplication extends JFrame
 		String prefsClassName = getPreferencesClassName();
 		if (prefsClassName!=null) {
 			try {
-				Class prefsClass = Class.forName(prefsClassName);
-				Class[] nullClass = null; // Stops JDK 1.5 varargs warnings.
-				Method method = prefsClass.getMethod("loadPreferences",
-												nullClass);
+				Class<?> prefsClass = Class.forName(prefsClassName);
+				Method method = prefsClass.getMethod("loadPreferences");
 				prefs = (GUIApplicationPreferences)method.invoke(
-											prefsClass, nullClass);
+											prefsClass);
 			} catch (Exception e) {
 				displayException(e);
 			}
@@ -992,9 +991,9 @@ public abstract class AbstractGUIApplication extends JFrame
 		if (getOS()==OS_MAC_OSX) {
 
 			try {
-				Class osxAdapter = Class.forName(
+				Class<?> osxAdapter = Class.forName(
 									"com.apple.osxadapter.OSXAdapter");
-				Class[] defArgs = { NativeMacApp.class };
+				Class<?>[] defArgs = { NativeMacApp.class };
 				Method registerMethod = osxAdapter.getDeclaredMethod(
 								"registerMacOSXApplication", defArgs);
 				if (registerMethod != null) {
@@ -1096,6 +1095,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 *
 	 * @param e The window event.
 	 */
+	@Override
 	protected void processWindowEvent(WindowEvent e) {
 
 		switch (e.getID()) {
@@ -1202,6 +1202,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @param contentPane The new content pane.
 	 * @see #getContentPane
 	 */
+	@Override
 	public void setContentPane(Container contentPane) {
 		if (contentPane!=null && !contentPane.equals(actualContentPane)) {
 			if (actualContentPane!=null)

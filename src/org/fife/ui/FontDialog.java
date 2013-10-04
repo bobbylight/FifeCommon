@@ -352,7 +352,7 @@ public class FontDialog extends JDialog implements ActionListener,
 		String[] families = GraphicsEnvironment.
 				getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
 
-		HashSet monospacedFontsSet = createMonospacedFontsSet();
+		HashSet<String> monospacedFontsSet = createMonospacedFontsSet();
 
 		// Add them to a list model.
 		DefaultListModel listModel = new DefaultListModel();
@@ -376,8 +376,8 @@ public class FontDialog extends JDialog implements ActionListener,
 	 * @return The set of common monospaced font names on Windows, OS X, and
 	 *         UNIX.
 	 */
-	private static final HashSet createMonospacedFontsSet() {
-		HashSet set = new HashSet();
+	private static final HashSet<String> createMonospacedFontsSet() {
+		HashSet<String> set = new HashSet<String>();
 		set.add("Andale Mono");
 		set.add("Andale Mono IPA");
 		set.add("Bitstream Vera Sans Mono");
@@ -658,7 +658,7 @@ public class FontDialog extends JDialog implements ActionListener,
 	 * @author Robert Futrell
 	 * @version 1.0
 	 */
-	private static class FontInfo implements Comparable {
+	private static class FontInfo implements Comparable<Object> {
 
 		public String fontFamily;
 		public boolean monospaced;
@@ -681,14 +681,17 @@ public class FontDialog extends JDialog implements ActionListener,
 			return value;
 		}
 
+		@Override
 		public boolean equals(Object obj) {
 			return compareTo(obj)==0;
 		}
 
+		@Override
 		public int hashCode() {
 			return fontFamily.hashCode() + (monospaced ? 1 : 0);
 		}
 
+		@Override
 		public String toString() {
 			String value = fontFamily;
 			if (monospaced) {

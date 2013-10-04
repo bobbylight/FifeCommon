@@ -59,6 +59,7 @@ public class ResizableFrameContentPane extends JPanel {
 	 * sometimes child panels will be painted over our size grip, rendering it
 	 * invisible.
 	 */
+	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
 		gripIcon.paintIcon(this, g, this.getX(), this.getY());

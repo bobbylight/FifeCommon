@@ -22,6 +22,7 @@ class x64FileIOExtras extends Win32FileIOExtras {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void loadNativeLibrary() {
 		System.loadLibrary("x64FileIOExtras");
 	}
@@ -30,6 +31,7 @@ class x64FileIOExtras extends Win32FileIOExtras {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected native boolean moveToRecycleBinImpl(long hwnd, String[] files,
 						boolean confirmation, boolean silent);
 
@@ -37,6 +39,7 @@ class x64FileIOExtras extends Win32FileIOExtras {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected native boolean showFilePropertiesDialogImpl(long hwnd,
 			String file);
 

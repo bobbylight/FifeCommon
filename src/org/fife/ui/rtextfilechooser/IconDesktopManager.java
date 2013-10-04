@@ -37,6 +37,7 @@ class IconDesktopManager extends DefaultDesktopManager {
 	 * that the "next internal frame" isn't selected after this one is closed.
 	 * @param f the <code>JInternalFrame</code> to be removed
 	 */
+	@Override
 	public void closeFrame(JInternalFrame f) {
 		Container c = f.getParent();
 		if (f.isSelected())
@@ -57,6 +58,7 @@ class IconDesktopManager extends DefaultDesktopManager {
 	 * This will activate <b>f</b> moving it to the front.
       * @param f the <code>JInternalFrame</code> to be activated
       */
+	@Override
 	public void activateFrame(JInternalFrame f) {
 		Container p = f.getParent();
 		IconDesktopPane d = (IconDesktopPane)f.getDesktopPane();
@@ -70,6 +72,7 @@ class IconDesktopManager extends DefaultDesktopManager {
 
     
 	// implements javax.swing.DesktopManager
+	@Override
 	public void deactivateFrame(JInternalFrame f) {
 		IconDesktopPane d = (IconDesktopPane)f.getDesktopPane();
 		d.removeSelectedFrame(f);

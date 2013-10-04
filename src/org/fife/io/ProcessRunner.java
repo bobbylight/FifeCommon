@@ -14,11 +14,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.io.StringReader;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +31,7 @@ public class ProcessRunner implements Runnable {
 
 	private File dir;
 	private String[] commandLine;
-	private Map envVars;
+	private Map<String, String> envVars;
 	private boolean appendEnv;
 	private String stdout;
 	private String stderr;
@@ -77,27 +74,11 @@ public class ProcessRunner implements Runnable {
 	 */
 	private String[] createEnvVarArray() {
 
-		Map env = new HashMap();
+		Map<String, String> env = new HashMap<String, String>();
 
 		// If we want to append our environment to that of the parent process...
 		if (appendEnv) {
-
-			// This class works with Java 1.4+, but System.getenv() was only
-			// added in Java 5, so we take extra care here.
-			Class clazz = System.class;
-			try {
-				Method getenv = clazz.getMethod("getenv", null);
-				Map parentEnv = (Map)getenv.invoke(clazz, null);
-				env.putAll(parentEnv);
-			} catch (NoSuchMethodException nsme) { // Java 1.4
-				getEnvironmentNative(env);
-			} catch (RuntimeException re) {
-				throw re;
-			} catch (Exception e) {
-				e.printStackTrace();
-				getEnvironmentNative(env); // Fallback
-			}
-
+			env.putAll(System.getenv());
 		}
 
 		// If we have any environment variables to append...
@@ -106,13 +87,12 @@ public class ProcessRunner implements Runnable {
 		}
 
 		// Create an array of "name=value" elements.
-		List temp = new ArrayList(env.size());
-		for (Iterator i=env.entrySet().iterator(); i.hasNext(); ) {
-			Map.Entry entry = (Map.Entry)i.next();
+		List<String> temp = new ArrayList<String>(env.size());
+		for (Map.Entry<String, String> entry : env.entrySet()) {
 			temp.add(entry.getKey() + "=" + entry.getValue());
 		}
 		String[] envp = new String[temp.size()];
-		envp = (String[])temp.toArray(envp);
+		envp = temp.toArray(envp);
 
 		return envp;
 
@@ -165,86 +145,6 @@ public class ProcessRunner implements Runnable {
 
 
 	/**
-	 * Uses "<code>cmd /c set</code>" on Windows and
-	 * "<code>/bin/sh -c env</code>" on *nix to determine the current
-	 * environment.  This method is used when an application is running in a
-	 * 1.4 JVM, meaning <code>System.getenv()</code> is not available.
-	 *
-	 * @param env The map to append the environment variables to.
-	 */
-	private static final void getEnvironmentNative(Map env) {
-
-		String command = File.separatorChar=='\\' ?
-									"cmd /c set" : "/bin/sh -c env";
-
-		Process p = null;
-		try {
-			p = Runtime.getRuntime().exec(command);
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-			return;
-		}
-
-		// Create threads to read the stdout and stderr of the external
-		// process.  If we do not do it this way, the process may
-		// deadlock.
-		InputStream errStream = p.getErrorStream();
-		InputStream outStream = p.getInputStream();
-		StreamReaderThread stdoutThread = new StreamReaderThread(p, outStream,
-													null, true);
-		Thread stderrThread = new StreamReaderThread(p, errStream, null, false);
-		stdoutThread.start();
-		stderrThread.start();
-		String vars = null;
-
-		try {
-
-			p.waitFor();
-			p = null;
-
-			// Don't interrupt reader threads; just wait for them to terminate
-			// normally.
-			//stdoutThread.interrupt();
-			//stderrThread.interrupt();
-			stdoutThread.join();
-			stderrThread.join();
-
-			vars = stdoutThread.getStreamOutput();
-			
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-			stdoutThread.interrupt();
-			stderrThread.interrupt();
-		} finally {
-			if (p!=null) {
-				p.destroy();
-			}
-		}
-
-		// Parse the stdout for name/value pairs.
-		if (vars!=null) {
-			BufferedReader r = new BufferedReader(new StringReader(vars));
-			String line = null;
-			try {
-				while ((line=r.readLine())!=null) {
-					int split = line.indexOf('=');
-					if (split>-1) { // Should always be true
-						String name = line.substring(0, split);
-						String value = line.substring(split+1);
-						//System.out.println("Adding var: " + name + " => " + value);
-						env.put(name, value);
-					}
-				}
-				r.close();
-			} catch (IOException ioe) {
-				ioe.printStackTrace(); // Never happens
-			}
-		}
-
-	}
-
-
-	/**
 	 * Returns any extra environment variables defined for this process to run
 	 * with.
 	 *
@@ -252,8 +152,8 @@ public class ProcessRunner implements Runnable {
 	 * @see #getAppendEnvironmentVars()
 	 * @see #setEnvironmentVars(Map, boolean)
 	 */
-	public Map getEnvironmentVars() {
-		Map temp = new HashMap();
+	public Map<String, String> getEnvironmentVars() {
+		Map<String, String> temp = new HashMap<String, String>();
 		if (envVars!=null) {
 			temp.putAll(envVars);
 		}
@@ -414,13 +314,13 @@ public class ProcessRunner implements Runnable {
 	 *        <code>vars</code> will be the only environment variables set.
 	 * @see #getEnvironmentVars()
 	 */
-	public void setEnvironmentVars(Map vars, boolean append) {
+	public void setEnvironmentVars(Map<String, String> vars, boolean append) {
 		appendEnv = append;
 		if (envVars!=null) {
 			envVars.clear();
 		}
 		else {
-			envVars = new HashMap();
+			envVars = new HashMap<String, String>();
 		}
 		envVars.putAll(vars);
 	}
@@ -491,6 +391,7 @@ public class ProcessRunner implements Runnable {
 		 * Continually reads from the output stream until this thread is
 		 * interrupted.
 		 */
+		@Override
 		public void run() {
 			String line;
 			try {

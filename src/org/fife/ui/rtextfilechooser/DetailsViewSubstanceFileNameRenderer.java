@@ -39,6 +39,7 @@ class DetailsViewSubstanceFileNameRenderer
 	}
 
 
+	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value,
 				boolean selected, boolean focused, int row, int column)  {
 

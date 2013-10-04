@@ -25,6 +25,7 @@ class DummyTranslucencyUtil extends TranslucencyUtil {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public float getOpacity(Window w) {
 		return 1f;
 	}
@@ -33,6 +34,7 @@ class DummyTranslucencyUtil extends TranslucencyUtil {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isTranslucencySupported(boolean perPixel) {
 		return false;
 	}
@@ -41,6 +43,7 @@ class DummyTranslucencyUtil extends TranslucencyUtil {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean setOpacity(Window w, float value) {
 		return false;
 	}
@@ -49,6 +52,7 @@ class DummyTranslucencyUtil extends TranslucencyUtil {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean setOpaque(Window w, boolean opaque) {
 		return false;
 	}

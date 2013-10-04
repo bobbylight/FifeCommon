@@ -47,6 +47,7 @@ public class KeyStrokeField extends JTextField {
 	}
 
 
+	@Override
 	protected void processKeyEvent(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 		if (e.getID()==KeyEvent.KEY_PRESSED &&
@@ -77,6 +78,7 @@ public class KeyStrokeField extends JTextField {
 
 	private class FocusHandler extends FocusAdapter {
 
+		@Override
 		public void focusGained(FocusEvent e) {
 			selectAll();
 		}

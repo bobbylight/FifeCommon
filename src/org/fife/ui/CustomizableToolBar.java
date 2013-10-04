@@ -111,6 +111,7 @@ public class CustomizableToolBar extends JToolBar {
 	}
 
 
+	@Override
 	public void addNotify() {
 		super.addNotify();
 		if (WebLookAndFeelUtils.isWebLookAndFeelInstalled()) {
@@ -201,9 +202,11 @@ public class CustomizableToolBar extends JToolBar {
 
 		// Create the action that listens for right-clicks for customization.
 		mia = new MouseInputAdapter() {
+			@Override
 			public void mousePressed(MouseEvent e) {
 				maybeShowPopup(e);
 			}
+			@Override
 			public void mouseReleased(MouseEvent e) {
 				maybeShowPopup(e);
 			}
@@ -290,6 +293,7 @@ public class CustomizableToolBar extends JToolBar {
 	}
 
 
+	@Override
 	public void setUI(ToolBarUI ui) {
 		super.setUI(ui);
 		if (WebLookAndFeelUtils.isWebLookAndFeelInstalled()) {
@@ -301,6 +305,7 @@ public class CustomizableToolBar extends JToolBar {
 	/**
 	 * Overridden so the popup menu gets its UI redone too.
 	 */
+	@Override
 	public void updateUI() {
 		super.updateUI();
 		if (popupMenu!=null) {

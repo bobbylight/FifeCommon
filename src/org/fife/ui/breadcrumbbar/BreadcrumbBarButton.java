@@ -27,6 +27,7 @@ class BreadcrumbBarButton extends JButton {
 	}
 
 
+	@Override
 	public void setUI(ButtonUI ui) {
 		super.setUI(new BreadcrumbBarButtonUI());
 	}

@@ -96,6 +96,7 @@ public class MenuButton extends JButton {
 	 *
 	 * @param o The new orientation.
 	 */
+	@Override
 	public void applyComponentOrientation(ComponentOrientation o) {
 		super.applyComponentOrientation(o);
 		if (popupMenu!=null) {
@@ -122,6 +123,7 @@ public class MenuButton extends JButton {
 	 * Overridden to give just a little extra space since our icon is longer.
 	 * FIXME:  Figure out why we really have to do this...
 	 */
+	@Override
 	public Dimension getPreferredSize() {
 		Dimension size = super.getPreferredSize();
 		if (size!=null)
@@ -181,6 +183,7 @@ public class MenuButton extends JButton {
 	 *
 	 * @param icon The icon to use for this button.
 	 */
+	@Override
 	public void setIcon(Icon icon) {
 		if (compoundIcon==null)
 			compoundIcon = new CompoundIcon(icon);
@@ -193,6 +196,7 @@ public class MenuButton extends JButton {
 	/**
 	 * Overridden so the popup menu gets updated as well.
 	 */
+	@Override
 	public void updateUI() {
 		super.updateUI();
 		if (popupMenu!=null) {// First time this is called, popupMenu is null.

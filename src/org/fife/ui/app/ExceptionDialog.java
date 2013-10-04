@@ -238,6 +238,7 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 	 * way too long.  Make us a reasonable width and guess at a height that
 	 * will likely hold all of the text, while still not looking way too tall.
 	 */
+	@Override
 	public void pack() {
 
 		super.pack();

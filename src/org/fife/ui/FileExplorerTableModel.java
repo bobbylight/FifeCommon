@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.List;
 import javax.swing.Icon;
@@ -60,6 +59,7 @@ import javax.swing.table.TableModel;
  * @author Robert Futrell
  * @version 0.4
  */
+// NOTE: Entering Generics hell...
 public class FileExplorerTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 1L;
@@ -78,9 +78,11 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	/**
 	 * Compares two comparable objects by their <code>compareTo</code> method.
 	 */
-	public static final Comparator COMPARABLE_COMPARATOR = new Comparator() {
+	public static final Comparator<?> COMPARABLE_COMPARATOR =
+			new Comparator<Object>() {
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		public int compare(Object o1, Object o2) {
-			return ((Comparable) o1).compareTo(o2);
+			return ((Comparable)o1).compareTo(o2);
 		}
 	};
 
@@ -88,7 +90,8 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	/**
 	 * Compares two objects by their string (<code>toString</code>) values.
 	 */
-	public static final Comparator LEXICAL_COMPARATOR = new Comparator() {
+	public static final Comparator<?> LEXICAL_COMPARATOR =
+			new Comparator<Object>() {
 		public int compare(Object o1, Object o2) {
 			return o1.toString().compareTo(o2.toString());
 		}
@@ -101,8 +104,9 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	private JTableHeader tableHeader;
 	private MouseHandler mouseListener;
 	private TableModelListener tableModelListener;
-	private Map columnComparators = new HashMap();
-	private List sortingColumns = new ArrayList();
+	private Map<Class<?>, Comparator<?>> columnComparators =
+			new HashMap<Class<?>, Comparator<?>>();
+	private List<Directive> sortingColumns = new ArrayList<Directive>();
 
 	private JTable table;
 
@@ -181,9 +185,10 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	}
 
 
+	@SuppressWarnings("rawtypes")
 	protected Comparator getComparator(int column) {
-		Class columnType = tableModel.getColumnClass(column);
-		Comparator comparator = (Comparator) columnComparators.get(columnType);
+		Class<?> columnType = tableModel.getColumnClass(column);
+		Comparator<?> comparator = columnComparators.get(columnType);
 		if (comparator != null)
 			return comparator;
 		if (Comparable.class.isAssignableFrom(columnType))
@@ -193,9 +198,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 
 
 	private Directive getDirective(int column) {
-		int size = sortingColumns.size();
-		for (int i=0; i<size; i++) {
-			Directive directive = (Directive)sortingColumns.get(i);
+		for (Directive directive : sortingColumns) {
 			if (directive.column == column)
 				return directive;
 		}
@@ -276,7 +279,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	}
 
 
-	public void setColumnComparator(Class type, Comparator comparator) {
+	public void setColumnComparator(Class<?> type, Comparator<?> comparator) {
 		if (comparator == null)
 			columnComparators.remove(type);
 		else
@@ -413,14 +416,17 @@ public class FileExplorerTableModel extends AbstractTableModel {
 		return (tableModel == null) ? 0 : tableModel.getColumnCount();
 	}
 
+	@Override
 	public String getColumnName(int column) {
 		return tableModel.getColumnName(column);
 	}
 
-	public Class getColumnClass(int column) {
+	@Override
+	public Class<?> getColumnClass(int column) {
 		return tableModel.getColumnClass(column);
 	}
 
+	@Override
 	public boolean isCellEditable(int row, int column) {
 		return tableModel.isCellEditable(modelIndex(row), column);
 	}
@@ -429,6 +435,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 		return tableModel.getValueAt(modelIndex(row), column);
 	}
 
+	@Override
 	public void setValueAt(Object aValue, int row, int column) {
 		tableModel.setValueAt(aValue, modelIndex(row), column);
 	}
@@ -509,7 +516,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	}
 
 
-	private class Row implements Comparable {
+	private class Row implements Comparable<Row> {
 
 		private int modelIndex;
 
@@ -517,14 +524,14 @@ public class FileExplorerTableModel extends AbstractTableModel {
 			this.modelIndex = index;
 		}
 
-		public int compareTo(Object o) {
+		@SuppressWarnings("unchecked")
+		public int compareTo(Row r2) {
 
 			int row1 = modelIndex;
-			int row2 = ((Row) o).modelIndex;
+			int row2 = r2.modelIndex;
 
-			for (Iterator it = sortingColumns.iterator(); it.hasNext();) {
+			for (Directive directive : sortingColumns) {
 
-				Directive directive = (Directive) it.next();
 				int column = directive.column;
 				Object o1 = tableModel.getValueAt(row1, column);
 				Object o2 = tableModel.getValueAt(row2, column);
@@ -542,7 +549,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 				if (comparison != 0)
 					return directive.direction == DESCENDING ? -comparison : comparison;
 
-			} // End of for (Iterator it = sortingColumns.iterator(); it.hasNext();).
+			}
 
 			return 0;
 
@@ -553,6 +560,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 
 	private class MouseHandler extends MouseAdapter {
 
+		@Override
 		public void mouseClicked(MouseEvent e) {
 
 			// Left-clicks mean to sort by the column.

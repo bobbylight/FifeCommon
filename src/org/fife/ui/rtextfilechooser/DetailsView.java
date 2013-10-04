@@ -20,6 +20,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
@@ -259,6 +260,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	}
 
 
+	@Override
 	public Dimension getPreferredScrollableViewportSize() {
 		// All rows are equal height for our table
 		int rowHeight = getRowHeight();
@@ -308,6 +310,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * sitting in.  Note in Java 6 this could be taken care of by the method
 	 * JTable#setFillsViewportHeight(boolean).
 	 */
+	@Override
 	public boolean getScrollableTracksViewportHeight() {
 		Component parent = getParent();
 		return parent instanceof JViewport ?
@@ -359,6 +362,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * @param e The mouse event.
 	 * @return The tool tip.
 	 */
+	@Override
 	public String getToolTipText(MouseEvent e) {
 		String tip = null;
 		int row = rowAtPoint(e.getPoint());
@@ -427,7 +431,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	}
 
 
-	private void restartAttributeThread(Vector files) {
+	private void restartAttributeThread(List<File> files) {
 		synchronized (ATTRIBUTES_LOCK) {
 			displayCount++;
 			if (attributeThread!=null) {
@@ -456,9 +460,9 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	/**
 	 * Sets the files displayed by this view.
 	 *
-	 * @param files A vector containing the files to display.
+	 * @param files The files to display.
 	 */
-	public void setDisplayedFiles(Vector files) {
+	public void setDisplayedFiles(List<File> files) {
 
 		DetailsViewModel tableModel =
 			(DetailsViewModel)((FileExplorerTableModel)getModel()).getTableModel();
@@ -507,6 +511,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	/**
 	 * Overridden to refresh our cell renderers on LAF changes.
 	 */
+	@Override
 	public void updateUI() {
 		super.updateUI();
 		TableColumnModel tcm = getColumnModel();
@@ -527,12 +532,12 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 		private int displayCount;
 		private int start;
-		private List fileAttrs;
+		private List<FileAttributes> fileAttrs;
 
 		public AttributeBatch(int displayCount, int start) {
 			this.displayCount = displayCount;
 			this.start = start;
-			fileAttrs = new ArrayList();
+			fileAttrs = new ArrayList<FileAttributes>();
 		}
 
 		public void addAttributes(FileAttributes attrs) {
@@ -540,7 +545,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		}
 
 		public FileAttributes getAttributes(int index) {
-			return (FileAttributes)fileAttrs.get(index);
+			return fileAttrs.get(index);
 		}
 
 		public int getDisplayCount() {
@@ -565,7 +570,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	private class AttributeRunnable implements Runnable {
 
 		private int displayCount;
-		private Vector files;
+		private List<File> files;
 
 		/**
 		 * Arbitrarily-chosen number of files to get attributes for at a time.
@@ -574,7 +579,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		private static final int BATCH_SIZE = 15;
 
 
-		public AttributeRunnable(int displayCount, Vector files) {
+		public AttributeRunnable(int displayCount, List<File> files) {
 			this.displayCount = displayCount;
 			this.files = files;
 		}
@@ -592,7 +597,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 				final AttributeBatch batch = new AttributeBatch(displayCount,i);
 
 				for (int j=i; j<max; j++) {
-					File file = (File)files.get(j);
+					File file = files.get(j);
 					batch.addAttributes(new FileAttributes(file));
 				}
 
@@ -634,9 +639,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	/**
 	 * Table model for the details view.
 	 */
-	class DetailsViewModel extends DefaultTableModel {
-
-		Vector tempVector;
+	private class DetailsViewModel extends DefaultTableModel {
 
 		public DetailsViewModel(String nameHeader, String typeHeader,
 							String statusHeader,
@@ -658,7 +661,8 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		 * adds a lot of overhead (e.g., notifies listeners of each line
 		 * added instead of just all of them at once, etc.).
 		 */
-		public void setContents(Vector data) {
+		@SuppressWarnings("unchecked")
+		public void setContents(Collection<File> data) {
 
 			// Calling setDataVector() call would be faster, but would require
 			// us to reset column 0's renderer to our custom one.  So, for now,
@@ -668,16 +672,14 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 			setRowCount(0);
 
-			int dataSize = data.size();
-			if (dataSize==0)
-				return; // For example, if our filter filters out all files in this dir.
-			for (int i=0; i<dataSize; i++) {
-				dataVector.add(getTableObjectVectorForFile((File)data.get(i)));
+			for (File file : data) {
+				dataVector.add(getTableObjectVectorForFile(file));
 			}
 
 		}
 
-		public Class getColumnClass(int column) {
+		@Override
+		public Class<?> getColumnClass(int column) {
 			switch (column) {
 				case 0:	// File name
 					return File.class;
@@ -690,19 +692,20 @@ class DetailsView extends JTable implements RTextFileChooserView {
 			}
 		}
 
-		private final Vector getTableObjectVectorForFile(File file) {
+		private final Vector<?> getTableObjectVectorForFile(File file) {
 //			boolean isDirectory = file.isDirectory();
 //			long length = isDirectory ? -1 : file.length();
 			String description = chooser.getDescription(file);
-			Vector tempVector = new Vector(5);//tempVector.clear();
-			tempVector.add(0, file);
-			tempVector.add(1, description);
-			tempVector.add(2, null);//status);
-			tempVector.add(3, null);//new FileSizeWrapper(length));
-			tempVector.add(4, null);//new FileModifiedWrapper(file.lastModified()));
-			return tempVector;
+			Vector<Object> temp = new Vector<Object>(5);
+			temp.add(0, file);
+			temp.add(1, description);
+			temp.add(2, null);//status);
+			temp.add(3, null);//new FileSizeWrapper(length));
+			temp.add(4, null);//new FileModifiedWrapper(file.lastModified()));
+			return temp;
 		}
 
+		@Override
 		public boolean isCellEditable(int row, int column) {
 			return false;
 		}
@@ -747,24 +750,22 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * both files or both directories, then it uses <code>File</code>'s
 	 * standard <code>compareTo</code> method.
 	 */
-	private static class FileComparator implements Comparator {
+	private static class FileComparator implements Comparator<File> {
 
-		public int compare(Object o1, Object o2) {
-			File f1 = (File)o1;
-			File f2 = (File)o2;
+		public int compare(File f1, File f2) {
 			boolean f1IsDir = f1.isDirectory();
 			boolean f2IsDir = f2.isDirectory();
 			if (f1IsDir) {
 				if (!f2IsDir)
 					return -1;
 				// Both are directories.
-				return ((Comparable)f1).compareTo(f2);
+				return f1.compareTo(f2);
 			}
 			// f1 isn't a directory.
 			if (f2IsDir)
 				return 1;
 			// Both are regular files.
-			return ((Comparable)f1).compareTo(f2);
+			return f1.compareTo(f2);
 		}
 
 	}
@@ -774,7 +775,8 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * A simple wrapper for the "date modified" column, so we don't have to
 	 * have two different renderers for Substance vs. all other LookAndFeels.
 	 */
-	private static class FileModifiedWrapper implements Comparable {
+	private static class FileModifiedWrapper
+	implements Comparable<FileModifiedWrapper> {
 
 		private long modified;
 
@@ -782,14 +784,14 @@ class DetailsView extends JTable implements RTextFileChooserView {
 			this.modified = modified;
 		}
 
-		public int compareTo(Object o) {
-			FileModifiedWrapper w2 = (FileModifiedWrapper)o;
+		public int compareTo(FileModifiedWrapper w2) {
 			if (modified==w2.modified) {
 				return 0;
 			}
 			return modified<w2.modified ? -1 : 1;
 		}
 
+		@Override
 		public String toString() {
 			return modified==-1 ? "" :
 				Utilities.getLastModifiedString(modified);
@@ -802,7 +804,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * A simple wrapper for the file size column, so we don't have to have
 	 * two different renderers for Substance vs. all other LookAndFeels.
 	 */
-	private static class FileSizeWrapper implements Comparable {
+	private static class FileSizeWrapper implements Comparable<FileSizeWrapper>{
 
 		private long size;
 
@@ -810,14 +812,14 @@ class DetailsView extends JTable implements RTextFileChooserView {
 			this.size = size;
 		}
 
-		public int compareTo(Object o) {
-			FileSizeWrapper w2 = (FileSizeWrapper)o;
+		public int compareTo(FileSizeWrapper w2) {
 			if (size==w2.size) {
 				return 0;
 			}
 			return size<w2.size ? -1 : 1;
 		}
 
+		@Override
 		public String toString() {
 			return size==-1 ? "" : Utilities.getFileSizeStringFor(size, true);
 		}
@@ -867,6 +869,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 		}
 
+		@Override
 		public void keyTyped(KeyEvent e) {
 
 			FileExplorerTableModel model = (FileExplorerTableModel)getModel();

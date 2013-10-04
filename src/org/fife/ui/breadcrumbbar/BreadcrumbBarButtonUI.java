@@ -12,7 +12,7 @@ package org.fife.ui.breadcrumbbar;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.util.Map;
+import java.awt.RenderingHints;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
 import javax.swing.JComponent;
@@ -43,6 +43,7 @@ class BreadcrumbBarButtonUI extends BasicButtonUI {
 	}
 
 
+	@Override
 	protected void installDefaults(AbstractButton b) {
 		super.installDefaults(b);
 		b.setMargin(new Insets(5, 4, 5, 4));
@@ -55,6 +56,7 @@ class BreadcrumbBarButtonUI extends BasicButtonUI {
 	}
 
 
+	@Override
 	public void paint(Graphics g, JComponent c) {
 
 		AbstractButton b = (AbstractButton)c;
@@ -92,7 +94,7 @@ class BreadcrumbBarButtonUI extends BasicButtonUI {
 		}
 
 		boolean substance = SubstanceUtils.isSubstanceInstalled();
-		Map oldHints = null;
+		RenderingHints oldHints = null;
 		if (substance) {
 			oldHints = UIUtil.setNativeRenderingHints((Graphics2D)g);
 		}

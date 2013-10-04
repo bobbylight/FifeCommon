@@ -35,11 +35,13 @@ class FileChooserViewTransferHandler extends TransferHandler {
 	}
 
 
+	@Override
 	public boolean canImport(JComponent comp, DataFlavor[] flavors) {
 		return false;
 	}
 
 
+	@Override
 	protected Transferable createTransferable(JComponent c) {
 		List list = null;
 		File[] files = view.getSelectedFiles();
@@ -50,6 +52,7 @@ class FileChooserViewTransferHandler extends TransferHandler {
 	}
 
 
+	@Override
 	public int getSourceActions(JComponent c) {
 		return TransferHandler.COPY;
 	}

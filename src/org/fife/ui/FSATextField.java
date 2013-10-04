@@ -178,6 +178,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addNotify() {
 		super.addNotify();
 		// Not sure why, but we have to do this later, else this text field's
@@ -656,6 +657,7 @@ System.out.println("DEBUG: *** parent is null");
 	 *
 	 * @param e The focus event fired by this text field.
 	 */
+	@Override
 	public void processFocusEvent(FocusEvent e) {
 		if (e.getID()==FocusEvent.FOCUS_LOST) {
 //			if (!e.isTemporary() && e.getOppositeComponent()!=popupWindow) {
@@ -679,6 +681,7 @@ System.out.println("DEBUG: *** parent is null");
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void removeNotify() {
 		super.removeNotify();
 		cleanupOldParentWindow();
@@ -765,6 +768,7 @@ System.out.println("DEBUG: *** parent is null");
 	 * Sets the document for this text field.  This is overridden so we can
 	 * add a document listener to it.
 	 */
+	@Override
 	public void setDocument(Document document) {
 		if (document!=null) {
 			Document oldDocument = getDocument();
@@ -844,6 +848,7 @@ System.out.println("DEBUG: *** parent is null");
 	/**
 	 * Overridden so that we always have a document listener on the text field.
 	 */
+	@Override
 	public void setUI(javax.swing.plaf.TextUI ui) {
 
 		// Add the document listener.

@@ -17,7 +17,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Vector;
@@ -158,7 +157,7 @@ public class ModifiableTable extends JPanel {
 	 * @see #ALL_BUTTONS
 	 */
 	public ModifiableTable(DefaultTableModel model, String buttonLocation,
-						int buttons, List customButtons) {
+						int buttons, List<? extends Action> customButtons) {
 		this(model, null, buttonLocation, buttons, customButtons);
 	}
 
@@ -198,7 +197,7 @@ public class ModifiableTable extends JPanel {
 	 */
 	public ModifiableTable(DefaultTableModel model, Object[] columnNames, 
 						String buttonLocation, int buttons,
-						List customButtons) {
+						List<? extends Action> customButtons) {
 
 		if (Boolean.getBoolean(PROPERTY_PANELS_NON_OPAQUE)) {
 			setOpaque(false);
@@ -261,7 +260,7 @@ public class ModifiableTable extends JPanel {
 	 * @return The panel of buttons.
 	 */
 	protected JPanel createButtonPanel(String buttonLocation, int buttons,
-			List customButtons) {
+			List<? extends Action> customButtons) {
 
 		// Get panel and spacing ready.
 		JPanel panel = null;
@@ -321,8 +320,7 @@ public class ModifiableTable extends JPanel {
 		// Any custom buttons specified by the user.  These currently must
 		// always stay enabled.
 		if (customButtons!=null) {
-			for (Iterator i=customButtons.iterator(); i.hasNext(); ) {
-				Action a = (Action)i.next();
+			for (Action a : customButtons) {
 				JButton extraButton = new JButton(a);
 				panel.add(extraButton);
 				buttonCount++;
@@ -379,6 +377,7 @@ public class ModifiableTable extends JPanel {
 			 * is sitting in.  Note in Java 6 this could be taken care of by the
 			 * method JTable#setFillsViewportHeight(boolean).
 			 */
+			@Override
 			public boolean getScrollableTracksViewportHeight() {
 				Component parent = getParent();
 				return parent instanceof JViewport ?
@@ -388,12 +387,14 @@ public class ModifiableTable extends JPanel {
 			 * Overridden so that, if this component is disabled, the table
 			 * also appears disabled (why doesn't this happen by default???).
 			 */
+			@Override
 			public Component prepareRenderer(TableCellRenderer renderer,
 											int row, int column) {
 				Component comp = super.prepareRenderer(renderer, row, column);
 				comp.setEnabled(isEnabled());  // Enable/disable renderer same as table.
 				return comp;
 			}
+			@Override
 			public boolean isCellEditable(int row, int col) {
 				return false;
 			}
@@ -476,7 +477,7 @@ public class ModifiableTable extends JPanel {
 	 *
 	 * @return The data in the table.
 	 */
-	public Vector getDataVector() {
+	public Vector<?> getDataVector() {
 		return ((DefaultTableModel)getTable().getModel()).getDataVector();
 	}
 
@@ -637,6 +638,7 @@ public class ModifiableTable extends JPanel {
 	 *
 	 * @param enabled Whether this modifiable table is enabled.
 	 */
+	@Override
 	public void setEnabled(boolean enabled) {
 		if (enabled!=isEnabled()) {
 			super.setEnabled(enabled);
@@ -686,6 +688,7 @@ public class ModifiableTable extends JPanel {
 	 * Updates the Look and Feel of this table.  Overridden to also update
 	 * the LaF of the <code>RowHandler</code>, if it is a Swing component.
 	 */
+	@Override
 	public void updateUI() {
 		super.updateUI();
 		if (rowHandler!=null) { // Should always be true
@@ -723,6 +726,7 @@ public class ModifiableTable extends JPanel {
 			}
 		}
 
+		@Override
 		public void mouseClicked(MouseEvent e) {
 			if (e.getClickCount()==2 && e.getButton()==MouseEvent.BUTTON1) {
 				modifyRow();

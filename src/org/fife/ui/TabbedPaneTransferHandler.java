@@ -76,11 +76,13 @@ public class TabbedPaneTransferHandler extends TransferHandler
 	/**
 	 * Overridden to include a check for a TabData flavor.
 	 */
+	@Override
 	public boolean canImport(JComponent c, DataFlavor[] flavors) {
 		return hasTabFlavor(flavors);
 	}
 
 
+	@Override
 	protected Transferable createTransferable(JComponent c) {
 		currentTransferable = new TabTransferable((JTabbedPane)c);
 		return currentTransferable;
@@ -233,6 +235,7 @@ public class TabbedPaneTransferHandler extends TransferHandler
 	 * @param c This parameter is ignored.
 	 * @return <code>TransferHandler.MOVE</code>, as we can only move tabs.
 	 */
+	@Override
 	public int getSourceActions(JComponent c) {
 		return MOVE;
 	}
@@ -265,6 +268,7 @@ public class TabbedPaneTransferHandler extends TransferHandler
 	 *        component contained by the tab).
 	 * @return Whether or not the import was successful.
 	 */
+	@Override
 	public boolean importData(JComponent c, Transferable t) {
 
 		boolean successful = false;

@@ -155,10 +155,12 @@ public class SplashScreen extends JWindow {
 			update(text, percentComplete);
 		}
 
+		@Override
 		public Dimension getPreferredSize() {
 			return preferredSize;
 		}
 
+		@Override
 		public void paintComponent(Graphics g) {
 
 			// Fill in background.

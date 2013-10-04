@@ -81,6 +81,7 @@ public abstract class GUIPlugin extends AbstractPlugin
 	 *
 	 * @param newLaf The new <code>LookAndFeel</code>.
 	 */
+	@Override
 	protected void lookAndFeelChanged(LookAndFeel newLaf) {
 		for (Iterator i=dockableWindowIterator(); i.hasNext(); ) {
 			DockableWindow dw = (DockableWindow)i.next();

@@ -18,6 +18,8 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.List;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
@@ -191,7 +193,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private FileFilter filterToSelect;
 
 	private FileTypeInfo tempInfo;	// Used internally.
-	private HashMap customColors;		// Mapping of extensions to colors.
+	private Map<String, Color> customColors; // Mapping of extensions to colors.
 	private boolean showHiddenFiles;
 	private Color hiddenFileColor;
 	private boolean styleOpenFiles;
@@ -203,7 +205,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private Dimension lastSize;
 	private int lastType;
 
-	private Vector fileFilters = new Vector(5,1);
+	private Vector<FileFilter> fileFilters = new Vector<FileFilter>(5,1);
 	private FileFilter currentFileFilter;
 
 	private boolean isChangingDirectories;
@@ -220,7 +222,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/**
 	 * Sorted list of "favorite" directories.
 	 */
-	private java.util.List favoriteList;
+	private java.util.List<String> favoriteList;
 
 	/**
 	 * The return value given after showOpenDialog or showSaveDialog.
@@ -353,7 +355,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		}
 
 		if (favoriteList==null) {
-			favoriteList = new ArrayList(1); // Usually not many.
+			favoriteList = new ArrayList<String>(1); // Usually not many.
 		}
 
 		if (!favoriteList.contains(dir)) {
@@ -910,6 +912,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		// Make it so if they "x-out" the dialog, they effectively cancel it.
 		dialog.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {
 				cancelSelection();//returnValue = CANCEL_OPTION;
 			}
@@ -931,6 +934,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private void createPopupMenu() {
 
 		popupMenu = new JPopupMenu() {
+			@Override
 			public void show(Component c, int x, int y) {
 
 				// Enable the file stuff (open, rename, ...) only if there
@@ -1087,7 +1091,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @see #clearExtensionColorMap
 	 */
 	public Color getColorForExtension(final String extension) {
-		return (Color)customColors.get(
+		return customColors.get(
 				IGNORE_CASE ? extension.toLowerCase() : extension);
 	}
 
@@ -1105,9 +1109,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	/**
-	 * Returns the hashmap containing all file extensions and the colors used
+	 * Returns the map containing all file extensions and the colors used
 	 * to color the names of files of those types.  Note that changes
-	 * to this hashmap will cause changes to the file chooser (it is a shallow
+	 * to this map will cause changes to the file chooser (it is a shallow
 	 * copy).<p>
 	 * So, for example, with the returned <code>HashMap</code> you can iterate
 	 * through its keys (the extensions) to get the color used by this
@@ -1115,7 +1119,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 *
 	 * @return The hash map of file extensions to file information.
 	 */
-	public HashMap getCustomColorsMap() {
+	public Map<String, Color> getCustomColorsMap() {
 		return customColors;
 	}
 
@@ -1275,7 +1279,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/**
 	 * Returns the "Favorite directories" of this file chooser, as an array
 	 * of strings.  Modifying this array does not modify the favorites used
-	 * by this file choooser.
+	 * by this file chooser.
 	 *
 	 * @return An array of "favorites".  If no favorites are known, a
 	 *         zero-length array is returned.
@@ -1289,8 +1293,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			return new String[0];
 		}
 		String[] array = new String[favoriteList.size()];
-		array = (String[])favoriteList.toArray(array);
-		return array;
+		return favoriteList.toArray(array);
 	}
 
 
@@ -1369,7 +1372,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		// Multiple files surrounded by '"''s.
 		else {
 
-			ArrayList fileNames = new ArrayList();
+			ArrayList<String> fileNames = new ArrayList<String>();
 			int i;
 
 			// Parse the text for filenames in '"''s.
@@ -1392,7 +1395,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			int numFileNames = fileNames.size();
 			files = new File[numFileNames];
 			for (i=0; i<numFileNames; i++)
-				files[i] = new File((String)fileNames.get(i));
+				files[i] = new File(fileNames.get(i));
 
 		}
 
@@ -1588,7 +1591,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @see #setSelectedFiles
 	 */
 	public File[] getSelectedFiles() {
-		return (File[]) selectedFiles.clone();
+		return selectedFiles.clone();
 	}
 
 
@@ -1761,10 +1764,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		// Populate the combo box with all available encodings.
 		if (encodingCombo!=null) {
-			Map availcs = Charset.availableCharsets();
-			Set keys = availcs.keySet();
-			for (Iterator i=keys.iterator(); i.hasNext(); ) {
-				encodingCombo.addItem(i.next());
+			Map<String, Charset> availcs = Charset.availableCharsets();
+			for (String key : availcs.keySet()) {
+				encodingCombo.addItem(key);
 			}
 			encodingCombo.addItemListener(itemListener);
 		}
@@ -1966,8 +1968,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		if (files!=null) {
 
 			int num = files.length;
-			Vector dirList = new Vector();
-			Vector fileList = new Vector();
+			Vector<File> dirList = new Vector<File>();
+			Vector<File> fileList = new Vector<File>();
 
 			// First, separate the directories from regular files so we can
 			// sort them individually.  This part of the code could be made
@@ -2059,8 +2061,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 										FAVORITES_ENCODING)));
 		try {
 			if (favoriteList!=null) {
-				for (Iterator i=favoriteList.iterator(); i.hasNext(); ) {
-					String favorite = (String)i.next();
+				for (String favorite : favoriteList) {
 					w.println(favorite);
 				}
 			}
@@ -2306,7 +2307,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			if (isMultiSelectionEnabled() && selectedFiles!=null &&
 					selectedFiles.length>0)
 			{
-				Vector fList = new Vector();
+				List<File> fList = new ArrayList<File>();
 				boolean failed = false;
 				int num = selectedFiles.length;
 				for (int i=0; i<num; i++) {
@@ -2318,7 +2319,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 				}
 				if (failed)
 					setSelectedFiles((fList.size() == 0) ? null :
-						(File[])fList.toArray(new File[fList.size()]));
+						fList.toArray(new File[fList.size()]));
 			}
 			else if (selectedFiles!=null && selectedFiles.length>0 &&
 				selectedFiles[0]!=null && !filter.accept(selectedFiles[0]))
@@ -2473,11 +2474,10 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @see #getSelectedFiles
 	 * @see #setSelectedFile
 	 */
-	public void setSelectedFiles(Vector files) {
+	public void setSelectedFiles(List<File> files) {
 		int size = files.size();
 		File[] fileArray = new File[size];
-		fileArray = (File[])files.toArray(fileArray);
-		setSelectedFiles(fileArray);
+		setSelectedFiles(files.toArray(fileArray));
 	}
 
 
@@ -2496,7 +2496,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		// This array will be checked at showOpenDialog and showSaveDialog to
 		// see whether files should be selected...
-		filesToSelect = (File[]) files.clone();
+		filesToSelect = files.clone();
 		selectedFiles = filesToSelect;
 
 	}
@@ -2836,6 +2836,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * should be explicitly called whenever a LnF change occurs to ensure that
 	 * the popup menu gets its UI updated.
 	 */
+	@Override
 	public void updateUI() {
 
 		if (!guiInitialized) {
@@ -2907,8 +2908,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 			// Add items, 1 per favorite.
 			if (favoriteList!=null && !favoriteList.isEmpty()) {
-				for (Iterator i=favoriteList.iterator(); i.hasNext(); ) {
-					String dir = (String)i.next();
+				for (String dir : favoriteList) {
 					JMenuItem item = new JMenuItem(dir);
 					item.setActionCommand("SetDir");
 					item.addActionListener(RTextFileChooser.this);
@@ -3026,6 +3026,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			handleDocumentChange(e);
 		}
 
+		@Override
 		public void focusGained(FocusEvent e) {
 			fileNameTextField.selectAll();
 		}

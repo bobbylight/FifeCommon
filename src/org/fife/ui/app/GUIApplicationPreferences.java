@@ -35,9 +35,9 @@ public abstract class GUIApplicationPreferences
 	 * Accelerators for all actions in the <code>GUIApplication</code>'s
 	 * action map.
 	 *
-	 * @see #getAccelerator
+	 * @see #getAccelerator(String)
 	 */
-	public HashMap accelerators;
+	public HashMap<String, KeyStroke> accelerators;
 
 	/**
 	 * The location on-screen of this GUI application.
@@ -93,7 +93,7 @@ public abstract class GUIApplicationPreferences
 	 * @return The accelerator.
 	 */
 	public KeyStroke getAccelerator(String actionName) {
-		return (KeyStroke)accelerators.get(actionName);
+		return accelerators.get(actionName);
 	}
 
 

@@ -159,7 +159,8 @@ public final class ShadowPopup extends Popup {
      * In addition to the superclass behavior, we reset the stored
      * horizontal and vertical drop shadows - if any.
      */
-    public void hide() {
+    @Override
+	public void hide() {
         if (contents == null) {
             return;
         }
@@ -187,7 +188,8 @@ public final class ShadowPopup extends Popup {
      * heavy-weight container, we try to snapshot the background.
      * If the <code>Popup</code> is currently visible, it remains visible.
      */
-    public void show() {
+    @Override
+	public void show() {
         if (heavyWeightContainer != null) {
             snapshot();
         }

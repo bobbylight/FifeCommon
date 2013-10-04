@@ -96,8 +96,9 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 		// Add all of our "root" nodes.
 		root = new FileSystemTreeNode();
-		for (Iterator i=RootManager.getInstance().iterator(); i.hasNext(); ) {
-			File aRoot = (File)i.next();
+		Iterator<File> i = RootManager.getInstance().iterator();
+		while (i.hasNext()) {
+			File aRoot = i.next();
 			// Hack - We "know" all roots are directories, so why query
 			// via isDirectory()?  This is a nice performance boost.
 			root.add(createTreeNodeForImpl(aRoot, true));
@@ -185,6 +186,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	}
 
 
+	@Override
 	public String convertValueToText(Object value, boolean selected,
 			boolean expanded, boolean leaf, int row, boolean hasFocus) {
 		// For FileSystemTrees, we should always be getting a
@@ -253,8 +255,8 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			String clazzName =
 				"org.fife.ui.rtextfilechooser.SubstanceFileSystemTreeRenderer";
 			try {
-				Class clazz = Class.forName(clazzName);
-				Constructor cons = clazz.getConstructor(
+				Class<?> clazz = Class.forName(clazzName);
+				Constructor<?> cons = clazz.getConstructor(
 						new Class[] { FileSystemTree.class });
 				return (TreeCellRenderer)cons.newInstance(new Object[] {this});
 			} catch (Exception e) {
@@ -353,8 +355,8 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	protected File[] filterAndSort(File[] files) {
 
 		int num = files.length;
-		ArrayList dirList = new ArrayList();
-		ArrayList fileList = new ArrayList();
+		List<File> dirList = new ArrayList<File>();
+		List<File> fileList = new ArrayList<File>();
 
 		// First, separate the directories from regular files so we can
 		// sort them individually.  This part could be made more compact,
@@ -367,14 +369,12 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		}
 
 		// On Windows and OS X, comparison is case-insensitive.
-		Comparator c = null;
+		Comparator<File> c = null;
 		String os = System.getProperty("os.name");
 		boolean isOSX = os!=null ? os.toLowerCase().indexOf("os x")>-1 : false;
 		if (File.separatorChar=='\\' || isOSX) {
-			c = new Comparator() {
-				public int compare(Object o1, Object o2) {
-					File f1 = (File)o1;
-					File f2 = (File)o2;
+			c = new Comparator<File>() {
+				public int compare(File f1, File f2) {
 					return f1.getName().compareToIgnoreCase(f2.getName());
 				}
 			};
@@ -385,7 +385,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		dirList.addAll(fileList);
 
 		File[] fileArray = new File[dirList.size()];
-		return (File[])dirList.toArray(fileArray);
+		return dirList.toArray(fileArray);
 
 	}
 
@@ -393,6 +393,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	/**
 	 * Called when a node has expanded.
 	 */
+	@Override
 	public void fireTreeExpanded(TreePath e) {
 
 		super.fireTreeExpanded(e);
@@ -413,6 +414,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 * so that the node that is being expanded will be populated with its
 	 * subdirectories, if necessary.
 	 */
+	@Override
 	public void fireTreeWillExpand(TreePath e) throws ExpandVetoException {
 
 		// We fire a property change at the beginning and end of a node
@@ -482,6 +484,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 *
 	 * @return The preferred size of this tree.
 	 */
+	@Override
 	public Dimension getPreferredSize() {
 		Dimension size = super.getPreferredSize();
 		size.width = Math.max(size.width, 300);
@@ -558,6 +561,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 *
 	 * @return The tooltip text.
 	 */
+	@Override
 	public String getToolTipText(MouseEvent e) {
 		String tip = null;
 		int x = e.getX();
@@ -658,6 +662,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 *
 	 * @param e The mouse event.
 	 */
+	@Override
 	protected void processMouseEvent(MouseEvent e) {
 		super.processMouseEvent(e);
 		if (e.isPopupTrigger()) {
@@ -709,8 +714,9 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		if (rootFile==null) {
 			// Add all of our "root" nodes.
 			root = new FileSystemTreeNode();
-			for (Iterator i=RootManager.getInstance().iterator(); i.hasNext(); ) {
-				File aRoot = (File)i.next();
+			Iterator<File> i = RootManager.getInstance().iterator();
+			while (i.hasNext()) {
+				File aRoot = i.next();
 				// Hack - We "know" all roots are directories, so why query
 				// via isDirectory()?  This is a nice performance boost.
 				root.add(createTreeNodeForImpl(aRoot, true));
@@ -762,7 +768,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			return false;
 		}
 
-		ArrayList parents = new ArrayList();
+		List<File> parents = new ArrayList<File>();
 		File f2 = file;
 		while (f2!=null) {
 			parents.add(f2);
@@ -806,6 +812,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 * If we don't do this, the renderer will still work, but will use the
 	 * "background color" and other colors from the original LnF.
 	 */
+	@Override
 	public void updateUI() {
 
 		super.updateUI();
@@ -840,6 +847,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			super(root);
 		}
 
+		@Override
 		public void insertNodeInto(MutableTreeNode child,
 								MutableTreeNode parent, int index) {
 			FileSystemTreeNode fstParent = (FileSystemTreeNode)parent;
@@ -875,6 +883,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			return (file!=null && file.equals(userObject));
 		}
 
+		@Override
 		public boolean equals(Object o2) {
 			if (o2 instanceof FileSystemTreeNode) {
 				File f2 = ((FileSystemTreeNode)o2).getFile();
@@ -895,10 +904,12 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		 * Overridden since {@link #equals(Object)} was overridden, to keep
 		 * them consistent.
 		 */
+		@Override
 		public int hashCode() {
 			return userObject==null ? 0 : userObject.hashCode();
 		}
 
+		@Override
 		public String toString() {
 			File file = getFile();
 			String fileName = file==null ? "<null>" : file.getAbsolutePath();
@@ -915,6 +926,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public Component getTreeCellRendererComponent(JTree tree,
 									Object value, boolean sel,
 									boolean expanded, boolean leaf,
@@ -952,21 +964,24 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 */
 	private static class TreeTransferHandler extends TransferHandler {
 
+		@Override
 		public boolean canImport(JComponent comp, DataFlavor[] flavors) {
 			return false;
 		}
 
+		@Override
 		protected Transferable createTransferable(JComponent c) {
-			List list = null;
+			List<File> list = null;
 			FileSystemTree tree = (FileSystemTree)c;
 			File file = tree.getSelectedFile();
 			if (file!=null) {
-				list = new ArrayList(1);
+				list = new ArrayList<File>(1);
 				list.add(file);
 			}
 			return new FileListTransferable(list);
 		}
 
+		@Override
 		public int getSourceActions(JComponent c) {
 			return TransferHandler.COPY;
 		}

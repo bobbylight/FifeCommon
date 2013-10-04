@@ -323,6 +323,7 @@ public class RScrollPane extends JScrollPane implements ActionListener {
 	 * This overrides <code>JComponent</code>'s <code>updateUI</code> method,
 	 * so that the popup menus are updated as well.
 	 */
+	@Override
 	public void updateUI() {
 		super.updateUI();
 		if (vertSBMenu!=null)
@@ -337,10 +338,12 @@ public class RScrollPane extends JScrollPane implements ActionListener {
 	 */
 	class PopupListener extends MouseAdapter {
 
+		@Override
 		public void mousePressed(MouseEvent e) {
 			maybeShowPopup(e);
 		}
 
+		@Override
 		public void mouseReleased(MouseEvent e) {
 			maybeShowPopup(e);
 		}

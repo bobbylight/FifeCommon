@@ -65,12 +65,14 @@ public abstract class PickyDocumentFilter extends DocumentFilter {
 	}
 
 
+	@Override
 	public void insertString(DocumentFilter.FilterBypass fb, int offset,
 				String text, AttributeSet attr) throws BadLocationException {
 		fb.insertString(offset, cleanse(text), attr);
 	}
 
 
+	@Override
 	public void remove(DocumentFilter.FilterBypass fb,
 				int offset, int length)
 					throws BadLocationException {
@@ -78,6 +80,7 @@ public abstract class PickyDocumentFilter extends DocumentFilter {
 	}
 
 
+	@Override
 	public void replace(DocumentFilter.FilterBypass fb, int offset, int length,
 			String text, AttributeSet attr) throws BadLocationException {
 		fb.replace(offset, length, cleanse(text), attr);

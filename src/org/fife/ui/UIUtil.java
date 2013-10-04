@@ -18,6 +18,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -444,15 +445,15 @@ public class UIUtil {
 				desktopCreationAttempted = true;
 
 				try {
-					Class desktopClazz = Class.forName("java.awt.Desktop");
+					Class<?> desktopClazz = Class.forName("java.awt.Desktop");
 					Method m = desktopClazz.
-						getDeclaredMethod("isDesktopSupported", null);
+						getDeclaredMethod("isDesktopSupported");
 
-					boolean supported = ((Boolean)m.invoke(null, null)).
+					boolean supported = ((Boolean)m.invoke(null)).
 												booleanValue();
 					if (supported) {
-						m = desktopClazz.getDeclaredMethod("getDesktop", null);
-						desktop = m.invoke(null, null);
+						m = desktopClazz.getDeclaredMethod("getDesktop");
+						desktop = m.invoke(null);
 					}
 
 				} catch (RuntimeException re) {
@@ -1046,12 +1047,12 @@ public class UIUtil {
 	 * @param g2d The graphics context.
 	 * @return The old rendering hints.
 	 */
-	public static Map setNativeRenderingHints(Graphics2D g2d) {
+	public static RenderingHints setNativeRenderingHints(Graphics2D g2d) {
 
-		Map old = g2d.getRenderingHints();
+		RenderingHints old = g2d.getRenderingHints();
 
 		// Try to use the rendering hint set that is "native".
-		Map hints = (Map)Toolkit.getDefaultToolkit().
+		Map<?, ?> hints = (Map<?, ?>)Toolkit.getDefaultToolkit().
 						getDesktopProperty("awt.font.desktophints");
 		if (hints!=null) {
 			g2d.addRenderingHints(hints);

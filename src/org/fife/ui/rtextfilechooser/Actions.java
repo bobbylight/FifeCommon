@@ -99,7 +99,7 @@ public interface Actions {
 				return;
 			}
 
-			List fileList = Arrays.asList(files);
+			List<File> fileList = Arrays.asList(files);
 			FileListTransferable flt = new FileListTransferable(fileList);
 			Clipboard clipboard = Toolkit.getDefaultToolkit().
 												getSystemClipboard();
@@ -265,10 +265,11 @@ public interface Actions {
 
 				try {
 
-					List files = (List)contents.getTransferData(accepted);
+					List<?> files = (List<?>)contents.getTransferData(accepted);
 					Window parent = SwingUtilities.getWindowAncestor(chooser);
 					FilePasteCallback callback =
 							new DefaultFilePasteCallback(parent) {
+						@Override
 						public void pasteOperationCompleted(int pasteCount){
 							super.pasteOperationCompleted(pasteCount);
 							chooser.refreshView();
@@ -439,15 +440,14 @@ public interface Actions {
 
 			try {
 
-				Class desktopClazz = Class.forName("java.awt.Desktop");
+				Class<?> desktopClazz = Class.forName("java.awt.Desktop");
 				Method m = desktopClazz.
-					getDeclaredMethod("isDesktopSupported", null);
+					getDeclaredMethod("isDesktopSupported");
 
-				boolean supported = ((Boolean)m.invoke(null, null)).
-											booleanValue();
+				boolean supported = ((Boolean)m.invoke(null)).booleanValue();
 				if (supported) {
-					m = desktopClazz.getDeclaredMethod("getDesktop", null);
-					return m.invoke(null, null);
+					m = desktopClazz.getDeclaredMethod("getDesktop");
+					return m.invoke(null);
 				}
 
 			} catch (RuntimeException re) {

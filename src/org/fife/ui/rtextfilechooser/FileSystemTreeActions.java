@@ -193,11 +193,13 @@ class FileSystemTreeActions {
 
 			delegate = new DefaultTreeCellEditor(tree, renderer) {
 
+				@Override
 				protected TreeCellEditor createTreeCellEditor() {
 					TreeCellEditor editor = super.createTreeCellEditor();
 					if (editor instanceof DefaultCellEditor) { // Always true
 						DefaultCellEditor dce = (DefaultCellEditor)editor;
 						dce.getComponent().addFocusListener(new FocusAdapter() {
+							@Override
 							public void focusLost(FocusEvent e) {
 								if (!e.isTemporary()) {
 									cancelCellEditing();
@@ -208,6 +210,7 @@ class FileSystemTreeActions {
 					return editor;
 				}
 
+				@Override
 				protected void determineOffset(JTree tree, Object value,
 						boolean selected, boolean expanded,
 						boolean leaf, int row) {
@@ -617,6 +620,7 @@ class FileSystemTreeActions {
 						Window parent = SwingUtilities.getWindowAncestor(tree);
 						FilePasteCallback callback =
 								new DefaultFilePasteCallback(parent) {
+							@Override
 							public void pasteOperationCompleted(int pasteCount){
 								super.pasteOperationCompleted(pasteCount);
 								tree.refreshChildren(node);

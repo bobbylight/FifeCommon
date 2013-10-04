@@ -45,6 +45,7 @@ class MouseListener extends MouseAdapter {
 	 *
 	 * @param e The mouse event.
 	 */
+	@Override
 	public void mouseClicked(MouseEvent e) {
 
 		// Don't listen to clicks from other objects.  This is a hack to
@@ -120,6 +121,7 @@ class MouseListener extends MouseAdapter {
 	}
 
 
+	@Override
 	public void mousePressed(MouseEvent e) {
 
 		// Don't listen to clicks from other objects.  This is a hack to
@@ -137,6 +139,7 @@ class MouseListener extends MouseAdapter {
 	}
 
 
+	@Override
 	public void mouseReleased(MouseEvent e) {
 
 		// Don't listen to clicks from other objects.  This is a hack to

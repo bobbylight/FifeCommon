@@ -16,7 +16,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -36,14 +35,14 @@ import javax.swing.KeyStroke;
  */
 public class ActionRegistry {
 
-	private Map actionMap;
+	private Map<String, Action> actionMap;
 
 	private static final String PROPS_FILE_HEADER =
 			"Shortcuts for this application.  Do not modify by hand!";
 
 
 	public ActionRegistry() {
-		actionMap = new HashMap();
+		actionMap = new HashMap<String, Action>();
 	}
 
 
@@ -75,7 +74,7 @@ public class ActionRegistry {
 	 * @see #getActions()
 	 */
 	public Action getAction(String key) {
-		return (Action)actionMap.get(key);
+		return actionMap.get(key);
 	}
 
 
@@ -84,27 +83,20 @@ public class ActionRegistry {
 	 *
 	 * @return The list of all action keys.
 	 */
-	public SortedSet getActionKeys() {
-		return new TreeSet(actionMap.keySet());
+	public SortedSet<String> getActionKeys() {
+		return new TreeSet<String>(actionMap.keySet());
 	}
 
 
 	/**
 	 * Returns all actions as an array.
 	 *
-	 * @return The actions.  <code>null</code> is returned if the action
+	 * @return The actions.  An empty array is returned if the action
 	 *         map has not yet been initialized.
 	 * @see #getAction(String)
 	 */
 	public Action[] getActions() {
-		Set keySet = actionMap.keySet();
-		int size = keySet.size();
-		Action[] array = new Action[size];
-		int j = 0;
-		for (Iterator i=keySet.iterator(); i.hasNext(); ) {
-			array[j++] = (Action)actionMap.get(i.next());
-		}
-		return array;
+		return actionMap.values().toArray(new Action[actionMap.size()]);
 	}
 
 
@@ -134,9 +126,8 @@ public class ActionRegistry {
 			bin.close();
 		}
 
-		Set entries = props.entrySet();
-		for (Iterator i=entries.iterator(); i.hasNext(); ) {
-			Map.Entry entry = (Map.Entry)i.next();
+		Set<Map.Entry<Object, Object>> entries = props.entrySet();
+		for (Map.Entry<Object, Object> entry : entries) {
 			String key = (String)entry.getKey();
 			Action a = getAction(key);
 			if (a!=null) {
@@ -162,9 +153,8 @@ public class ActionRegistry {
 	public void saveShortcuts(File file) throws IOException {
 
 		Properties props = new Properties();
-		SortedSet keys = getActionKeys();
-		for (Iterator i=keys.iterator(); i.hasNext(); ) {
-			String key = (String)i.next();
+		SortedSet<String> keys = getActionKeys();
+		for (String key : keys) {
 			Action action = getAction(key);
 			KeyStroke ks = (KeyStroke)action.getValue(Action.ACCELERATOR_KEY);
 			String value = ks==null ? "" : ks.toString();

@@ -137,7 +137,7 @@ public abstract class Prefs {
 	}
 
 
-	private static final boolean isPrimitiveNumberType(Class type) {
+	private static final boolean isPrimitiveNumberType(Class<?> type) {
 		return int.class==type || long.class==type || short.class==type ||
 				byte.class==type || float.class==type || double.class==type;
 	}
@@ -203,7 +203,7 @@ public abstract class Prefs {
 	 */
 	public void load(Properties props) throws IOException {
 
-		Class clazz = getClass();
+		Class<?> clazz = getClass();
 		Field[] fields = clazz.getFields();
 
 		for (int i=0; i<fields.length; i++) {
@@ -215,7 +215,7 @@ public abstract class Prefs {
 
 				if (value!=null) {
 
-					Class type = fields[i].getType();
+					Class<?> type = fields[i].getType();
 					Object obj = null;
 
 					if (int.class==type) {
@@ -369,7 +369,7 @@ public abstract class Prefs {
 	 */
 	public void save(Properties props) throws IOException {
 
-		Class clazz = getClass();
+		Class<?> clazz = getClass();
 		Field[] fields = clazz.getFields();
 
 		for (int i=0; i<fields.length; i++) {
@@ -380,7 +380,7 @@ public abstract class Prefs {
 				}
 
 				String name = fields[i].getName();
-				Class type = fields[i].getType();
+				Class<?> type = fields[i].getType();
 				Object value = fields[i].get(this);
 				String strVal = null;
 
@@ -464,7 +464,7 @@ public abstract class Prefs {
 	 * @see #save(Properties)
 	 */
 	public void save(OutputStream out) throws IOException {
-		Class clazz = getClass();
+		Class<?> clazz = getClass();
 		Properties props = new Properties();
 		save(props);
 		String header = "Preferences for the " + clazz.getName() + " class";

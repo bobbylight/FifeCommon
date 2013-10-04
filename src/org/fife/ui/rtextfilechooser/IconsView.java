@@ -13,7 +13,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyVetoException;
 import java.io.File;
-import java.util.Vector;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.DesktopPaneUI;
@@ -64,6 +63,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		mouseListener = new MouseListener(chooser);
 		addMouseListener(mouseListener);
 		addComponentListener(new ComponentAdapter() {
+						@Override
 						public void componentShown(ComponentEvent e) {
 							refresh();// This makes icons organized neatly on first appearance.
 						}
@@ -250,20 +250,14 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 
 
 	/**
-	 * Sets the files displayed by this view.
-	 *
-	 * @param files A vector containing the files to display.  These files
-	 *        are not necessarily sorted by file name.
+	 * {@inheritDoc}
 	 */
-	public void setDisplayedFiles(Vector files) {
+	public void setDisplayedFiles(java.util.List<File> files) {
 
 		// Clears view and also clears "selected files" vector.
 		clearDisplayedFiles();
 
-		int num = files.size();
-		for (int i=0; i<num; i++) {
-
-			File file = (File)files.get(i);
+		for (File file : files) {
 
 			// Create the internal frame.
 			// Set the image and text color according to the file type.
@@ -341,6 +335,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	}
 
 
+	@Override
 	public void setUI(DesktopPaneUI ui) {
 		super.setUI(ui);
 		setImportantColors();
@@ -356,6 +351,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 			setToolTipText("freaky"); // We must do this for tooltips to work (???).
 		}
 
+		@Override
 		public Point getToolTipLocation(MouseEvent e) {
 			Point p = e.getPoint();
 			p.x += 10;
@@ -363,6 +359,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 			return p;
 		}
 
+		@Override
 		public String getToolTipText(MouseEvent e) {
 			String tip = null;
 			// Put (x,y) in IconsView coordinate system.
@@ -379,12 +376,14 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 			return tip;
 		}
 
+		@Override
 		public boolean isOpaque() {
 			return true;
 		}
 
 		// Overridden so we can paint the background like it looks in Windows'
 		// "Icon View."
+		@Override
 		public void paint(Graphics g) {
 			g.setColor(IconsView.this.getBackground());
 			Rectangle bounds = getBounds();
@@ -483,6 +482,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 
 		}
 
+		@Override
 		public void setSelected(boolean selected) throws PropertyVetoException {
 
 			super.setSelected(selected);
@@ -529,11 +529,14 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		}
 
 		// Overridden to always have our special UI.
+		@Override
 		public void setUI(InternalFrameUI ui) {
 			super.setUI(new BasicInternalFrameUI(this) {
+					@Override
 					protected MouseInputAdapter createBorderListener(JInternalFrame w) {
 						return null;
 					}
+					@Override
 					protected void installMouseHandlers(JComponent c) {
 					}
 					});
@@ -704,6 +707,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		// This is only called for the internal frame itself, not its JLabel,
 		// so we never really see it called.  But it's still safe to have it,
 		// and it prevents other listeners from hearin' stuff.
+		@Override
 		public void processMouseEvent(MouseEvent e) {
 			switch (e.getID()) {
 				case MouseEvent.MOUSE_PRESSED:
@@ -718,6 +722,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 			//super.processMouseEvent(e); // Don't need this...
 		}
 
+		@Override
 		public void processMouseMotionEvent(MouseEvent e) {
 			switch (e.getID()) {
 				case MouseEvent.MOUSE_DRAGGED:
@@ -727,6 +732,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 			//super.processMouseMotionEvent(e); // Don't need this...
 		}
 
+		@Override
 		public String toString() {
 			return "[IconInternalFrame: file==" + getFile() + "]";
 		}

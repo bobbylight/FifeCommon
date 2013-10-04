@@ -67,6 +67,7 @@ class FloatingWindow extends JFrame {
 	 */
 	private class Listener extends WindowAdapter {
 
+		@Override
 		public void windowClosing(WindowEvent e) {
 			// Causes this window to close, but also updates all dockable
 			// window-related stuff.

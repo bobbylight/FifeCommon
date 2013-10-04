@@ -36,6 +36,7 @@ class Java6TranslucencyUtil extends TranslucencyUtil {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public float getOpacity(Window w) {
 
 		float opacity = 1;
@@ -63,6 +64,7 @@ class Java6TranslucencyUtil extends TranslucencyUtil {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isTranslucencySupported(boolean perPixel) {
 
 		String fieldName = perPixel ? "PERPIXEL_TRANSLUCENT" : "TRANSLUCENT";
@@ -107,6 +109,7 @@ class Java6TranslucencyUtil extends TranslucencyUtil {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean setOpacity(Window w, float value) {
 
 		if (!isTranslucencySupported(false)) {
@@ -134,6 +137,7 @@ class Java6TranslucencyUtil extends TranslucencyUtil {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean setOpaque(Window w, boolean opaque) {
 
 		if (!opaque && !isTranslucencySupported(true)) {

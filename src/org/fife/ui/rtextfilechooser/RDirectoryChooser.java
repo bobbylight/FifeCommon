@@ -128,6 +128,7 @@ public class RDirectoryChooser extends EscapableDialog {
 	}
 
 
+	@Override
 	public void escapePressed() {
 		chosenDirectory = null;
 		super.escapePressed();

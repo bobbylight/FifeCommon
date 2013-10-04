@@ -43,9 +43,9 @@ public class DockableWindowPanel extends JPanel
 	public static final int LARGE_ON_TOP_AND_BOTTOM	= 1;
 	private ContentPanel[] panels;
 	private FloatingWindow[] floatingWindows;
-	private SortedSet listeningTo;
+	private SortedSet<String> listeningTo;
 	private int dockingStyle;
-	protected List windowList;
+	protected List<DockableWindow> windowList;
 	private int[] panelToLocationMap = { 0, 2, 1, 3,
 								1, 3, 0, 2 };
 
@@ -76,7 +76,7 @@ public class DockableWindowPanel extends JPanel
 		applyComponentOrientation(orientation);
 
 		setBorder(BorderFactory.createEmptyBorder(0,3,2,3));
-		listeningTo = new TreeSet();
+		listeningTo = new TreeSet<String>();
 
 	}
 
@@ -155,7 +155,7 @@ public class DockableWindowPanel extends JPanel
 	 */
 	private synchronized void addDockableWindowToList(DockableWindow window) {
 		if (windowList==null)
-			windowList = new ArrayList();
+			windowList = new ArrayList<DockableWindow>();
 		windowList.add(window);
 	}
 
@@ -282,8 +282,7 @@ public class DockableWindowPanel extends JPanel
 	 */
 	public DockableWindow[] getDockableWindows() {
 		DockableWindow[] windows = new DockableWindow[windowList.size()];
-		windows = (DockableWindow[])windowList.toArray(windows);
-		return windows;
+		return windowList.toArray(windows);
 	}
 
 
@@ -590,6 +589,7 @@ public class DockableWindowPanel extends JPanel
 				}
 				remove(0); // Remove the original contents.
 				splitPane = new JSplitPane(split, true, comp1, comp2) {
+					@Override
 					public void setUI(SplitPaneUI ui) {
 						super.setUI(new CleanSplitPaneUI());
 					}
@@ -724,6 +724,7 @@ public class DockableWindowPanel extends JPanel
 			dockableWindowsLocation = location;
 		}
 
+		@Override
 		public void updateUI() {
 			super.updateUI();
 			if (splitPane!=null && !splitPane.isDisplayable()) {

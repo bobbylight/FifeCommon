@@ -59,6 +59,7 @@ public class WizardDialogInfoPanel extends JPanel {
 	 *
 	 * @return This panel's preferred size.
 	 */
+	@Override
 	public Dimension getPreferredSize() {
 		Dimension d = super.getPreferredSize();
 		if (d.width>540) d.width = 540;

@@ -51,14 +51,14 @@ class RootManager {
 	 */
 	private static final File[] getAllRoots() {
 		FileSystemView fsv = FileSystemView.getFileSystemView();
-		ArrayList list = new ArrayList(Arrays.asList(fsv.getRoots()));
+		ArrayList<File> list = new ArrayList<File>(Arrays.asList(fsv.getRoots()));
 		File[] moreRoots = File.listRoots();
 		for (int i=0; i<moreRoots.length; i++)
 			if (!list.contains(moreRoots[i]))
 				list.add(moreRoots[i]);
 		Collections.sort(list);
 		File[] fileArray = new File[list.size()];
-		return (File[])list.toArray(fileArray);
+		return list.toArray(fileArray);
 	}
 
 
@@ -124,7 +124,7 @@ class RootManager {
 	 *
 	 * @return The iterator.
 	 */
-	public Iterator iterator() {
+	public Iterator<File> iterator() {
 		return new RootIterator();
 	}
 
@@ -132,7 +132,7 @@ class RootManager {
 	/**
 	 * Iterator for the file system's root nodes.
 	 */
-	class RootIterator implements Iterator {
+	private class RootIterator implements Iterator<File> {
 
 		private int i = 0;
 
@@ -140,7 +140,7 @@ class RootManager {
 			return i<rootCount;
 		}
 
-		public Object next() {
+		public File next() {
 			if (!hasNext())
 				throw new NoSuchElementException();
 			return roots[i++];

@@ -312,6 +312,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 *
 	 * @return This option panel's name.
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -391,6 +392,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 *
 	 * @param name The name to use for this options panel.
 	 */
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -440,6 +442,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 * Returns the name of this options panel, since this is the value
 	 * that is diaplayed in the Options dialog's JList.
 	 */
+	@Override
 	public final String toString() {
 		return name;
 	}

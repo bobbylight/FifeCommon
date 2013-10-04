@@ -1525,6 +1525,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		/**
 		 * We're listening for when the user clicks in one of our components.
 		 */
+		@Override
 		public void mouseClicked(MouseEvent e) {
 			// They must double-click for anything to happen.
 			if (e.getClickCount()==2) {

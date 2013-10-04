@@ -178,6 +178,7 @@ public class ExtensionFileFilter extends FileFilter {
 	 * @param f The file to check.
 	 * @return Whether the file was accepted.
 	 */
+	@Override
 	public boolean accept(File f) {
 
 		// Accept the "file" if it is a directory.
@@ -239,6 +240,7 @@ public class ExtensionFileFilter extends FileFilter {
 	 *
 	 * @return The description.
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -250,6 +252,7 @@ public class ExtensionFileFilter extends FileFilter {
 	 *
 	 * @return A string representation of this filter.
 	 */
+	@Override
 	public String toString() {
 		return getDescription();
 	}

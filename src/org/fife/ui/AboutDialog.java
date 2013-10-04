@@ -97,6 +97,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 			 * is sitting in.  Note in Java 6 this could be taken care of by the
 			 * method JTable#setFillsViewportHeight(boolean).
 			 */
+			@Override
 			public boolean getScrollableTracksViewportHeight() {
 				Component parent = getParent();
 				return parent instanceof JViewport ?
@@ -316,6 +317,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 			setColumnIdentifiers(new String[] { "", "" });
 		}
 
+		@Override
 		public boolean isCellEditable(int row, int col) {
 			return false;
 		}

@@ -41,6 +41,7 @@ public class RTreeSelectionModel extends DefaultTreeSelectionModel {
 	 * <code>removeSelectionPath</code> to do nothing, so the user can't
 	 * "deselect."
 	 */
+	@Override
 	public void removeSelectionPath(TreePath path) {
 	}
 

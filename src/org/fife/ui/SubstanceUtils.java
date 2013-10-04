@@ -76,11 +76,11 @@ public class SubstanceUtils {
 		if (cl!=null) {
 			String managerClassName =
 				LAFWIDGET_PKG + "animation.AnimationConfigurationManager";
-			Class managerClazz = Class.forName(managerClassName, true, cl);
-			Method m = managerClazz.getMethod("getInstance", null);
-			Object manager = m.invoke(null, null);
-			m = managerClazz.getMethod("getTimelineDuration", null);
-			Long millis = (Long)m.invoke(manager, null);
+			Class<?> managerClazz = Class.forName(managerClassName, true, cl);
+			Method m = managerClazz.getMethod("getInstance");
+			Object manager = m.invoke(null);
+			m = managerClazz.getMethod("getTimelineDuration");
+			Long millis = (Long)m.invoke(manager);
 			speed = millis.longValue();
 		}
 
@@ -115,19 +115,19 @@ public class SubstanceUtils {
 		LookAndFeel laf = UIManager.getLookAndFeel();
 		ClassLoader cl = (ClassLoader)UIManager.get("ClassLoader");
 		if (cl!=null) {
-			Class clazz = Class.forName(PKG + "SubstanceLookAndFeel", true, cl);
+			Class<?> clazz = Class.forName(PKG + "SubstanceLookAndFeel", true, cl);
 			if (clazz.isInstance(laf)) {
-				Class skinClazz = Class.forName(PKG + "SubstanceSkin", true, cl);
-				Method m = clazz.getDeclaredMethod("getCurrentSkin", null);
-				Object skin = m.invoke(null, null);
-				Class decAreaTypeClazz = Class.forName(PKG + "DecorationAreaType", true, cl);
+				Class<?> skinClazz = Class.forName(PKG + "SubstanceSkin", true, cl);
+				Method m = clazz.getDeclaredMethod("getCurrentSkin");
+				Object skin = m.invoke(null);
+				Class<?> decAreaTypeClazz = Class.forName(PKG + "DecorationAreaType", true, cl);
 				Field decAreaTypeField = decAreaTypeClazz.getDeclaredField("GENERAL");
 				Object decAreaType = decAreaTypeField.get(null);
 				m = skinClazz.getDeclaredMethod("getActiveColorScheme", new Class[] { decAreaTypeClazz });
 				Object colorScheme = m.invoke(skin, new Object[] { decAreaType });
-				Class colorSchemeClazz = Class.forName(PKG + "SubstanceColorScheme", true, cl);
-				m = colorSchemeClazz.getMethod("get" + name, null);
-				color = (Color)m.invoke(colorScheme, null);
+				Class<?> colorSchemeClazz = Class.forName(PKG + "SubstanceColorScheme", true, cl);
+				m = colorSchemeClazz.getMethod("get" + name);
+				color = (Color)m.invoke(colorScheme);
 			}
 		}
 
@@ -187,9 +187,9 @@ public class SubstanceUtils {
 		if (cl!=null) {
 			String managerClassName =
 				LAFWIDGET_PKG + "animation.AnimationConfigurationManager";
-			Class managerClazz = Class.forName(managerClassName, true, cl);
-			Method m = managerClazz.getMethod("getInstance", null);
-			Object manager = m.invoke(null, null);
+			Class<?> managerClazz = Class.forName(managerClassName, true, cl);
+			Method m = managerClazz.getMethod("getInstance");
+			Object manager = m.invoke(null);
 			m = managerClazz.getMethod("setTimelineDuration",
 					new Class[] { long.class });
 			m.invoke(manager, new Object[] { new Long(millis) });

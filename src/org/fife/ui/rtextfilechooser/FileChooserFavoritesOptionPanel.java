@@ -121,7 +121,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 		if (SubstanceUtils.isSubstanceInstalled()) {
 			// Use reflection to avoid hard dependency on Substance
 			try {
-				Class clazz = Class.forName(SUBSTANCE_TABLE_RENDERER_CLASS);
+				Class<?> clazz = Class.forName(SUBSTANCE_TABLE_RENDERER_CLASS);
 				r = (DefaultTableCellRenderer)clazz.newInstance();
 			} catch (Exception e) { // Never happens
 				e.printStackTrace();

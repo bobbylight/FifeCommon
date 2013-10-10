@@ -21,13 +21,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -41,6 +39,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 
@@ -68,7 +67,7 @@ import org.fife.ui.UIUtil;
 class FilePasteThread extends GUIWorkerThread {
 
 	private Window parent;
-	private List files;
+	private List<File> files;
 	private File destDir;
 	private FilePasteCallback callback;
 	private UserDecisions decisions;
@@ -82,14 +81,14 @@ class FilePasteThread extends GUIWorkerThread {
 	private static final ResourceBundle msg = ResourceBundle.getBundle(MSG);
 
 
-	public FilePasteThread(Frame parent, List files, File destDir,
+	public FilePasteThread(Frame parent, List<File> files, File destDir,
 			FilePasteCallback callback) {
 		this.parent = parent;
 		init(files, destDir, callback);
 	}
 
 
-	public FilePasteThread(Dialog parent, List files, File destDir,
+	public FilePasteThread(Dialog parent, List<File> files, File destDir,
 			FilePasteCallback callback) {
 		this.parent = parent;
 		init(files, destDir, callback);
@@ -105,16 +104,14 @@ class FilePasteThread extends GUIWorkerThread {
 
 		pasteCount = 0;
 		total = 0;
-		Map toCopy = new HashMap();
+		List<FileTreeNode> toCopy = new ArrayList<FileTreeNode>();
 
-		for (Iterator i=files.iterator(); i.hasNext(); ) {
-			File file = (File)i.next();
+		for (File file : files) {
 			if (file.isDirectory()) {
-				Map children = getFilesRecursive(file);
-				toCopy.put(file, children);
+				toCopy.add(getFilesRecursive(file));
 			}
 			else {
-				toCopy.put(file, null);
+				toCopy.add(new FileTreeNode(file, false));
 			}
 			total++; // For either the file or the directory.
 		}
@@ -179,23 +176,22 @@ class FilePasteThread extends GUIWorkerThread {
 	}
 
 
-	private void doCopy(Map copyMap, File toDir) {
+	private void doCopy(List<FileTreeNode> copyMap, File toDir) {
 
 		if (copyMap==null || copyMap.isEmpty()) {
 			return;
 		}
 
-		for (Iterator i=copyMap.entrySet().iterator(); i.hasNext(); ) {
+		for (FileTreeNode node : copyMap) {
 
 			if (decisions.cancelEverything) {
 				return;
 			}
 
-			Map.Entry entry = (Map.Entry)i.next();
-			File file = (File)entry.getKey();
-			Object value = entry.getValue();
+			File file = node.node;
+			List<FileTreeNode> children = node.children;
 
-			if (value==null) {
+			if (children==null) { // node.node is a file
 				File dest = new File(toDir, file.getName());
 				doCopyFile(file, dest);
 			}
@@ -208,7 +204,6 @@ class FilePasteThread extends GUIWorkerThread {
 						return;
 					}
 				}
-				Map children = (Map)value;
 
 				File newDir = new File(toDir, file.getName());
 
@@ -269,16 +264,8 @@ class FilePasteThread extends GUIWorkerThread {
 				}
 
 				else {
-					if (!newDir.mkdir()) {
-						String msg = getString("Error.CreatingDirectory",
-								newDir.getAbsolutePath(),
-								file.getAbsolutePath());
-						String title = getConfirmationDialogTitle();
-						int rc = JOptionPane.showConfirmDialog(null, msg, title,
-								JOptionPane.YES_NO_OPTION);
-						if (rc != JOptionPane.YES_OPTION) {
-							return; // Don't copy the files in this directory
-						}
+					if (!makeDir(newDir, file)) {
+						return; // Don't copy the files in this directory
 					}
 				}
 
@@ -307,26 +294,27 @@ class FilePasteThread extends GUIWorkerThread {
 				}
 			}
 			if (decisions.nameCollision == UserDecisions.PROMPT) {
-				NameCollisionDialog ncd = null;
-				if (parent instanceof Frame) {
-					ncd = new NameCollisionDialog((Frame)parent,
-							file, dest);
+				NameCollisionResolver r = new NameCollisionResolver(file, dest);
+				try {
+					SwingUtilities.invokeAndWait(r);
+				} catch (InvocationTargetException ite) {
+					ite.printStackTrace();
+					return;
+				} catch (InterruptedException ie) {
+					ie.printStackTrace();
+					return;
 				}
-				else {
-					ncd = new NameCollisionDialog((Dialog)parent,
-							file, dest);
-				}
-				ncd.setVisible(true);
-				int result = ncd.getResult();
+				int result = r.result;
+				boolean doForAll = r.doForAll;
 				switch (result) {
 					case 0: // Overwrite existing file
 						copyFileImpl(file, dest);
-						if (ncd.getDoForAll()) {
+						if (doForAll) {
 							decisions.nameCollision = UserDecisions.OVERWRITE;
 						}
 						break;
 					case 1: // Skip this file
-						if (ncd.getDoForAll()) {
+						if (doForAll) {
 							decisions.nameCollision = UserDecisions.SKIP;
 						}
 						break;
@@ -334,7 +322,7 @@ class FilePasteThread extends GUIWorkerThread {
 						File toDir = dest.getParentFile();
 						dest = createUniqueDestFile(toDir, file.getName());
 						copyFileImpl(file, dest);
-						if (ncd.getDoForAll()) {
+						if (doForAll) {
 							decisions.nameCollision = UserDecisions.RENAME;
 						}
 						break;
@@ -419,27 +407,23 @@ class FilePasteThread extends GUIWorkerThread {
 	 * files.
 	 *
 	 * @param dir The directory of which to retrieve all children recursively.
-	 * @param result The list to which to add all child nodes.
+	 * @return The tree hierarchy of files under <code>dir</code>.
 	 */
-	private Map getFilesRecursive(File dir) {
+	private FileTreeNode getFilesRecursive(File dir) {
 
-		Map files = new HashMap();
+		FileTreeNode node = new FileTreeNode(dir, true);
 
 		File[] children = dir.listFiles();
 		int count = children==null ? 0 : children.length;
 		for (int i=0; i<count; i++) {
 			File child = children[i];
 			if (child.isDirectory()) {
-				Map grandkids = getFilesRecursive(child);
-				files.put(child, grandkids);
-			}
-			else {
-				files.put(child, null);
+				node.addChild(getFilesRecursive(child));
 			}
 			total++; // For either the file or the directory.
 		}
 
-		return files;
+		return node;
 
 	}
 
@@ -450,16 +434,14 @@ class FilePasteThread extends GUIWorkerThread {
 	 * @param map The map of maps.
 	 * @return The size of the map of maps.
 	 */
-	private static final int getSizeRecursive(Map map) {
+	private static final int getSizeRecursive(List<FileTreeNode> map) {
 
 		int count = 0;
 
-		for (Iterator i=map.entrySet().iterator(); i.hasNext(); ) {
-			Map.Entry entry = (Map.Entry)i.next();
+		for (FileTreeNode node : map) {
 			count++; // Increment for this file or directory
-			Object value = entry.getValue();
-			if (value instanceof Map) { // A directory's children
-				count += getSizeRecursive((Map)value);
+			if (node.children!=null) { // Directory with children
+				count += getSizeRecursive(node.children);
 			}
 		}
 
@@ -473,19 +455,14 @@ class FilePasteThread extends GUIWorkerThread {
 	}
 
 
-	private static final String getString(String key, String arg) {
+	private static final String getString(String key, String... args) {
 		String str = msg.getString(key);
-		return MessageFormat.format(str, new String[] { arg });
+		return MessageFormat.format(str, (Object[])args);
 	}
 
 
-	private static final String getString(String key, String arg1, String arg2){
-		String str = msg.getString(key);
-		return MessageFormat.format(str, new String[] { arg1, arg2 });
-	}
-
-
-	private void init(List files, File destDir, FilePasteCallback callback) {
+	private void init(List<File> files, File destDir,
+			FilePasteCallback callback) {
 		this.files = files;
 		this.destDir = destDir;
 		this.callback = callback;
@@ -493,7 +470,33 @@ class FilePasteThread extends GUIWorkerThread {
 	}
 
 
-	public static void paste(Window parent, List files, File destDir,
+	/**
+	 * Tries to create a directory, and displays a message asking whether to
+	 * continue if the creation fails.
+	 *
+	 * @param dir The directory to create.
+	 * @param contentsToCopyInDir A folder containing contents that will get
+	 *        copied into the new directory <code>dir</code>.
+	 * @return <code>true</code> if the operation was successful, or failed
+	 *         but the user selected to continue anyway; <code>false</code> if
+	 *         the operation failed, and the user chose to cancel any further
+	 *         copying.
+	 */
+	private boolean makeDir(File dir, File contentsToCopyInDir) {
+		int rc = JOptionPane.YES_OPTION;
+		if (!dir.mkdir()) {
+			String msg = getString("Error.CreatingDirectory",
+					dir.getAbsolutePath(),
+					contentsToCopyInDir.getAbsolutePath());
+			String title = getConfirmationDialogTitle();
+			rc = JOptionPane.showConfirmDialog(null, msg, title,
+					JOptionPane.YES_NO_OPTION);
+		}
+		return rc==JOptionPane.YES_OPTION;
+	}
+
+
+	public static void paste(Window parent, List<File> files, File destDir,
 			FilePasteCallback callback) {
 		FilePasteThread thread = null;
 		if (parent instanceof Frame) {
@@ -853,6 +856,42 @@ class FilePasteThread extends GUIWorkerThread {
 	}
 
 
+	/**
+	 * Prompts the user about a file name collision.  To be executed on the EDT.
+	 */
+	private class NameCollisionResolver implements Runnable {
+
+		public int result;
+		public boolean doForAll;
+
+		private File file;
+		private File dest;
+
+		public NameCollisionResolver(File file, File dest) {
+			this.file = file;
+			this.dest = dest;
+			result = 0;
+			doForAll = false;
+		}
+
+		public void run() {
+			NameCollisionDialog ncd = null;
+			if (parent instanceof Frame) {
+				ncd = new NameCollisionDialog((Frame)parent,
+						file, dest);
+			}
+			else {
+				ncd = new NameCollisionDialog((Dialog)parent,
+						file, dest);
+			}
+			ncd.setVisible(true);
+			result = ncd.getResult();
+			doForAll = ncd.getDoForAll();
+		}
+
+	}
+
+
 	static class UserDecisions {
 
 		public static final int PROMPT = 0;
@@ -897,6 +936,34 @@ class FilePasteThread extends GUIWorkerThread {
 
 		FilePasteThread.paste(parent, files, dest, callback);
 		
+	}
+
+
+	/**
+	 * A cached representation of a file, or a folder and its children.
+	 * An instance of this class represents a file if <code>children</code>
+	 * is <code>null</code>; if it is non-<code>null</code> (even just empty),
+	 * it represents a folder.
+	 */
+	private static class FileTreeNode {
+
+		private File node;
+		private List<FileTreeNode> children;
+
+		private FileTreeNode(File node, boolean isDir) {
+			this.node = node;
+			if (isDir) {
+				children = new ArrayList<FileTreeNode>();
+			}
+		}
+
+		private void addChild(FileTreeNode child) {
+			if (children==null) {
+				children = new ArrayList<FileTreeNode>();
+			}
+			children.add(child);
+		}
+
 	}
 
 

@@ -36,7 +36,7 @@ public class MenuBar extends JMenuBar {
 	 * Registry of "named" menus, so you can grab a specific menu without
 	 * knowing the order of menus in this menu bar.
 	 */
-	private Map namedMenus;
+	private Map<String, JMenu> namedMenus;
 
 
 	/**
@@ -243,7 +243,7 @@ public class MenuBar extends JMenuBar {
 			throw new NullPointerException("menu name cannot be null");
 		}
 		if (namedMenus==null) {
-			namedMenus = new HashMap();
+			namedMenus = new HashMap<String, JMenu>();
 		}
 		namedMenus.put(name, menu);
 	}

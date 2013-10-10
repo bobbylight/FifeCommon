@@ -43,7 +43,7 @@ class FileChooserViewTransferHandler extends TransferHandler {
 
 	@Override
 	protected Transferable createTransferable(JComponent c) {
-		List list = null;
+		List<File> list = null;
 		File[] files = view.getSelectedFiles();
 		if (files!=null && files.length>0) {
 			list = Arrays.asList(files);

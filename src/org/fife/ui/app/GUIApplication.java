@@ -136,7 +136,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @return The action keys.
 	 * @see #getAction(String)
 	 */
-	public SortedSet getActionKeys();
+	public SortedSet<String> getActionKeys();
 
 
 	/**

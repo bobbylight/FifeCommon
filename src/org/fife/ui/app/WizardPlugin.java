@@ -13,6 +13,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -32,7 +34,7 @@ public abstract class WizardPlugin implements Plugin, GUIApplicationConstants {
 
 	private GUIApplication app;
 	private WizardPluginDialog dialog;
-	private ArrayList infoPanels;
+	private List<WizardDialogInfoPanel> infoPanels;
 
 
 	/**
@@ -42,7 +44,7 @@ public abstract class WizardPlugin implements Plugin, GUIApplicationConstants {
 	 */
 	public WizardPlugin(GUIApplication app) {
 		this.app = app;
-		infoPanels = new ArrayList(3);
+		infoPanels = new ArrayList<WizardDialogInfoPanel>(3);
 	}
 
 
@@ -105,7 +107,7 @@ public abstract class WizardPlugin implements Plugin, GUIApplicationConstants {
 										WizardPluginDialog dialog) {
 		if (index<=0 || index>getStepCount())
 			throw new IllegalArgumentException("Invalid index: " + index);
-		return (WizardDialogInfoPanel)infoPanels.get(index-1);
+		return infoPanels.get(index-1);
 	}
 
 
@@ -231,7 +233,7 @@ public abstract class WizardPlugin implements Plugin, GUIApplicationConstants {
 		if (rc==SUCCESSFUL) {
 			WizardDialogInfoPanel[] wdip =
 					new WizardDialogInfoPanel[infoPanels.size()];
-			wdip = (WizardDialogInfoPanel[])infoPanels.toArray(wdip);
+			wdip = infoPanels.toArray(wdip);
 			handleWizardSuccessful(wdip);
 		}
 

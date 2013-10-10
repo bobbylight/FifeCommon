@@ -56,10 +56,10 @@ class TopicsFoundDialog extends JDialog {
 	 * Creates a new <code>TopicsFoundDialog</code>.
 	 *
 	 * @param owner The HelpDialog that spawns this TopicsFoundDialog.
-	 * @param choices An array of Strings to use as the choices (the "topics
+	 * @param choices An array of nodes to use as the choices (the "topics
 	 *        found").
 	 */
-	TopicsFoundDialog(JFrame owner, List choices) {
+	TopicsFoundDialog(JFrame owner, List<HelpTreeNode> choices) {
 
 		// Call parent's constructor and set the dialog's title.
 		super(owner);

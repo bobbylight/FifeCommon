@@ -18,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -54,7 +55,7 @@ public class WizardPluginDialog extends JDialog {
 	private WizardPlugin plugin;
 	private WizardDialogInfoPanel[] panels;
 	private int currentPanel;
-	private HashMap wizardProperties;
+	private Map<String, Object> wizardProperties;
 	private Listener listener;
 
 	private int retVal;
@@ -100,7 +101,7 @@ public class WizardPluginDialog extends JDialog {
 
 		this.plugin = plugin;
 		listener = new Listener();
-		wizardProperties = new HashMap();
+		wizardProperties = new HashMap<String, Object>();
 
 		JPanel contentPane = new JPanel(new BorderLayout());
 		contentPane.setBorder(UIUtil.getEmpty5Border());

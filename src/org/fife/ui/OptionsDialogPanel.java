@@ -20,8 +20,9 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
@@ -68,7 +69,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 	/**
 	 * A collection of "child" option panels in the options dialog tree.
 	 */
-	private ArrayList childPanels;
+	private List<OptionsDialogPanel> childPanels;
 
 	/**
 	 * Parent panel.  null if no parent panel.
@@ -93,7 +94,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 	public OptionsDialogPanel(String name) {
 		this.name = name;
 		this.hasUnsavedChanges = false;
-		childPanels = new ArrayList(0);
+		childPanels = new ArrayList<OptionsDialogPanel>(0);
 	}
 
 
@@ -267,7 +268,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 * @see #getChildPanelCount
 	 */
 	public OptionsDialogPanel getChildPanel(int index) {
-		return (OptionsDialogPanel)childPanels.get(index);
+		return childPanels.get(index);
 	}
 
 
@@ -529,7 +530,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 			Graphics2D g2d = (Graphics2D)g;
 
 			// Try to use the rendering hint set that is "native".
-			Map old = UIUtil.setNativeRenderingHints(g2d);
+			RenderingHints old = UIUtil.setNativeRenderingHints(g2d);
 
 			g.setColor(UIUtil.getHyperlinkForeground());
 			font = UIManager.getFont("Label.font");

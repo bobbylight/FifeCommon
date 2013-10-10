@@ -47,13 +47,13 @@ public abstract class TranslucencyUtil {
 				}
 
 				else if ("1.6".equals(ver)) {
-					Class clazz = Class.forName(
+					Class<?> clazz = Class.forName(
 								"org.fife.util.Java6TranslucencyUtil");
 					instance = (TranslucencyUtil)clazz.newInstance();
 				}
 
 				else { // Java 1.7 +
-					Class clazz = Class.forName(
+					Class<?> clazz = Class.forName(
 								"org.fife.util.Java7TranslucencyUtil");
 					instance = (TranslucencyUtil)clazz.newInstance();
 				}

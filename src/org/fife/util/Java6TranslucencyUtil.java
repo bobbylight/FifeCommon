@@ -44,11 +44,10 @@ class Java6TranslucencyUtil extends TranslucencyUtil {
 		// If translucency isn't supported, it must be 1f.
 		if (isTranslucencySupported(false)) {
 			try {
-				Class clazz = Class.forName(CLASS_NAME);
+				Class<?> clazz = Class.forName(CLASS_NAME);
 				Method m = clazz.getDeclaredMethod("getWindowOpacity",
-									new Class[] { Window.class });
-				opacity = ((Float)m.invoke(null, new Object[] { w })).
-															floatValue();
+									Window.class);
+				opacity = ((Float)m.invoke(null, w)).floatValue();
 			} catch (RuntimeException re) { // FindBugs - don't catch RE's
 				throw re;
 			} catch (Exception e) {
@@ -74,7 +73,7 @@ class Java6TranslucencyUtil extends TranslucencyUtil {
 
 			Field transField = null;
 
-			Class enumClazz = Class.forName(CLASS_NAME + "$Translucency");
+			Class<?> enumClazz = Class.forName(CLASS_NAME + "$Translucency");
 			Field[] fields = enumClazz.getDeclaredFields();
 			for (int i=0; i<fields.length; i++) {
 				if (fieldName.equals(fields[i].getName())) {
@@ -84,12 +83,10 @@ class Java6TranslucencyUtil extends TranslucencyUtil {
 			}
 
 			if (transField!=null) {
-				Class awtUtilClazz = Class.forName(CLASS_NAME);
+				Class<?> awtUtilClazz = Class.forName(CLASS_NAME);
 				Method m = awtUtilClazz.getDeclaredMethod(
-								"isTranslucencySupported",
-								new Class[] { enumClazz });
-				Boolean res = (Boolean)m.invoke(null, new Object[] {
-											transField.get(null) });
+						"isTranslucencySupported", enumClazz);
+				Boolean res = (Boolean)m.invoke(null, transField.get(null));
 				supported = res.booleanValue();
 
 			}
@@ -119,10 +116,10 @@ class Java6TranslucencyUtil extends TranslucencyUtil {
 		boolean supported = true;
 
 		try {
-			Class clazz = Class.forName(CLASS_NAME);
+			Class<?> clazz = Class.forName(CLASS_NAME);
 			Method m = clazz.getDeclaredMethod("setWindowOpacity",
-								new Class[] { Window.class, float.class });
-			m.invoke(null, new Object[] { w, new Float(value) });
+								Window.class, float.class);
+			m.invoke(null, w, new Float(value));
 		} catch (RuntimeException re) { // FindBugs - don't catch RE's
 			throw re;
 		} catch (Exception e) {
@@ -145,10 +142,10 @@ class Java6TranslucencyUtil extends TranslucencyUtil {
 		}
 
 		try {
-			Class clazz = Class.forName(CLASS_NAME);
+			Class<?> clazz = Class.forName(CLASS_NAME);
 			Method m = clazz.getDeclaredMethod("setWindowOpaque",
-							new Class[] { Window.class, boolean.class });
-			m.invoke(null, new Object[] { w, new Boolean(opaque) });
+							Window.class, boolean.class);
+			m.invoke(null, w, new Boolean(opaque));
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

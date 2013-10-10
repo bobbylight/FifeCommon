@@ -1,6 +1,7 @@
 package org.fife.ctags;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -47,7 +48,7 @@ public class TagEntry {
 	/**
 	 * List of key-value pairs.
 	 */
-	public ArrayList fieldList;
+	public List<TagExtensionField> fieldList;
 
 
 	/**
@@ -56,7 +57,7 @@ public class TagEntry {
 	public TagEntry() {
 		// Initialize a small list, because we have fields dedicated to a
 		// pattern and line number, which are the common extension fields.
-		this.fieldList = new ArrayList(1);
+		this.fieldList = new ArrayList<TagExtensionField>(1);
 	}
 
 
@@ -68,7 +69,7 @@ public class TagEntry {
 	 *        entry.
 	 */
 	public TagEntry(String line) {
-		this.fieldList = new ArrayList(1);
+		this.fieldList = new ArrayList<TagExtensionField>(1);
 		parseTagLine(line);
 	}
 
@@ -84,7 +85,7 @@ public class TagEntry {
 
 		// TODO: Replace with StringBuilder and use better append methods
 		// in 1.5.
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		int old = 0;
 		int pos = 0;

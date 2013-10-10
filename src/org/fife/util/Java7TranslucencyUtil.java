@@ -48,8 +48,8 @@ class Java7TranslucencyUtil extends TranslucencyUtil {
 		// If translucency isn't supported, it must be 1f.
 		if (isTranslucencySupported(false)) {
 			try {
-				Method m = Window.class.getMethod("getOpacity", null);
-				opacity = ((Float)m.invoke(w, null)).floatValue();
+				Method m = Window.class.getMethod("getOpacity");
+				opacity = ((Float)m.invoke(w)).floatValue();
 			} catch (RuntimeException re) { // FindBugs - don't catch RE's
 				throw re;
 			} catch (Exception e) {
@@ -85,7 +85,7 @@ class Java7TranslucencyUtil extends TranslucencyUtil {
 			Field transField = null;
 
 			// An enum that should exist in Java 7.
-			Class enumClazz = Class.forName(
+			Class<?> enumClazz = Class.forName(
 							"java.awt.GraphicsDevice$WindowTranslucency");
 			Field[] fields = enumClazz.getDeclaredFields();
 			for (int i=0; i<fields.length; i++) {
@@ -100,14 +100,13 @@ class Java7TranslucencyUtil extends TranslucencyUtil {
 				GraphicsEnvironment env = GraphicsEnvironment.
 											getLocalGraphicsEnvironment();
 				GraphicsDevice device = env.getDefaultScreenDevice();
-				Class deviceClazz = device.getClass();
+				Class<?> deviceClazz = device.getClass();
 
 				// A method that should exist in Java 7
 				Method m = deviceClazz.getMethod(
 									"isWindowTranslucencySupported",
-									new Class[] { enumClazz });
-				Boolean res = (Boolean)m.invoke(device,
-									new Object[] { transField.get(null) });
+									enumClazz);
+				Boolean res = (Boolean)m.invoke(device, transField.get(null));
 				supported = res.booleanValue();
 
 			}
@@ -137,8 +136,7 @@ class Java7TranslucencyUtil extends TranslucencyUtil {
 		boolean supported = true;
 
 		try {
-			Method m = Window.class.getMethod("setOpacity",
-											new Class[] { float.class });
+			Method m = Window.class.getMethod("setOpacity", float.class);
 			m.invoke(w, new Object[] { new Float(value) });
 		} catch (RuntimeException re) { // FindBugs - don't catch RE's
 			//re.printStackTrace();

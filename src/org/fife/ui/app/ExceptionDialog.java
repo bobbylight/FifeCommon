@@ -138,7 +138,7 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 	 * @return The stack trace.
 	 */
 	private static final String getStackTraceText(Throwable t) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append(t.toString()).append("\n");
 		StackTraceElement[] ste = t.getStackTrace();
 		int count = ste.length;
@@ -178,7 +178,7 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 		if (desc==null) {
 			desc = t.toString();
 		}
-		desc = MessageFormat.format(descFormat, new String[] { desc });
+		desc = MessageFormat.format(descFormat, desc);
 		setDescription(desc);
 		JPanel temp2 = new JPanel(new BorderLayout());
 		temp2.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));

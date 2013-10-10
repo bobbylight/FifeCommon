@@ -13,8 +13,6 @@ package org.fife.ui.dockablewindows;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.util.Map;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -231,7 +229,7 @@ class DockableWindowGroup extends JPanel {
 			// Swing's (i.e. the OS's) default AA settings without
 			// subclassing components.
 			Graphics2D g2d = (Graphics2D)g;
-			Map old = UIUtil.setNativeRenderingHints(g2d);
+			RenderingHints old = UIUtil.setNativeRenderingHints(g2d);
 			super.paintComponent(g);
 			g2d.setRenderingHints(old);
 		}

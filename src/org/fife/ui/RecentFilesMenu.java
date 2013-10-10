@@ -11,7 +11,6 @@ package org.fife.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import javax.swing.Action;
 import javax.swing.JMenu;
@@ -34,7 +33,7 @@ public abstract class RecentFilesMenu extends JMenu {
 	 * A cache of the full paths of files in this menu, to allow us to know
 	 * the index of a specific item to move it to the top later.
 	 */
-	private List fileHistory;
+	private List<String> fileHistory;
 
 	private static final int DEFAULT_MAX_SIZE = 20;
 	
@@ -45,7 +44,7 @@ public abstract class RecentFilesMenu extends JMenu {
 	 * @param name The name for this menu item, e.g. "Recent Files".
 	 */
 	public RecentFilesMenu(String name) {
-		this(name, (List)null);
+		this(name, (List<String>)null);
 	}
 
 
@@ -55,13 +54,13 @@ public abstract class RecentFilesMenu extends JMenu {
 	 * @param name The name for this menu item, e.g. "Recent Files".
 	 * @param initialContents The initial contents of this menu.
 	 */
-	public RecentFilesMenu(String name, List initialContents) {
+	public RecentFilesMenu(String name, List<String> initialContents) {
 		super(name);
 		this.maxFileHistorySize = DEFAULT_MAX_SIZE;
-		fileHistory = new ArrayList(maxFileHistorySize);
+		fileHistory = new ArrayList<String>(maxFileHistorySize);
 		if (initialContents!=null) {
-			for (Iterator i=initialContents.iterator(); i.hasNext(); ) {
-				addFileToFileHistory((String)i.next());
+			for (String fileFullPath : initialContents) {
+				addFileToFileHistory(fileFullPath);
 			}
 		}
 	}
@@ -75,7 +74,7 @@ public abstract class RecentFilesMenu extends JMenu {
 	 */
 	public RecentFilesMenu(String name, String[] initialContents) {
 		this(name, initialContents!=null ?
-				Arrays.asList(initialContents) : (List)null);
+				Arrays.asList(initialContents) : (List<String>)null);
 	}
 
 
@@ -105,7 +104,7 @@ public abstract class RecentFilesMenu extends JMenu {
 			menuItem = (JMenuItem)getMenuComponent(index);
 			remove(index);
 			insert(menuItem, 0);
-			Object temp = fileHistory.remove(index);
+			String temp = fileHistory.remove(index);
 			fileHistory.add(0, temp);
 			return;
 		}
@@ -142,7 +141,7 @@ public abstract class RecentFilesMenu extends JMenu {
 	 * @see #getFileHistory()
 	 */
 	public String getFileFullPath(int index) {
-		return (String)fileHistory.get(index);
+		return fileHistory.get(index);
 	}
 
 
@@ -154,8 +153,8 @@ public abstract class RecentFilesMenu extends JMenu {
 	 *         have been opened.
 	 * @see #getFileFullPath(int)
 	 */
-	public List getFileHistory() {
-		return new ArrayList(fileHistory);
+	public List<String> getFileHistory() {
+		return new ArrayList<String>(fileHistory);
 	}
 
 

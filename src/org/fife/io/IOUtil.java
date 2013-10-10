@@ -40,7 +40,7 @@ public class IOUtil {
 	 * @throws IOException If an IO error occurs.
 	 */
 	public static String readFully(InputStream in) throws IOException {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		BufferedReader r = new BufferedReader(new InputStreamReader(in));
 		String line = null;
 		try {

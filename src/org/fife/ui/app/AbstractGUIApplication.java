@@ -183,7 +183,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * when the use calls <code>getContentPane</code> to add
 	 * stuff, this is the panel they get).
 	 */
-	protected JPanel actualContentPane;
+	protected Container actualContentPane;
 
 	/**
 	 * Used to dynamically load 3rd-party LookAndFeels.
@@ -377,7 +377,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 *        content.  This panel should be added to the returned panel.
 	 * @return The panel.
 	 */
-	JPanel createMainContentPanel(JPanel actualContentPane) {
+	JPanel createMainContentPanel(Container actualContentPane) {
 		JPanel mcp = new JPanel(new GridLayout(1,1));
 		mcp.add(actualContentPane);
 		return mcp;
@@ -589,12 +589,11 @@ public abstract class AbstractGUIApplication extends JFrame
 
 
 	/**
-	 * This method is overridden to throw an exception; you should be adding
-	 * components via this class's <code>add</code> methods.
+	 * Returns the main content pane of the application.  Applications should
+	 * add components to this panel.
 	 *
-	 * @return Nothing, an exception is thrown.
-	 * @throws UnsupportedOperationException always.
-	 * @see #setContentPane
+	 * @return The application's main content pane.
+	 * @see #setContentPane(Container)
 	 */
 	@Override
 	public Container getContentPane() {
@@ -1200,14 +1199,16 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * meddle with the status bar, toolbar, etc.
 	 *
 	 * @param contentPane The new content pane.
-	 * @see #getContentPane
+	 * @see #getContentPane()
 	 */
 	@Override
 	public void setContentPane(Container contentPane) {
 		if (contentPane!=null && !contentPane.equals(actualContentPane)) {
-			if (actualContentPane!=null)
+			if (actualContentPane!=null) {
 				mainContentPanel.remove(actualContentPane);
+			}
 			mainContentPanel.add(contentPane);
+			actualContentPane = contentPane;
 		}
 	}
 

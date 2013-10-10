@@ -18,6 +18,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import javax.swing.SwingUtilities;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -156,15 +157,15 @@ class PluginLoader {
 	private void loadPluginImpl(String className) throws Exception {
 
 		final Object[] objs = { app };
-		Class[] params = { AbstractPluggableGUIApplication.class };
-		Class c = ucl.loadClass(className);
+		Class<?>[] params = { AbstractPluggableGUIApplication.class };
+		Class<?> c = ucl.loadClass(className);
 
 		// This should be true unless there was an error in the manifest
 		if (Plugin.class.isAssignableFrom(c)) {
 			synchronized (this) {
 				loadingPluginCount++;
 			}
-			final Constructor cnst = c.getConstructor(params);
+			final Constructor<?> cnst = c.getConstructor(params);
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					try {
@@ -215,8 +216,12 @@ class PluginLoader {
 		});
 		int jarCount = jars.length;
 
-		ArrayList[] plugins = new ArrayList[LOAD_PRIORITIES.length];
-		ArrayList urlList = new ArrayList();
+		List<List<String>> plugins = new ArrayList<List<String>>(
+										LOAD_PRIORITIES.length);
+		for (int i=0; i<LOAD_PRIORITIES.length; i++) {
+			plugins.add(new ArrayList<String>(3)); // Small
+		}
+		List<URL> urlList = new ArrayList<URL>();
 
 		for (int i=0; i<jarCount; i++) {
 
@@ -231,10 +236,7 @@ class PluginLoader {
 					String clazz = attrs.getValue(PLUGIN_CLASS_ATTR);
 					if (clazz!=null) {
 						int priority = getLoadPriority(attrs);
-						if (plugins[priority]==null) {
-							plugins[priority] = new ArrayList(3); // Small
-						}
-						plugins[priority].add(clazz);
+						plugins.get(priority).add(clazz);
 					}
 				}
 			} finally {
@@ -244,7 +246,7 @@ class PluginLoader {
 		}
 
 		// Create the ClassLoader that does the actual dirty-work.
-		URL[] urls = (URL[])urlList.toArray(new URL[urlList.size()]);
+		URL[] urls = urlList.toArray(new URL[urlList.size()]);
 		ucl = new URLClassLoader(urls, app.getClass().getClassLoader());
 
 		loadPluginsImpl(plugins);
@@ -256,24 +258,26 @@ class PluginLoader {
 	 * Loads the main plugin classes, and adds the resulting {@link Plugin}s
 	 * to the application.
 	 *
-	 * @param plugins The list of plugin classes.
+	 * @param plugins The list of list of plugin classes.  Each element in the
+	 *        "first" list is a list of plugins of a specific priority, or
+	 *        <code>null</code> if no plugins of that priority were discovered.
 	 */
-	private void loadPluginsImpl(ArrayList[] plugins) {
+	private void loadPluginsImpl(List<List<String>> plugins) {
 
-		for (int p=0; p<plugins.length; p++) {
-			int pluginCount = plugins[p]==null ? 0 : plugins[p].size();
-			for (int i=0; i<pluginCount; i++) {
-				try {
-					Thread.sleep(SLEEP_TIME); // Space the Runnables out
-					String className = (String)plugins[p].get(i);
-					loadPluginImpl(className);
-				} catch (final Exception e) {
-					e.printStackTrace();
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-							app.displayException(e);
-						}
-					});
+		for (List<String> pluginList : plugins) {
+			if (pluginList!=null) {
+				for (String className : pluginList) {
+					try {
+						Thread.sleep(SLEEP_TIME); // Space the Runnables out
+						loadPluginImpl(className);
+					} catch (final Exception e) {
+						e.printStackTrace();
+						SwingUtilities.invokeLater(new Runnable() {
+							public void run() {
+								app.displayException(e);
+							}
+						});
+					}
 				}
 			}
 		}

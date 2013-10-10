@@ -122,7 +122,7 @@ public class ProcessRunner implements Runnable {
 	 */
 	public String getCommandLineString() {
 		int count = commandLine.length;
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i=0; i<count; i++) {
 			sb.append(i==0 ? "\"" : " \"").append(commandLine[i]).
 												append('\"');
@@ -354,7 +354,7 @@ public class ProcessRunner implements Runnable {
 
 		private Process p;
 		private BufferedReader r;
-		private StringBuffer buffer;
+		private StringBuilder buffer;
 		private ProcessRunnerOutputListener listener;
 		private boolean isStdout;
 
@@ -373,7 +373,7 @@ public class ProcessRunner implements Runnable {
 							boolean isStdout) {
 			this.p = p;
 			r = new BufferedReader(new InputStreamReader(in));
-			this.buffer = new StringBuffer();
+			this.buffer = new StringBuilder();
 			this.listener = listener;
 			this.isStdout = isStdout;
 		}

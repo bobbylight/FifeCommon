@@ -21,7 +21,6 @@ import java.awt.event.MouseWheelEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
@@ -56,7 +55,7 @@ import javax.swing.Timer;
 public class ScrollableJPopupMenu extends JPopupMenu {
 
 	private int visibleRowCount;
-	private List children;
+	private List<Component> children;
 	JMenuItem previousItem;
 	JMenuItem nextItem;
 	private static Icon upIcon;
@@ -87,7 +86,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 	public ScrollableJPopupMenu(int rowCount) {
 		enableEvents(java.awt.AWTEvent.MOUSE_WHEEL_EVENT_MASK);
 		visibleRowCount = rowCount;
-		children = new ArrayList(rowCount);
+		children = new ArrayList<Component>(rowCount);
 		MenuMouseAdapter adapter = new MenuMouseAdapter();
 		previousItem = new ArrowMenuItem(upIcon);
 		previousItem.putClientProperty(PROPERTY_TIMER, previousTimer);
@@ -128,8 +127,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 	@Override
 	public void applyComponentOrientation(ComponentOrientation o) {
 		super.applyComponentOrientation(o);
-		for (Iterator i=children.iterator(); i.hasNext(); ) {
-			Component c = (Component)i.next();
+		for (Component c : children) {
 			c.applyComponentOrientation(o);
 		}
 	}
@@ -170,7 +168,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 
 			// Determine the best width for the popup.
 			for (int i=0; i<itemCount; i++) {
-				add((Component)children.get(i));
+				add(children.get(i));
 			}
 			int w = super.getPreferredSize().width;
 			removeAll();
@@ -182,7 +180,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 			nextItem.setEnabled(firstItemIndex < itemCount - visibleRowCount);
 			add(previousItem);
 			for (int i=0; i<visibleRowCount && firstItemIndex+i<itemCount; i++) {
-				add((Component)children.get(firstItemIndex + i));
+				add(children.get(firstItemIndex + i));
 			}
 			add(nextItem);
 			Dimension size = super.getPreferredSize();
@@ -195,7 +193,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 
 		else {
 			for (int i=0; i<itemCount; i++) {
-				add((Component)children.get(i));
+				add(children.get(i));
 			}
 		}
 

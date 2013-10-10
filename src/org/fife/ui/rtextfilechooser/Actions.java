@@ -265,7 +265,9 @@ public interface Actions {
 
 				try {
 
-					List<?> files = (List<?>)contents.getTransferData(accepted);
+					@SuppressWarnings("unchecked")
+					List<File> files = (List<File>)contents.
+											getTransferData(accepted);
 					Window parent = SwingUtilities.getWindowAncestor(chooser);
 					FilePasteCallback callback =
 							new DefaultFilePasteCallback(parent) {

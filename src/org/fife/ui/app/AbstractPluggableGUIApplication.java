@@ -134,7 +134,7 @@ public abstract class AbstractPluggableGUIApplication
 	 * @return The panel.
 	 */
 	@Override
-	JPanel createMainContentPanel(JPanel actualContentPane) {
+	JPanel createMainContentPanel(Container actualContentPane) {
 		MainContentPanel mcp = new MainContentPanel();
 		mcp.setContentPanel(actualContentPane);
 		return mcp;
@@ -330,8 +330,9 @@ public abstract class AbstractPluggableGUIApplication
 	
 		public boolean addPlugin(GUIPlugin plugin) {
 			boolean success = true;
-			for (Iterator i=plugin.dockableWindowIterator(); i.hasNext(); ) {
-				DockableWindow wind = (DockableWindow)i.next();
+			Iterator<DockableWindow> i = plugin.dockableWindowIterator();
+			while (i.hasNext()) {
+				DockableWindow wind = i.next();
 				if (!addDockableWindow(wind)) {
 					success = false; // Any 1 failure => failure
 				}
@@ -341,8 +342,9 @@ public abstract class AbstractPluggableGUIApplication
 
 		public boolean removePlugin(GUIPlugin plugin) {
 			boolean success = true;
-			for (Iterator i=plugin.dockableWindowIterator(); i.hasNext(); ) {
-				DockableWindow wind = (DockableWindow)i.next();
+			Iterator<DockableWindow> i = plugin.dockableWindowIterator();
+			while (i.hasNext()) {
+				DockableWindow wind = i.next();
 				if (!removeDockableWindow(wind)) {
 					success = false; // Any 1 failure => failure
 				}

@@ -261,9 +261,11 @@ public class CTagReader {
 
 		String result = null;
 		int size = entry.fieldList.size();
-		for (int i=0 ;  i<size && result==null; i++)
-			if (key.equals(entry.fieldList.get(i)))
-				result = (String)entry.fieldList.get(i);
+		for (int i=0; i<size && result==null; i++) {
+			if (key.equals(entry.fieldList.get(i).key)) {
+				result = entry.fieldList.get(i).value;
+			}
+		}
 		return result;
 
 	}

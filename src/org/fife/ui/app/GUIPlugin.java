@@ -33,14 +33,14 @@ public abstract class GUIPlugin extends AbstractPlugin
 	/**
 	 * Map of window ID's to dockable windows.
 	 */
-	private Map windowMap;
+	private Map<String, DockableWindow> windowMap;
 
 
 	/**
 	 * Constructor.
 	 */
 	public GUIPlugin() {
-		windowMap = new HashMap();
+		windowMap = new HashMap<String, DockableWindow>();
 	}
 
 
@@ -50,7 +50,7 @@ public abstract class GUIPlugin extends AbstractPlugin
 	 * @return An iterator.
 	 * @see #getDockableWindow(String)
 	 */
-	public Iterator dockableWindowIterator() {
+	public Iterator<DockableWindow> dockableWindowIterator() {
 		return windowMap.values().iterator();
 	}
 
@@ -65,7 +65,7 @@ public abstract class GUIPlugin extends AbstractPlugin
 	 * @see #dockableWindowIterator()
 	 */
 	public DockableWindow getDockableWindow(String id) {
-		return (DockableWindow)windowMap.get(id);
+		return windowMap.get(id);
 	}
 
 
@@ -83,8 +83,7 @@ public abstract class GUIPlugin extends AbstractPlugin
 	 */
 	@Override
 	protected void lookAndFeelChanged(LookAndFeel newLaf) {
-		for (Iterator i=dockableWindowIterator(); i.hasNext(); ) {
-			DockableWindow dw = (DockableWindow)i.next();
+		for (DockableWindow dw : windowMap.values()) {
 			if (!dw.isActive()) {
 				SwingUtilities.updateComponentTreeUI(dw);
 			}

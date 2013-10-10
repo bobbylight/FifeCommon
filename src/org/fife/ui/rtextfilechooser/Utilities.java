@@ -20,6 +20,8 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
@@ -310,14 +312,14 @@ InputSource is = new InputSource(new FileReader(file));
 		// Child elements are the extensions accepted by this filter.
 		NodeList extElems = elem.getElementsByTagName(EXTENSION);
 		int extElemCount = extElems==null ? 0 : extElems.getLength();
-		ArrayList extList = new ArrayList(extElemCount/3);
+		List<String> extList = new ArrayList<String>(extElemCount/3);
 
 		for (int i=0; i<extElemCount; i++) {
 			Node extElem = extElems.item(i);
 			// TODO: Replace with this when we move to Java 5.
 			//String extension = ((Element)extElem).getTextContent();
 			//extList.add(extension);
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			NodeList childTextNodes = extElem.getChildNodes();
 			if (childTextNodes==null || childTextNodes.getLength()==0) {
 				throw new IOException("Extension tag requires child text");
@@ -334,7 +336,7 @@ InputSource is = new InputSource(new FileReader(file));
 		}
 
 		String[] extensions = new String[extList.size()];
-		extensions = (String[])extList.toArray(extensions);
+		extensions = extList.toArray(extensions);
 
 		// Get the name, ignore-case, and show-extensions.
 		String name = null;

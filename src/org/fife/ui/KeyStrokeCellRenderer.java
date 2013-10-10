@@ -47,7 +47,7 @@ public class KeyStrokeCellRenderer extends DefaultTableCellRenderer {
 			// class to Substance.
 			String clazzName = "org.fife.ui.SubstanceKeyStrokeCellRenderer";
 			try {
-				Class clazz = Class.forName(clazzName);
+				Class<?> clazz = Class.forName(clazzName);
 				return (TableCellRenderer)clazz.newInstance();
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -20,8 +20,8 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
+import java.awt.RenderingHints;
 import java.net.URL;
-import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -181,7 +181,7 @@ public class SplashScreen extends JWindow {
 			if (text!=null) {
 
 				// Try to use the rendering hint set that is "native".
-				Map old = UIUtil.setNativeRenderingHints(g2d);
+				RenderingHints old = UIUtil.setNativeRenderingHints(g2d);
 
 				g2d.setColor(textColor);
 				g2d.drawString(text, textX,textY);

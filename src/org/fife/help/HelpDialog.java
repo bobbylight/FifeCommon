@@ -31,6 +31,7 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import javax.swing.*;
@@ -125,7 +126,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 	private String searchString;		// What to look for in the search tab.
 	private boolean highlightSearchString;
 
-	private ArrayList history;		// All HelpTreeNodes the user has previously viewed.
+	private List<HelpTreeNode> history;		// All HelpTreeNodes the user has previously viewed.
 	private int historyPos;			// Position in history array we're at.
 	private boolean updateHistory;	// If true, selecting a tocTree node updates history.
 
@@ -367,7 +368,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		pack();
 
 		// Initially, the use hasn't viewed any nodes.
-		history = new ArrayList();
+		history = new ArrayList<HelpTreeNode>();
 		updateHistory = true;
 		clickedOnTOCTree = true;		// Initially, we assume they click on tocTree first.
 		historyPos = -1;				// Initially, there is no history to point to.
@@ -424,7 +425,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 			// Increment the "position" in history and update the page.
 			if (historyPos>0) {
 				historyPos--;
-				setHelpPageURL(((HelpTreeNode)history.get(historyPos)).url);
+				setHelpPageURL(history.get(historyPos).url);
 			}
 			else {
 				// Root must be visible but not contain a page.  So we'll
@@ -452,7 +453,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 			// Increment the "position" in history and update the page.
 			historyPos++;
-			setHelpPageURL(((HelpTreeNode)history.get(historyPos)).url);
+			setHelpPageURL(history.get(historyPos).url);
 
 			// If they've gone forward to the final page, they can't go
 			// forward any longer.
@@ -498,11 +499,12 @@ public class HelpDialog extends JFrame implements ActionListener {
 	 * Returns a list of all nodes under <code>root</code>'s tree
 	 * with URL's containing <code>searchString</code>.
 	 */
-	private ArrayList getArrayList(DefaultMutableTreeNode root,
-							String searchString) {
+	private List<HelpTreeNode> getTreeNodesContaining(
+			DefaultMutableTreeNode root, String searchString) {
 
 		// Our return value.
-		ArrayList arrayList = new ArrayList();
+		List<HelpTreeNode> arrayList =
+				new ArrayList<HelpTreeNode>();
 
 		// Loop through all children of root.
 		int count = root.getChildCount();
@@ -525,7 +527,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 			// If this node has children, we must search them too for
 			// searchString.
 			if (child.getChildCount()>0) {
-				ArrayList temp = getArrayList(child, searchString);
+				List<HelpTreeNode> temp = getTreeNodesContaining(child, searchString);
 				if (temp.size() > 0)
 					arrayList.addAll(temp);
 			}
@@ -783,9 +785,8 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 		if (childNodes!=null) {
 			int length = childNodes.getLength();
-			// Cache to avoid all of the text (whitespace)
-			// elements.
-			ArrayList elements = new ArrayList(length/2);
+			// Cache to avoid all of the text (whitespace) elements.
+			List<String> elements = new ArrayList<String>(length/2);
 			for (int i=0; i<length; i++) {
 				Node node2 = childNodes.item(i);
 				if (node2.getNodeType()==Node.TEXT_NODE)
@@ -800,10 +801,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 				elements.add(name);
 			}
 			int size = elements.size();
-			indexElements = new String[size];
-			for (int i=0; i<size; i++) {
-				indexElements[i] = (String)elements.get(i);
-			}
+			indexElements = elements.toArray(new String[size]);
 		}
 
 		return null;
@@ -997,18 +995,18 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 		// Search through all of the help pages to see where this item is.
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)tocTree.getModel().getRoot();
-		ArrayList matchNodes = getArrayList(root, selected);
+		List<HelpTreeNode> matchNodes = getTreeNodesContaining(root, selected);
 		int size = matchNodes.size();
 
 		// If there's only one match, just display it.
 		if (size==1) {
-			HelpTreeNode node = (HelpTreeNode)matchNodes.get(0);
+			HelpTreeNode node = matchNodes.get(0);
 			if (node.url!=null) {
 				updateHistory = true;
 				highlightSearchString = false;
 				setHelpPageURL(node.url);
 			}
-		} // End of if (matchNodes.size() == 1).
+		}
 
 		// If there is > 1 match found, have the user pick the one they want.
 		else if (size>1) {
@@ -1016,7 +1014,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 			tfDialog.setVisible(true);
 			int selectedIndex = tfDialog.getSelectedIndex();
 			if (selectedIndex != -1) {
-				HelpTreeNode node = (HelpTreeNode)matchNodes.get(selectedIndex);
+				HelpTreeNode node = matchNodes.get(selectedIndex);
 				if (node.url!=null) {
 					updateHistory = true;
 					highlightSearchString = false;
@@ -1063,7 +1061,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 			// Search through all of the help pages to see where this item is.
 			DefaultMutableTreeNode root = (DefaultMutableTreeNode)tocTree.
 											getModel().getRoot();
-			ArrayList matchNodes = getArrayList(root, selected);
+			List<HelpTreeNode> matchNodes = getTreeNodesContaining(root, selected);
 
 			// Populate the searchList panel with possible places to go.
 			searchList.setListData(matchNodes.toArray());
@@ -1100,7 +1098,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		int nch;
 		boolean lastWasCR = false;
 		int last;
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		// Read in a block at a time, mapping \r\n to \n, as well as single
 		// \r's to \n's. If a \r\n is encountered, \r\n will be set as the

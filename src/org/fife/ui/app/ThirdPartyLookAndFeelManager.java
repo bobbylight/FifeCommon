@@ -19,7 +19,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
@@ -69,7 +68,7 @@ public class ThirdPartyLookAndFeelManager {
 	 */
 	private String appRoot;
 
-	private List lnfInfo;
+	private List<ExtendedLookAndFeelInfo> lnfInfo;
 	private URLClassLoader lafLoader;
 
 	private static final String CLASS				= "class";
@@ -96,18 +95,16 @@ public class ThirdPartyLookAndFeelManager {
 			// NOTE:  The lines of code below MUST be in the order they're
 			// in or stuff breaks for some reason; I'm not sure why...
 			if (count>0) {
-				List lnfJarUrlList = new ArrayList();
-				for (Iterator i=lnfInfo.iterator(); i.hasNext(); ) {
-					ExtendedLookAndFeelInfo info =
-									(ExtendedLookAndFeelInfo)i.next();
+				List<URL> lnfJarUrlList = new ArrayList<URL>();
+				for (ExtendedLookAndFeelInfo info : lnfInfo) {
 					urls = info.getURLs(appRoot);
-					for (int j=0; j<urls.length; j++) {
-						if (!lnfJarUrlList.contains(urls[j])) {
-							lnfJarUrlList.add(urls[j]);
+					for (URL url : urls) {
+						if (!lnfJarUrlList.contains(url)) {
+							lnfJarUrlList.add(url);
 						}
 					}
 				}
-				urls = (URL[])lnfJarUrlList.toArray(new URL[0]);
+				urls = lnfJarUrlList.toArray(new URL[0]);
 			}
 		} catch (RuntimeException re) { // FindBugs
 			throw re;
@@ -139,12 +136,12 @@ public class ThirdPartyLookAndFeelManager {
 		}
 		ExtendedLookAndFeelInfo[] array =
 					new ExtendedLookAndFeelInfo[lnfInfo.size()];
-		return (ExtendedLookAndFeelInfo[])lnfInfo.toArray(array);
+		return lnfInfo.toArray(array);
 	}
 
 
 	private static String getJarsFromDirectory(String dirName) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		File dir = new File(dirName);
 		File[] files = dir.listFiles(new FileFilter() {
 			public boolean accept(File pathname) {
@@ -175,7 +172,8 @@ public class ThirdPartyLookAndFeelManager {
 	 * @param xmlFile The XML file specifying the 3rd party Look and Feels.
 	 * @return A list of {@link ExtendedLookAndFeelInfo}s.
 	 */
-	private List load3rdPartyLookAndFeelInfo(String xmlFile) {
+	private List<ExtendedLookAndFeelInfo>
+	load3rdPartyLookAndFeelInfo(String xmlFile) {
 
 		File file = new File(appRoot, xmlFile);
 		if (!file.isFile()) {
@@ -199,7 +197,8 @@ public class ThirdPartyLookAndFeelManager {
 		}
 
 		// Traverse the XML tree.
-		ArrayList lafInfo = new ArrayList(1);
+		List<ExtendedLookAndFeelInfo> lafInfo =
+				new ArrayList<ExtendedLookAndFeelInfo>(1);
 		try {
 			loadFromXML(doc.getDocumentElement(), lafInfo);
 		} catch (IOException ioe) {
@@ -218,8 +217,8 @@ public class ThirdPartyLookAndFeelManager {
 	 * @param lafInfo An array list of <code>ExtendedLookAndFeelInfo</code>s.
 	 * @throws IOException If an error occurs while parsing the XML.
 	 */
-	private static void loadFromXML(Element root, ArrayList lafInfo)
-										throws IOException {
+	private static void loadFromXML(Element root,
+			List<ExtendedLookAndFeelInfo> lafInfo) throws IOException {
 
 		if (root==null) {
 			throw new IOException("XML error:  node==null!");

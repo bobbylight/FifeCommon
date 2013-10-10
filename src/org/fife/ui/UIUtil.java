@@ -496,7 +496,7 @@ public class UIUtil {
 			return "#000000";
 		}
 
-		StringBuffer sb = new StringBuffer("#");
+		StringBuilder sb = new StringBuilder("#");
 		int r = color.getRed();
 		if (r<16) {
 			sb.append('0');

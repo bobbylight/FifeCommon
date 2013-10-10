@@ -59,7 +59,7 @@ public final class ShadowPopup extends Popup {
     /**
      * The cache to use for ShadowPopups.
      */
-    private static List cache;
+    private static List<ShadowPopup> cache;
 
     /**
      * The singleton instance used to draw all borders.
@@ -121,10 +121,10 @@ public final class ShadowPopup extends Popup {
         ShadowPopup result;
         synchronized (ShadowPopup.class) {
             if (cache == null) {
-                cache = new ArrayList(MAX_CACHE_SIZE);
+                cache = new ArrayList<ShadowPopup>(MAX_CACHE_SIZE);
             }
             if (cache.size() > 0) {
-                result = (ShadowPopup) cache.remove(0);
+                result = cache.remove(0);
             } else {
                 result = new ShadowPopup();
             }

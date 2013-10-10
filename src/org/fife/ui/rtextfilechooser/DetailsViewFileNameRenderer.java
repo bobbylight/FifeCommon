@@ -15,9 +15,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.io.File;
-import java.util.Map;
-
 import javax.swing.Icon;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
@@ -112,7 +111,7 @@ class DetailsViewFileNameRenderer extends DefaultTableCellRenderer {
 			icon.paintIcon(this, g, paintIconR.x, paintIconR.y);
 
 		if (text != null) {
-			Map old = UIUtil.setNativeRenderingHints((Graphics2D)g);
+			RenderingHints old = UIUtil.setNativeRenderingHints((Graphics2D)g);
 			int textX = paintTextR.x;
 			int textY = paintTextR.y + fm.getAscent();
 			g.setColor(getForeground());

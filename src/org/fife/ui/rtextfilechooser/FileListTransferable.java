@@ -16,7 +16,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -32,7 +31,7 @@ public class FileListTransferable implements Transferable, ClipboardOwner {
 	/**
 	 * The list of files to transfer.
 	 */
-	private List fileList;
+	private List<File> fileList;
 
 	private DataFlavor uriListFlavor; // RFC 2483, needed for Linux/OS X
 
@@ -43,7 +42,7 @@ public class FileListTransferable implements Transferable, ClipboardOwner {
 	 * @param fileList The list of files to transfer.  This should not be
 	 *        <code>null</code>.
 	 */
-	public FileListTransferable(List fileList) {
+	public FileListTransferable(List<File> fileList) {
 
 		this.fileList = fileList;
 
@@ -66,26 +65,24 @@ public class FileListTransferable implements Transferable, ClipboardOwner {
 									throws UnsupportedFlavorException {
 
 		if (DataFlavor.javaFileListFlavor.equals(flavor)) {
-			return new ArrayList(fileList); // Deep copy
+			return new ArrayList<File>(fileList); // Deep copy
 		}
 
 		else if (DataFlavor.stringFlavor.equals(flavor)) {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			if (fileList!=null) {
-				for (Iterator i=fileList.iterator(); i.hasNext(); ) {
-					File f = (File)i.next();
-					sb.append(f.getAbsolutePath()).append('\n');
+				for (File file : fileList) {
+					sb.append(file.getAbsolutePath()).append('\n');
 				}
 			}
-			return sb.subSequence(0, sb.length()-1).toString();
+			return sb.substring(0, sb.length()-1);
 		}
 
 		else if (uriListFlavor.equals(flavor)) {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			if (fileList!=null) {
-				for (Iterator i=fileList.iterator(); i.hasNext(); ) {
-					File f = (File)i.next();
-					String uri = f.toURI().toString();
+				for (File file : fileList) {
+					String uri = file.toURI().toString();
 					if (uri.startsWith("file:/") && uri.length()>6 &&
 							uri.charAt(6)!='/') { // Always true?
 						// Java doesn't form file URI's properly
@@ -110,14 +107,14 @@ public class FileListTransferable implements Transferable, ClipboardOwner {
 	 */
 	public DataFlavor[] getTransferDataFlavors() {
 
-		ArrayList flavors = new ArrayList();
+		List<DataFlavor> flavors = new ArrayList<DataFlavor>();
 		flavors.add(DataFlavor.javaFileListFlavor);
 		if (uriListFlavor!=null) {
 			flavors.add(uriListFlavor);
 		}
 		flavors.add(DataFlavor.stringFlavor);
 
-		return (DataFlavor[])flavors.toArray(new DataFlavor[flavors.size()]);
+		return flavors.toArray(new DataFlavor[flavors.size()]);
 
 	}
 

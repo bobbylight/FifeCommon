@@ -43,7 +43,7 @@ class Win32FileIOExtras extends FileIOExtras {
 	public static long getHwnd(Component c) {
 		long hwnd = 0;
 		try {
-			Class clazz = Class.forName("sun.awt.windows.WComponentPeer");
+			Class<?> clazz = Class.forName("sun.awt.windows.WComponentPeer");
 			Field hwndField = clazz.getDeclaredField("hwnd");
 			hwndField.setAccessible(true);
 			Object val = hwndField.get(c.getPeer());

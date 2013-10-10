@@ -48,7 +48,7 @@ class FileChooserViewRendererFactory {
 	public static TableCellRenderer createDefaultTableRenderer() {
 		if (SubstanceUtils.isSubstanceInstalled()) {
 			try {
-				Class clazz = Class.forName(
+				Class<?> clazz = Class.forName(
 					"org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer");
 				return (TableCellRenderer)clazz.newInstance();
 			} catch (Exception e) { // Should never happen
@@ -76,8 +76,8 @@ class FileChooserViewRendererFactory {
 			// Use reflection to avoid compile dependency in this class to
 			// Substance
 			try {
-				Class clazz = Class.forName(clazzName);
-				Constructor c = clazz.getConstructor(new Class[] { RTextFileChooser.class });
+				Class<?> clazz = Class.forName(clazzName);
+				Constructor<?> c = clazz.getConstructor(new Class[] { RTextFileChooser.class });
 				renderer = (ListCellRenderer)c.newInstance(new Object[] { chooser });
 			} catch (Exception e) { // Should never happen
 				e.printStackTrace();
@@ -108,9 +108,9 @@ class FileChooserViewRendererFactory {
 			// Use reflection to avoid compile dependency in this class to
 			// Substance
 			try {
-				Class clazz = Class.forName(
+				Class<?> clazz = Class.forName(
 					"org.fife.ui.rtextfilechooser.DetailsViewSubstanceFileNameRenderer");
-				Constructor c = clazz.getConstructor(new Class[] { RTextFileChooser.class });
+				Constructor<?> c = clazz.getConstructor(new Class[] { RTextFileChooser.class });
 				renderer = (TableCellRenderer)c.newInstance(new Object[] { chooser });
 			} catch (Exception e) { // Should never happen
 				e.printStackTrace();

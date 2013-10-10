@@ -11,6 +11,8 @@
 package org.fife.ui.rtextfilechooser;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.*;
 
 
@@ -26,7 +28,7 @@ class IconDesktopPane extends JDesktopPane {
 
 	private static final long serialVersionUID = 1L;
 
-	private ArrayList selectedFrames;
+	private List<JInternalFrame> selectedFrames;
 
 
 	/**
@@ -34,7 +36,7 @@ class IconDesktopPane extends JDesktopPane {
 	 */
 	public IconDesktopPane() {
 		setDesktopManager(new IconDesktopManager());
-		selectedFrames = new ArrayList(5);
+		selectedFrames = new ArrayList<JInternalFrame>(5);
 	}
 
 
@@ -58,7 +60,7 @@ class IconDesktopPane extends JDesktopPane {
 	public JInternalFrame getSelectedFrame() {
 		if (selectedFrames.size()==0)
 			return null;
-		return (JInternalFrame)selectedFrames.get(0);
+		return selectedFrames.get(0);
 	}
 
 
@@ -73,7 +75,7 @@ class IconDesktopPane extends JDesktopPane {
 			return null;
 		JInternalFrame[] frames = new JInternalFrame[size];
 		for (int i=0; i<size; i++)
-			frames[i] = (JInternalFrame)selectedFrames.get(i);
+			frames[i] = selectedFrames.get(i);
 		return frames;
 	}
 

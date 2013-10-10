@@ -122,7 +122,7 @@ public class ExtensionFileFilter extends FileFilter {
 										extension.toLowerCase();
 
 		// Create the description.
-		StringBuffer buf = new StringBuffer(description);
+		StringBuilder buf = new StringBuilder(description);
 		if (showExtensions)
 			buf.append(" (*.").append(extensions[0]).append(")");
 		this.description = buf.toString();
@@ -160,7 +160,7 @@ public class ExtensionFileFilter extends FileFilter {
 		}
 
 		// Create the description.
-		StringBuffer buf = new StringBuffer(description);
+		StringBuilder buf = new StringBuilder(description);
 		if (showExtensions && extCount>0) {
 			buf.append(" (");
 			for (int i=0; i<extCount-1; i++)

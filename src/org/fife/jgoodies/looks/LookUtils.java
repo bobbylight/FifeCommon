@@ -451,7 +451,7 @@ public final class LookUtils {
     	return null;
     }
 
-    public static List getInstalledThemes(LookAndFeel laf) {
+    public static List<?> getInstalledThemes(LookAndFeel laf) {
         return Collections.EMPTY_LIST;
     }
 

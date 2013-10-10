@@ -92,9 +92,9 @@ public final class Options {
      * @see #putLookAndFeelReplacement(String, String)
      * @see #removeLookAndFeelReplacement(String)
      */
-    private static final Map LAF_REPLACEMENTS;
+    private static final Map<String, String> LAF_REPLACEMENTS;
     static {
-        LAF_REPLACEMENTS = new HashMap();
+        LAF_REPLACEMENTS = new HashMap<String, String>();
         initializeDefaultReplacements();
     }
 
@@ -817,7 +817,7 @@ public final class Options {
      * @see #removeLookAndFeelReplacement(String)
      */
     public static String getReplacementClassNameFor(String className) {
-        String replacement = (String) LAF_REPLACEMENTS.get(className);
+        String replacement = LAF_REPLACEMENTS.get(className);
         if (replacement == null) {
             return className;
         } else if (replacement.equals(NO_REPLACEMENT)) {

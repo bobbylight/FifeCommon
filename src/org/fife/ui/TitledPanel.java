@@ -35,8 +35,6 @@ public class TitledPanel extends JPanel {
 
 	private static final int GRADIENT_WIDTH	= 80;
 	private static final Font DEFAULT_FONT	= new Font("dialog", Font.BOLD, 12);
-	private static final Color BACKGROUND	= Color.WHITE;
-	private static final Color END_GRADIENT	= new Color(160,160,255);
 
 
 	public TitledPanel(String title, Component content, int border) {
@@ -136,6 +134,8 @@ public class TitledPanel extends JPanel {
 		private static final long serialVersionUID = 1L;
 
 		private int gradientWidth;
+		private Color background;
+		private Color gradientBG;
 
 		GradientPanel(int gradientWidth) {
 			this.gradientWidth = gradientWidth;
@@ -146,15 +146,36 @@ public class TitledPanel extends JPanel {
 			Rectangle bounds = getBounds();
 			int w = 0;
 			if (bounds.width>gradientWidth) {
-				g.setColor(BACKGROUND);
+				g.setColor(background);
 				w = bounds.width - gradientWidth;
 				g.fillRect(0,0, w,bounds.height);
 			}
 			Graphics2D g2d = (Graphics2D)g;
-			GradientPaint paint = new GradientPaint(w,0, BACKGROUND,
-									bounds.width,0, END_GRADIENT);
+			GradientPaint paint = new GradientPaint(w,0, background,
+									bounds.width,0, gradientBG);
 			g2d.setPaint(paint);
 			g2d.fill(new Rectangle(w,0, gradientWidth,bounds.height));
+		}
+
+		@Override
+		public void updateUI() {
+
+			super.updateUI();
+
+			// Set by BasicLookAndFeels and Substance
+			background = UIManager.getColor("TextField.background");
+			if (background==null) {
+				// Assume a "light" default background...
+				background = Color.white;
+			}
+
+			gradientBG = UIManager.getColor("TextField.selectionBackground");
+			if (gradientBG!=null) {
+				gradientBG = gradientBG.brighter();
+			}
+			else {
+				gradientBG = new Color(160,160,255); // How to pick a color?
+			}
 		}
 
 	}

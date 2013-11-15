@@ -106,6 +106,7 @@ public class WebLookAndFeelUtils {
 					Field f = styleClazz.getDeclaredField("attached");
 					Object style = f.get(null);
 					m.invoke(toolBar.getUI(), style);
+					
 				}
 
 			} catch (RuntimeException re) { // FindBugs

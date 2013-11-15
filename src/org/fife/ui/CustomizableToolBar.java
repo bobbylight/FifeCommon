@@ -114,9 +114,7 @@ public class CustomizableToolBar extends JToolBar {
 	@Override
 	public void addNotify() {
 		super.addNotify();
-		if (WebLookAndFeelUtils.isWebLookAndFeelInstalled()) {
-			WebLookAndFeelUtils.fixToolbarButtons(this);
-		}
+		WebLookAndFeelUtils.fixToolbarButtons(this);
 	}
 
 
@@ -296,9 +294,7 @@ public class CustomizableToolBar extends JToolBar {
 	@Override
 	public void setUI(ToolBarUI ui) {
 		super.setUI(ui);
-		if (WebLookAndFeelUtils.isWebLookAndFeelInstalled()) {
-			WebLookAndFeelUtils.fixToolbarButtons(this);
-		}
+		WebLookAndFeelUtils.fixToolbarButtons(this);
 	}
 
 

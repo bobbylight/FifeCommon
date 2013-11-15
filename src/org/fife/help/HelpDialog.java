@@ -57,6 +57,7 @@ import org.fife.ui.RScrollPane;
 import org.fife.ui.RTreeSelectionModel;
 import org.fife.ui.StatusBar;
 import org.fife.ui.UIUtil;
+import org.fife.ui.WebLookAndFeelUtils;
 import org.fife.ui.app.GUIApplication;
 
 
@@ -105,6 +106,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 	private JTabbedPane tabbedPane;
 	private DefaultMutableTreeNode root;
+	private JToolBar toolBar;
 
 	private JTree tocTree;				// Tree laying out the table of contents.
 	private boolean rootVisible;
@@ -348,7 +350,13 @@ public class HelpDialog extends JFrame implements ActionListener {
 		}
 
 		// Make the toolbar.
-		JToolBar toolBar = new JToolBar();
+		toolBar = new JToolBar() {
+			@Override
+			public void updateUI() {
+				super.updateUI();
+				WebLookAndFeelUtils.fixToolbarButtons(this);
+			}
+		};
 		backButton = UIUtil.newButton(msg, "Back", this);
 		backButton.setActionCommand("Back");
 		backButton.setEnabled(false);
@@ -358,6 +366,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		forwardButton.setEnabled(false);
 		toolBar.add(forwardButton);
 		toolBar.setFloatable(false);
+		WebLookAndFeelUtils.fixToolbarButtons(toolBar);
 
 		// Make our help dialog!
 		Container contentPane = getContentPane();

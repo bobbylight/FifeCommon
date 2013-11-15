@@ -25,6 +25,7 @@ import javax.swing.*;
 import javax.swing.plaf.SplitPaneUI;
 
 import org.fife.ui.CleanSplitPaneUI;
+import org.fife.ui.WebLookAndFeelUtils;
 
 
 /**
@@ -816,8 +817,17 @@ public class DockableWindowPanel extends JPanel
 					b.addMouseListener(this);
 					toolbar.add(b);
 				}
+				WebLookAndFeelUtils.fixToolbarButtons(toolbar);
 				toolbar.revalidate();
 				return toolbar.getComponentCount();
+			}
+
+			@Override
+			public void updateUI() {
+				super.updateUI();
+				if (toolbar!=null) {
+					WebLookAndFeelUtils.fixToolbarButtons(toolbar);
+				}
 			}
 
 		}

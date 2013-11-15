@@ -20,6 +20,7 @@ import javax.swing.plaf.TabbedPaneUI;
 
 import org.fife.ui.SubstanceUtils;
 import org.fife.ui.UIUtil;
+import org.fife.ui.WebLookAndFeelUtils;
 import org.fife.ui.dockablewindows.DockableWindowPanel.ContentPanel;
 
 
@@ -282,6 +283,7 @@ class DockableWindowGroup extends JPanel {
 	private class TitlePanel extends JPanel implements ChangeListener {
 
 		private JLabel label;
+		private JToolBar tb;
 		private JButton minimizeButton;
 		private Color gradient1;
 		private Color gradient2;
@@ -295,11 +297,12 @@ class DockableWindowGroup extends JPanel {
 			add(label);
 			minimizeButton = new JButton(new MinimizeAction());
 			minimizeButton.setOpaque(false);
-			JToolBar tb = new JToolBar();
+			tb = new JToolBar();
 			tb.setFloatable(false);
 			tb.setOpaque(false);
 			tb.setBorder(null);
 			tb.add(minimizeButton);
+			WebLookAndFeelUtils.fixToolbarButtons(tb);
 			add(tb, BorderLayout.LINE_END);
 		}
 
@@ -442,6 +445,9 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 			refreshGradientColors();
 			if (label!=null) {
 				refreshLabelForeground();
+			}
+			if (tb!=null) {
+				WebLookAndFeelUtils.fixToolbarButtons(tb);
 			}
 		}
 

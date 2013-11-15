@@ -13,13 +13,16 @@ package org.fife.ui.dockablewindows;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Field;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.TabbedPaneUI;
+import javax.swing.table.JTableHeader;
 
 import org.fife.ui.SubstanceUtils;
 import org.fife.ui.UIUtil;
+import org.fife.ui.WebLookAndFeelUtils;
 import org.fife.ui.dockablewindows.DockableWindowPanel.ContentPanel;
 
 
@@ -282,6 +285,7 @@ class DockableWindowGroup extends JPanel {
 	private class TitlePanel extends JPanel implements ChangeListener {
 
 		private JLabel label;
+		private JToolBar tb;
 		private JButton minimizeButton;
 		private Color gradient1;
 		private Color gradient2;
@@ -295,11 +299,12 @@ class DockableWindowGroup extends JPanel {
 			add(label);
 			minimizeButton = new JButton(new MinimizeAction());
 			minimizeButton.setOpaque(false);
-			JToolBar tb = new JToolBar();
+			tb = new JToolBar();
 			tb.setFloatable(false);
 			tb.setOpaque(false);
 			tb.setBorder(null);
 			tb.add(minimizeButton);
+			WebLookAndFeelUtils.fixToolbar(tb, true);
 			add(tb, BorderLayout.LINE_END);
 		}
 
@@ -384,6 +389,9 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 					e.printStackTrace();
 				}
 			}
+			else if (WebLookAndFeelUtils.isWebLookAndFeelInstalled()) {
+				getWebLookAndFeelGradientColors();
+			}
 			if (gradient1==null) {
 				gradient1 = UIManager.getColor("TextField.selectionBackground");
 				if (gradient1==null) {
@@ -393,6 +401,21 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 					}
 				}
 				gradient2 = darker(gradient1);
+			}
+		}
+
+		private void getWebLookAndFeelGradientColors() {
+			JTableHeader header = new JTableHeader();
+			Class<?> clazz = header.getUI().getClass();
+			try {
+				Field f1 = clazz.getDeclaredField("topBgColor");
+				Field f2 = clazz.getDeclaredField("bottomBgColor");
+				gradient1 = (Color)f1.get(null);
+				gradient2 = (Color)f2.get(null);
+			} catch (Exception e) {
+				gradient1 = gradient2 = null;
+				e.printStackTrace();
+				// We'll end up taking the (ugly) defaults
 			}
 		}
 
@@ -414,6 +437,9 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 //				} catch (Exception e) {
 //					e.printStackTrace();
 //				}
+			}
+			else if (WebLookAndFeelUtils.isWebLookAndFeelInstalled()) {
+				c = new JTableHeader().getForeground();
 			}
 			if (c==null) {
 				c = UIManager.getColor("TextField.selectionForeground");
@@ -442,6 +468,9 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 			refreshGradientColors();
 			if (label!=null) {
 				refreshLabelForeground();
+			}
+			if (tb!=null) {
+				WebLookAndFeelUtils.fixToolbar(tb, true);
 			}
 		}
 

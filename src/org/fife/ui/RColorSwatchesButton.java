@@ -144,6 +144,7 @@ public class RColorSwatchesButton extends RColorButton {
 			// and updating them would get rid of our custom UI.
 			((JComponent)popup.getComponent(popup.getComponentCount()-1)).
 													updateUI();
+			SwatchMenuItemUI.refreshMenuItemBackground();
 		}
 
 	}
@@ -202,6 +203,7 @@ public class RColorSwatchesButton extends RColorButton {
 
 			}
 
+			SwatchMenuItemUI.refreshMenuItemBackground();
 			ResourceBundle msg = ResourceBundle.getBundle(MSG);
 
 			c.weightx = 0.0;		   //reset to the default
@@ -215,11 +217,9 @@ public class RColorSwatchesButton extends RColorButton {
 
 		private void addSwatch(Color color, GridBagLayout gridbag,
 							GridBagConstraints c) {
-
 			// We want a menu item that uses a custom UI even when the
 			// user changes it.
 			JMenuItem item = new JMenuItem(new ColorIcon(color, 16,16));
-			item.setUI(new SwatchMenuItemUI());
 			item.setToolTipText(createToolTipText(color));
 			item.setUI(new SwatchMenuItemUI());
 			item.addActionListener(popupListener);
@@ -277,6 +277,8 @@ public class RColorSwatchesButton extends RColorButton {
 	 */
 	private static class SwatchMenuItemUI extends BasicMenuItemUI {
 
+		private static Color background;
+
 		public SwatchMenuItemUI() {
 			// When LAF is set to something other than a subclass of 
 			// BasicLookAndFeel (e.g. GTK, Synth, Nimbus), it's possible
@@ -295,8 +297,7 @@ public class RColorSwatchesButton extends RColorButton {
 
 		@Override
 		protected Dimension getPreferredMenuItemSize(JComponent c,
-					Icon checkIcon, Icon arrowIcon, int defaultTextIconGap)
-		{
+					Icon checkIcon, Icon arrowIcon, int defaultTextIconGap) {
 			return getPreferredSize(c);
 		}
 
@@ -312,7 +313,7 @@ public class RColorSwatchesButton extends RColorButton {
 			ButtonModel model = menuItem.getModel();
 
 			// Get color through UIManager in case of LnF change.
-			g.setColor(UIManager.getColor("MenuItem.background"));
+			g.setColor(background);
 			Rectangle bounds = c.getBounds();
 			g.fillRect(0,0, bounds.width,bounds.height);
 
@@ -328,6 +329,19 @@ public class RColorSwatchesButton extends RColorButton {
 			int y = (bounds.height-icon.getIconHeight())/2;
 			icon.paintIcon(menuItem, g, x,y);
 
+		}
+
+		/**
+		 * Workaround for the fact that not all LookAndFeels define
+		 * MenuItem.background (such as MacLookAndFeel and WebLookAndFeel).
+		 */
+		private static void refreshMenuItemBackground() {
+			background = UIManager.getColor("MenuItem.background");
+			if (background==null ||
+					System.getProperty("os.name").toLowerCase().contains("os x") ||
+					WebLookAndFeelUtils.isWebLookAndFeelInstalled()) {
+				background = new JMenuItem().getBackground();
+			}
 		}
 
 	}

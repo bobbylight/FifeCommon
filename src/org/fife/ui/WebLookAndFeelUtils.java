@@ -10,7 +10,6 @@
  */
 package org.fife.ui;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -46,26 +45,75 @@ public class WebLookAndFeelUtils {
 
 	/**
 	 * Sets properties needed for toolbar buttons to look nice in
-	 * WebLookAndFeel.
+	 * WebLookAndFeel.  Does nothing if WebLookAndFeel is not installed.
 	 *
 	 * @param toolBar The toolbar to update.
 	 */
-	public static void fixToolbarButtons(JToolBar toolBar) {
+	public static void fixToolbar(JToolBar toolBar) {
+		fixToolbar(toolBar, false);
+	}
 
-		try {
 
-			for (int i=0; i<toolBar.getComponentCount(); i++) {
-				Component comp = toolBar.getComponent(i);
-				if (comp instanceof JButton) {
-					JButton button = (JButton)comp;
-					fixToolbarButtonImpl(button);
+	/**
+	 * Sets properties needed for toolbar buttons to look nice in
+	 * WebLookAndFeel.  Does nothing if WebLookAndFeel is not installed.
+	 *
+	 * @param toolBar The toolbar to update.
+	 */
+	public static void fixToolbar(JToolBar toolBar, boolean flatten) {
+		fixToolbar(toolBar, flatten, true);
+	}
+
+
+	/**
+	 * Sets properties needed for toolbar buttons to look nice in
+	 * WebLookAndFeel.  Does nothing if WebLookAndFeel is not installed.
+	 *
+	 * @param toolBar The toolbar to update.
+	 */
+	public static void fixToolbar(JToolBar toolBar, boolean flatten,
+			boolean attached) {
+
+		if (WebLookAndFeelUtils.isWebLookAndFeelInstalled()) {
+
+			try {
+
+				for (int i=0; i<toolBar.getComponentCount(); i++) {
+					Component comp = toolBar.getComponent(i);
+					if (comp instanceof JButton) {
+						JButton button = (JButton)comp;
+						fixToolbarButtonImpl(button);
+					}
 				}
+
+				if (flatten) {
+					Class<?> clazz = toolBar.getUI().getClass();
+					Method m = clazz.getDeclaredMethod(
+							"setUndecorated", boolean.class);
+					m.invoke(toolBar.getUI(), true);
+				}
+
+				// flatten => not painted at all
+				else if (attached) {
+
+					Class<?> uiClazz = toolBar.getUI().getClass();
+					ClassLoader cl = uiClazz.getClassLoader();
+					Class<?> styleClazz = Class.forName(
+							"com.alee.laf.toolbar.ToolbarStyle", true, cl);
+
+					Method m = uiClazz.getDeclaredMethod(
+							"setToolbarStyle", styleClazz);
+					Field f = styleClazz.getDeclaredField("attached");
+					Object style = f.get(null);
+					m.invoke(toolBar.getUI(), style);
+				}
+
+			} catch (RuntimeException re) { // FindBugs
+				throw re;
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
-		} catch (RuntimeException re) { // FindBugs
-			throw re;
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 	}
@@ -80,16 +128,15 @@ public class WebLookAndFeelUtils {
 		if (BUTTON_UI_CLASS_NAME.equals(clazzName)) {
 
 			Class<?> clazz = ui.getClass();
-			Class<?>[] params = { boolean.class };
-			Method m = clazz.getDeclaredMethod("setRolloverDecoratedOnly", params);
-			m.invoke(ui, new Object[] { Boolean.TRUE });
-			params = new Class[] { int.class };
-			m = clazz.getMethod("setRound", params);
+			Method m = clazz.getDeclaredMethod("setRolloverDecoratedOnly",
+					boolean.class);
+			m.invoke(ui, true);
+			m = clazz.getMethod("setRound", int.class);
 			ClassLoader cl = clazz.getClassLoader();
 			clazz = Class.forName(STYLE_CONSTANTS_CLASS, true, cl);
 			Field smallRound = clazz.getField("smallRound");
 			int value = smallRound.getInt(null);
-			m.invoke(ui, new Object[] { new Integer(value) });
+			m.invoke(ui, value);
 
 		}
 
@@ -99,44 +146,32 @@ public class WebLookAndFeelUtils {
 	public static final void installWebLookAndFeelProperties(ClassLoader cl) {
 
 		// Don't override non-UIResource borders!
-		// This is only in our custom build, based off of 1.4, for now.
+		// This currently only works for our fork at https://github.com/bobbylight/weblaf
 		//String honorBorders = WebLookAndFeel.PROPERTY_HONOR_USER_BORDERS;
 		String honorBorders = "WebLookAndFeel.honorUserBorders";
 		System.setProperty(honorBorders, "true");
 
-		try {
-
-			// Decorating frames is disabled as for some reason it sets our
-			// initial size to 0, which breaks RSTA's addNotify() method.
-			// Perhaps it has to do with the frame "fading in"?
-			//WebLookandFeel.setDecorateFrames(true);
-			//WebLookAndFeel.setDecorateDialogs(true);
-			Class<?> clazz = Class.forName(LAF_CLASS_NAME, true, cl);
-			Class<?>[] classes = { boolean.class };
-			//Method m = clazz.getDeclaredMethod("setDecorateFrames", classes);
-			//m.invoke(null, new Object[] { Boolean.TRUE });
-			Method m = clazz.getDeclaredMethod("setDecorateDialogs", classes);
-			m.invoke(null, new Object[] { Boolean.TRUE });
-			
-			//StyleConstants.shadeColor = new Color(0xc0c0ff);
-			//StyleConstants.innerShadeColor = new Color(0xd0d0ff);
-			clazz = Class.forName(STYLE_CONSTANTS_CLASS, true, cl);
-//			Field shadeColor = clazz.getDeclaredField("shadeColor");
-//			Field innerShadeColor = clazz.getDeclaredField("innerShadeColor");
-//			shadeColor.set(null, new Color(0xc0c0ff));
-//			innerShadeColor.set(null, new Color(0xd0d0ff));
-
-			Field topBGColor = clazz.getDeclaredField("topBgColor");
-			Field bottomBGColor = clazz.getDeclaredField("bottomBgColor");
-			topBGColor.set(null, new Color(0xffefef));
-			bottomBGColor.set(null, new Color(0xdfdfdf));
-
-//			Field rolloverDecoratedOnly = clazz.getDeclaredField("rolloverDecoratedOnly");
-//			rolloverDecoratedOnly.set(null, Boolean.TRUE);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//
+//			// Decorating frames is disabled as for some reason it sets our
+//			// initial size to 0, which breaks RSTA's addNotify() method.
+//			// Perhaps it has to do with the frame "fading in"?
+//			//WebLookandFeel.setDecorateFrames(true);
+//			//WebLookAndFeel.setDecorateDialogs(true);
+//			Class<?> clazz = Class.forName(LAF_CLASS_NAME, true, cl);
+//			Class<?>[] classes = { boolean.class };
+//			//Method m = clazz.getDeclaredMethod("setDecorateFrames", classes);
+//			//m.invoke(null, new Object[] { Boolean.TRUE });
+//			Method m = clazz.getDeclaredMethod("setDecorateDialogs", classes);
+//			m.invoke(null, new Object[] { Boolean.TRUE });
+//			
+//			clazz = Class.forName(STYLE_CONSTANTS_CLASS, true, cl);
+////			Field rolloverDecoratedOnly = clazz.getDeclaredField("rolloverDecoratedOnly");
+////			rolloverDecoratedOnly.set(null, Boolean.TRUE);
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 
 	}
 

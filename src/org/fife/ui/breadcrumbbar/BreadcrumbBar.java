@@ -505,10 +505,13 @@ tb.addChangeListener(new ChangeListener() {
 
 	private void updateBorderAndBackground() {
 
+		JTextField tempField = null;
+
 		// Reset background color on LaF changes, since it is LaF-dependent.
 		Color bg = UIManager.getColor("TextField.background");
 		if (bg==null) { // Some LaF's might not define UIManager stuff
-			bg = new JTextField().getBackground(); // Better match
+			tempField = new JTextField();
+			bg = tempField.getBackground(); // Better match
 		}
 		setBackground(bg);
 		iconLabel.setBackground(bg);
@@ -516,7 +519,13 @@ tb.addChangeListener(new ChangeListener() {
 		// Reset border on LaF changes, since it is LaF-dependent.
 		Border border = UIManager.getBorder("TextField.border");
 		if (border==null) { // e.g. Nimbus
-			border = BorderFactory.createLineBorder(Color.BLACK);
+//			if (tempField==null) {
+//				tempField = new JTextField();
+//			}
+//			border = tempField.getBorder();
+//			if (border==null || border instanceof EmptyBorder) { // WebLaF
+				border = BorderFactory.createLineBorder(Color.BLACK);
+//			}
 		}
 		setBorder(border);
 

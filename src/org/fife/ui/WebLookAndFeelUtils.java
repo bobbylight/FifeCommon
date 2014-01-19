@@ -31,7 +31,7 @@ import javax.swing.plaf.ButtonUI;
  * notice.<p>
  * 
  * WebLookAndFeel also requires Java 6+, so everything is done by reflection.
- * Everything in this class works as of the WebLaF 1.4 preview release.
+ * Everything in this class works as of the WebLaF 1.26 beta.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -40,7 +40,10 @@ public class WebLookAndFeelUtils {
 
 	private static final String LAF_CLASS_NAME = "com.alee.laf.WebLookAndFeel";
 	private static final String BUTTON_UI_CLASS_NAME = "com.alee.laf.button.WebButtonUI";
+	private static final String MENU_BAR_STYLE_CLASS = "com.alee.laf.menu.WebMenuBarStyle";
 	private static final String STYLE_CONSTANTS_CLASS = "com.alee.laf.StyleConstants";
+
+	public static boolean decorateFrames = true;
 
 
 	/**
@@ -86,9 +89,11 @@ public class WebLookAndFeelUtils {
 					}
 				}
 
+				Class<?> uiClazz = toolBar.getUI().getClass();
+				ClassLoader cl = uiClazz.getClassLoader();
+
 				if (flatten) {
-					Class<?> clazz = toolBar.getUI().getClass();
-					Method m = clazz.getDeclaredMethod(
+					Method m = uiClazz.getDeclaredMethod(
 							"setUndecorated", boolean.class);
 					m.invoke(toolBar.getUI(), true);
 				}
@@ -96,8 +101,6 @@ public class WebLookAndFeelUtils {
 				// flatten => not painted at all
 				else if (attached) {
 
-					Class<?> uiClazz = toolBar.getUI().getClass();
-					ClassLoader cl = uiClazz.getClassLoader();
 					Class<?> styleClazz = Class.forName(
 							"com.alee.laf.toolbar.ToolbarStyle", true, cl);
 
@@ -128,16 +131,23 @@ public class WebLookAndFeelUtils {
 		String clazzName = ui.getClass().getName();
 		if (BUTTON_UI_CLASS_NAME.equals(clazzName)) {
 
-			Class<?> clazz = ui.getClass();
-			Method m = clazz.getDeclaredMethod("setRolloverDecoratedOnly",
+			Class<?> uiClazz = ui.getClass();
+			Method m = uiClazz.getDeclaredMethod("setRolloverDecoratedOnly",
 					boolean.class);
 			m.invoke(ui, true);
-			m = clazz.getMethod("setRound", int.class);
-			ClassLoader cl = clazz.getClassLoader();
-			clazz = Class.forName(STYLE_CONSTANTS_CLASS, true, cl);
+			m = uiClazz.getMethod("setRound", int.class);
+			ClassLoader cl = uiClazz.getClassLoader();
+			Class<?> clazz = Class.forName(STYLE_CONSTANTS_CLASS, true, cl);
 			Field smallRound = clazz.getField("smallRound");
 			int value = smallRound.getInt(null);
 			m.invoke(ui, value);
+
+			// By default, buttons have 4 pixel spacing on their left and
+			// right, which looks ridiculous for toolbar buttons.  WebLaF
+			// provides factory methods for icon-only buttons to work around
+			// this, but we are avoiding WebLaF-specific APIs.
+			m = uiClazz.getMethod("setLeftRightSpacing", int.class);
+			m.invoke(ui, 0);
 
 		}
 
@@ -147,32 +157,39 @@ public class WebLookAndFeelUtils {
 	public static final void installWebLookAndFeelProperties(ClassLoader cl) {
 
 		// Don't override non-UIResource borders!
-		// This currently only works for our fork at https://github.com/bobbylight/weblaf
 		//String honorBorders = WebLookAndFeel.PROPERTY_HONOR_USER_BORDERS;
 		String honorBorders = "WebLookAndFeel.honorUserBorders";
 		System.setProperty(honorBorders, "true");
 
-//		try {
-//
-//			// Decorating frames is disabled as for some reason it sets our
-//			// initial size to 0, which breaks RSTA's addNotify() method.
-//			// Perhaps it has to do with the frame "fading in"?
-//			//WebLookandFeel.setDecorateFrames(true);
-//			//WebLookAndFeel.setDecorateDialogs(true);
-//			Class<?> clazz = Class.forName(LAF_CLASS_NAME, true, cl);
-//			Class<?>[] classes = { boolean.class };
-//			//Method m = clazz.getDeclaredMethod("setDecorateFrames", classes);
-//			//m.invoke(null, new Object[] { Boolean.TRUE });
-//			Method m = clazz.getDeclaredMethod("setDecorateDialogs", classes);
-//			m.invoke(null, new Object[] { Boolean.TRUE });
-//			
+		try {
+
+			// Decorating frames is disabled as for some reason it sets our
+			// initial size to 0, which breaks RSTA's addNotify() method.
+			// Perhaps it has to do with the frame "fading in"?
+			//WebLookandFeel.setDecorateFrames(true);
+			//WebLookAndFeel.setDecorateDialogs(true);
+			Class<?> clazz = Class.forName(LAF_CLASS_NAME, true, cl);
+			Method m = null;
+			if (decorateFrames) {
+				m = clazz.getDeclaredMethod("setDecorateFrames", boolean.class);
+				m.invoke(null, Boolean.TRUE);
+			}
+			m = clazz.getDeclaredMethod("setDecorateDialogs", boolean.class);
+			m.invoke(null, Boolean.TRUE);
+			
 //			clazz = Class.forName(STYLE_CONSTANTS_CLASS, true, cl);
-////			Field rolloverDecoratedOnly = clazz.getDeclaredField("rolloverDecoratedOnly");
-////			rolloverDecoratedOnly.set(null, Boolean.TRUE);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+//			Field rolloverDecoratedOnly = clazz.getDeclaredField("rolloverDecoratedOnly");
+//			rolloverDecoratedOnly.set(null, Boolean.TRUE);
+			
+			if (decorateFrames) {
+				clazz = Class.forName(MENU_BAR_STYLE_CLASS, true, cl);
+				Field f = clazz.getDeclaredField("undecorated");
+				f.set(null, Boolean.TRUE);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 

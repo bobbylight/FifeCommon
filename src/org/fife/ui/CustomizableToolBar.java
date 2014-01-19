@@ -114,7 +114,7 @@ public class CustomizableToolBar extends JToolBar {
 	@Override
 	public void addNotify() {
 		super.addNotify();
-		WebLookAndFeelUtils.fixToolbar(this, false, false);
+		WebLookAndFeelUtils.fixToolbar(this, true, false);
 	}
 
 

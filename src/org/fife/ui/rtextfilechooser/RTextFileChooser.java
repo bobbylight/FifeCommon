@@ -946,7 +946,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 										IS_JAVA_6_PLUS && filesSelected);
 				((JMenuItem)getComponent(2)).setEnabled(filesSelected);
 				((JMenuItem)getComponent(4)).setEnabled(filesSelected);
-				((JMenuItem)getComponent(5)).setEnabled(filesSelected);
+				pasteAction.checkEnabledState(); // component 5 in menu
 				((JMenuItem)getComponent(6)).setEnabled(filesSelected);
 
 				// Only enable the "Up one level" item if we can actually

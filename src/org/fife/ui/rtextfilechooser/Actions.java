@@ -299,19 +299,11 @@ public interface Actions {
 		}
 
 		/**
-		 * Returns whether the system clipboard contents are "valid" for this
-		 * action to be enabled (e.g., whether it's a list of files to copy).
-		 * Applications can enable this action based on the return value of
-		 * this method.
-		 *
-		 * @return Whether the contents of the clipboard are "valid" for this
-		 *         action to be used.
+		 * Sets the enabled state of this action based on whether the system
+		 * clipboard contains a list of files to copy).
 		 */
-		public boolean isClipboardContentValid() {
-			Clipboard clip = chooser.getToolkit().getSystemClipboard();
-			Transferable contents = clip.getContents(null);
-			DataFlavor accepted = DataFlavor.javaFileListFlavor;
-			return contents.isDataFlavorSupported(accepted);
+		public void checkEnabledState() {
+			setEnabled(Utilities.getClipboardContainsFileList());
 		}
 
 	}

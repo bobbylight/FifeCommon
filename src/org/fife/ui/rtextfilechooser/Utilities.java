@@ -9,6 +9,10 @@
  */
 package org.fife.ui.rtextfilechooser;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -23,9 +27,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.*;
+
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
-
 import org.fife.ui.rtextfilechooser.filters.ExtensionFileFilter;
 
 
@@ -158,6 +162,20 @@ InputSource is = new InputSource(new FileReader(file));
 			}
 		}
 
+	}
+
+
+	/**
+	 * Returns whether the system clipboard currently contains one or more
+	 * files for pasting.
+	 *
+	 * @return Whether the current clipboard buffer contains files.
+	 */
+	public static final boolean getClipboardContainsFileList() {
+		Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
+		Transferable contents = clip.getContents(null);
+		DataFlavor accepted = DataFlavor.javaFileListFlavor;
+		return contents.isDataFlavorSupported(accepted);
 	}
 
 

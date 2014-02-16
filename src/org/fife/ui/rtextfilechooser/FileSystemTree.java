@@ -181,7 +181,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		newFolderAction.setEnabled(enable);
 
 		pasteAction.setEnabled(enable &&
-								pasteAction.isClipboardContentValid()); 
+				Utilities.getClipboardContainsFileList());
 
 	}
 

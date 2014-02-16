@@ -945,11 +945,7 @@ public abstract class AbstractGUIApplication extends JFrame
 
 
 	/**
-	 * Loads the preferences for this GUI application.  If this application
-	 * does not use preferences or something, <code>null</code> is
-	 * goes wrong, <code>null</code> is returned.
-	 *
-	 * @return This application's preferences.
+	 * {@inheritDoc}
 	 */
 	public GUIApplicationPreferences loadPreferences() {
 		GUIApplicationPreferences prefs = null;

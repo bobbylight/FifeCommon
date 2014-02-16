@@ -103,26 +103,20 @@ public abstract class GUIApplicationPreferences
 	 * can be called by any subclass's <code>loadPreferences</code>
 	 * so they don't have to worry about doing it all themselves.
 	 *
-	 * @param prefs The preferences into which to load.  If any of the
-	 *        preferences aren't found in the backing store, the value
-	 *        of those preferences saved in this instance are not
-	 *        are not changed (i.e., the defaults are the current values).
 	 * @param p The preferences backing store from which to
 	 *        retrieve preferences.
 	 */
-	protected static void loadCommonPreferences(
-					GUIApplicationPreferences prefs,
-					Preferences p) {
-		prefs.location.x		= p.getInt("location.x", prefs.location.x);
-		prefs.location.y		= p.getInt("location.y", prefs.location.y);
-		prefs.size.width		= p.getInt("size.width", prefs.size.width);
-		prefs.size.height		= p.getInt("size.height", prefs.size.height);
-		prefs.toolbarVisible	= p.getBoolean("toolbarVisible",
-											prefs.toolbarVisible);
-		prefs.statusBarVisible	= p.getBoolean("statusBarVisible",
-											prefs.statusBarVisible);
-		prefs.lookAndFeel		= p.get("lookAndFeel", prefs.lookAndFeel);
-		prefs.language			= p.get("language", prefs.language);
+	protected void loadCommonPreferences(Preferences p) {
+		location.x		= p.getInt("location.x", location.x);
+		location.y		= p.getInt("location.y", location.y);
+		size.width		= p.getInt("size.width", size.width);
+		size.height		= p.getInt("size.height", size.height);
+		toolbarVisible	= p.getBoolean("toolbarVisible",
+											toolbarVisible);
+		statusBarVisible	= p.getBoolean("statusBarVisible",
+											statusBarVisible);
+		lookAndFeel		= p.get("lookAndFeel", lookAndFeel);
+		language			= p.get("language", language);
 	}
 
 

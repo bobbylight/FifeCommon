@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
@@ -49,9 +50,10 @@ import javax.swing.text.Document;
 import javax.swing.text.Position;
 import javax.swing.text.html.HTMLDocument;
 import javax.xml.parsers.*;
+
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
-
+import org.fife.ui.CleanSplitPaneUI;
 import org.fife.ui.RListSelectionModel;
 import org.fife.ui.RScrollPane;
 import org.fife.ui.RTreeSelectionModel;
@@ -337,6 +339,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 		// Create the split pane.
 		JSplitPane splitPane = new JSplitPane();
+		splitPane.setUI(new CleanSplitPaneUI());
 		splitPane.setContinuousLayout(true);
 		JScrollPane rightScrollPane = new RScrollPane(400,200, editorPane);
 		rightScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);

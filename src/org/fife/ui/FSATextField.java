@@ -415,6 +415,24 @@ System.out.println("DEBUG: *** parent is null");
 
 
 	/**
+	 * Returns the text in this component, as a <code>File</code>.  Note that
+	 * this file may or may not exist, and may or may not be a directory,
+	 * regardless of what {@link #isDirectoriesOnly()} returns.  It is up to
+	 * client applications to do any validation of this value.
+	 *
+	 * @return The selected text, as a file.  If this text field is empty,
+	 *         <code>null</code> is returned.
+	 */
+	public File getSelectedFile() {
+		String text = getText().trim();
+		if (text.length()==0) {
+			return null;
+		}
+		return new File(text);
+	}
+
+
+	/**
 	 * Hides the popup window, if it is visible.  This can be used to
 	 * programmatically hide the popup window.
 	 */

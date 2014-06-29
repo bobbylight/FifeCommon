@@ -59,7 +59,6 @@ import javax.swing.table.TableModel;
  * @author Robert Futrell
  * @version 0.4
  */
-// NOTE: Entering Generics hell...
 public class FileExplorerTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 1L;

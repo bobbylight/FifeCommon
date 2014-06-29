@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -86,6 +87,10 @@ public class UIUtil {
 	 */
 	private static final int DEFAULT_BUTTON_SIZE = 85;
 
+	/**
+	 * The version of Java we are running in.
+	 */
+    private static final String JAVA_VERSION = System.getProperty("java.version");
 
 	/**
 	 * Private constructor so we cannot instantiate this class.
@@ -640,6 +645,39 @@ public class UIUtil {
 
 		}
 
+	}
+
+
+	/**
+	 * Returns whether this current JVM is Java 5 or earlier.
+	 *
+	 * @return Whether the current JVM is Java 5 or earlier.
+	 */
+	public static final boolean isPreJava6() {
+		return JAVA_VERSION==null ||
+			JAVA_VERSION.startsWith("1.5") || JAVA_VERSION.startsWith("1.4");
+	}
+
+
+	/**
+	 * Returns whether this current JVM is Java 6 or earlier.
+	 *
+	 * @return Whether the current JVM is Java 6 or earlier.
+	 */
+	public static final boolean isPreJava7() {
+		return JAVA_VERSION==null ||
+				JAVA_VERSION.startsWith("1.6") || isPreJava6();
+	}
+
+
+	/**
+	 * Returns whether this current JVM is Java 7 or earlier.
+	 *
+	 * @return Whether the current JVM is Java 7 or earlier.
+	 */
+	public static final boolean isPreJava8() {
+		return JAVA_VERSION==null ||
+				JAVA_VERSION.startsWith("1.7") || isPreJava7();
 	}
 
 

@@ -281,21 +281,22 @@ class FileSystemTreeActions {
 
 
 	/**
-	 * Allows the user to create a new file.
+	 * A base class for actions that create files or folders.
 	 */
-	static class NewFileAction extends AbstractTreeAction
-								implements CellEditorListener {
+	private static abstract class AbstractNewFileOrFolderAction
+			extends AbstractTreeAction implements CellEditorListener {
 
-		private TreeCellEditor editor;
+		protected TreeCellEditor editor;
 
-		public NewFileAction(FileSystemTree tree) {
+		protected  AbstractNewFileOrFolderAction(FileSystemTree tree,
+				String keyRoot) {
 			super(tree);
-			putValue(NAME, getString("NewFile"));
+			putValue(NAME, getString(keyRoot));
 			putValue(MNEMONIC_KEY,
-				new Integer(getString("NewFileMnemonic").charAt(0)));
+				new Integer(getString(keyRoot + "Mnemonic").charAt(0)));
 		}
 
-		public void actionPerformed(ActionEvent e) {
+		public final void actionPerformed(ActionEvent e) {
 
 			TreePath path = tree.getSelectionPath();
 
@@ -307,7 +308,7 @@ class FileSystemTreeActions {
 				File root = parentNode.getFile();
 
 				if (root.isDirectory()) { // Should always be true
-					handleNewFile(path, parentNode);
+					handleNewFileOrFolder(path, parentNode);
 				}
 
 				// Should never happen.
@@ -321,12 +322,16 @@ class FileSystemTreeActions {
 			else if (tree.getRoot()!=null) {
 				FileSystemTreeNode rootNode =
 					(FileSystemTreeNode)tree.getModel().getRoot();
-				handleNewFile(path, rootNode); // path is null here
+				handleNewFileOrFolder(path, rootNode); // path is null here
 			}
 
 		}
 
-		public void editingCanceled(ChangeEvent e) {
+		protected abstract boolean createFileOrFolderImpl(File file);
+
+		protected abstract FileSystemTreeNode createTreeNode(File root);
+
+		public final void editingCanceled(ChangeEvent e) {
 
 			// Removes the node that was being edited.
 			TreePath path = tree.getSelectionPath();
@@ -353,7 +358,7 @@ class FileSystemTreeActions {
 
 		}
 
-		public void editingStopped(ChangeEvent e) {
+		public final void editingStopped(ChangeEvent e) {
 
 			File file = (File)editor.getCellEditorValue();
 			FileSystemTreeNode node = (FileSystemTreeNode)tree.
@@ -362,12 +367,7 @@ class FileSystemTreeActions {
 			if (node!=null) { // Should always be true
 				node.setUserObject(file);
 				//System.out.println(file.getAbsolutePath());
-				boolean res = false;
-				try {
-					res = file.createNewFile();
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				}
+				boolean res = createFileOrFolderImpl(file);
 				if (!res) {
 					UIManager.getLookAndFeel().provideErrorFeedback(tree);
 				}
@@ -388,171 +388,11 @@ class FileSystemTreeActions {
 
 		}
 
-		private void handleNewFile(TreePath path, FileSystemTreeNode parentNode) {
+		private void handleNewFileOrFolder(TreePath path,
+				FileSystemTreeNode parentNode) {
 
 			File root = parentNode.getFile();
-
-			String name = File.separatorChar=='/' ? "newFile" : "NewFile.txt";
-			File f = new File(root, name);
-			FileSystemTreeNode newChild = new FileSystemTreeNode(f);
-
-			// We must do this before inserting a child node, due to
-			// our use of "dummy" child nodes for tree visual appeal.
-			//System.out.println("pre-expand path == " + path);
-			//System.out.println("pre-expand node == " + parentNode);
-			//System.out.println("pre-expand child count == " + parentNode.getChildCount());
-			//if (parentNode.getChildCount()>0) {
-			//	System.out.println("pre-expand child 1 == " + parentNode.getChildAt(0));
-			//}
-			tree.refreshChildren(parentNode);
-			//System.out.println("post-expand child count == " + parentNode.getChildCount());
-			//if (parentNode.getChildCount()>0) {
-			//	System.out.println("post-expand child 1 == " + parentNode.getChildAt(0));
-			//}
-			DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-			model.insertNodeInto(newChild, parentNode, 0);
-			//System.out.println("post-insert child count == " + parentNode.getChildCount());
-			//if (parentNode.getChildCount()>0) {
-			//	System.out.println("post insert child 1 == " + parentNode.getChildAt(0));
-			//}
-
-			// JTree only works with TreePaths returned by it (!);
-			// creating TreePaths by its constructor or by other means
-			// results in NPE's when adding a child node to a newly-
-			// added child node.
-			// Don't know why, but the lines below are magic!  Can't
-			// be simplified...
-			tree.expandPath(path); // Expand to show new child
-			int parentRow = tree.getRowForPath(path);
-			//System.out.println(tree.isExpanded(path));
-			int newRow = parentRow + 1;
-			TreePath newChildPath = tree.getPathForRow(newRow);
-			//System.out.println("newChildPath == " + newChildPath);
-			//System.out.println("--- " + tree.getPathForRow(newRow-1));
-			//System.out.println("--- " + tree.getPathForRow(newRow));
-			//System.out.println("--- " + tree.getPathForRow(newRow+1));
-			//System.out.println("--- " + parentNode.getChildCount() + " - " + parentNode.getChildAt(0));
-			tree.setSelectionPath(newChildPath);
-			tree.setEditable(true);
-			editor = new FileTreeCellEditor(tree,
-					(DefaultTreeCellRenderer)tree.getCellRenderer(), root, false);
-			editor.addCellEditorListener(this);
-			tree.setCellEditor(editor);
-			tree.startEditingAtPath(newChildPath);
-
-		}
-
-	}
-
-
-	/**
-	 * Allows the user to create a new folder.
-	 */
-	static class NewFolderAction extends AbstractTreeAction
-								implements CellEditorListener {
-
-		private TreeCellEditor editor;
-
-		public NewFolderAction(FileSystemTree tree) {
-			super(tree);
-			putValue(NAME, getString("NewFolder"));
-			putValue(MNEMONIC_KEY,
-					new Integer(getString("NewFolderMnemonic").charAt(0)));
-		}
-
-		public void actionPerformed(ActionEvent e) {
-
-			TreePath path = tree.getSelectionPath();
-
-			if (path != null) { // Should always be true.
-
-				FileSystemTreeNode parentNode = (FileSystemTreeNode)path
-						.getLastPathComponent();
-				File root = parentNode.getFile();
-
-				if (root.isDirectory()) { // Should always be true
-					handleNewFolder(path, parentNode);
-				} else {
-					UIManager.getLookAndFeel().provideErrorFeedback(tree);
-				}
-
-			}
-
-			// Nothing selected, but the hidden "root" is a directory.
-			else if (tree.getRoot()!=null) {
-				FileSystemTreeNode rootNode =
-					(FileSystemTreeNode)tree.getModel().getRoot();
-				handleNewFolder(path, rootNode); // path is null here
-			}
-
-		}
-
-		public void editingCanceled(ChangeEvent e) {
-
-			// Removes the node that was being edited.
-			TreePath path = tree.getSelectionPath();
-			FileSystemTreeNode node = (FileSystemTreeNode)path.
-												getLastPathComponent();
-			FileSystemTreeNode parent = null;
-			if (node != null) { // Should always be true
-				parent = (FileSystemTreeNode) node.getParent();
-				tree.refreshChildren(parent);
-				((DefaultTreeModel)tree.getModel()).reload(parent);
-			}
-
-			editor.removeCellEditorListener(this);
-			editor = null;
-			tree.setCellEditor(null);
-			tree.setEditable(false);
-
-			// Select the parent that was going to be added to.
-			// Use parent's file, not node.getFile().getParentFile(),
-			// as node.getFile() may be our DUMMY_FILE.
-			if (parent!=null) {
-				tree.setSelectedFile(parent.getFile());
-			}
-
-		}
-
-		public void editingStopped(ChangeEvent e) {
-
-			File file = (File) editor.getCellEditorValue();
-			FileSystemTreeNode node = (FileSystemTreeNode)tree.
-									getSelectionPath().getLastPathComponent();
-			if (node != null) { // Should always be true
-				node.setUserObject(file);
-				// System.out.println(file.getAbsolutePath());
-				if (!file.mkdir()) {
-					UIManager.getLookAndFeel().provideErrorFeedback(tree);
-				}
-				tree.iconManager.removeIconFor(file);
-				FileSystemTreeNode parent = (FileSystemTreeNode) node
-						.getParent();
-				tree.refreshChildren(parent);
-				((DefaultTreeModel)tree.getModel()).reload(parent);
-				// After sorting alphabetically, the selected item may no
-				// longer be visible.
-				tree.scrollPathToVisible(tree.getSelectionPath());
-			}
-
-			editor.removeCellEditorListener(this);
-			editor = null;
-			tree.setCellEditor(null);
-			tree.setEditable(false);
-			tree.requestFocusInWindow();
-
-		}
-
-		private void handleNewFolder(TreePath path, FileSystemTreeNode parentNode) {
-
-			File root = parentNode.getFile();
-
-			String name = File.separatorChar == '/' ? "newDir" : "New Folder";
-			File f = new File(root, name);
-			// Pass in "true" for directory property, as this directory
-			// doesn't exist yet.
-			FileSystemTreeNode newChild = tree.
-										createTreeNodeForImpl(f, true);
+			FileSystemTreeNode newChild = createTreeNode(root);
 
 			tree.refreshChildren(parentNode);
 			DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
@@ -577,6 +417,62 @@ class FileSystemTreeActions {
 			tree.setCellEditor(editor);
 			tree.startEditingAtPath(newChildPath);
 
+		}
+
+	}
+
+
+	/**
+	 * Allows the user to create a new file.
+	 */
+	static class NewFileAction extends AbstractNewFileOrFolderAction {
+
+		public NewFileAction(FileSystemTree tree) {
+			super(tree, "NewFile");
+		}
+
+		@Override
+		protected boolean createFileOrFolderImpl(File file) {
+			boolean res = false;
+			try {
+				res = file.createNewFile();
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
+			return res;
+		}
+
+		@Override
+		protected FileSystemTreeNode createTreeNode(File root) {
+			String name = File.separatorChar=='/' ? "newFile" : "NewFile.txt";
+			File f = new File(root, name);
+			return new FileSystemTreeNode(f);
+		}
+
+	}
+
+
+	/**
+	 * Allows the user to create a new folder.
+	 */
+	static class NewFolderAction extends AbstractNewFileOrFolderAction {
+
+		public NewFolderAction(FileSystemTree tree) {
+			super(tree, "NewFolder");
+		}
+
+		@Override
+		protected boolean createFileOrFolderImpl(File file) {
+			return file.mkdir();
+		}
+
+		@Override
+		protected FileSystemTreeNode createTreeNode(File root) {
+			String name = File.separatorChar == '/' ? "newDir" : "New Folder";
+			File f = new File(root, name);
+			// Pass in "true" for directory property, as this directory
+			// doesn't exist yet.
+			return tree.createTreeNodeForImpl(f, true);
 		}
 
 	}

@@ -140,9 +140,12 @@ public class ThirdPartyLookAndFeelManager {
 	}
 
 
-	private static String getJarsFromDirectory(String dirName) {
+	private String getJarsFromDirectory(String dirName) {
 		StringBuilder sb = new StringBuilder();
 		File dir = new File(dirName);
+		if (!dir.isAbsolute()) {
+			dir = new File(appRoot, dirName);
+		}
 		File[] files = dir.listFiles(new FileFilter() {
 			public boolean accept(File pathname) {
 				return pathname.getName().endsWith(".jar");
@@ -155,7 +158,6 @@ public class ThirdPartyLookAndFeelManager {
 			}
 			sb.append(files[i].getPath());
 		}
-		//System.out.println("--- " + sb.toString());
 		return sb.length()==0 ? null : sb.toString();
 	}
 
@@ -217,7 +219,7 @@ public class ThirdPartyLookAndFeelManager {
 	 * @param lafInfo An array list of <code>ExtendedLookAndFeelInfo</code>s.
 	 * @throws IOException If an error occurs while parsing the XML.
 	 */
-	private static void loadFromXML(Element root,
+	private void loadFromXML(Element root,
 			List<ExtendedLookAndFeelInfo> lafInfo) throws IOException {
 
 		if (root==null) {

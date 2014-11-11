@@ -222,7 +222,7 @@ public abstract class WizardPlugin implements Plugin, GUIApplicationConstants {
 
 		if (app instanceof AbstractGUIApplication)
 			dialog = new WizardPluginDialog(
-							(AbstractGUIApplication)app, this);
+							(AbstractGUIApplication<?>)app, this);
 		else
 			dialog = new WizardPluginDialog(this);
 		String title = getWizardDialogTitle();

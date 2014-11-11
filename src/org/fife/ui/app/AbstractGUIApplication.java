@@ -78,7 +78,7 @@ import com.apple.osxadapter.NativeMacApp;
  * @version 0.6
  * @see AbstractPluggableGUIApplication
  */
-public abstract class AbstractGUIApplication extends JFrame
+public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> extends JFrame
 							implements GUIApplication, NativeMacApp {
 
 	/**
@@ -235,7 +235,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @param prefs The preferences with which to initialize this application.
 	 */
 	public AbstractGUIApplication(String title, String jarFile,
-							GUIApplicationPreferences prefs) {
+							T prefs) {
 		initialize(title, jarFile, prefs);
 	}
 
@@ -252,7 +252,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @param prefs The preferences with which to initialize this application.
 	 */
 	private void initialize(String title, String jarFile,
-							GUIApplicationPreferences prefs) {
+							T prefs) {
 
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 
@@ -313,7 +313,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see #createActions(GUIApplicationPreferences)
+	 * @see #createActions(GUIApplicationPrefs)
 	 * @see #getAction(String)
 	 */
 	public void addAction(String key, Action action) {
@@ -363,7 +363,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @see #addAction(String, Action)
 	 * @see #getAction(String)
 	 */
-	protected void createActions(GUIApplicationPreferences prefs) {
+	protected void createActions(T prefs) {
 	}
 
 
@@ -390,7 +390,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @param prefs This GUI application's preferences.
 	 * @return The menu bar.
 	 */
-	protected abstract JMenuBar createMenuBar(GUIApplicationPreferences prefs);
+	protected abstract JMenuBar createMenuBar(T prefs);
 
 
 	/**
@@ -410,8 +410,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @param prefs This GUI application's preferences.
 	 * @return The status bar.
 	 */
-	protected abstract StatusBar createStatusBar(
-								GUIApplicationPreferences prefs);
+	protected abstract StatusBar createStatusBar(T prefs);
 
 
 	/**
@@ -421,8 +420,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @param prefs This GUI application's preferences.
 	 * @return The toolbar.
 	 */
-	protected abstract CustomizableToolBar createToolBar(
-						GUIApplicationPreferences prefs);
+	protected abstract CustomizableToolBar createToolBar(T prefs);
 
 
 	/**
@@ -563,7 +561,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * {@inheritDoc}
 	 * 
 	 * @see #addAction(String, Action)
-	 * @see #createActions(GUIApplicationPreferences)
+	 * @see #createActions(GUIApplicationPrefs)
 	 */
 	public Action getAction(String key) {
 		return actions.getAction(key);
@@ -740,7 +738,7 @@ public abstract class AbstractGUIApplication extends JFrame
 
 	/**
 	 * Returns the name of the preferences class for this application.  This
-	 * class must be a subclass of <code>GUIApplicationPreferences</code>.
+	 * class must be a subclass of <code>GUIApplicationPrefs</code>.
 	 *
 	 * @return The class name, or <code>null</code> if this GUI application
 	 *         does not save preferences.
@@ -926,7 +924,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	/**
 	 * Loads saved (customized) shortcuts for this application's actions from
 	 * a file.  Implementations are expected to call this method after creating
-	 * their actions via {@link #createActions(GUIApplicationPreferences)} to
+	 * their actions via {@link #createActions(GUIApplicationPrefs)} to
 	 * restore any user customizations to shortcuts (assuming the application
 	 * allows them).<p>
 	 * 
@@ -947,15 +945,15 @@ public abstract class AbstractGUIApplication extends JFrame
 	/**
 	 * {@inheritDoc}
 	 */
-	public GUIApplicationPreferences loadPreferences() {
-		GUIApplicationPreferences prefs = null;
+	@SuppressWarnings("unchecked")
+	public T loadPreferences() {
+		T prefs = null;
 		String prefsClassName = getPreferencesClassName();
 		if (prefsClassName!=null) {
 			try {
 				Class<?> prefsClass = Class.forName(prefsClassName);
-				Method method = prefsClass.getMethod("loadPreferences");
-				prefs = (GUIApplicationPreferences)method.invoke(
-											prefsClass);
+				prefs = (T)prefsClass.newInstance();
+				prefs.load();
 			} catch (Exception e) {
 				displayException(e);
 			}
@@ -1042,8 +1040,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @param splashScreen The "splash screen" for this application.  This
 	 *        value may be <code>null</code>.
 	 */
-	protected abstract void preDisplayInit(GUIApplicationPreferences prefs,
-								SplashScreen splashScreen);
+	protected abstract void preDisplayInit(T prefs, SplashScreen splashScreen);
 
 
 	/**
@@ -1055,8 +1052,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @param splashScreen The "splash screen" for this application.  This
 	 *        value may be <code>null</code>.
 	 */
-	protected abstract void preMenuBarInit(GUIApplicationPreferences prefs,
-								SplashScreen splashScreen);
+	protected abstract void preMenuBarInit(T prefs, SplashScreen splashScreen);
 
 
 	/**
@@ -1068,8 +1064,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @param splashScreen The "splash screen" for this application.  This
 	 *        value may be <code>null</code>.
 	 */
-	protected abstract void preStatusBarInit(GUIApplicationPreferences prefs,
-									SplashScreen splashScreen);
+	protected abstract void preStatusBarInit(T prefs,SplashScreen splashScreen);
 
 
 	/**
@@ -1081,8 +1076,7 @@ public abstract class AbstractGUIApplication extends JFrame
 	 * @param splashScreen The "splash screen" for this application.  This
 	 *        value may be <code>null</code>.
 	 */
-	protected abstract void preToolBarInit(GUIApplicationPreferences prefs,
-								SplashScreen splashScreen);
+	protected abstract void preToolBarInit(T prefs, SplashScreen splashScreen);
 
 
 	/**
@@ -1349,11 +1343,11 @@ public abstract class AbstractGUIApplication extends JFrame
 		private String title;
 		private String jarFile;
 		private SplashScreen splashScreen;
-		private GUIApplicationPreferences prefs;
+		private T prefs;
 
 		public StartupRunnable(String title, String jarFile,
 								SplashScreen splashScreen,
-								GUIApplicationPreferences prefs) {
+								T prefs) {
 			this.splashScreen = splashScreen;
 			this.prefs = prefs;
 			this.title = title;

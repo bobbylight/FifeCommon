@@ -195,6 +195,7 @@ public abstract class StandardAction extends AbstractAction {
 	 * @return The default accelerator.
 	 * @see #setDefaultAccelerator(KeyStroke)
 	 * @see #getAccelerator()
+	 * @see #restoreDefaultAccelerator()
 	 * @see #DEFAULT_ACCELERATOR
 	 */
 	public KeyStroke getDefaultAccelerator() {
@@ -273,6 +274,18 @@ public abstract class StandardAction extends AbstractAction {
 
 
 	/**
+	 * Restores the default accelerator for this action, clearing the
+	 * accelerator if there is no default.
+	 *
+	 * @see #getDefaultAccelerator()
+	 * @see #setDefaultAccelerator(KeyStroke)
+	 */
+	public void restoreDefaultAccelerator() {
+		setAccelerator(getDefaultAccelerator());
+	}
+
+
+	/**
 	 * Sets the accelerator for this action.
 	 *
 	 * @param accelerator The new accelerator, or <code>null</code> for none.
@@ -293,6 +306,7 @@ public abstract class StandardAction extends AbstractAction {
 	 *        <code>null</code>.
 	 * @see #getDefaultAccelerator()
 	 * @see #setAccelerator(KeyStroke)
+	 * @see #restoreDefaultAccelerator()
 	 * @see #DEFAULT_ACCELERATOR
 	 */
 	public void setDefaultAccelerator(KeyStroke accelerator) {

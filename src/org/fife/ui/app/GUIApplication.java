@@ -12,8 +12,10 @@ package org.fife.ui.app;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import java.util.SortedSet;
@@ -194,6 +196,15 @@ public interface GUIApplication extends GUIApplicationConstants {
 
 
 	/**
+	 * Returns the location of this application's main window on the screen.
+	 *
+	 * @return The location of the application's main window.
+	 * @see #getSize()
+	 */
+	public abstract Point getLocation();
+
+
+	/**
 	 * Returns an integer constant representing the OS.  This can be handy for
 	 * special case situations such as Mac OS-X (special application
 	 * registration) or Windows (allow mixed case, etc.).
@@ -209,6 +220,15 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @return The resource bundle.
 	 */
 	public ResourceBundle getResourceBundle();
+
+
+	/**
+	 * Returns the size of the application's main window.
+	 *
+	 * @return The size of the application's main window.
+	 * @see #getLocation()
+	 */
+	public abstract Dimension getSize();
 
 
 	/**
@@ -271,7 +291,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 *
 	 * @return This application's preferences.
 	 */
-	public GUIApplicationPreferences loadPreferences();
+	public GUIApplicationPrefs<?> loadPreferences();
 
 
 	/**

@@ -67,7 +67,7 @@ class PluginLoader {
 	/**
 	 * The GUI application that owns this class loader.
 	 */
-	private AbstractPluggableGUIApplication app;
+	private AbstractPluggableGUIApplication<?> app;
 
 	/**
 	 * The directory in which all plugin jars reside.
@@ -107,7 +107,7 @@ class PluginLoader {
 	 *
 	 * @param app The GUI application.
 	 */
-	public PluginLoader(AbstractPluggableGUIApplication app) {
+	public PluginLoader(AbstractPluggableGUIApplication<?> app) {
 		this.app = app;
 		pluginDir = new File(app.getInstallLocation(), "plugins");
 	}

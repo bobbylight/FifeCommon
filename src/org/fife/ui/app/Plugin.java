@@ -101,7 +101,7 @@ public interface Plugin {
 	 * @param app The application to which this plugin was just added.
 	 * @see #uninstall
 	 */
-	public void install(AbstractPluggableGUIApplication app);
+	public void install(AbstractPluggableGUIApplication<?> app);
 
 
 	/**

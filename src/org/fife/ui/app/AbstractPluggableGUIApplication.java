@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -31,8 +32,8 @@ import org.fife.ui.dockablewindows.DockableWindowPanel;
  * @author Robert Futrell
  * @version 0.5
  */
-public abstract class AbstractPluggableGUIApplication
-									extends AbstractGUIApplication {
+public abstract class AbstractPluggableGUIApplication<T extends GUIApplicationPrefs<?>>
+									extends AbstractGUIApplication<T> {
 
 	/**
 	 * List of installed plug-ins.
@@ -79,7 +80,7 @@ public abstract class AbstractPluggableGUIApplication
 	 * @param prefs The preferences with which to initialize this application.
 	 */
 	public AbstractPluggableGUIApplication(String title, String jarFile,
-									GUIApplicationPreferences prefs) {
+									T prefs) {
 		super(title, jarFile, prefs);
 	}
 
@@ -256,8 +257,7 @@ public abstract class AbstractPluggableGUIApplication
 	 *        value may be <code>null</code>.
 	 */
 	@Override
-	protected void preDisplayInit(GUIApplicationPreferences prefs,
-								SplashScreen splashScreen) {
+	protected void preDisplayInit(T prefs, SplashScreen splashScreen) {
 		loadPlugins();
 	}
 

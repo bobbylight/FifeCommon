@@ -234,8 +234,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 *        main class of this application (e.g. "Foobar.jar").
 	 * @param prefs The preferences with which to initialize this application.
 	 */
-	public AbstractGUIApplication(String title, String jarFile,
-							T prefs) {
+	public AbstractGUIApplication(String title, String jarFile, T prefs) {
 		initialize(title, jarFile, prefs);
 	}
 
@@ -251,8 +250,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 *        main class of this application (e.g. "Foobar.jar").
 	 * @param prefs The preferences with which to initialize this application.
 	 */
-	private void initialize(String title, String jarFile,
-							T prefs) {
+	private void initialize(String title, String jarFile, T prefs) {
 
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 
@@ -798,82 +796,14 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 
 	/**
-	 * Returns the localized text for the given key.  This method is
-	 * equivalent to <code>getResourceBundle().getString(key)</code>.
-	 *
-	 * @param key The key into the resource bundle.
-	 * @return The localized text.
-	 * @see #getString(String, Object)
-	 * @see #getString(String, Object[])
-	 * @see #getResourceBundle()
-	 */
-	public String getString(String key) {
-		return getResourceBundle().getString(key);
-	}
-
-
-	/**
-	 * Returns the localized text for the given key.
-	 *
-	 * @param key The key into the resource bundle.
-	 * @param param A parameter in the localized text.
-	 * @return The localized text.
-	 * @see #getString(String)
-	 * @see #getString(String, Object[])
-	 * @see #getResourceBundle()
-	 */
-	public String getString(String key, Object param) {
-		return getString(key, new Object[] { param });
-	}
-
-
-	/**
-	 * Returns the localized text for the given key.
-	 *
-	 * @param key The key into the resource bundle.
-	 * @param param1 A parameter in the localized text.
-	 * @param param2 Another parameter in the localized text.
-	 * @return The localized text.
-	 * @see #getString(String)
-	 * @see #getString(String, Object)
-	 * @see #getString(String, Object[])
-	 * @see #getResourceBundle()
-	 */
-	public String getString(String key, Object param1, Object param2) {
-		return getString(key, new Object[] { param1, param2 });
-	}
-
-
-	/**
-	 * Returns the localized text for the given key.
-	 *
-	 * @param key The key into the resource bundle.
-	 * @param param1 A parameter in the localized text.
-	 * @param param2 Another parameter in the localized text.
-	 * @param param3 Another parameter in the localized text.
-	 * @return The localized text.
-	 * @see #getString(String)
-	 * @see #getString(String, Object)
-	 * @see #getString(String, Object[])
-	 * @see #getResourceBundle()
-	 */
-	public String getString(String key, Object param1, Object param2,
-						Object param3) {
-		return getString(key, new Object[] { param1, param2, param3 });
-	}
-
-
-	/**
 	 * Returns localized text for the given key.
 	 *
 	 * @param key The key into the resource bundle.
-	 * @param params Parameters for the localized text.
+	 * @param params Any (optional) parameters for the localized text.
 	 * @return The localized text.
-	 * @see #getString(String)
-	 * @see #getString(String, Object)
 	 * @see #getResourceBundle()
 	 */
-	public String getString(String key, Object[] params) {
+	public String getString(String key, Object... params) {
 		String text = getResourceBundle().getString(key);
 		return MessageFormat.format(text, params);
 	}

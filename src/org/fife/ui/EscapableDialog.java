@@ -21,7 +21,7 @@ import javax.swing.KeyStroke;
  * @author Robert Futrell
  * @version 1.0
  */
-public abstract class EscapableDialog extends JDialog {
+public class EscapableDialog extends JDialog {
 
 	/**
 	 * The key in an <code>InputMap</code> for the Escape key action.

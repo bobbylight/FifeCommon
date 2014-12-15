@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="i18n"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="extra"/>
-	<classpathentry kind="lib" path="lib/substance/laf-plugin-7.2.1.jar"/>
-	<classpathentry kind="lib" path="lib/substance/laf-widget-7.2.1.jar"/>
-	<classpathentry kind="lib" path="lib/substance/substance-7.2.1-tools.jar"/>
-	<classpathentry kind="lib" path="lib/substance/substance-7.2.1.jar"/>
-	<classpathentry kind="lib" path="lib/substance/trident-7.2.1-base.jar"/>
-	<classpathentry kind="lib" path="lib/substance/trident-7.2.1-swing.jar"/>
-	<classpathentry kind="lib" path="lib/substance/trident-7.2.1.jar"/>
+	<classpathentry exported="true" kind="con" path="org.springsource.ide.eclipse.gradle.classpathcontainer"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

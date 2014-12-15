@@ -5,98 +5,19 @@
 	This is the Ant build script for org.fife.* classes that might be
 	useful accross applications.  Here is a list of available targets:
 	
-		1. compile:            Compiles all org.fife classes into ${class-dir}.
-		2. make-common-jar:    Creates the jar file.
-		3. make-common-jar-source-zip: Creates a zip file useful for Eclipse
-		                       code completion for this library.
-		4. create-jni-headers: Creates header files for win32 and x64 versions
+		1. create-jni-headers: Creates header files for win32 and x64 versions
 		                       of the FileIOExtras class (native file
 		                       operations for file choosers, etc.).
 
 	Author:   Robert Futrell
-	Version:  1.0
-	Date:     02jun2009
+	Version:  1.1
+	Date:     14dec2014
 
 -->
-<project name="Common" default="make-common-jar" basedir=".">
+<!-- TODO: Move this into gradle build.gradle. -->
+<project name="Common" default="create-jni-headers" basedir=".">
 
 	<description>org.fife.* common classes build file</description>
-
-
-	<!-- Set global properties for this build. -->
-	<property name="source-dir"       location="src"/>
-	<property name="class-dir"        location="ant-classes"/>
-	<property name="dist-dir"         location="dist"/>
-	<property name="debug"            value="true"/>
-	<property name="debuglevel"       value="lines,vars,source"/>
-	<property name="java-level"       value="1.5"/>
-	<property file="build.properties"/>
-	
-
-	<!-- Compiles all common org.fife classes.  -->
-	<target name="compile" description="Compile the source.">
-		<delete includeEmptyDirs="true" quiet="true" dir="${class-dir}"/>
-		<mkdir dir="${class-dir}"/>
-		<!-- Most stuff only requires Java 1.5. -->
-		<echo>Compiling most common classes with: ${java.version} (1.5 is recommended)</echo>
-		<javac srcdir="${source-dir}" destdir="${class-dir}"
-				classpath="extra"
-				includeantruntime="false"
-				deprecation="yes" debug="${debug}" debuglevel="${debuglevel}"
-				source="${java-level}" target="${java-level}">
-			<include name="**/*.java"/>
-			<exclude name="**/*Substance*.java"/>
-			<include name="**/SubstanceUtils.java"/>
-		</javac>
-		<!-- Dynamically loaded stuff that requires Java 6. -->
-		<echo>Compiling dynamically loaded classes with compiler: ${javac.16} (1.6 is recommended)</echo>
-		<javac srcdir="${source-dir}" destdir="${class-dir}"
-				classpath="${class-dir}:lib/substance/substance-7.2.1.jar"
-				includeantruntime="false"
-				deprecation="yes" debug="${debug}" debuglevel="${debuglevel}"
-				fork="true" executable="${javac.16}"
-				source="${java-level}" target="${java-level}">
-			<include name="**/*Substance*.java"/>
-			<exclude name="**/SubstanceUtils.java"/>
-		</javac>
-	</target>
-
-
-	<!-- Build the jar.  -->
-	<target name="make-common-jar" depends="compile" description="Create the jar.">
-		<mkdir dir="${dist-dir}"/>
-		<jar destfile="${dist-dir}/fife.common.jar">
-			<fileset dir="${class-dir}"/>
-			<fileset dir="i18n"/>
-			<fileset dir="${source-dir}">
-				<include name="**/*.png"/>
-				<include name="**/*.gif"/>
-				<include name="**/*.jpg"/>
-				<include name="org/fife/ui/modifiedBsdLicense.txt"/>
-			</fileset>
-			<fileset dir="extra">
-				<include name="com/apple/osxadapter/*.class"/>
-			</fileset>
-			<manifest>
-				<attribute name="Class-Path" value="rsyntaxtextarea.jar"/>
-			</manifest>
-		</jar>
-	</target>
-
-
-	<!-- Builds a zip file containing all source files for fife.common.jar. -->
-	<!-- This is useful for Eclipse code completion when creating           -->
-	<!-- applications with this library.                                    -->
-	<target name="make-common-jar-source-zip"
-		description="Builds the source zip for this library.">
-		<delete file="./fife.common_Source.zip" quiet="true"/>
-		<zip destfile="./fife.common_Source.zip">
-			<fileset dir="${source-dir}">
-				<exclude name="**/.svn/**"/>
-			</fileset>
-		</zip>
-	</target>
-
 
 	<!-- Creates the JNI headers for the native methods. -->
 	<target name="create-jni-headers" description="Create JNI headers">
@@ -105,6 +26,5 @@
 			<class name="org.fife.ui.rtextfilechooser.extras.x64FileIOExtras"/>
 		</javah>
 	</target>
-
 
 </project>

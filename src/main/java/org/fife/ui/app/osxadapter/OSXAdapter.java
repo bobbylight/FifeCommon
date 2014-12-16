@@ -11,7 +11,7 @@
 				
 	Author:		mdrance
 
-	Copyright: 	© Copyright 2003 Apple Computer, Inc. All rights reserved.
+	Copyright: 	(C) Copyright 2003 Apple Computer, Inc. All rights reserved.
 	
 	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc.
 				("Apple") in consideration of your agreement to the following terms, and your
@@ -20,7 +20,7 @@
 				please do not use, install, modify or redistribute this Apple software.
 
 				In consideration of your agreement to abide by the following terms, and subject
-				to these terms, Apple grants you a personal, non-exclusive license, under Apple’s
+				to these terms, Apple grants you a personal, non-exclusive license, under Apple's
 				copyrights in this original Apple software (the "Apple Software"), to use,
 				reproduce, modify and redistribute the Apple Software, with or without
 				modifications, in source and/or binary forms; provided that if you redistribute

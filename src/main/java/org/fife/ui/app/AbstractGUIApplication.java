@@ -912,7 +912,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 			try {
 				Class<?> osxAdapter = Class.forName(
-									"com.apple.osxadapter.OSXAdapter");
+									"org.fife.ui.app.osxadapter.OSXAdapter");
 				Class<?>[] defArgs = { NativeMacApp.class };
 				Method registerMethod = osxAdapter.getDeclaredMethod(
 								"registerMacOSXApplication", defArgs);

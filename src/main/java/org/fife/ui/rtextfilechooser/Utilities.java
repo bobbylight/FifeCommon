@@ -298,25 +298,6 @@ InputSource is = new InputSource(new FileReader(file));
 
 
 	/**
-	 * Returns whether or not the current OS is case-sensitive.  Windows and
-	 * OS X will return <code>false</code>, other OSes will return
-	 * <code>true</code>.
-	 *
-	 * @return Whether or not the underlying OS is case-sensitive.
-	 */
-	public static final boolean isCaseSensitiveFileSystem() {
-		String os = System.getProperty("os.name");
-		boolean caseSensitive = false;
-		if (os!=null) {
-			os = os.toLowerCase();
-			caseSensitive = os.indexOf("windows")==-1 &&
-						os.indexOf("mac os x")==-1;
-		}
-		return caseSensitive;
-	}
-
-
-	/**
 	 * Used in reading file filters from an XML file and adding them to a file
 	 * chooser.
 	 *

@@ -46,6 +46,7 @@ import javax.swing.event.ChangeListener;
 
 import org.fife.ui.AboutDialog;
 import org.fife.ui.CustomizableToolBar;
+import org.fife.ui.OS;
 import org.fife.ui.OptionsDialog;
 import org.fife.ui.SplashScreen;
 import org.fife.ui.StatusBar;
@@ -192,12 +193,6 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 	private static final String STATUS_BAR_LOCATION	= BorderLayout.SOUTH;
 	private static final String TOOL_BAR_LOCATION	= BorderLayout.NORTH;
-
-	/**
-	 * An integer constant representing the OS, such as
-	 * <code>OS_WINDOWS</code> or <code>OS_LINUX</code>.
-	 */
-	private int os;
 
 
 	/**
@@ -707,29 +702,10 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 
 	/**
-	 * Returns an integer constant representing the OS.  This can be handy for
-	 * special case situations such as Mac OS-X (special application
-	 * registration) or Windows (allow mixed case, etc.).
-	 *
-	 * @return An integer constant representing the OS.
+	 * {@inheritDoc}
 	 */
-	public int getOS() {
-		if (os==0) {
-			os = OS_OTHER;
-			String osName = System.getProperty("os.name");
-			if (osName!=null) { // Should always be true.
-				osName = osName.toLowerCase();
-				if (osName.indexOf("windows") > -1)
-					os = OS_WINDOWS;
-				else if (osName.indexOf("mac os x") > -1)
-					os = OS_MAC_OSX;
-				else if (osName.indexOf("linux") > -1)
-					os = OS_LINUX;
-				else
-					os = OS_OTHER;
-			}
-		}
-		return os;
+	public OS getOS() {
+		return OS.get();
 	}
 
 
@@ -908,7 +884,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 */
 	private void possibleMacOSXRegistration() {
 
-		if (getOS()==OS_MAC_OSX) {
+		if (getOS()==OS.MAC_OS_X) {
 
 			try {
 				Class<?> osxAdapter = Class.forName(

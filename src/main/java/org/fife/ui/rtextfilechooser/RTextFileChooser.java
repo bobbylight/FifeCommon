@@ -31,6 +31,7 @@ import javax.swing.filechooser.FileSystemView;
 
 import org.fife.ui.FSATextField;
 import org.fife.ui.MenuButton;
+import org.fife.ui.OS;
 import org.fife.ui.RScrollPane;
 import org.fife.ui.ResizableFrameContentPane;
 import org.fife.ui.UIUtil;
@@ -87,7 +88,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	public static final int STYLE_ITALIC			= 1;
 	public static final int STYLE_UNDERLINE			= 2;
 
-	static final boolean IGNORE_CASE = Utilities.isCaseSensitiveFileSystem();
+	private static final boolean IGNORE_CASE = !OS.get().isCaseSensitive();
 
 	private FileSystemView fileSystemView;
 	private ItemListener itemListener;

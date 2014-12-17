@@ -26,6 +26,7 @@ import javax.swing.JMenuBar;
 
 import org.fife.help.HelpDialog;
 import org.fife.ui.CustomizableToolBar;
+import org.fife.ui.OS;
 import org.fife.ui.StatusBar;
 
 
@@ -205,13 +206,13 @@ public interface GUIApplication extends GUIApplicationConstants {
 
 
 	/**
-	 * Returns an integer constant representing the OS.  This can be handy for
-	 * special case situations such as Mac OS-X (special application
-	 * registration) or Windows (allow mixed case, etc.).
+	 * Returns the current OS.  This can be handy for special-case situations
+	 * such as Mac OS X (special application registration) or Windows (allow
+	 * mixed case, etc.).
 	 *
-	 * @return An integer constant representing the OS.
+	 * @return The OS we're running on.
 	 */
-	public int getOS();
+	public OS getOS();
 
 
 	/**

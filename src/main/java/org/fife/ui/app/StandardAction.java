@@ -12,16 +12,50 @@ package org.fife.ui.app;
 import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
+import org.fife.ui.OS;
+
 
 /**
  * The action type used by all instances of <code>GUIApplication</code>.  This
- * is merely an action with many ease-of-use methods.
+ * class not only provides ease-of-use methods, but knows how to look up its
+ * properties in a resource bundle.<p>
+ * 
+ * For example, you could define an action to create a new document like so in
+ * a properties file:
+ * 
+ * <pre>
+ * NewAction=New
+ * NewAction.Mnemonic=N
+ * NewAction.ShortDesc=Creates a new text file.
+ * NewAction.Accelerator=default N
+ * </code>
  *
+ * This creates an action that can be used for a menu item (for example), with
+ * label "New", mnemonic 'N', an appropriate short description that gets
+ * displayed in the application's status bar on rollover, and an accelerator.<p>
+ * 
+ * For accelerators, the standard syntax for key strokes defined 
+ * <a href="https://docs.oracle.com/javase/7/docs/api/javax/swing/KeyStroke.html#getKeyStroke(java.lang.String)">here</a>
+ * can be used.  In addition, the string literal "default" maps to "ctrl" on
+ * Windows and Linux, and "meta" on OS X.<p>
+ * 
+ * In addition, OS-specific accelerators can be defined, for example:
+ * 
+ * <pre>
+ * NextTabAction.Accelerator.OSX=meta shift BRACELEFT
+ * NextTabAction.Accelerator.Windows=ctrl PAGE_DOWN
+ * NextTabAction.Accelerator.Linux=ctrl TAB
+ * </pre>
+ * 
+ * If the appropriate OS-specific accelerator is defined for an action, it is
+ * used, otherwise, the OS-agnostic accelerator is used, if defined.
+ * 
  * @author Robert Futrell
  * @version 0.6
  * @see org.fife.ui.app.GUIApplication
@@ -66,7 +100,19 @@ public abstract class StandardAction extends AbstractAction {
 	 * </ul>
 	 * then those properties are set as well.  Further, if an accelerator is
 	 * defined, it is set as both the action's active accelerator and default
-	 * accelerator.
+	 * accelerator.<p>
+	 * 
+	 * You can provide OS-specific accelerators for actions by defining any of
+	 * the following properties:
+	 * <ul>
+	 *    <li><code>key + ".Accelerator.OSX"</code>
+	 *    <li><code>key + ".Accelerator.Windows"</code>
+	 *    <li><code>key + ".Accelerator.Linux"</code> (applies to Unix as well)
+	 * </ul>
+	 * This is useful for instances where different operating systems have
+	 * different "standard" shortcuts for things.
+	 * If the appropriate OS-specific accelerator is not defined, then the
+	 * default value (<code>key + ".Accelerator"</code>) is used.
 	 *
 	 * @param app The parent application.
 	 * @param key The key in the bundle for the name of this action.
@@ -87,7 +133,19 @@ public abstract class StandardAction extends AbstractAction {
 	 * </ul>
 	 * then those properties are set as well.  Further, if an accelerator is
 	 * defined, it is set as both the action's active accelerator and default
-	 * accelerator.
+	 * accelerator.<p>
+	 * 
+	 * You can provide OS-specific accelerators for actions by defining any of
+	 * the following properties:
+	 * <ul>
+	 *    <li><code>key + ".Accelerator.OSX"</code>
+	 *    <li><code>key + ".Accelerator.Windows"</code>
+	 *    <li><code>key + ".Accelerator.Linux"</code> (applies to Unix as well)
+	 * </ul>
+	 * This is useful for instances where different operating systems have
+	 * different "standard" shortcuts for things.
+	 * If the appropriate OS-specific accelerator is not defined, then the
+	 * default value (<code>key + ".Accelerator"</code>) is used.
 	 *
 	 * @param app The parent application.
 	 * @param key The key in the bundle for the name of this action.
@@ -113,7 +171,19 @@ public abstract class StandardAction extends AbstractAction {
 	 * </ul>
 	 * then those properties are set as well.  Further, if an accelerator is
 	 * defined, it is set as both the action's active accelerator and default
-	 * accelerator.
+	 * accelerator.<p>
+	 * 
+	 * You can provide OS-specific accelerators for actions by defining any of
+	 * the following properties:
+	 * <ul>
+	 *    <li><code>key + ".Accelerator.OSX"</code>
+	 *    <li><code>key + ".Accelerator.Windows"</code>
+	 *    <li><code>key + ".Accelerator.Linux"</code> (applies to Unix as well)
+	 * </ul>
+	 * This is useful for instances where different operating systems have
+	 * different "standard" shortcuts for things.
+	 * If the appropriate OS-specific accelerator is not defined, then the
+	 * default value (<code>key + ".Accelerator"</code>) is used.
 	 *
 	 * @param app The parent application.
 	 * @param msg The bundle to localize from.  If this is <code>null</code>,
@@ -263,8 +333,7 @@ public abstract class StandardAction extends AbstractAction {
 		int index = accelerator.indexOf(DEFAULT);
 
 		if (index>-1) {
-			String replacement = app.getOS()==GUIApplication.OS_MAC_OSX ?
-					"meta " : "control ";
+			String replacement = app.getOS()==OS.MAC_OS_X ? "meta ":"control ";
 			accelerator = accelerator.substring(0, index) + replacement +
 					accelerator.substring(index + DEFAULT.length());
 		}

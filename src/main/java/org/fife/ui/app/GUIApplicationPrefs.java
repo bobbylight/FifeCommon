@@ -12,36 +12,23 @@ package org.fife.ui.app;
 
 import java.awt.Dimension;
 import java.awt.Point;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.prefs.Preferences;
-
-import javax.swing.Action;
-import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 
 
 /**
- * Preferences for a <code>GUIApplication</code>.  This class currently
- * explicitly remembers the accelerators for all actions of the GUI
- * application in a hash map.  The keys in the map are the action keys in
- * the application.
+ * Preferences for a <code>GUIApplication</code>.  This class remembers basic
+ * information relevant to most GUI applications.  It is expected that
+ * subclasses will override and load/store more information specific to each
+ * application.
  *
  * @author Robert Futrell
- * @version 0.1
+ * @version 0.2
  * @see GUIApplication
  * @see AbstractGUIApplication
  */
 public abstract class GUIApplicationPrefs<T extends GUIApplication>
 								implements GUIApplicationConstants {
-
-	/**
-	 * Accelerators for all actions in the <code>GUIApplication</code>'s
-	 * action map.
-	 *
-	 * @see #getAccelerator(String)
-	 */
-	public HashMap<String, KeyStroke> accelerators;
 
 	/**
 	 * The location on-screen of this GUI application.
@@ -72,8 +59,6 @@ public abstract class GUIApplicationPrefs<T extends GUIApplication>
 	 * The language for this application, in a Locale-friendly string.
 	 */
 	public String language;
-
-	private static final String NOTHING_STRING = "-";
 
 
 	/**
@@ -113,62 +98,6 @@ public abstract class GUIApplicationPrefs<T extends GUIApplication>
 		statusBarVisible		= app.getStatusBarVisible();
 		language					= app.getLanguage();
 		
-		accelerators = new HashMap<String, KeyStroke>();
-		for (Action a : app.getActions()) {
-			if (a instanceof StandardAction) {
-				StandardAction sa = (StandardAction)a;
-				accelerators.put(sa.getName(), sa.getAccelerator());
-				//System.out.println(sa.getName() + " - " + sa.getAccelerator());
-			}
-		}
-		
-	}
-
-
-	/**
-	 * Returns the accelerator for the specified action name.
-	 * This is shorthand for (KeyStroke)accelerators.get(NAME);
-	 *
-	 * @return The accelerator.
-	 */
-	public KeyStroke getAccelerator(String actionName) {
-		return accelerators.get(actionName);
-	}
-
-
-	/**
-	 * Returns a string suitable for saving this keystroke via the Java
-	 * Preferences API of the form "&lt;keycode> &lt;modifiers>".
-	 *
-	 * @param stroke The keystroke for which to get the string.
-	 * @return A <code>String</code> representing the keystroke.
-	 * @see #getKeyStrokeFromString
-	 */
-	private static final String getKeyStrokeString(KeyStroke stroke) {
-		if (stroke!=null) {
-			return stroke.getKeyCode() + " " + stroke.getModifiers();
-		}
-		return NOTHING_STRING;
-	}
-
-
-	/**
-	 * Returns the keystroke from the passed-in string of the form
-	 * "&lt;keycode&gt; &lt;modifiers&gt;".
-	 *
-	 * @param string The string from which to get the keystroke.  This string
-	 *        was saved by a previous <code>RTextPreferences</code>.
-	 * @return The keystroke.
-	 * @see #getKeyStrokeString
-	 */
-	private static final KeyStroke getKeyStrokeFromString(String string) {
-		int space = string.indexOf(' ');
-		if (space>-1) {
-			return KeyStroke.getKeyStroke(
-						Integer.parseInt(string.substring(0,space)),
-						Integer.parseInt(string.substring(space+1)));
-		}
-		return null;
 	}
 
 
@@ -180,17 +109,6 @@ public abstract class GUIApplicationPrefs<T extends GUIApplication>
 	 * @see #save()
 	 */
 	public abstract GUIApplicationPrefs<T> load();
-
-
-	protected void loadActionAccelerators(String[] actionNames, Preferences prefs) {
-		for (int i=0; i<actionNames.length; i++) {
-			String actionName = actionNames[i];
-			String temp = prefs.get(actionName, null);
-			if (temp!=null)
-				accelerators.put(actionName,
-							getKeyStrokeFromString(temp));
-		}
-	}
 
 
 	/**
@@ -244,10 +162,6 @@ public abstract class GUIApplicationPrefs<T extends GUIApplication>
 		prefs.putBoolean("statusBarVisible", statusBarVisible);
 		prefs.put("lookAndFeel", lookAndFeel);
 		prefs.put("language", language);
-		for (Map.Entry<String, KeyStroke> entry : accelerators.entrySet()) {
-			//System.out.println(entry.getKey() + "... ... " + getKeyStrokeString(entry.getValue()));
-			prefs.put(entry.getKey(), getKeyStrokeString(entry.getValue()));
-		}
 	}
 
 

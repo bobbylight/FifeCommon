@@ -116,6 +116,11 @@ public class ActionRegistry {
 	 */
 	public void loadShortcuts(File file) throws IOException {
 
+		// First time running the application
+		if (!file.exists()) {
+			return;
+		}
+
 		Properties props = new Properties();
 
 		BufferedInputStream bin = new BufferedInputStream(

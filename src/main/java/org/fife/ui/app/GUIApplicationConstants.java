@@ -20,26 +20,4 @@ import org.fife.ui.dockablewindows.DockableWindowConstants;
  */
 public interface GUIApplicationConstants extends DockableWindowConstants {
 
-	/**
-	 * Integer constant representing a Windows-variant OS.
-	 */
-	public static final int OS_WINDOWS			= 1;
-
-	/**
-	 * Integer constant representing Mac OS X.
-	 */
-	public static final int OS_MAC_OSX			= 2;
-
-	/**
-	 * Integer constant representing Linux.
-	 */
-	public static final int OS_LINUX			= 4;
-
-	/**
-	 * Integer constant representing an "unknown" OS.  99.99% of the
-	 * time, this means some UNIX variant (AIX, SunOS, etc.).
-	 */
-	public static final int OS_OTHER			= 8;
-
-
 }

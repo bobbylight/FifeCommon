@@ -160,6 +160,35 @@ public abstract class StandardAction extends AbstractAction {
 	}
 
 
+	private static final String shortcutExtension(OS os) {
+		String extension = ".Accelerator";
+		String suffix = null;
+		if (os != null) {
+			switch (os) {
+				case MAC_OS_X:
+					suffix = ".OSX";
+					break;
+				case LINUX:
+					suffix = ".Linux";
+					break;
+				case WINDOWS:
+					suffix = ".Windows";
+					break;
+				case SOLARIS:
+					suffix = ".Solaris";
+					break;
+				default:
+					suffix = null;
+					break;
+			}
+		}
+		if (suffix != null) {
+			extension += suffix;
+		}
+		return extension;
+	}
+
+
 	/**
 	 * Creates an action, initializing its properties from a resource bundle.
 	 * The name of the action is found using the specified key.  If keys exist
@@ -212,18 +241,14 @@ public abstract class StandardAction extends AbstractAction {
 			// Swallow
 		}
 
-		// TODO: Use msg.containsKey() when we drop 1.4/1.5 support
-		try {
-			String accelKey = key + ".Accelerator";
-			String temp = msg.getString(accelKey);
-			if (temp!=null) {
-				temp = massageAcceleratorString(temp);
-				KeyStroke ks = KeyStroke.getKeyStroke(temp);
-				setAccelerator(ks);
-				setDefaultAccelerator(ks);
-			}
-		} catch (MissingResourceException mre) {
-			// Swallow
+		// Try OS-specific shortcut first, then generic shortcut
+		KeyStroke ks = getKeyStroke(msg, key + shortcutExtension(OS.get()));
+		if (ks == null) {
+			ks = getKeyStroke(msg, key + shortcutExtension(null));
+		}
+		if (ks != null) {
+			setAccelerator(ks);
+			setDefaultAccelerator(ks);
 		}
 
 		// TODO: Use msg.containsKey() when we drop 1.4/1.5 support
@@ -281,6 +306,32 @@ public abstract class StandardAction extends AbstractAction {
 	 */
 	public Icon getIcon() {
 		return (Icon)getValue(SMALL_ICON);
+	}
+
+
+	/**
+	 * If a property is found in a resource bundle, it is assumed to be a string
+	 * representation of a key stroke, and a <code>KeyStroke</code> is made
+	 * from it.
+	 *
+	 * @param msg The resource bundle.
+	 * @param key The key.
+	 * @return The key stroke, or <code>null</code> if the property is not
+	 *         found or the value is not a valid key stroke.
+	 */
+	private KeyStroke getKeyStroke(ResourceBundle msg, String key) {
+		// TODO: Use msg.containsKey() when we drop 1.4/1.5 support
+		KeyStroke ks = null;
+		try {
+			String temp = msg.getString(key);
+			if (temp!=null) {
+				temp = massageAcceleratorString(temp);
+				ks = KeyStroke.getKeyStroke(temp);
+			}
+		} catch (MissingResourceException mre) {
+			// Swallow
+		}
+		return ks;
 	}
 
 

@@ -689,7 +689,7 @@ public class UIUtil {
 	 * @param fg The foreground color.
 	 * @return Whether it is a "light" foreground color.
 	 */
-	private static final boolean isLightForeground(Color fg) {
+	public static final boolean isLightForeground(Color fg) {
 		return fg.getRed()>0xa0 && fg.getGreen()>0xa0 && fg.getBlue()>0xa0;
 	}
 

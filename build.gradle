@@ -78,8 +78,18 @@ repositories {
 uploadArchives {
 	repositories {
 		mavenDeployer {
-			repository(url: 'file:///' + projectDir + '/../localMavenRepo')
 			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+			if (project.hasProperty('upload') && Boolean.parseBoolean(upload)) { // gradlew -Pupload=true
+				repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
+					authentication(userName: ossrhUsername, password: ossrhPassword)
+				}
+				snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
+					authentication(userName: ossrhUsername, password: ossrhPassword)
+				}
+			}
+			else {
+				repository(url: 'file:///' + projectDir + '/../localMavenRepo')
+			}
 			pom {
 				groupId = 'com.fifesoft.rtext'
 				name = archivesBaseName
@@ -112,7 +122,9 @@ uploadArchives {
 						url 'https://github.com/bobbylight/FifeCommon'
 						connection 'https://github.com/bobbylight/FifeCommon.git'
 						developerConnection 'https://github.com/bobbylight/FifeCommon.git'
-						tag project.version
+						if (!project.version.endsWith('-SNAPSHOT')) {
+							tag project.version
+						}
 					}
 					
 					developers {

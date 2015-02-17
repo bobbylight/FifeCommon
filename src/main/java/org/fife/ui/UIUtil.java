@@ -29,7 +29,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -413,6 +412,20 @@ public class UIUtil {
 				}
 			}
 		}
+	}
+
+
+	/**
+	 * Given a combo box in which the user enters a comma-separated list of
+	 * values (such as file extensions), this method returns those
+	 * comma-separated values.
+	 *
+	 * @param combo The combo box.
+	 * @return The values, or an empty array for none.
+	 */
+	public static final String[] getCommaSeparatedValues(JComboBox combo) {
+		String value = (String)combo.getSelectedItem();
+		return value.trim().split("\\s*,?\\s+");
 	}
 
 

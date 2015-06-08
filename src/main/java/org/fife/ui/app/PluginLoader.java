@@ -109,7 +109,7 @@ class PluginLoader {
 	 */
 	public PluginLoader(AbstractPluggableGUIApplication<?> app) {
 		this.app = app;
-		pluginDir = new File(app.getInstallLocation(), "plugins");
+		pluginDir = getPluginDir(app);
 	}
 
 
@@ -135,6 +135,18 @@ class PluginLoader {
 
 		return priority;
 
+	}
+
+
+	/**
+	 * Returns the directory in which to look for plugin jars.
+	 *
+	 * @param app The application.
+	 * @return The plugin jar directory.
+	 */
+	private static final File getPluginDir(
+			AbstractPluggableGUIApplication<?> app) {
+		return new File(app.getInstallLocation(), "plugins");
 	}
 
 

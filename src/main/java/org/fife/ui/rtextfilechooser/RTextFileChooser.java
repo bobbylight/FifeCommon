@@ -1037,6 +1037,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * filename when the drop-down list is visible.  Note that this property
 	 * is only honored when this text field is "file system aware".
 	 *
+	 * @return Whether file names are automatically completed.
 	 * @see #setAutoCompleteFileNames(boolean)
 	 */
 	public boolean getAutoCompleteFileNames() {
@@ -2026,8 +2027,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/**
 	 * Removes a filter from the list of user choosable file filters.
 	 *
+	 * @param f The file filter to remove.
 	 * @return <code>true</code> if the file filter was removed.
-	 *
 	 * @see #addChoosableFileFilter
 	 * @see #getChoosableFileFilters
 	 */ 
@@ -2628,6 +2629,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 *
 	 * @param parent The parent of this open/save dialog.
 	 * @param dialogType Either {@link #OPEN_DIALOG} or {@link #SAVE_DIALOG}.
+	 * @return One of <code>APPROVE_OPTION</code>, <code>CANCEL_OPTION</code>,
+	 *         or <code>ERROR_OPTION</code>.
 	 */
 	protected int showDialogImpl(Window parent, int dialogType) {
 

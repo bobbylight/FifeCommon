@@ -384,7 +384,7 @@ public final class LookUtils {
      * Checks and answers whether we have a true color system.
      *
      * @param c   the component used to determine the toolkit
-     * @return true if the component's toolkit has a pixel size >= 24
+     * @return true if the component's toolkit has a pixel size &gt;= 24
      */
     public static boolean isTrueColor(Component c) {
         return c.getToolkit().getColorModel().getPixelSize() >= 24;

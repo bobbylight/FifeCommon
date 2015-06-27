@@ -654,7 +654,7 @@ public class PrintPreviewDialog extends EscapableDialog
 	 * Sets what scale to make the preview images of the pages.
 	 *
 	 * @param newScale The scale to use when sizing the page
-	 *        previews, in percent (i.e., 33 => 33%).
+	 *        previews, in percent (i.e., 33 =&gt; 33%).
 	 */
 	public void setScale(int newScale) {
 		sizeComboBox.setSelectedItem(Integer.toString(newScale)+"%");

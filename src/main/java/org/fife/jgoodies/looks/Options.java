@@ -48,7 +48,7 @@ import com.sun.java.swing.plaf.windows.WindowsComboBoxUI;
  * table, via a method, or all of them.<p>
  *
  * API users can use this class' constants or their values to configure
- * the JGoodies L&amP;f. Using the constants requires the Looks library
+ * the JGoodies L&amp;f. Using the constants requires the Looks library
  * classes in the class path of the using application/applet, where using
  * the String values doesn't require having this class in the class path.
  *
@@ -775,11 +775,11 @@ public final class Options {
 
 
     /**
-     * A replacement used to replace a given L&f with nothing,
+     * A replacement used to replace a given L&amp;f with nothing,
      * that indicates that it should not be used. For example,
-     * by default we mark the WindowsClass L&f this way,
-     * to remove it from L&f lists that replace the Sun Windows L&f
-     * with the JGoodies Windows L&f.
+     * by default we mark the WindowsClass L&amp;f this way,
+     * to remove it from L&amp;f lists that replace the Sun Windows L&amp;f
+     * with the JGoodies Windows L&amp;f.
      *
      * @since 2.1.3
      */

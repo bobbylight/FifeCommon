@@ -31,6 +31,8 @@ public class MenuButton extends JButton {
 
 	/**
 	 * Constructor.
+	 * 
+	 * @param icon The icon for this button.
 	 */
 	public MenuButton(Icon icon) {
 		popupMenu = new JPopupMenu();

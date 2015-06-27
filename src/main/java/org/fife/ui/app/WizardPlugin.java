@@ -75,11 +75,12 @@ public abstract class WizardPlugin implements Plugin, GUIApplicationConstants {
 
 
 	/**
+	 * <p>
 	 * Returns the "introduction panel;" that is, the initial information
 	 * displayed to the user explain what this wizard will do.  For example,
-	 * <p>
+	 * </p>
 	 *
-	 *   <pre>This wizard will walk you through creating a simple Java
+	 * <pre>This wizard will walk you through creating a simple Java
 	 * class.</pre>
 	 *
 	 * @param dialog The dialog in which this information will be displayed.

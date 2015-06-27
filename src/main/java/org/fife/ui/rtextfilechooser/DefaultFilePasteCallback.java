@@ -36,6 +36,8 @@ public class DefaultFilePasteCallback implements FilePasteCallback {
 
 	/**
 	 * Constructor.
+	 *
+	 * @param parent The parent component.
 	 */
 	public DefaultFilePasteCallback(Component parent) {
 		monitor = new ProgressMonitor(parent,

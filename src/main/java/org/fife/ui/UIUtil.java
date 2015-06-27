@@ -289,6 +289,7 @@ public class UIUtil {
 	 *        less than zero, zero is used for that component value; similarly,
 	 *        if it makes any value greater than 255, 255 is used for that
 	 *        component's value.
+	 * @return The derived color.
 	 */
 	public static final Color deriveColor(Color orig, int darker) {
 
@@ -1011,6 +1012,7 @@ public class UIUtil {
 	 * then the button returned is not opaque.  Otherwise, a regular (opaque)
 	 * button is returned.
 	 *
+	 * @param text The text to use as the button's label.
 	 * @return A button to add to a <code>JTabbedPane</code>.
 	 * @see #newTabbedPanePanel()
 	 */

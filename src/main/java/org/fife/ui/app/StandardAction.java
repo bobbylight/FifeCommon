@@ -34,18 +34,24 @@ import org.fife.ui.OS;
  * NewAction.Mnemonic=N
  * NewAction.ShortDesc=Creates a new text file.
  * NewAction.Accelerator=default N
- * </code>
+ * </pre>
  *
+ * <p>
  * This creates an action that can be used for a menu item (for example), with
  * label "New", mnemonic 'N', an appropriate short description that gets
- * displayed in the application's status bar on rollover, and an accelerator.<p>
+ * displayed in the application's status bar on rollover, and an accelerator.
+ * </p>
  * 
+ * <p>
  * For accelerators, the standard syntax for key strokes defined 
  * <a href="https://docs.oracle.com/javase/7/docs/api/javax/swing/KeyStroke.html#getKeyStroke(java.lang.String)">here</a>
  * can be used.  In addition, the string literal "default" maps to "ctrl" on
- * Windows and Linux, and "meta" on OS X.<p>
+ * Windows and Linux, and "meta" on OS X.
+ * </p>
  * 
+ * <p>
  * In addition, OS-specific accelerators can be defined, for example:
+ * </p>
  * 
  * <pre>
  * NextTabAction.Accelerator.OSX=meta shift BRACELEFT
@@ -53,8 +59,10 @@ import org.fife.ui.OS;
  * NextTabAction.Accelerator.Linux=ctrl TAB
  * </pre>
  * 
+ * <p>
  * If the appropriate OS-specific accelerator is defined for an action, it is
  * used, otherwise, the OS-agnostic accelerator is used, if defined.
+ * </p>
  * 
  * @author Robert Futrell
  * @version 0.6

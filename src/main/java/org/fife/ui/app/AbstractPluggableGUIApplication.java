@@ -167,6 +167,7 @@ public abstract class AbstractPluggableGUIApplication<T extends GUIApplicationPr
 	 *
 	 * @param splitPane One of <code>GUIApplicationConstants.TOP</code>,
 	 *        <code>LEFT</code>, <code>BOTTOM</code>, or <code>RIGHT</code>.
+	 * @return The divider location.
 	 * @throws IllegalArgumentException If <code>splitPane</code> is
 	 *         invalid.
 	 * @see #setSplitPaneDividerLocation

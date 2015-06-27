@@ -265,6 +265,7 @@ public class DockableWindowPanel extends JPanel
 	 *        <code>GUIApplicationConstants.TOP</code>,
 	 *        <code>LEFT</code>, <code>BOTTOM</code> or
 	 *        <code>RIGHT</code>.
+	 * @return The divider location.
 	 */
 	public int getDividerLocation(int splitPane) {
 		return panels[panelToLocationMap[splitPane]].getDividerLocation();

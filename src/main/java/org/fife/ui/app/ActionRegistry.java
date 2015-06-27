@@ -68,6 +68,7 @@ public class ActionRegistry {
 	/**
 	 * Returns an action by its key.
 	 *
+	 * @param key The key of the action.
 	 * @return The action, or <code>null</code> if no action exists for the
 	 *         specified key.
 	 * @see #addAction(String, Action)

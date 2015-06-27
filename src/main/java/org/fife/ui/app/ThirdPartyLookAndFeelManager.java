@@ -28,17 +28,24 @@ import org.fife.ui.app.ExtendedLookAndFeelInfo;
 
 
 /**
+ * <p>
  * NOTE: Specifying LookAndFeels in this XML file is done at your own risk!
  * If a LookAndFeel throws an Exception on the EDT, for any reason (needs
  * special configuration not handled by this LAF manager, requires a newer
  * JRE version than is specified in the XML, etc.), it can hose the
- * <code>GUIApplication</code> and keep it from running!<p>
+ * <code>GUIApplication</code> and keep it from running!
+ * </p>
  *
+ * <p>
  * A class capable of reading an XML file specifying 3rd party Look and Feel
  * JAR files, and returning an array of information about the Look and Feels,
- * so your <code>GUIApplication</code> can use them.<p>
+ * so your <code>GUIApplication</code> can use them.
+ * </p>
  *
- * The XML file read should have the following format:<p>
+ * <p>
+ * The XML file read should have the following format:
+ * </p>
+ * 
  * <pre>
  *   &lt;?xml version="1.0" encoding="UTF-8" ?&gt;
  *   &lt;ThirdPartyLookAndFeels&gt;
@@ -47,7 +54,8 @@ import org.fife.ui.app.ExtendedLookAndFeelInfo;
  *      ... other LookAndFeel tags if desired ...
  *   &lt;/ThirdPartyLookAndFeels&gt;
  * </pre>
- *
+ * 
+ * <p>
  * where <code>name</code> is the name of the Look and Feel (as appears in
  * RText's menu), <code>class</code> is the main Look and Feel class, such as
  * <code>org.fife.plaf.OfficeXP.OfficeXPLookAndFeel</code>, and
@@ -57,7 +65,8 @@ import org.fife.ui.app.ExtendedLookAndFeelInfo;
  * optional, and specifies the minimum Java version the JRE must be for the
  * application to offer this LookAndFeel as a choice.  This should be a double
  * value, such as "1.5", "1.6", etc.
- *
+ * </p>
+ * 
  * @author Robert Futrell
  * @version 1.0
  */
@@ -81,6 +90,8 @@ public class ThirdPartyLookAndFeelManager {
 
 	/**
 	 * Constructor.
+	 *
+	 * @param appRoot The root directory of the application.
 	 */
 	public ThirdPartyLookAndFeelManager(String appRoot) {
 

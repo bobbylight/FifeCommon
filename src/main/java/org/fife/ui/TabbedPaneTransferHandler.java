@@ -243,6 +243,9 @@ public class TabbedPaneTransferHandler extends TransferHandler
 	
 	/**
 	 * Does the flavor list have a Tab flavor?
+	 *
+	 * @param flavors The flavors to look for.
+	 * @return Whether any of those flavors is supported by this handler.
 	 */
 	protected boolean hasTabFlavor(DataFlavor[] flavors) {
 		if (tabFlavor == null) {

@@ -50,6 +50,8 @@ public abstract class GUIWorkerThread {
 	 * Compute the value to be returned by the <code>get</code> method.  This
 	 * method should be overridden to do all the CPU-intensive stuff that
 	 * you don't want to do in the event dispatch thread.
+	 *
+	 * @return The value computed by this worker thread.
 	 */
 	public abstract Object construct();
 
@@ -93,6 +95,8 @@ public abstract class GUIWorkerThread {
 	/** 
 	 * Get the value produced by the worker thread, or null if it 
 	 * hasn't been constructed yet.
+	 *
+	 * @return The produced value.
 	 */
 	protected synchronized Object getValue() { 
 		return value; 

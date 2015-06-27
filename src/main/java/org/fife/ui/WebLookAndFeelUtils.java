@@ -47,10 +47,10 @@ public class WebLookAndFeelUtils {
 
 
 	/**
-	 * Sets properties needed for toolbar buttons to look nice in
+	 * Sets properties needed for tool bar buttons to look nice in
 	 * WebLookAndFeel.  Does nothing if WebLookAndFeel is not installed.
 	 *
-	 * @param toolBar The toolbar to update.
+	 * @param toolBar The tool bar to update.
 	 */
 	public static void fixToolbar(JToolBar toolBar) {
 		fixToolbar(toolBar, false);
@@ -58,10 +58,11 @@ public class WebLookAndFeelUtils {
 
 
 	/**
-	 * Sets properties needed for toolbar buttons to look nice in
+	 * Sets properties needed for tool bar buttons to look nice in
 	 * WebLookAndFeel.  Does nothing if WebLookAndFeel is not installed.
 	 *
-	 * @param toolBar The toolbar to update.
+	 * @param toolBar The tool bar to update.
+	 * @param flatten Whether the tool bar should have a "flat" look.
 	 */
 	public static void fixToolbar(JToolBar toolBar, boolean flatten) {
 		fixToolbar(toolBar, flatten, true);
@@ -69,10 +70,12 @@ public class WebLookAndFeelUtils {
 
 
 	/**
-	 * Sets properties needed for toolbar buttons to look nice in
+	 * Sets properties needed for tool bar buttons to look nice in
 	 * WebLookAndFeel.  Does nothing if WebLookAndFeel is not installed.
 	 *
-	 * @param toolBar The toolbar to update.
+	 * @param toolBar The tool bar to update.
+	 * @param flatten Whether the tool bar should have a "flat" look.
+	 * @param attached Whether the tool bar should have an "attached" look.
 	 */
 	public static void fixToolbar(JToolBar toolBar, boolean flatten,
 			boolean attached) {
@@ -143,7 +146,7 @@ public class WebLookAndFeelUtils {
 			m.invoke(ui, value);
 
 			// By default, buttons have 4 pixel spacing on their left and
-			// right, which looks ridiculous for toolbar buttons.  WebLaF
+			// right, which looks ridiculous for tool bar buttons.  WebLaF
 			// provides factory methods for icon-only buttons to work around
 			// this, but we are avoiding WebLaF-specific APIs.
 			m = uiClazz.getMethod("setLeftRightSpacing", int.class);
@@ -154,6 +157,11 @@ public class WebLookAndFeelUtils {
 	}
 
 
+	/**
+	 * Installs system properties specific to this Look and Feel.
+	 * 
+	 * @param cl the class loader.
+	 */
 	public static final void installWebLookAndFeelProperties(ClassLoader cl) {
 
 		// Don't override non-UIResource borders!
@@ -194,11 +202,22 @@ public class WebLookAndFeelUtils {
 	}
 
 
+	/**
+	 * Returns whether the specified class name is for the Web Look and Feel.
+	 *
+	 * @param laf The class name.
+	 * @return Whether that class name is for the Web Look and Feel.
+	 */
 	public static final boolean isWebLookAndFeel(String laf) {
 		return laf.equals(LAF_CLASS_NAME);
 	}
 
 
+	/**
+	 * Returns whether the Web Look and Feel is installed.
+	 *
+	 * @return Whether the Web Look and Feel is installed.
+	 */
 	public static final boolean isWebLookAndFeelInstalled() {
 		LookAndFeel laf = UIManager.getLookAndFeel();
 		return isWebLookAndFeel(laf.getClass().getName());

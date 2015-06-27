@@ -13,7 +13,6 @@ package org.fife.ui;
 
 import java.io.File;
 import java.awt.Component;
-import java.awt.HeadlessException;
 import javax.swing.JFileChooser;
 
 
@@ -32,7 +31,7 @@ public class RFileChooser extends JFileChooser {
 
 	/**
 	 * Pops up an "Open File" file chooser dialog.  Note that the text that
-	 * appears in the approve button is determined by the L&F.
+	 * appears in the approve button is determined by the L&amp;F.
 	 *
 	 * @param parent The parent component of the dialog, can be
 	 *        <code>null</code>; see <code>JFileChooser.showDialog</code>
@@ -44,10 +43,9 @@ public class RFileChooser extends JFileChooser {
 	 *            <li>RFileChooser.ERROR_OPTION if an error occurs or the
 	 *                dialog is dismissed.
 	 *         </ul>
-	 * @throws HeadlessException If this graphics environment is headless.
 	 */
 	@Override
-	public int showOpenDialog(Component parent) throws HeadlessException {
+	public int showOpenDialog(Component parent) {
 		File temp = getCurrentDirectory();
 		int retVal = super.showOpenDialog(parent);
 		if (retVal!=RFileChooser.APPROVE_OPTION)
@@ -58,7 +56,7 @@ public class RFileChooser extends JFileChooser {
 
 	/**
 	 * Pops up a "Save File" file chooser dialog.  Note that the text that
-	 * appears in the approve button is determined by the L&F.
+	 * appears in the approve button is determined by the L&amp;F.
 	 *
 	 * @param parent The parent component of the dialog, can be
 	 *        <code>null</code>; see <code>JFileChooser.showDialog</code>
@@ -70,10 +68,9 @@ public class RFileChooser extends JFileChooser {
 	 *            <li>RFileChooser.ERROR_OPTION if an error occurs or the
 	 *                dialog is dismissed.
 	 *         </ul>
-	 * @throws HeadlessException
 	 */
 	@Override
-	public int showSaveDialog(Component parent) throws HeadlessException {
+	public int showSaveDialog(Component parent) {
 		File temp = getCurrentDirectory();
 		int retVal = super.showSaveDialog(parent);
 		if (retVal!=RFileChooser.APPROVE_OPTION)

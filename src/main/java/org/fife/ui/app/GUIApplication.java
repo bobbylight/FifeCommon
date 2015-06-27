@@ -124,6 +124,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	/**
 	 * Returns one of this application's actions.
 	 *
+	 * @param key The key of the action to return.
 	 * @return The action, or <code>null</code> if no action exists for the
 	 *         specified key.
 	 * @see #addAction(String, Action)

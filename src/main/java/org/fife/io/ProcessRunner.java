@@ -205,7 +205,6 @@ public class ProcessRunner implements Runnable {
 	/**
 	 * Runs the current external process.
 	 * 
-	 * @throws IOException If an I/O error occurs while running the process.
 	 * @see #getStdout()
 	 * @see #getStderr()
 	 */

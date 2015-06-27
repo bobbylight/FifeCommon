@@ -351,6 +351,8 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 * switches to this Options panel in the Options dialog.  As an added
 	 * bonus, if this component is a <code>JTextComponent</code>, its
 	 * text is selected for easy changing.
+	 *
+	 * @return The top component.
 	 */
 	public abstract JComponent getTopJComponent();
 
@@ -359,7 +361,8 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 * Returns whether or not this Options panel has unsaved changes.  Note
 	 * that these changes may or may not be invalid.
 	 *
-	 * @see #setUnsavedChanges
+	 * @return Whether this panel has any unsaved changes.
+	 * @see #setUnsavedChanges(boolean)
 	 */
 	public boolean hasUnsavedChanges() {
 		return hasUnsavedChanges;

@@ -433,6 +433,7 @@ public class CTagReader {
 	 * @param entry Will contain the tag read, ??? or <code>null</code> if
 	 *        the read fails ???
 	 * @return Whether or not the read was successful.
+	 * @throws IOException If an IO error occurs.
 	 */
 	public boolean tagsFirst(TagEntry entry) throws IOException {
 		boolean result = false;
@@ -467,6 +468,7 @@ public class CTagReader {
 	 *        if the read fails???
 	 * @return <code>true</code> if a tag was read, or <code>false</code> if
 	 *         EOF was reached.
+	 * @throws IOException If an IO error occurs.
 	 */
 	public boolean tagsNext(TagEntry entry) throws IOException {
 		boolean result = false;
@@ -524,6 +526,7 @@ public class CTagReader {
 	 * @param options ???
 	 * @return <code>true</code> if the tag was found, or <code>false</code>
 	 *         if it wasn't or <code>file</code> wasn't initialized.
+	 * @throws IOException If an IO error occurs.
 	 */
 	public boolean tagsFind(TagEntry entry, String name, int options) throws IOException {
 		boolean result = false;
@@ -539,7 +542,9 @@ public class CTagReader {
 	 * structure pointed to by 'entry' will be populated with information
 	 * about the tag file entry.
 	 *
+	 * @param entry The tag entry.
 	 * @return Whether or not another tag matching the name is found.
+	 * @throws IOException If an IO error occurs.
 	 */
 	public boolean tagsFindNext(TagEntry entry) throws IOException {
 		boolean result = false;
@@ -556,6 +561,7 @@ public class CTagReader {
 	 * @return <code>true</code> if the file was closed, <code>false</code>
 	 *         if this reader wasn't even initialized so there was no reason
 	 *         to call close.
+	 * @throws IOException If an IO error occurs.
 	 */
 	public boolean tagsClose() throws IOException {
 		if (initialized) {

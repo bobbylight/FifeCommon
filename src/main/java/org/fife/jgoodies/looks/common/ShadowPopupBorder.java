@@ -73,6 +73,8 @@ public final class ShadowPopupBorder extends AbstractBorder {
 
 	/**
 	 * Returns the singleton instance used to draw all borders.
+	 *
+	 * @return The singleton instance of this class.
 	 */
 	public static ShadowPopupBorder getInstance() {
 		return instance;

@@ -229,6 +229,8 @@ public class CustomizableToolBar extends JToolBar {
 
 	/**
 	 * Populates the "Add/Remove Buttons" popup menu.
+	 *
+	 * @param msg The resource bundle to use for localization.
 	 */
 	protected void populateAddRemovePopupMenu(ResourceBundle msg) {
 

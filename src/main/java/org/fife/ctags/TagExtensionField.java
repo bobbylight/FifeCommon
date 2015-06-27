@@ -17,6 +17,9 @@ public class TagExtensionField {
 
 	/**
 	 * Creates a new <code>TagExtensionField</code>.
+	 *
+	 * @param key The key of the extension field.
+	 * @param value The value of the extension field.
 	 */
 	public TagExtensionField(String key, String value) {
 		this.key = key;

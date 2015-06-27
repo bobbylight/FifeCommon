@@ -68,10 +68,11 @@ public class Utilities {
 
 
 	/**
+	 * <p>
 	 * Adds user-defined file filters to a file chooser, as specified in a
-	 * file.<p>
+	 * file.</p>
 	 *
-	 * The file should have the following format:<p>
+	 * The file should have the following format:
 	 * <pre>
 	 *   &lt;?xml version="1.0"?&gt;
 	 *
@@ -88,13 +89,17 @@ public class Utilities {
 	 * displayed in the file chooser, <code>ignoreCase</code> designates
 	 * whether the filter should ignore case when filtering files, and
 	 * <code>showExtensions</code> designates whether the extensions should
-	 * be displayed beside the description in the file chooser.<p>
+	 * be displayed beside the description in the file chooser.
 	 *
+	 * <p>
 	 * The values within <code>Extension</code> tags are the extensions of
-	 * files to be accepted by the filter (excluding the initial period).<p>
+	 * files to be accepted by the filter (excluding the initial period).
+	 * </p>
 	 *
+	 * <p>
 	 * <code>ignoreCase</code> and <code>showExtensions</code> both have a
 	 * default value of <code>true</code>.
+	 * </p>
 	 *
 	 * @param file The XML file, as described above.
 	 * @param chooser The file chooser to which to add the file filters.
@@ -211,6 +216,8 @@ InputSource is = new InputSource(new FileReader(file));
 	 * "1.43 KB" or "3.4 MB".  This method should only be called on the EDT.
 	 *
 	 * @param size the size of a file, in bytes.
+	 * @param reportInKB Whether to always report the file size in KB, as
+	 *        opposed to the largest relevant size.
 	 * @return The string.
 	 * @see #getFileSizeStringFor(File)
 	 */

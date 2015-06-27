@@ -52,6 +52,7 @@ public class EscapableDialog extends JDialog {
 	 * Constructor.
 	 *
 	 * @param owner The parent dialog.
+	 * @param modal Whether this dialog should be modal.
 	 */
 	public EscapableDialog(Dialog owner, boolean modal) {
 		super(owner, modal);
@@ -63,6 +64,7 @@ public class EscapableDialog extends JDialog {
 	 * Constructor.
 	 *
 	 * @param owner The parent dialog.
+	 * @param title The title of the dialog.
 	 */
 	public EscapableDialog(Dialog owner, String title) {
 		super(owner, title);
@@ -74,6 +76,8 @@ public class EscapableDialog extends JDialog {
 	 * Constructor.
 	 *
 	 * @param owner The parent dialog.
+	 * @param title The title of the dialog.
+	 * @param modal Whether this dialog should be modal.
 	 */
 	public EscapableDialog(Dialog owner, String title, boolean modal) {
 		super(owner, title, modal);
@@ -96,6 +100,7 @@ public class EscapableDialog extends JDialog {
 	 * Constructor.
 	 *
 	 * @param owner The parent frame.
+	 * @param modal Whether this frame should be modal.
 	 */
 	public EscapableDialog(Frame owner, boolean modal) {
 		super(owner, modal);
@@ -107,6 +112,7 @@ public class EscapableDialog extends JDialog {
 	 * Constructor.
 	 *
 	 * @param owner The parent frame.
+	 * @param title The title of the frame.
 	 */
 	public EscapableDialog(Frame owner, String title) {
 		super(owner, title);
@@ -118,6 +124,8 @@ public class EscapableDialog extends JDialog {
 	 * Constructor.
 	 *
 	 * @param owner The parent frame.
+	 * @param title The title of the frame.
+	 * @param modal Whether this frame should be modal.
 	 */
 	public EscapableDialog(Frame owner, String title, boolean modal) {
 		super(owner, title, modal);

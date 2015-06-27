@@ -1068,12 +1068,15 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 
 	/**
+	 * <p>
 	 * Saves the (customized) shortcuts for this application's actions from a
 	 * file.  Implementations are expected to call this method when shutting
 	 * down, to save any user customizations to shortcuts (assuming the
 	 * application allows them).</p>
 	 * 
+	 * <p>
 	 * If an IO error occurs, an error is displayed to the user.
+	 * </p>
 	 *
 	 * @param file The file to save to.
 	 * @see #loadActionShortcuts(File)

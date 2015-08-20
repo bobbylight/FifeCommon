@@ -631,7 +631,6 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * this knowledge, along with knowledge of the directory layout of the
 	 * application, the programmer can access other files in the installation.
 	 *
-	 * @param jarFileName The name of the jar file for which to search.
 	 * @return The directory in which the jar file resides.
 	 */
 	public static String getLocationOfJar() {

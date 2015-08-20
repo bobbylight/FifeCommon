@@ -49,23 +49,10 @@ public abstract class AbstractPluggableGUIApplication<T extends GUIApplicationPr
 	/**
 	 * Constructor.
 	 *
-	 * @param jarFile The name (not full path) of the JAR file containing the
-	 *        main class of this application (e.g. "Foobar.jar").
-	 */
-	public AbstractPluggableGUIApplication(String jarFile) {
-		super(jarFile);
-	}
-
-
-	/**
-	 * Constructor.
-	 *
 	 * @param title The title for this frame.
-	 * @param jarFile The name (not full path) of the JAR file containing
-	 *        the main class of this application (e.g. "Foobar.jar").
 	 */
-	public AbstractPluggableGUIApplication(String title, String jarFile) {
-		super(title, jarFile);
+	public AbstractPluggableGUIApplication(String title) {
+		super(title);
 	}
 
 
@@ -75,13 +62,10 @@ public abstract class AbstractPluggableGUIApplication<T extends GUIApplicationPr
 	 * the two instances to have the same properties.
 	 *
 	 * @param title The title for this frame.
-	 * @param jarFile The name (not full path) of the JAR file containing the
-	 *        main class of this application (e.g. "Foobar.jar").
 	 * @param prefs The preferences with which to initialize this application.
 	 */
-	public AbstractPluggableGUIApplication(String title, String jarFile,
-									T prefs) {
-		super(title, jarFile, prefs);
+	public AbstractPluggableGUIApplication(String title, T prefs) {
+		super(title, prefs);
 	}
 
 

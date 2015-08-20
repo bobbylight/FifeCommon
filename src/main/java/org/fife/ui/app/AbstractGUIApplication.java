@@ -22,7 +22,9 @@ import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.net.URLDecoder;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -198,23 +200,10 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	/**
 	 * Constructor.
 	 *
-	 * @param jarFile The name (not full path) of the JAR file containing the
-	 *        main class of this application (e.g. "Foobar.jar").
-	 */
-	public AbstractGUIApplication(String jarFile) {
-		this(null, jarFile);
-	}
-
-
-	/**
-	 * Constructor.
-	 *
 	 * @param title The title for this frame.
-	 * @param jarFile The name (not full path) of the JAR file containing the
-	 *        main class of this application (e.g. "Foobar.jar").
 	 */
-	public AbstractGUIApplication(String title, String jarFile) {
-		initialize(title, jarFile, loadPreferences());
+	public AbstractGUIApplication(String title) {
+		initialize(title, loadPreferences());
 	}
 
 
@@ -224,12 +213,10 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * the two instances to have the same properties.
 	 *
 	 * @param title The title for this frame.
-	 * @param jarFile The name (not full path) of the JAR file containing the
-	 *        main class of this application (e.g. "Foobar.jar").
 	 * @param prefs The preferences with which to initialize this application.
 	 */
-	public AbstractGUIApplication(String title, String jarFile, T prefs) {
-		initialize(title, jarFile, prefs);
+	public AbstractGUIApplication(String title, T prefs) {
+		initialize(title, prefs);
 	}
 
 
@@ -240,11 +227,9 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * initialize this class.
 	 *
 	 * @param title The title for this frame.
-	 * @param jarFile The name (not full path) of the JAR file containing the
-	 *        main class of this application (e.g. "Foobar.jar").
 	 * @param prefs The preferences with which to initialize this application.
 	 */
-	private void initialize(String title, String jarFile, T prefs) {
+	private void initialize(String title, T prefs) {
 
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 
@@ -280,8 +265,8 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 		// Do the rest of this stuff "later," so that the EDT has time to
 		// actually display the splash screen and update it.
-		SwingUtilities.invokeLater(new StartupRunnable(title, jarFile,
-													splashScreen, prefs));
+		SwingUtilities.invokeLater(new StartupRunnable(title, splashScreen,
+				prefs));
 
 	}
 
@@ -649,26 +634,18 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * @param jarFileName The name of the jar file for which to search.
 	 * @return The directory in which the jar file resides.
 	 */
-	public static String getLocationOfJar(String jarFileName) {
+	public static String getLocationOfJar() {
 
-		String classPath = System.getProperty("java.class.path");
-		int index = classPath.indexOf(jarFileName);
-
-		// A jar file on a classpath MUST be explicitly given; a jar file
-		// in a directory, for example, will not be picked up by specifying
-		// "-classpath /my/directory/".  So, we can simply search for the
-		// jar name in the classpath string, and if it isn't there, it must
-		// be in the current directory.
-		if (index>-1) {
-			int pathBeginning = classPath.lastIndexOf(File.pathSeparator,
-												index-1) + 1;
-			String loc = classPath.substring(pathBeginning, index);
-			File file = new File(loc);
-			return file.getAbsolutePath();
+		String path = AbstractGUIApplication.class.getProtectionDomain().
+				getCodeSource().getLocation().getPath();
+		String decodedPath = null;
+		try {
+			decodedPath = URLDecoder.decode(path, "UTF-8");
+		} catch (UnsupportedEncodingException uee) {
+			uee.printStackTrace();
 		}
 
-		// Otherwise, it must be in the current directory.
-		return System.getProperty("user.dir");
+		return new File(decodedPath).getParent();
 
 	}
 
@@ -1247,23 +1224,21 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	private class StartupRunnable implements Runnable {
 
 		private String title;
-		private String jarFile;
 		private SplashScreen splashScreen;
 		private T prefs;
 
-		public StartupRunnable(String title, String jarFile,
+		public StartupRunnable(String title,
 								SplashScreen splashScreen,
 								T prefs) {
 			this.splashScreen = splashScreen;
 			this.prefs = prefs;
 			this.title = title;
-			this.jarFile = jarFile;
 		}
 
 		public void run() {
 
 			setTitle(title);
-			setInstallLocation(getLocationOfJar(jarFile));
+			setInstallLocation(getLocationOfJar());
 
 			// contentPane contains the status bar to the south and toolBarPane
 			// in the center (which contains everything else).

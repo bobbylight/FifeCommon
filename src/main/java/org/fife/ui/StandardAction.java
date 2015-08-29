@@ -7,24 +7,19 @@
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */
-package org.fife.ui.app;
+package org.fife.ui;
 
 import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
-import org.fife.ui.OS;
-
 
 /**
- * The action type used by all instances of <code>GUIApplication</code>.  This
- * class not only provides ease-of-use methods, but knows how to look up its
- * properties in a resource bundle.<p>
+ * An action that can configure itself from a properties file.<p>
  * 
  * For example, you could define an action to create a new document like so in
  * a properties file:
@@ -80,120 +75,10 @@ public abstract class StandardAction extends AbstractAction {
 
 
 	/**
-	 * The parent GUI application.
+	 * Creates an action with no name, description, shortcut, or other such
+	 * properties.
 	 */
-	private GUIApplication app;
-
-
-	/**
-	 * Creates the action.  The parent class should call
-	 * {@link #setName(String)}, {@link #setIcon(String)}, or whatever other
-	 * methods are necessary to set this action up.
-	 *
-	 * @param app The parent application.
-	 */
-	public StandardAction(GUIApplication app) {
-		this.app = app;
-	}
-
-
-	/**
-	 * Creates an action, initializing its properties from the parent
-	 * application's resource bundle. The name of the action is found using the
-	 * specified key.  If keys exist with the names:
-	 * <ul>
-	 *    <li><code>key + ".Mnemonic"</code>
-	 *    <li><code>key + ".Accelerator"</code>
-	 *    <li><code>key + ".ShortDesc"</code>
-	 * </ul>
-	 * then those properties are set as well.  Further, if an accelerator is
-	 * defined, it is set as both the action's active accelerator and default
-	 * accelerator.<p>
-	 * 
-	 * You can provide OS-specific accelerators for actions by defining any of
-	 * the following properties:
-	 * <ul>
-	 *    <li><code>key + ".Accelerator.OSX"</code>
-	 *    <li><code>key + ".Accelerator.Windows"</code>
-	 *    <li><code>key + ".Accelerator.Linux"</code> (applies to Unix as well)
-	 * </ul>
-	 * This is useful for instances where different operating systems have
-	 * different "standard" shortcuts for things.
-	 * If the appropriate OS-specific accelerator is not defined, then the
-	 * default value (<code>key + ".Accelerator"</code>) is used.
-	 *
-	 * @param app The parent application.
-	 * @param key The key in the bundle for the name of this action.
-	 */
-	public StandardAction(GUIApplication app, String key) {
-		this(app, key, null);
-	}
-
-
-	/**
-	 * Creates an action, initializing its properties from the parent
-	 * application's resource bundle. The name of the action is found using the
-	 * specified key.  If keys exist with the names:
-	 * <ul>
-	 *    <li><code>key + ".Mnemonic"</code>
-	 *    <li><code>key + ".Accelerator"</code>
-	 *    <li><code>key + ".ShortDesc"</code>
-	 * </ul>
-	 * then those properties are set as well.  Further, if an accelerator is
-	 * defined, it is set as both the action's active accelerator and default
-	 * accelerator.<p>
-	 * 
-	 * You can provide OS-specific accelerators for actions by defining any of
-	 * the following properties:
-	 * <ul>
-	 *    <li><code>key + ".Accelerator.OSX"</code>
-	 *    <li><code>key + ".Accelerator.Windows"</code>
-	 *    <li><code>key + ".Accelerator.Linux"</code> (applies to Unix as well)
-	 * </ul>
-	 * This is useful for instances where different operating systems have
-	 * different "standard" shortcuts for things.
-	 * If the appropriate OS-specific accelerator is not defined, then the
-	 * default value (<code>key + ".Accelerator"</code>) is used.
-	 *
-	 * @param app The parent application.
-	 * @param key The key in the bundle for the name of this action.
-	 * @param icon The name of the icon resource for this action, or
-	 *        <code>null</code> for no icon.
-	 */
-	public StandardAction(GUIApplication app, String key, String icon) {
-		this(app, app.getResourceBundle(), key);
-		if (icon!=null) {
-			setIcon(icon);
-		}
-	}
-
-
-	private static final String shortcutExtension(OS os) {
-		String extension = ".Accelerator";
-		String suffix = null;
-		if (os != null) {
-			switch (os) {
-				case MAC_OS_X:
-					suffix = ".OSX";
-					break;
-				case LINUX:
-					suffix = ".Linux";
-					break;
-				case WINDOWS:
-					suffix = ".Windows";
-					break;
-				case SOLARIS:
-					suffix = ".Solaris";
-					break;
-				default:
-					suffix = null;
-					break;
-			}
-		}
-		if (suffix != null) {
-			extension += suffix;
-		}
-		return extension;
+	public StandardAction() {
 	}
 
 
@@ -222,17 +107,11 @@ public abstract class StandardAction extends AbstractAction {
 	 * If the appropriate OS-specific accelerator is not defined, then the
 	 * default value (<code>key + ".Accelerator"</code>) is used.
 	 *
-	 * @param app The parent application.
 	 * @param msg The bundle to localize from.  If this is <code>null</code>,
 	 *        then <code>app.getResourceBundle()</code> is used.
 	 * @param key The key in the bundle for the name of this action.
 	 */
-	public StandardAction(GUIApplication app, ResourceBundle msg, String key) {
-
-		this(app);
-		if (msg==null) {
-			msg = app.getResourceBundle();
-		}
+	public StandardAction(ResourceBundle msg, String key) {
 
 		// TODO: Use msg.containsKey() when we drop 1.4/1.5 support
 		try {
@@ -281,16 +160,6 @@ public abstract class StandardAction extends AbstractAction {
 
 
 	/**
-	 * Returns the application.
-	 *
-	 * @return The application.
-	 */
-	public GUIApplication getApplication() {
-		return app;
-	}
-
-
-	/**
 	 * Returns the default accelerator for this action.  This is the
 	 * accelerator that should be restored if the user chooses to "restore
 	 * defaults" in the options dialog.
@@ -327,7 +196,8 @@ public abstract class StandardAction extends AbstractAction {
 	 * @return The key stroke, or <code>null</code> if the property is not
 	 *         found or the value is not a valid key stroke.
 	 */
-	private KeyStroke getKeyStroke(ResourceBundle msg, String key) {
+	private static final KeyStroke getKeyStroke(ResourceBundle msg,
+			String key) {
 		// TODO: Use msg.containsKey() when we drop 1.4/1.5 support
 		KeyStroke ks = null;
 		try {
@@ -386,13 +256,13 @@ public abstract class StandardAction extends AbstractAction {
 	 *        <code>"default O"</code> or <code>"ctrl SPACE"</code>.
 	 * @return A (possibly) modified version of that string.
 	 */
-	private String massageAcceleratorString(String accelerator) {
+	private static final String massageAcceleratorString(String accelerator) {
 
 		final String DEFAULT = "default ";
 		int index = accelerator.indexOf(DEFAULT);
 
 		if (index>-1) {
-			String replacement = app.getOS()==OS.MAC_OS_X ? "meta ":"control ";
+			String replacement = OS.get() == OS.MAC_OS_X ? "meta ":"control ";
 			accelerator = accelerator.substring(0, index) + replacement +
 					accelerator.substring(index + DEFAULT.length());
 		}
@@ -514,6 +384,35 @@ public abstract class StandardAction extends AbstractAction {
 	 */
 	public void setShortDescription(String desc) {
 		putValue(SHORT_DESCRIPTION, desc);
+	}
+
+
+	private static final String shortcutExtension(OS os) {
+		String extension = ".Accelerator";
+		String suffix = null;
+		if (os != null) {
+			switch (os) {
+				case MAC_OS_X:
+					suffix = ".OSX";
+					break;
+				case LINUX:
+					suffix = ".Linux";
+					break;
+				case WINDOWS:
+					suffix = ".Windows";
+					break;
+				case SOLARIS:
+					suffix = ".Solaris";
+					break;
+				default:
+					suffix = null;
+					break;
+			}
+		}
+		if (suffix != null) {
+			extension += suffix;
+		}
+		return extension;
 	}
 
 

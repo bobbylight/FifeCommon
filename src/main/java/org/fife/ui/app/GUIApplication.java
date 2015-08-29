@@ -363,7 +363,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * should be sufficient for most applications; it simply displays the
 	 * modal About dialog obtained from <code>getAboutDialog</code>.
 	 */
-	public static class AboutAction extends StandardAction {
+	public static class AboutAction extends AppAction {
 
 		private static final long serialVersionUID = 1L;
 
@@ -411,7 +411,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * Action that attempts to close the application.  This action calls
 	 * the application's <code>doExit</code> method.
 	 */
-	public static class ExitAction extends StandardAction {
+	public static class ExitAction extends AppAction {
 
 		private static final long serialVersionUID = 1L;
 
@@ -468,7 +468,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * should be sufficient for most applications; it simply displays the
 	 * modal Help dialog obtained from <code>getHelpDialog</code>.
 	 */
-	public static class HelpAction extends StandardAction {
+	public static class HelpAction extends AppAction {
 
 		private static final long serialVersionUID = 1L;
 
@@ -543,7 +543,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	/**
 	 * Action to toggle a <code>GUIApplication</code>'s status bar.
 	 */
-	public static class ToggleStatusBarAction extends StandardAction {
+	public static class ToggleStatusBarAction extends AppAction {
 
 		private static final long serialVersionUID = 1L;
 
@@ -600,7 +600,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	/**
 	 * Action to toggle a <code>GUIApplication</code>'s toolbar.
 	 */
-	public static class ToggleToolBarAction extends StandardAction {
+	public static class ToggleToolBarAction extends AppAction {
 
 		private static final long serialVersionUID = 1L;
 

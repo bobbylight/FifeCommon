@@ -174,6 +174,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private Actions.SystemOpenAction systemEditAction;
 	private Actions.SystemOpenAction systemViewAction;
 	private Actions.CopyAction copyAction;
+	private Actions.CopyFullPathAction copyPathAction;
 	private Actions.DeleteAction deleteAction;
 	private Actions.DeleteAction hardDeleteAction;
 	private Actions.PasteAction pasteAction;
@@ -875,6 +876,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		systemViewAction = new Actions.SystemOpenAction(selector, "open");
 		renameAction = new Actions.RenameAction(this);
 		copyAction = new Actions.CopyAction(this);
+		copyPathAction = new Actions.CopyFullPathAction(this);
 		deleteAction = new Actions.DeleteAction(this, false);
 		hardDeleteAction = new Actions.DeleteAction(this, true);
 		pasteAction = new Actions.PasteAction(this);
@@ -934,6 +936,14 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 */
 	private void createPopupMenu() {
 
+		final JMenuItem openMenuItem = new JMenuItem(openString);
+		openMenuItem.setActionCommand("PopupOpen");
+		openMenuItem.addActionListener(this);
+
+		final JMenu openInMenu = new JMenu(msg.getString("PopupMenu.OpenIn"));
+		openInMenu.add(new JMenuItem(systemEditAction));
+		openInMenu.add(new JMenuItem(systemViewAction));
+
 		popupMenu = new JPopupMenu() {
 			@Override
 			public void show(Component c, int x, int y) {
@@ -942,39 +952,31 @@ public class RTextFileChooser extends ResizableFrameContentPane
 				// is a file highlighted.
 				int count = view.getSelectedFiles().length;
 				boolean filesSelected = count>0;
-				((JMenuItem)getComponent(0)).setEnabled(filesSelected);
-				((JMenuItem)getComponent(1)).setEnabled(
-										IS_JAVA_6_PLUS && filesSelected);
-				((JMenuItem)getComponent(2)).setEnabled(filesSelected);
-				((JMenuItem)getComponent(4)).setEnabled(filesSelected);
+				openMenuItem.setEnabled(filesSelected);
+				openInMenu.setEnabled(IS_JAVA_6_PLUS && filesSelected);
+				renameAction.setEnabled(filesSelected);
+				copyAction.setEnabled(filesSelected);
+				copyPathAction.setEnabled(filesSelected);
 				pasteAction.checkEnabledState(); // component 5 in menu
-				((JMenuItem)getComponent(6)).setEnabled(filesSelected);
+				deleteAction.setEnabled(filesSelected);
 
 				// Only enable the "Up one level" item if we can actually
 				// go up a level.
-				JMenuItem upOneLevel = (JMenuItem)getComponent(8);
-				upOneLevel.setEnabled(upOneLevelButton.isEnabled());
+				upOneLevelAction.setEnabled(upOneLevelButton.isEnabled());
 
-				((JMenuItem)getComponent(12)).setEnabled(filesSelected);
+				propertiesAction.setEnabled(filesSelected);
 
 				super.show(c, x,y);
 
 			}
 		};
 
-		JMenuItem menuItem = new JMenuItem(openString);
-		menuItem.setActionCommand("PopupOpen");
-		menuItem.addActionListener(this);
-		popupMenu.add(menuItem);
-
-		JMenu subMenu = new JMenu(msg.getString("PopupMenu.OpenIn"));
-		popupMenu.add(subMenu);
-		subMenu.add(new JMenuItem(systemEditAction));
-		subMenu.add(new JMenuItem(systemViewAction));
-
+		popupMenu.add(openInMenu);
+		popupMenu.add(openMenuItem);
 		popupMenu.add(new JMenuItem(renameAction));
 		popupMenu.addSeparator();
 		popupMenu.add(new JMenuItem(copyAction));
+		popupMenu.add(new JMenuItem(copyPathAction));
 		popupMenu.add(new JMenuItem(pasteAction));
 		popupMenu.add(new JMenuItem(deleteAction));
 		popupMenu.addSeparator();

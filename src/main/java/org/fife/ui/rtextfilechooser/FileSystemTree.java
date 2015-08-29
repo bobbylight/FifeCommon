@@ -18,7 +18,6 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -69,6 +68,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	private Actions.SystemOpenAction systemEditAction;
 	private Actions.SystemOpenAction systemViewAction;
 	private Actions.CopyAction copyAction;
+	private Actions.CopyFullPathAction copyPathAction;
 	private FileSystemTreeActions.PasteAction pasteAction;
 	private FileSystemTreeActions.DeleteAction deleteAction;
 	private FileSystemTreeActions.DeleteAction hardDeleteAction;
@@ -163,6 +163,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 		boolean enable = selectedFile!=null;
 		copyAction.setEnabled(enable);
+		copyPathAction.setEnabled(enable);
 		deleteAction.setEnabled(enable);
 
 		// Only have the "Refresh" menu item enabled if a directory
@@ -227,6 +228,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		popup.addSeparator();
 
 		popup.add(copyAction);
+		popup.add(copyPathAction);
 		popup.add(pasteAction);
 		popup.add(deleteAction);
 		popup.addSeparator();
@@ -368,20 +370,8 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 				fileList.add(files[i]);
 		}
 
-		// On Windows and OS X, comparison is case-insensitive.
-		Comparator<File> c = null;
-		String os = System.getProperty("os.name");
-		boolean isOSX = os!=null ? os.toLowerCase().indexOf("os x")>-1 : false;
-		if (File.separatorChar=='\\' || isOSX) {
-			c = new Comparator<File>() {
-				public int compare(File f1, File f2) {
-					return f1.getName().compareToIgnoreCase(f2.getName());
-				}
-			};
-		}
-
-		Collections.sort(fileList, c);
-		Collections.sort(dirList, c);
+		Collections.sort(fileList);
+		Collections.sort(dirList);
 		dirList.addAll(fileList);
 
 		File[] fileArray = new File[dirList.size()];
@@ -613,6 +603,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 		// Create our actions (most of which have shortcuts)
 		copyAction = new Actions.CopyAction(this);
+		copyPathAction = new Actions.CopyFullPathAction(this);
 		pasteAction = new FileSystemTreeActions.PasteAction(this);
 		deleteAction = new FileSystemTreeActions.DeleteAction(null, this, false);
 		hardDeleteAction = new FileSystemTreeActions.DeleteAction(null, this, true);
@@ -637,6 +628,9 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 		im.put((KeyStroke)copyAction.getValue(Action.ACCELERATOR_KEY), "Copy");
 		am.put("Copy", copyAction);
+
+		im.put((KeyStroke)copyPathAction.getValue(Action.ACCELERATOR_KEY), "CopyFullPath");
+		am.put("CopyFullPath", copyPathAction);
 
 		im.put((KeyStroke)pasteAction.getValue(Action.ACCELERATOR_KEY), "Paste");
 		am.put("Paste", pasteAction);

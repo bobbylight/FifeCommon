@@ -14,6 +14,7 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
@@ -105,6 +106,56 @@ public interface Actions {
 												getSystemClipboard();
 			clipboard.setContents(flt, flt);
 
+		}
+
+	}
+
+
+	/**
+	 * Copies the full path of any selected files to the clipboard.
+	 */
+	static class CopyFullPathAction extends FileChooserAction {
+
+		private FileSelector chooser;
+
+		public CopyFullPathAction(FileSelector chooser) {
+			super(null);
+			this.chooser = chooser;
+			putValue(Action.NAME, getString("CopyFullPath"));
+			int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+			mod |= InputEvent.SHIFT_MASK;
+			putValue(Action.ACCELERATOR_KEY,
+					KeyStroke.getKeyStroke(KeyEvent.VK_C, mod));
+		}
+
+		public void actionPerformed(ActionEvent e) {
+
+			// Get the selected files.  If there are no selected files (i.e.,
+			// they pressed "Ctrl+Shift+C" when no files were selected), beep.
+			File[] files = null;
+			if (chooser instanceof RTextFileChooser) {
+				// Horrible hack!!!  File chooser shouldn't actually
+				// implement FileSelector!  But it's view does...
+				files = ((RTextFileChooser)chooser).getView().getSelectedFiles();
+			}
+			else { // FileSystemTree
+				files = chooser.getSelectedFiles();
+			}
+			if (files==null || files.length==0) {
+				UIManager.getLookAndFeel().provideErrorFeedback(null);
+				return;
+			}
+
+			Clipboard clipboard = Toolkit.getDefaultToolkit().
+					getSystemClipboard();
+			StringBuilder sb = new StringBuilder(files[0].getAbsolutePath());
+			for (int i = 1; i < files.length; i++) {
+				sb.append('\n').append(files[i].getAbsolutePath());
+			}
+
+			StringSelection transferable = new StringSelection(sb.toString());
+			clipboard.setContents(transferable, transferable);
+			
 		}
 
 	}

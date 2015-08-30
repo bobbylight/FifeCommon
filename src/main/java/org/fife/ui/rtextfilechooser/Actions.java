@@ -27,7 +27,6 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
@@ -439,23 +438,32 @@ public interface Actions {
 	public static class SystemOpenAction extends FileChooserAction {
 
 		private FileSelector chooser;
-		private String methodName;
+		private OpenMethod method;
 
-		public SystemOpenAction(FileSelector chooser, String methodName) {
+		public static enum OpenMethod {
 
+			OPEN("open", "SystemOpenViewer"),
+			EDIT("edit", "SystemOpenEditor");
+
+			private OpenMethod(String method, String localizationKey) {
+				this.method = method;
+				this.localizationKey = localizationKey;
+			}
+
+			private OpenMethod opposite() {
+				return this == OPEN ? EDIT : OPEN;
+			}
+
+			private String method;
+			private String localizationKey;
+
+		}
+
+		public SystemOpenAction(FileSelector chooser, OpenMethod method) {
 			super(null);
 			this.chooser = chooser;
-			this.methodName = methodName;
-
-			String name = null;
-			if ("edit".equals(methodName)) {
-				name = "SystemOpenEditor";
-			}
-			else {
-				name = "SystemOpenViewer";
-			}
-			putValue(Action.NAME, getString(name));
-
+			this.method = method;
+			putValue(Action.NAME, getString(method.localizationKey));
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -468,14 +476,14 @@ public interface Actions {
 
 			Object desktop = getDesktop();
 			if (desktop!=null) {
-				try {
-					Method m = desktop.getClass().getDeclaredMethod(
-								methodName, new Class[] { File.class });
-					m.invoke(desktop, new Object[] { file });
-				} catch (RuntimeException re) {
-					throw re; // Keep FindBugs happy
-				} catch (Exception ex) {
-					UIManager.getLookAndFeel().provideErrorFeedback(null);
+				// Since OSes can be finicky over whether something is
+				// considered a "viewer" or an "editor," and usually folks
+				// just want to open the application in *something*, if what
+				// they ask for fails we'll try the other application type.
+				if (!openImpl(desktop, method, file)) {
+					if (!openImpl(desktop, method.opposite(), file)) {
+						UIManager.getLookAndFeel().provideErrorFeedback(null);
+					}
 				}
 			}
 
@@ -503,6 +511,23 @@ public interface Actions {
 
 			return null;
 
+		}
+
+		private static final boolean openImpl(Object desktop,
+				OpenMethod method, File file) {
+			try {
+				Method m = desktop.getClass().getDeclaredMethod(
+							method.method, new Class[] { File.class });
+				m.invoke(desktop, new Object[] { file });
+				return true;
+			} catch (RuntimeException re) {
+				throw re; // Keep FindBugs happy
+			} catch (Exception e) {
+				// Likely the UnsupportedOperationException or IOException
+				// if the file association does not exist or app fails to load.
+				// Swallow and return false below.
+			}
+			return false;
 		}
 
 	}

@@ -218,9 +218,11 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 		openInMenu = new JMenu(bundle.getString("PopupMenu.OpenIn"));
 		if (IS_JAVA_6_PLUS) {
-			systemEditAction = new Actions.SystemOpenAction(this, "edit");
+			systemEditAction = new Actions.SystemOpenAction(this,
+					Actions.SystemOpenAction.OpenMethod.EDIT);
 			openInMenu.add(systemEditAction);
-			systemViewAction = new Actions.SystemOpenAction(this, "open");
+			systemViewAction = new Actions.SystemOpenAction(this,
+					Actions.SystemOpenAction.OpenMethod.OPEN);
 			openInMenu.add(systemViewAction);
 		}
 		popup.add(openInMenu);

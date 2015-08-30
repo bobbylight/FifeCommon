@@ -872,8 +872,10 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			}
 		};
 
-		systemEditAction = new Actions.SystemOpenAction(selector, "edit");
-		systemViewAction = new Actions.SystemOpenAction(selector, "open");
+		systemEditAction = new Actions.SystemOpenAction(selector,
+				Actions.SystemOpenAction.OpenMethod.EDIT);
+		systemViewAction = new Actions.SystemOpenAction(selector,
+				Actions.SystemOpenAction.OpenMethod.OPEN);
 		renameAction = new Actions.RenameAction(this);
 		copyAction = new Actions.CopyAction(this);
 		copyPathAction = new Actions.CopyFullPathAction(this);

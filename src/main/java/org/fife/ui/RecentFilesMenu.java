@@ -35,7 +35,7 @@ public abstract class RecentFilesMenu extends JMenu {
 	 */
 	private List<String> fileHistory;
 
-	private static final int DEFAULT_MAX_SIZE = 20;
+	private static final int DEFAULT_MAX_SIZE = 25;
 	
 
 	/**

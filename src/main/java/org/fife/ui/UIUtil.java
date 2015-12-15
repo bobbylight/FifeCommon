@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -36,6 +37,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
@@ -926,6 +929,43 @@ public class UIUtil {
 			label.setLabelFor(labelFor);
 		}
 		return label;
+	}
+
+
+	/**
+	 * Returns a menu with localized text whose key is <code>key</code>.
+	 * If another property is defined in the resource bundle with key
+	 * <code>key + ".Mnemonic"</code>, then it will be used for the mnemonic
+	 * of the menu.
+	 *
+	 * @param bundle The resource bundle for localizing the menu.
+	 * @param key The key into the bundle containing the string text value.
+	 * @return The menu.
+	 * @see #newMenuItem(ResourceBundle, String)
+	 */
+	public static final JMenu newMenu(ResourceBundle bundle, String key) {
+		JMenu menu = new JMenu(bundle.getString(key));
+		menu.setMnemonic(getMnemonic(bundle, mnemonicKey(key)));
+		return menu;
+	}
+
+
+	/**
+	 * Returns a menu item with the specified text.  If another property is
+	 * defined in the resource bundle with key
+	 * <code>key + ".Mnemonic"</code>, then it will be used for the mnemonic
+	 * of the menu item.
+	 *
+	 * @param bundle The resource bundle for localizing the menu item.
+	 * @param key The key into the bundle containing the string text value.
+	 * @return The menu item.
+	 * @see #newMenu(ResourceBundle, String)
+	 */
+	public static final JMenuItem newMenuItem(ResourceBundle bundle,
+			String key) {
+		JMenuItem menuItem = new JMenuItem(bundle.getString(key));
+		menuItem.setMnemonic(getMnemonic(bundle, mnemonicKey(key)));
+		return menuItem;
 	}
 
 

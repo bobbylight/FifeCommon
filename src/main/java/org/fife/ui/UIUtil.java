@@ -29,7 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -941,7 +941,7 @@ public class UIUtil {
 	 * @param bundle The resource bundle for localizing the menu.
 	 * @param key The key into the bundle containing the string text value.
 	 * @return The menu.
-	 * @see #newMenuItem(ResourceBundle, String)
+	 * @see #newMenuItem(ResourceBundle, String, Action)
 	 */
 	public static final JMenu newMenu(ResourceBundle bundle, String key) {
 		JMenu menu = new JMenu(bundle.getString(key));
@@ -958,13 +958,15 @@ public class UIUtil {
 	 *
 	 * @param bundle The resource bundle for localizing the menu item.
 	 * @param key The key into the bundle containing the string text value.
+	 * @param action The action to execute when the menu item is clicked.
 	 * @return The menu item.
 	 * @see #newMenu(ResourceBundle, String)
 	 */
 	public static final JMenuItem newMenuItem(ResourceBundle bundle,
-			String key) {
+			String key, Action action) {
 		JMenuItem menuItem = new JMenuItem(bundle.getString(key));
 		menuItem.setMnemonic(getMnemonic(bundle, mnemonicKey(key)));
+		menuItem.setAction(action);
 		return menuItem;
 	}
 

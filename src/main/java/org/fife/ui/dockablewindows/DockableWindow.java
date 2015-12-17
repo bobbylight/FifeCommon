@@ -11,10 +11,13 @@
 package org.fife.ui.dockablewindows;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.LayoutManager;
 import java.util.ResourceBundle;
+
 import javax.swing.Icon;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 
 /**
@@ -178,6 +181,27 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 			return primaryComponent.requestFocusInWindow();
 		}
 		return false;
+	}
+
+
+	/**
+	 * Focuses this dockable window in its tabbed pane.
+	 */
+	public void focusInDockableWindowGroup() {
+		Container parent = getParent();
+		if (parent instanceof JTabbedPane) {
+			parent = parent.getParent();
+			if (parent instanceof DockableWindowGroup) {
+				DockableWindowGroup dwg = (DockableWindowGroup)parent;
+				for (int i = 0; i < dwg.getDockableWindowCount(); i++) {
+					if (this == dwg.getDockableWindowAt(i)) {
+						dwg.setActiveDockableWindow(i);
+						//dwg.focusActiveDockableWindow();
+						return;
+					}
+				}
+			}
+		}
 	}
 
 

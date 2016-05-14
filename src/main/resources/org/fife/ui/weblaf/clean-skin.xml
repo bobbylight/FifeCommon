@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin>
+
+    <!-- com.alee.laf.toolbar.WebToolBar -->
+
+    <!-- Toolbar -->
+    <style type="toolbar" padding="2">
+        <component>
+            <orientation>0</orientation>
+            <floatable>true</floatable>
+        </component>
+        <painter class="WebToolBarPainter">
+<!-- 
+            <undecorated>false</undecorated>
+            <round>6</round>
+            <shadeWidth>2</shadeWidth>
+            <paintBackground>true</paintBackground>
+-->
+<undecoreated>true</undecoreated>
+<paintBackground>true</paintBackground>
+            <webColoredBackground>true</webColoredBackground>
+            <spacing>2</spacing>
+            <topBgColor>white</topBgColor>
+            <bottomBgColor>229,233,238</bottomBgColor>
+        </painter>
+    </style>
+
+    <!-- Attached toolbar -->
+    <style type="toolbar" id="attached">
+        <painter class="WebToolBarPainter">
+            <shadeWidth>0</shadeWidth>
+            <paintTop>false</paintTop>
+            <paintLeft>false</paintLeft>
+            <paintRight>false</paintRight>
+        </painter>
+    </style>
+
+</skin>

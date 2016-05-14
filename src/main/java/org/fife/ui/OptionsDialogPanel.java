@@ -265,7 +265,8 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 * @param index The index of the child option panel to return.
 	 * @return The child option panel.
 	 * @see #addChildPanel
-	 * @see #getChildPanelCount
+	 * @see #getChildPanelCount()
+	 * @see #getChildPanels()
 	 */
 	public OptionsDialogPanel getChildPanel(int index) {
 		return childPanels.get(index);
@@ -276,11 +277,25 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 * Gets the number of "child" option panels.
 	 *
 	 * @return The child option panel count.
-	 * @see #addChildPanel
-	 * @see #getChildPanel
+	 * @see #addChildPanel(OptionsDialogPanel)
+	 * @see #getChildPanel(int)
+	 * @see #getChildPanels()
 	 */
 	public int getChildPanelCount() {
 		return childPanels.size();
+	}
+
+
+	/**
+	 * Returns all child panels of this options panel.
+	 * 
+	 * @return All child panels.  This may be empty, but will never be
+	 *         <code>null</code>.  This list is a copy and can be modified.
+	 * @see #getChildPanel(int)
+	 * @see #getChildPanelCount()
+	 */
+	public List<OptionsDialogPanel> getChildPanels() {
+		return new ArrayList<OptionsDialogPanel>(childPanels);
 	}
 
 

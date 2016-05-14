@@ -44,7 +44,7 @@ import javax.swing.table.TableCellRenderer;
 import org.fife.ui.OptionsDialogPanel;
 import org.fife.ui.RColorSwatchesButton;
 import org.fife.ui.ResizableFrameContentPane;
-import org.fife.ui.SpecialValueComboBox;
+import org.fife.ui.LabelValueComboBox;
 import org.fife.ui.SubstanceUtils;
 import org.fife.ui.UIUtil;
 import org.fife.ui.modifiabletable.*;
@@ -78,7 +78,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	private RColorSwatchesButton hiddenColorButton;
 	private ColorTableModel colorTableModel;
 	private static String defaultColorString;
-	private SpecialValueComboBox openFilesStyleCombo;
+	private LabelValueComboBox<String, String> openFilesStyleCombo;
 	private JCheckBox styleOpenFilesCheckBox;
 
 	private static final String SUBSTANCE_RENDERER_CLASS =
@@ -176,7 +176,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		}
 
 		else if ("OpenFilesStyle".equals(actionCommand)) {
-			String style = openFilesStyleCombo.getSelectedSpecialItem();
+			String style = openFilesStyleCombo.getSelectedValue();
 			firePropertyChange(OPEN_FILES_STYLE_PROPERTY, null, style);
 		}
 
@@ -199,7 +199,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		chooser.clearExtensionColorMap(); // In case they removed any.
 
 		chooser.setStyleOpenFiles(styleOpenFilesCheckBox.isSelected());
-		String style = openFilesStyleCombo.getSelectedSpecialItem();
+		String style = openFilesStyleCombo.getSelectedValue();
 		chooser.setOpenFilesStyle(Integer.parseInt(style));
 
 		// Do all of the other colors.
@@ -226,7 +226,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 
 		Box panel = createHorizontalBox();
 
-		openFilesStyleCombo = new SpecialValueComboBox();
+		openFilesStyleCombo = new LabelValueComboBox<String, String>();
 		UIUtil.fixComboOrientation(openFilesStyleCombo);
 
 		/*
@@ -235,7 +235,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		openFilesStyleCombo.addSpecialItem(msg.getString("Italic"),
 								""+RTextFileChooser.STYLE_ITALIC);
 		*/
-		openFilesStyleCombo.addSpecialItem(msg.getString("Underline"),
+		openFilesStyleCombo.addLabelValuePair(msg.getString("Underline"),
 								""+RTextFileChooser.STYLE_UNDERLINE);
 		openFilesStyleCombo.setActionCommand("OpenFilesStyle");
 		openFilesStyleCombo.addActionListener(this);
@@ -346,7 +346,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		hiddenColorButton.setColor(chooser.getHiddenFileColor());
 		hiddenColorButton.setEnabled(showHiddenFiles);
 		styleOpenFilesCheckBox.setSelected(chooser.getStyleOpenFiles());
-		openFilesStyleCombo.setSelectedSpecialItem(""+chooser.getOpenFilesStyle());
+		openFilesStyleCombo.setSelectedValue(""+chooser.getOpenFilesStyle());
 		openFilesStyleCombo.setEnabled(chooser.getStyleOpenFiles());
 		setOfferSuggestionsSelected(chooser.getFileSystemAware());
 		autoCompleteCheckBox.setSelected(chooser.getAutoCompleteFileNames());

@@ -14,9 +14,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.JTextComponent;
@@ -201,8 +204,8 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	private void addOptionPanel(OptionsDialogPanel panel) {
 		panel.addPropertyChangeListener(this);
 		currentOptionPanel.add(panel, createKeyForPanel(panel));
-		for (int i=0; i<panel.getChildPanelCount(); i++) {
-			addOptionPanel(panel.getChildPanel(i));
+		for (OptionsDialogPanel childPanel : panel.getChildPanels()) {
+			addOptionPanel(childPanel);
 		}
 	}
 
@@ -312,10 +315,8 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 * @param owner The application.
 	 */
 	private void doApplyImpl(Frame owner) {
-		int panelCount = optionsPanels.length;
-		for (int i=0; i<panelCount; i++) {
-			OptionsDialogPanel currentPanel = optionsPanels[i];
-			currentPanel.doApply(owner);
+		for (OptionsDialogPanel panel : optionsPanels) {
+			panel.doApply(owner);
 		}
 		owner.repaint();
 	}
@@ -365,6 +366,33 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 
 
 	/**
+	 * Returns the option panel with a specific ID.
+	 * 
+	 * @param id The ID to search for.
+	 * @return The option panel, or <code>null</code> if none with the
+	 *         specified ID is found.
+	 */
+	public OptionsDialogPanel getPanelById(String id) {
+
+		List<OptionsDialogPanel> panels = new ArrayList<OptionsDialogPanel>();
+		panels.addAll(Arrays.asList(optionsPanels));
+
+		for (OptionsDialogPanel panel : optionsPanels) {
+			if (id.equals(panel.getId())) {
+				return panel;
+			}
+			List<OptionsDialogPanel> children = panel.getChildPanels();
+			if (!children.isEmpty()) {
+				panels.addAll(children);
+			}
+		}
+
+		return null;
+
+	}
+
+
+	/**
 	 * Initializes all fields/radio buttons/etc. in this options dialog
 	 * with their proper states as obtained from the owner of this options
 	 * dialog (as passed into the constructor).  The "Apply" button will be
@@ -372,10 +400,8 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 */
 	public void initialize() {
 		Frame owner = (Frame)getParent();
-		int panelCount = optionsPanels.length;
-		for (int i=0; i<panelCount; i++) {
-			OptionsDialogPanel currentPanel = optionsPanels[i];
-			currentPanel.setValues(owner);
+		for (OptionsDialogPanel panel : optionsPanels) {
+			panel.setValues(owner);
 		}
 		setApplyButtonEnabled(false);
 	}
@@ -392,9 +418,8 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 			OptionsDialogPanel panel) {
 		MutableTreeNode node = new DefaultMutableTreeNode(panel);
 		treeModel.insertNodeInto(node, parentNode, parentNode.getChildCount());
-		int childCount = panel.getChildPanelCount();
-		for (int i = 0; i < childCount; i++) {
-			insertOptionPanel(node, panel.getChildPanel(i));
+		for (OptionsDialogPanel childPanel : panel.getChildPanels()) {
+			insertOptionPanel(node, childPanel);
 		}
 	}
 

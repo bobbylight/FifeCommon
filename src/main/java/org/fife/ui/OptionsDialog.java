@@ -527,15 +527,16 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	/**
 	 * Selects the options panel with the specified name.
 	 *
-	 * @param name The name of the panel.
+	 * @param nameOrId The name or ID of the panel.  ID is preferred here, but
+	 *        either will work.
 	 * @return Whether the panel was selected.  This will only be
-	 *         <code>false</code> if <code>name</code> is not the name of an
-	 *         options panel added to this dialog.
+	 *         <code>false</code> if <code>nameOrId</code> is not the name or
+	 *         ID of an options panel added to this dialog.
 	 */
-	public boolean setSelectedOptionsPanel(String name) {
+	public boolean setSelectedOptionsPanel(String nameOrId) {
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)optionTree.
 														getModel().getRoot();
-		return setSelectedOptionsPanelImpl(name, root);
+		return setSelectedOptionsPanelImpl(nameOrId, root);
 	}
 
 
@@ -588,7 +589,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	}
 
 
-	private boolean setSelectedOptionsPanelImpl(String name,
+	private boolean setSelectedOptionsPanelImpl(String nameOrId,
 									DefaultMutableTreeNode node) {
 
 		// Be careful and check for nulls as we support branch nodes not
@@ -596,7 +597,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		Object obj = node.getUserObject();
 		if (obj instanceof OptionsDialogPanel) {
 			OptionsDialogPanel panel = (OptionsDialogPanel)obj;
-			if (name.equals(panel.getName())) {
+			if (nameOrId.equals(panel.getName()) || nameOrId.equals(panel.getId())) {
 				setSelectedOptionsPanel(panel, true);
 				return true;
 			}
@@ -604,7 +605,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 
 		for (Enumeration<?> e=node.children(); e.hasMoreElements(); ) {
 			node = (DefaultMutableTreeNode)e.nextElement();
-			if (setSelectedOptionsPanelImpl(name, node)) {
+			if (setSelectedOptionsPanelImpl(nameOrId, node)) {
 				return true;
 			}
 		}

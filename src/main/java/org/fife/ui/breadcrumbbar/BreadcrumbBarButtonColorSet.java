@@ -79,7 +79,7 @@ class BreadcrumbBarButtonColorSet {
 
 	public void initialize(AbstractButton b) {
 
-//		if (SubstanceUtils.isSubstanceInstalled()) {
+//		if (SubstanceUtil.isSubstanceInstalled()) {
 
 			JTextField textField = new JTextField();
 			Color highlight = textField.getSelectionColor();

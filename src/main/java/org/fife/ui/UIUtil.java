@@ -622,7 +622,7 @@ public class UIUtil {
 
 			// Check for Windows XP.
 			String osname = System.getProperty("os.name");
-			if (osname.toLowerCase().indexOf("windows")>-1) {
+			if (osname.toLowerCase().contains("windows")) {
 				String osver = System.getProperty("os.version");
 				boolean isXPorVista = osver.startsWith("5.1") ||
 								osver.startsWith("6.0");

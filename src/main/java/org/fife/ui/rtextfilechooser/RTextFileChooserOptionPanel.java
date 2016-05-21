@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.Vector;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -45,9 +46,9 @@ import org.fife.ui.OptionsDialogPanel;
 import org.fife.ui.RColorSwatchesButton;
 import org.fife.ui.ResizableFrameContentPane;
 import org.fife.ui.LabelValueComboBox;
-import org.fife.ui.SubstanceUtils;
 import org.fife.ui.UIUtil;
 import org.fife.ui.modifiabletable.*;
+import org.fife.util.SubstanceUtil;
 
 
 /**
@@ -272,7 +273,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	 */
 	private static final TableCellRenderer createTextColorCellRenderer() {
 		TableCellRenderer renderer = null;
-		if (SubstanceUtils.isSubstanceInstalled()) {
+		if (SubstanceUtil.isSubstanceInstalled()) {
 			// Use reflection to avoid hard dependency on Substance.
 			try {
 				Class<?> clazz = Class.forName(SUBSTANCE_RENDERER_CLASS);

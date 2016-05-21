@@ -13,13 +13,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
 import javax.swing.JComponent;
 import javax.swing.plaf.basic.BasicButtonUI;
 
-import org.fife.ui.SubstanceUtils;
 import org.fife.ui.UIUtil;
+import org.fife.util.SubstanceUtil;
 
 
 /**
@@ -93,7 +94,7 @@ class BreadcrumbBarButtonUI extends BasicButtonUI {
 			c.setForeground(colors.defaultFG);
 		}
 
-		boolean substance = SubstanceUtils.isSubstanceInstalled();
+		boolean substance = SubstanceUtil.isSubstanceInstalled();
 		RenderingHints oldHints = null;
 		if (substance) {
 			oldHints = UIUtil.setNativeRenderingHints((Graphics2D)g);

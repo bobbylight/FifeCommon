@@ -16,7 +16,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
-import org.fife.ui.SubstanceUtils;
+import org.fife.util.SubstanceUtil;
 
 
 /**
@@ -46,7 +46,7 @@ class FileChooserViewRendererFactory {
 	 * @return the renderer to use.
 	 */
 	public static TableCellRenderer createDefaultTableRenderer() {
-		if (SubstanceUtils.isSubstanceInstalled()) {
+		if (SubstanceUtil.isSubstanceInstalled()) {
 			try {
 				Class<?> clazz = Class.forName(
 					"org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer");
@@ -70,7 +70,7 @@ class FileChooserViewRendererFactory {
 
 		ListCellRenderer renderer = null;
 
-		if (SubstanceUtils.isSubstanceInstalled()) {
+		if (SubstanceUtil.isSubstanceInstalled()) {
 			String clazzName =
 				"org.fife.ui.rtextfilechooser.ListViewSubstanceCellRenderer";
 			// Use reflection to avoid compile dependency in this class to
@@ -104,7 +104,7 @@ class FileChooserViewRendererFactory {
 
 		TableCellRenderer renderer = null;
 
-		if (SubstanceUtils.isSubstanceInstalled()) {
+		if (SubstanceUtil.isSubstanceInstalled()) {
 			// Use reflection to avoid compile dependency in this class to
 			// Substance
 			try {

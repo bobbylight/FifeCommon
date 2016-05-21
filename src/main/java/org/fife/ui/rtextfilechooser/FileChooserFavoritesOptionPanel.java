@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ResourceBundle;
 import java.util.Vector;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -37,12 +38,12 @@ import javax.swing.table.DefaultTableModel;
 import org.fife.ui.EscapableDialog;
 import org.fife.ui.OptionsDialogPanel;
 import org.fife.ui.ResizableFrameContentPane;
-import org.fife.ui.SubstanceUtils;
 import org.fife.ui.UIUtil;
 import org.fife.ui.modifiabletable.AbstractRowHandler;
 import org.fife.ui.modifiabletable.ModifiableTable;
 import org.fife.ui.modifiabletable.ModifiableTableChangeEvent;
 import org.fife.ui.modifiabletable.ModifiableTableListener;
+import org.fife.util.SubstanceUtil;
 
 
 /**
@@ -118,7 +119,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 		// version of Java uses a different one.  We'll manipulate it
 		// later.
 		DefaultTableCellRenderer r = null;
-		if (SubstanceUtils.isSubstanceInstalled()) {
+		if (SubstanceUtil.isSubstanceInstalled()) {
 			// Use reflection to avoid hard dependency on Substance
 			try {
 				Class<?> clazz = Class.forName(SUBSTANCE_TABLE_RENDERER_CLASS);

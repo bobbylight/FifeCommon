@@ -14,16 +14,18 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.TabbedPaneUI;
 import javax.swing.table.JTableHeader;
 
-import org.fife.ui.SubstanceUtils;
 import org.fife.ui.UIUtil;
 import org.fife.ui.WebLookAndFeelUtils;
 import org.fife.ui.dockablewindows.DockableWindowPanel.ContentPanel;
+import org.fife.util.DarculaUtil;
+import org.fife.util.SubstanceUtil;
 
 
 /**
@@ -215,6 +217,7 @@ class DockableWindowGroup extends JPanel {
 
 		public DockedTabbedPane() {
 			super(BOTTOM);
+			setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 			enableEvents(AWTEvent.MOUSE_EVENT_MASK);
 		}
 
@@ -273,7 +276,10 @@ class DockableWindowGroup extends JPanel {
 		public void setUI(TabbedPaneUI ui) {
 			// Keep using tabbed pane ui so laf stays the same, but need to
 			// set a new one to pick up new tabbed pane colors, fonts, etc.
-			super.setUI(new DockedWindowTabbedPaneUI());
+			if (!DarculaUtil.isDarculaUI(ui)) {
+				ui = new DockedWindowTabbedPaneUI();
+			}
+			super.setUI(ui);
 		}
 
 	}
@@ -299,7 +305,9 @@ class DockableWindowGroup extends JPanel {
 			add(label);
 			minimizeButton = new JButton(new MinimizeAction());
 			minimizeButton.setOpaque(false);
+			minimizeButton.setContentAreaFilled(false);
 			tb = new JToolBar();
+			tb.setRollover(true);
 			tb.setFloatable(false);
 			tb.setOpaque(false);
 			tb.setBorder(null);
@@ -379,10 +387,10 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 				gradient1 = new Color(225,233,241);//200,200,255);
 				gradient2 = new Color(153,180,209);//40,93,220);
 			}
-			else if (SubstanceUtils.isSubstanceInstalled()) {
+			else if (SubstanceUtil.isSubstanceInstalled()) {
 				try {
-					gradient1 = SubstanceUtils.getSubstanceColor("ultraLightColor");
-					gradient2 = SubstanceUtils.getSubstanceColor("lightColor");
+					gradient1 = SubstanceUtil.getSubstanceColor("ultraLightColor");
+					gradient2 = SubstanceUtil.getSubstanceColor("lightColor");
 				} catch (RuntimeException re) { // FindBugs
 					throw re;
 				} catch (Exception e) {
@@ -428,10 +436,10 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 				// color change for Nimbus.
 				c = UIManager.getColor("Label.foreground");
 			}
-			else if (SubstanceUtils.isSubstanceInstalled()) {
+			else if (SubstanceUtil.isSubstanceInstalled()) {
 				c = UIManager.getColor("Label.foreground");
 //				try {
-//					c = SubstanceUtils.getSubstanceColor("selectionForegroundColor");
+//					c = SubstanceUtil.getSubstanceColor("selectionForegroundColor");
 //				} catch (RuntimeException re) { // FindBugs
 //					throw re;
 //				} catch (Exception e) {

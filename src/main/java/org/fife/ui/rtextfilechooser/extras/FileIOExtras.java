@@ -50,7 +50,7 @@ public abstract class FileIOExtras {
 		if (!loaded) {
 			loaded = true;
 			String os = System.getProperty("os.name");
-			if (os.toLowerCase().indexOf("windows")>-1) {
+			if (os.toLowerCase().contains("windows")) {
 				String arch = System.getProperty("os.arch");
 				try {
 					if ("x86".equals(arch)) {

@@ -10,10 +10,13 @@
 package org.fife.ui;
 
 import java.awt.Component;
+
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+
+import org.fife.util.SubstanceUtil;
 
 
 /**
@@ -42,7 +45,7 @@ public class KeyStrokeCellRenderer extends DefaultTableCellRenderer {
 	 * @return A cell renderer to use for key strokes.
 	 */
 	public static TableCellRenderer create() {
-		if (SubstanceUtils.isSubstanceInstalled()) {
+		if (SubstanceUtil.isSubstanceInstalled()) {
 			//  Use reflection to avoid compile-time dependencies form this
 			// class to Substance.
 			String clazzName = "org.fife.ui.SubstanceKeyStrokeCellRenderer";

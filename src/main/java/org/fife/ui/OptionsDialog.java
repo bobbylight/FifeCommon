@@ -25,6 +25,8 @@ import javax.swing.event.*;
 import javax.swing.text.JTextComponent;
 import javax.swing.tree.*;
 
+import org.fife.util.SubstanceUtil;
+
 
 /**
  * An options dialog similar to those found in many Microsoft Windows
@@ -232,7 +234,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 * @return The renderer to use.
 	 */
 	private static final TreeCellRenderer createTreeCellRenderer() {
-		if (SubstanceUtils.isSubstanceInstalled()) {
+		if (SubstanceUtil.isSubstanceInstalled()) {
 			//  Use reflection to avoid compile-time dependencies form this
 			// class to Substance.
 			String clazzName = "org.fife.ui.SubstanceOptionsDialogTreeRenderer";

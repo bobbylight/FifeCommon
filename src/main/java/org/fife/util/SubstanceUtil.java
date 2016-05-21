@@ -1,14 +1,14 @@
 /*
  * 11/11/2010
  *
- * SubstanceUtils.java - Utility methods for Java 1.4-compatible applications
+ * SubstanceUtil.java - Utility methods for Java 1.4-compatible applications
  * looking to support Substance 6.1 if the current JRE is 1.6+.
  * Copyright (C) 2003 Robert Futrell
  * http://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */
-package org.fife.ui;
+package org.fife.util;
 
 import java.awt.Color;
 import java.lang.reflect.Field;
@@ -25,7 +25,7 @@ import javax.swing.UIManager;
  * @author Robert Futrell
  * @version 1.0
  */
-public class SubstanceUtils {
+public class SubstanceUtil {
 
 	public static final String FOREGROUND_COLOR			= "ForegroundColor";
 
@@ -169,7 +169,7 @@ public class SubstanceUtils {
 	 * @see #isSubstanceInstalled()
 	 */
 	public static boolean isASubstanceLookAndFeel(String lafName) {
-		return lafName.indexOf(".Substance")>-1;
+		return lafName.contains(".Substance");
 	}
 
 

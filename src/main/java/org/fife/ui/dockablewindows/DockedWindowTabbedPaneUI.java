@@ -26,6 +26,7 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
@@ -34,7 +35,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.text.View;
 
-import org.fife.ui.SubstanceUtils;
+import org.fife.util.SubstanceUtil;
 
 
 /**
@@ -276,10 +277,10 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 			int tabIndex, int x, int y, int w, int h, boolean isSelected) {
 		if (isSelected) {
 			Color c = UIManager.getColor("TabbedPane.highlight");
-			if (SubstanceUtils.isSubstanceInstalled()) {
+			if (SubstanceUtil.isSubstanceInstalled()) {
 				try {
-					c = SubstanceUtils.getSubstanceColor(
-							SubstanceUtils.EXTRA_LIGHT_COLOR);
+					c = SubstanceUtil.getSubstanceColor(
+							SubstanceUtil.EXTRA_LIGHT_COLOR);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -291,10 +292,10 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 			Graphics2D g2d = (Graphics2D)g;
 			Paint old = g2d.getPaint();
 			if (unselectedTabPaint==null) {
-				if (SubstanceUtils.isSubstanceInstalled()) {
+				if (SubstanceUtil.isSubstanceInstalled()) {
 					try {
-						unselectedTabPaint = SubstanceUtils.getSubstanceColor(
-								SubstanceUtils.ULTRA_LIGHT_COLOR);
+						unselectedTabPaint = SubstanceUtil.getSubstanceColor(
+								SubstanceUtil.ULTRA_LIGHT_COLOR);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

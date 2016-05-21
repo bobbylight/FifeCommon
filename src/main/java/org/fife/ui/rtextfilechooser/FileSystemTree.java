@@ -21,14 +21,15 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
-import org.fife.ui.SubstanceUtils;
 import org.fife.ui.ToolTipTree;
+import org.fife.util.SubstanceUtil;
 
 
 /**
@@ -253,7 +254,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 * @return The renderer to use.
 	 */
 	private TreeCellRenderer createTreeCellRenderer() {
-		if (SubstanceUtils.isSubstanceInstalled()) {
+		if (SubstanceUtil.isSubstanceInstalled()) {
 			// Use reflection to avoid compile-time dependencies form this
 			// class to Substance.
 			String clazzName =

@@ -133,11 +133,16 @@ public abstract class AppAction<T extends GUIApplication> extends StandardAction
 	 * @param app The parent application.
 	 * @param key The key in the bundle for the name of this action.
 	 * @param icon The name of the icon resource for this action, or
-	 *        <code>null</code> for no icon.
+	 *        <code>null</code> for no icon.  An icon will be fetched via
+	 *        <pre>setIcon(getClass().getResource(res))</pre>.
+	 * @see #setIcon(javax.swing.Icon)
 	 */
 	public AppAction(T app, String key, String icon) {
 		super(app.getResourceBundle(), key);
 		this.app = app;
+		if (icon != null) {
+			setIcon(icon);
+		}
 	}
 
 

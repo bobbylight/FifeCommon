@@ -52,12 +52,12 @@ import org.fife.ui.StandardAction;
  * @version 0.6
  * @see org.fife.ui.app.GUIApplication
  */
-public abstract class AppAction extends StandardAction {
+public abstract class AppAction<T extends GUIApplication> extends StandardAction {
 
 	/**
 	 * The application that owns this action.
 	 */
-	private GUIApplication app;
+	private T app;
 
 
 	/**
@@ -66,7 +66,7 @@ public abstract class AppAction extends StandardAction {
 	 *
 	 * @param app The parent application.
 	 */
-	public AppAction(GUIApplication app) {
+	public AppAction(T app) {
 		this.app = app;
 	}
 
@@ -99,7 +99,7 @@ public abstract class AppAction extends StandardAction {
 	 * @param app The parent application.
 	 * @param key The key in the bundle for the name of this action.
 	 */
-	public AppAction(GUIApplication app, String key) {
+	public AppAction(T app, String key) {
 		super(app.getResourceBundle(), null);
 		this.app = app;
 	}
@@ -135,7 +135,7 @@ public abstract class AppAction extends StandardAction {
 	 * @param icon The name of the icon resource for this action, or
 	 *        <code>null</code> for no icon.
 	 */
-	public AppAction(GUIApplication app, String key, String icon) {
+	public AppAction(T app, String key, String icon) {
 		super(app.getResourceBundle(), key);
 		this.app = app;
 	}
@@ -171,7 +171,7 @@ public abstract class AppAction extends StandardAction {
 	 *        then <code>app.getResourceBundle()</code> is used.
 	 * @param key The key in the bundle for the name of this action.
 	 */
-	public AppAction(GUIApplication app, ResourceBundle msg, String key) {
+	public AppAction(T app, ResourceBundle msg, String key) {
 		super(msg, key);
 		this.app = app;
 	}
@@ -182,7 +182,7 @@ public abstract class AppAction extends StandardAction {
 	 *
 	 * @return The application.
 	 */
-	public GUIApplication getApplication() {
+	public T getApplication() {
 		return app;
 	}
 

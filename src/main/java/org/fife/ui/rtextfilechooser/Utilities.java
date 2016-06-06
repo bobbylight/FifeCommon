@@ -371,11 +371,11 @@ InputSource is = new InputSource(new FileReader(file));
 		}
 
 		chooser.addChoosableFileFilter(
-			new ExtensionFileFilter(name, extensions,
-				ignoreCase ?
-						ExtensionFileFilter.NO_CASE_CHECK :
-						ExtensionFileFilter.CASE_CHECK,
-				showExtensions));
+			new ExtensionFileFilter(name, ignoreCase ?
+					ExtensionFileFilter.CaseCheck.NO_CASE_CHECK :
+					ExtensionFileFilter.CaseCheck.CASE_CHECK,
+				showExtensions,
+				extensions));
 
 	}
 

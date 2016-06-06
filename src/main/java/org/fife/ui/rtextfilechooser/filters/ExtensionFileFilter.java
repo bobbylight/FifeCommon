@@ -10,8 +10,10 @@
 package org.fife.ui.rtextfilechooser.filters;
 
 import java.io.File;
+
 import javax.swing.filechooser.*;
 
+import org.fife.ui.OS;
 import org.fife.ui.rtextfilechooser.Utilities;
 
 
@@ -23,10 +25,6 @@ import org.fife.ui.rtextfilechooser.Utilities;
  * @version 1.0
  */
 public class ExtensionFileFilter extends FileFilter {
-
-	public static final int SYSTEM_CASE_CHECK		= 0;
-	public static final int CASE_CHECK				= 1;
-	public static final int NO_CASE_CHECK			= 2;
 
 	private String description;
 	private String[] extensions;
@@ -44,7 +42,7 @@ public class ExtensionFileFilter extends FileFilter {
 	 *        "<code>.</code>".
 	 */
 	public ExtensionFileFilter(String description, String extension) {
-		this(description, extension, SYSTEM_CASE_CHECK);
+		this(description, CaseCheck.SYSTEM_CASE_CHECK, extension);
 	}
 
 
@@ -58,8 +56,8 @@ public class ExtensionFileFilter extends FileFilter {
 	 *        These strings should be everything after the final
 	 *        "<code>.</code>".
 	 */
-	public ExtensionFileFilter(String description, String[] extensions) {
-		this(description, extensions, SYSTEM_CASE_CHECK);
+	public ExtensionFileFilter(String description, String... extensions) {
+		this(description, CaseCheck.SYSTEM_CASE_CHECK, extensions);
 	}
 
 
@@ -68,16 +66,16 @@ public class ExtensionFileFilter extends FileFilter {
 	 *
 	 * @param description The description of this file filter, as displayed in
 	 *        the file chooser.
-	 * @param extension The single extension files can have to match this
-	 *        filter.  This string should be everything after the final
-	 *        "<code>.</code>".
 	 * @param caseCheck Whether the case of the file's extension should be
 	 *        taken into consideration when deciding whether files pass this
 	 *        filter.
+	 * @param extension The single extension files can have to match this
+	 *        filter.  This string should be everything after the final
+	 *        "<code>.</code>".
 	 */
-	public ExtensionFileFilter(String description, String extension,
-							int caseCheck) {
-		this(description, extension, caseCheck, true);
+	public ExtensionFileFilter(String description, CaseCheck caseCheck,
+							String extension) {
+		this(description, caseCheck, true, extension);
 	}
 
 
@@ -86,16 +84,16 @@ public class ExtensionFileFilter extends FileFilter {
 	 *
 	 * @param description The description of this file filter, as displayed in
 	 *        the file chooser.
+	 * @param caseCheck Whether the case of the file's extension should be
+	 *        taken into consideration when deciding whether files pass this
+	 *        filter.
 	 * @param extensions The extensions files can have to match this filter.
 	 *        These strings should be everything after the final
 	 *        "<code>.</code>".
-	 * @param caseCheck Whether the case of the file's extension should be
-	 *        taken into consideration when deciding whether files pass this
-	 *        filter.
 	 */
-	public ExtensionFileFilter(String description, String[] extensions,
-							int caseCheck) {
-		this(description, extensions, caseCheck, true);
+	public ExtensionFileFilter(String description, CaseCheck caseCheck,
+							String... extensions) {
+		this(description, caseCheck, true, extensions);
 	}
 
 
@@ -104,17 +102,17 @@ public class ExtensionFileFilter extends FileFilter {
 	 *
 	 * @param description The description of this file filter, as displayed in
 	 *        the file chooser.
-	 * @param extension The single extension files can have to match this
-	 *        filter.  This string should be everything after the final
-	 *        "<code>.</code>".
 	 * @param caseCheck Whether the case of the file's extension should be
 	 *        taken into consideration when deciding whether files pass this
 	 *        filter.
 	 * @param showExtensions Whether the accepted extensions should be
 	 *        displayed in the description.
+	 * @param extension The single extension files can have to match this
+	 *        filter.  This string should be everything after the final
+	 *        "<code>.</code>".
 	 */
-	public ExtensionFileFilter(String description, String extension,
-							int caseCheck, boolean showExtensions) {
+	public ExtensionFileFilter(String description, CaseCheck caseCheck,
+							boolean showExtensions, String extension) {
 
 		this.extensions = new String[1];
 		this.caseCheck = ExtensionFileFilter.doCaseCheck(caseCheck);
@@ -135,17 +133,17 @@ public class ExtensionFileFilter extends FileFilter {
 	 *
 	 * @param description The description of this file filter, as displayed in
 	 *        the file chooser.
-	 * @param extensions The extensions files can have to match this filter.
-	 *        These strings should be everything after the final
-	 *        "<code>.</code>".
 	 * @param caseCheck Whether the case of the file's extension should be
 	 *        taken into consideration when deciding whether files pass this
 	 *        filter.
 	 * @param showExtensions Whether the accepted extensions should be
 	 *        displayed in the description.
+	 * @param extensions The extensions files can have to match this filter.
+	 *        These strings should be everything after the final
+	 *        "<code>.</code>".
 	 */
-	public ExtensionFileFilter(String description, String[] extensions,
-							int caseCheck, boolean showExtensions) {
+	public ExtensionFileFilter(String description, CaseCheck caseCheck,
+							boolean showExtensions, String... extensions) {
 
 		int extCount = extensions==null ? 0 : extensions.length;
 		this.extensions = new String[extCount];
@@ -214,7 +212,7 @@ public class ExtensionFileFilter extends FileFilter {
 	 * @param requestedCheck The requested case checking.  If this value is
 	 *        <code>SYSTEM_CASE_CHECK</code>, we'll figure it out ourselves.
 	 */
-	private static final boolean doCaseCheck(int requestedCheck) {
+	private static final boolean doCaseCheck(CaseCheck requestedCheck) {
 		switch (requestedCheck) {
 			case CASE_CHECK:
 				return true;
@@ -222,15 +220,7 @@ public class ExtensionFileFilter extends FileFilter {
 				return false;
 			case SYSTEM_CASE_CHECK:
 			default:
-				String os = System.getProperty("os.name");
-				if (os!=null) {
-					// Everyone but Windows is case-sensitive.
-					boolean notWindows = os.toLowerCase().
-											indexOf("windows")==0;
-					return notWindows;
-				}
-				// Don't know the OS?  Just don't worry about it.
-				return false;
+				return OS.get().isCaseSensitive();
 		}
 	}
 
@@ -257,5 +247,15 @@ public class ExtensionFileFilter extends FileFilter {
 		return getDescription();
 	}
 
+
+	/**
+	 * Enumeration describing whether or not to check a file name for
+	 * proper casing for the current OS.
+	 */
+	public static enum CaseCheck {
+		SYSTEM_CASE_CHECK,
+		CASE_CHECK,
+		NO_CASE_CHECK
+	}
 
 }

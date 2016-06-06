@@ -363,7 +363,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * should be sufficient for most applications; it simply displays the
 	 * modal About dialog obtained from <code>getAboutDialog</code>.
 	 */
-	public static class AboutAction extends AppAction {
+	public static class AboutAction<T extends GUIApplication> extends AppAction<T> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -374,7 +374,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
 		 */
-		public AboutAction(GUIApplication app, String nameKey) {
+		public AboutAction(T app, String nameKey) {
 			super(app, nameKey);
 		}
 
@@ -386,8 +386,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
 		 */
-		public AboutAction(GUIApplication app, ResourceBundle msg,
-							String nameKey) {
+		public AboutAction(T app, ResourceBundle msg, String nameKey) {
 			super(app, msg, nameKey);
 		}
 
@@ -411,7 +410,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * Action that attempts to close the application.  This action calls
 	 * the application's <code>doExit</code> method.
 	 */
-	public static class ExitAction extends AppAction {
+	public static class ExitAction<T extends GUIApplication> extends AppAction<T> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -422,7 +421,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
 		 */
-		public ExitAction(GUIApplication app, String nameKey) {
+		public ExitAction(T app, String nameKey) {
 			super(app, nameKey);
 		}
 
@@ -434,7 +433,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 *        root of keys for description, mnemonic, etc.).
 		 * @param icon The name of the icon resource for this action.
 		 */
-		public ExitAction(GUIApplication app, String nameKey, String icon) {
+		public ExitAction(T app, String nameKey, String icon) {
 			super(app, nameKey, icon);
 		}
 
@@ -446,8 +445,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
 		 */
-		public ExitAction(GUIApplication app, ResourceBundle msg,
-						String nameKey) {
+		public ExitAction(T app, ResourceBundle msg, String nameKey) {
 			super(app, msg, nameKey);
 		}
 
@@ -468,7 +466,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * should be sufficient for most applications; it simply displays the
 	 * modal Help dialog obtained from <code>getHelpDialog</code>.
 	 */
-	public static class HelpAction extends AppAction {
+	public static class HelpAction<T extends GUIApplication> extends AppAction<T> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -479,7 +477,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
 		 */
-		public HelpAction(GUIApplication app, String nameKey) {
+		public HelpAction(T app, String nameKey) {
 			super(app, nameKey);
 		}
 
@@ -491,7 +489,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 *        root of keys for description, mnemonic, etc.).
 		 * @param icon The name of the icon resource for this action.
 		 */
-		public HelpAction(GUIApplication app, String nameKey, String icon) {
+		public HelpAction(T app, String nameKey, String icon) {
 			super(app, nameKey, icon);
 		}
 
@@ -503,8 +501,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
 		 */
-		public HelpAction(GUIApplication app, ResourceBundle msg,
-									String nameKey) {
+		public HelpAction(T app, ResourceBundle msg, String nameKey) {
 			super(app, msg, nameKey);
 		}
 
@@ -543,7 +540,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	/**
 	 * Action to toggle a <code>GUIApplication</code>'s status bar.
 	 */
-	public static class ToggleStatusBarAction extends AppAction {
+	public static class ToggleStatusBarAction<T extends GUIApplication> extends AppAction<T> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -554,7 +551,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
 		 */
-		public ToggleStatusBarAction(GUIApplication app, String nameKey) {
+		public ToggleStatusBarAction(T app, String nameKey) {
 			super(app, nameKey);
 		}
 
@@ -566,8 +563,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 *        root of keys for description, mnemonic, etc.).
 		 * @param icon The name of the icon resource for this action.
 		 */
-		public ToggleStatusBarAction(GUIApplication app, String nameKey,
-				String icon) {
+		public ToggleStatusBarAction(T app, String nameKey, String icon) {
 			super(app, nameKey, icon);
 		}
 
@@ -579,8 +575,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
 		 */
-		public ToggleStatusBarAction(GUIApplication app, ResourceBundle msg,
-								String nameKey) {
+		public ToggleStatusBarAction(T app, ResourceBundle msg, String nameKey){
 			super(app, msg, nameKey);
 		}
 
@@ -600,7 +595,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	/**
 	 * Action to toggle a <code>GUIApplication</code>'s toolbar.
 	 */
-	public static class ToggleToolBarAction extends AppAction {
+	public static class ToggleToolBarAction<T extends GUIApplication> extends AppAction<T> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -611,7 +606,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
 		 */
-		public ToggleToolBarAction(GUIApplication app, String nameKey) {
+		public ToggleToolBarAction(T app, String nameKey) {
 			super(app, nameKey);
 		}
 
@@ -623,8 +618,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 *        root of keys for description, mnemonic, etc.).
 		 * @param icon The name of the icon resource for this action.
 		 */
-		public ToggleToolBarAction(GUIApplication app, String nameKey,
-				String icon) {
+		public ToggleToolBarAction(T app, String nameKey, String icon) {
 			super(app, nameKey, icon);
 		}
 
@@ -636,8 +630,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
 		 */
-		public ToggleToolBarAction(GUIApplication app, ResourceBundle msg,
-								String nameKey) {
+		public ToggleToolBarAction(T app, ResourceBundle msg, String nameKey) {
 			super(app, msg, nameKey);
 		}
 

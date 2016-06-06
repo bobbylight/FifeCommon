@@ -100,7 +100,7 @@ public abstract class AppAction<T extends GUIApplication> extends StandardAction
 	 * @param key The key in the bundle for the name of this action.
 	 */
 	public AppAction(T app, String key) {
-		super(app.getResourceBundle(), null);
+		super(app.getResourceBundle(), key);
 		this.app = app;
 	}
 

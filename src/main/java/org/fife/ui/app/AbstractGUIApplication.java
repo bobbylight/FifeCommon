@@ -199,6 +199,14 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 	/**
 	 * Constructor.
+	 */
+	public AbstractGUIApplication() {
+		this(null);
+	}
+
+
+	/**
+	 * Constructor.
 	 *
 	 * @param title The title for this frame.
 	 */
@@ -1236,7 +1244,9 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 		public void run() {
 
-			setTitle(title);
+			if (title != null) {
+				setTitle(title);
+			}
 			setInstallLocation(getLocationOfJar());
 
 			// contentPane contains the status bar to the south and toolBarPane

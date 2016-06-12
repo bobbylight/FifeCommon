@@ -960,6 +960,7 @@ public class UIUtil {
 	 * @param key The key into the bundle containing the string text value.
 	 * @param action The action to execute when the menu item is clicked.
 	 * @return The menu item.
+	 * @see #newMenuItem(Action)
 	 * @see #newMenu(ResourceBundle, String)
 	 */
 	public static final JMenuItem newMenuItem(ResourceBundle bundle,
@@ -967,6 +968,21 @@ public class UIUtil {
 		JMenuItem menuItem = new JMenuItem(bundle.getString(key));
 		menuItem.setMnemonic(getMnemonic(bundle, mnemonicKey(key)));
 		menuItem.setAction(action);
+		menuItem.setToolTipText(null); // Clear SHORT_DESC being set to tool tip
+		return menuItem;
+	}
+
+
+	/**
+	 * Returns a menu item configured to use an action.
+	 * 
+	 * @param action The action.
+	 * @return The menu item.
+	 * @see #newMenuItem(ResourceBundle, String, Action)
+	 */
+	public static final JMenuItem newMenuItem(Action action) {
+		JMenuItem menuItem = new JMenuItem(action);
+		menuItem.setToolTipText(null); // Clear SHORT_DESC being set to tool tip
 		return menuItem;
 	}
 

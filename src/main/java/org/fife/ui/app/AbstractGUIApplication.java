@@ -14,11 +14,13 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
@@ -1219,6 +1221,65 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 			SwingUtilities.updateComponentTreeUI(aboutDialog);
 		}
 	}
+
+
+	/**
+	 * Action to show an application's Options dialog.
+	 */
+    public static class OptionsAction<T extends AbstractGUIApplication<?>>
+    		extends AppAction<T> {
+
+    	/**
+    	 * Creates an instance of this action.
+    	 *
+		 * @param app The application that owns this action.
+		 * @param nameKey The key for the name of the action (and the possible
+		 *        root of keys for description, mnemonic, etc.).
+    	 */
+        public OptionsAction(T app, String nameKey) {
+            super(app, nameKey);
+        }
+
+    	/**
+    	 * Creates an instance of this action.
+    	 *
+		 * @param app The application that owns this action.
+		 * @param nameKey The key for the name of the action (and the possible
+		 *        root of keys for description, mnemonic, etc.).
+		 * @param icon The name of the icon resource for this action.
+    	 */
+        public OptionsAction(T app, String nameKey, String icon) {
+            super(app, nameKey, icon);
+        }
+
+    	/**
+    	 * Creates an instance of this action.
+    	 *
+		 * @param app The application that owns this action.
+		 * @param msg The resource bundle to localize from.
+		 * @param nameKey The key for the name of the action (and the possible
+		 *        root of keys for description, mnemonic, etc.).
+    	 */
+        public OptionsAction(T app, ResourceBundle msg, String nameKey) {
+            super(app, msg, nameKey);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+
+            AbstractGUIApplication<?> app = getApplication();
+            app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            OptionsDialog dialog = null;
+
+            try {
+                dialog = app.getOptionsDialog();
+                dialog.initialize();
+            } finally { // Just in case something goes horribly awry
+                app.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            }
+
+            dialog.setVisible(true);
+        }
+    }
 
 
 	/**

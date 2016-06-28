@@ -1273,6 +1273,8 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
             try {
                 dialog = app.getOptionsDialog();
                 dialog.initialize();
+                dialog.pack();
+                dialog.setLocationRelativeTo(app);
             } finally { // Just in case something goes horribly awry
                 app.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             }

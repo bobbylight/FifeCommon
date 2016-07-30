@@ -2,7 +2,7 @@
  * 11/11/2010
  *
  * SubstanceUtil.java - Utility methods for Java 1.4-compatible applications
- * looking to support Substance 6.1 if the current JRE is 1.6+.
+ * looking to support Substance if the current JRE is 1.6+.
  * Copyright (C) 2003 Robert Futrell
  * http://fifesoft.com/rtext
  * Licensed under a modified BSD license.

@@ -706,6 +706,7 @@ public class ModifiableTable extends JPanel {
 		public Listener() {
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			String command = e.getActionCommand();
 			if (ADD_COMMAND.equals(command)) {
@@ -733,6 +734,7 @@ public class ModifiableTable extends JPanel {
 			}
 		}
 
+		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			if (rowHandler==null)
 				return;

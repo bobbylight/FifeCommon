@@ -139,6 +139,7 @@ class TopicsFoundDialog extends JDialog {
 	private class TopicsFoundListener extends MouseAdapter
 						implements ActionListener, KeyListener {
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			String actionCommand = e.getActionCommand();
 			if (actionCommand.equals("Display")) {
@@ -151,6 +152,7 @@ class TopicsFoundDialog extends JDialog {
 			}
 		}
 
+		@Override
 		public void keyPressed(KeyEvent e) {
 			switch (e.getKeyCode()) {
 				case KeyEvent.VK_ENTER:
@@ -164,9 +166,11 @@ class TopicsFoundDialog extends JDialog {
 			}
 		}
 
+		@Override
 		public void keyReleased(KeyEvent e) {
 		}
 
+		@Override
 		public void keyTyped(KeyEvent e) {
 		}
 

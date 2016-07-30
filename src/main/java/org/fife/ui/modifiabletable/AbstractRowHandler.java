@@ -24,6 +24,7 @@ public abstract class AbstractRowHandler implements RowHandler {
 	 * typically <code>ModifiableTable</code>s will allow all their rows to be
 	 * modified.  Subclasses can override.
 	 */
+	@Override
 	public boolean canModifyRow(int row) {
 		return true;
 	}
@@ -34,6 +35,7 @@ public abstract class AbstractRowHandler implements RowHandler {
 	 * any row that can be modified can also be removed.  Subclasses can
 	 * override.
 	 */
+	@Override
 	public boolean canRemoveRow(int row) {
 		return canModifyRow(row);
 	}
@@ -42,6 +44,7 @@ public abstract class AbstractRowHandler implements RowHandler {
 	/**
 	 * The default implementation does nothing.  Subclasses can override.
 	 */
+	@Override
 	public void updateUI() {
 	}
 

@@ -265,6 +265,7 @@ public class StatusBar extends StatusBarPanel implements MouseListener {
 	 *
 	 * @param e The mouse event.
 	 */
+	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
 
@@ -275,6 +276,7 @@ public class StatusBar extends StatusBarPanel implements MouseListener {
 	 *
 	 * @param e The mouse event.
 	 */
+	@Override
 	public void mouseEntered(MouseEvent e) {
 
 		Component c = e.getComponent();
@@ -305,6 +307,7 @@ public class StatusBar extends StatusBarPanel implements MouseListener {
 	 *
 	 * @param e The mouse event.
 	 */
+	@Override
 	public final void mouseExited(MouseEvent e) {
 		setStatusMessage(getDefaultStatusMessage());
 	}
@@ -316,6 +319,7 @@ public class StatusBar extends StatusBarPanel implements MouseListener {
 	 *
 	 * @param e The mouse event.
 	 */
+	@Override
 	public void mousePressed(MouseEvent e) {
 	}
 
@@ -326,6 +330,7 @@ public class StatusBar extends StatusBarPanel implements MouseListener {
 	 *
 	 * @param e The mouse event.
 	 */
+	@Override
 	public void mouseReleased(MouseEvent e) {
 	}
 

@@ -208,6 +208,7 @@ public class ProcessRunner implements Runnable {
 	 * @see #getStdout()
 	 * @see #getStderr()
 	 */
+	@Override
 	public void run() {
 
 		clearLastOutput(); // In case we throw an exception, clear output.

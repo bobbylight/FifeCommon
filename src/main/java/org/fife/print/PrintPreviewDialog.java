@@ -194,6 +194,7 @@ public class PrintPreviewDialog extends EscapableDialog
 	}
 
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		String actionCommand = e.getActionCommand();
@@ -498,6 +499,7 @@ public class PrintPreviewDialog extends EscapableDialog
 
 
 	// Called whenever the user changes the value in one of the comboboxes.
+	@Override
 	public void itemStateChanged(ItemEvent e) {
 
 		JComboBox source = (JComboBox)e.getSource();

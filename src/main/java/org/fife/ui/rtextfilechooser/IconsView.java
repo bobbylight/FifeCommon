@@ -75,6 +75,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	/**
 	 * Clears all files displayed by this view.
 	 */
+	@Override
 	public void clearDisplayedFiles() {
 
 		// Selected files are kept in a separate array so we clear them separately.
@@ -95,6 +96,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	/**
 	 * Makes sure there are no selected files in this view.
 	 */
+	@Override
 	public void clearSelection() {
 		JInternalFrame[] frames = getSelectedFrames();
 		if (frames==null)
@@ -113,6 +115,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	 *
 	 * @param file The file that is to be visible.
 	 */
+	@Override
 	public void ensureFileIsVisible(File file) {
 		System.err.println("Not implemented!");
 	}
@@ -121,6 +124,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Color getDefaultFileColor() {
 		return getForeground();
 	}
@@ -131,6 +135,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	 *
 	 * @return The number of files currently being displayed.
 	 */
+	@Override
 	public int getDisplayedFileCount() {
 		return getComponentCount();
 	}
@@ -143,6 +148,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	 * @return The file at that point (or <code>null</code> if there isn't
 	 *         one???  This may very-well be view-dependent).
 	 */
+	@Override
 	public File getFileAtPoint(Point p) {
 		Component c = getComponentAt(p);
 		if (c instanceof IconInternalFrame)
@@ -157,6 +163,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	 * @return The selected file, or <code>null</code> if no file is
 	 *         selected.
 	 */
+	@Override
 	public File getSelectedFile() {
 		IconInternalFrame frame = (IconInternalFrame)getSelectedFrame();
 		if (frame!=null)
@@ -170,6 +177,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	 *
 	 * @return An array of all selected files.
 	 */
+	@Override
 	public File[] getSelectedFiles() {
 		JInternalFrame[] frames = getSelectedFrames();
 		File[] files = null;
@@ -224,6 +232,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	 * this view, but nobody else knows about these listeners except for the
 	 * view.
 	 */
+	@Override
 	public void removeAllListeners() {
 		clearDisplayedFiles(); // Just in case.
 		removeMouseListener(mouseListener);
@@ -236,6 +245,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	 *
 	 * @param p The point at which a file should be selected.
 	 */
+	@Override
 	public void selectFileAtPoint(Point p) {
 		clearSelection();
 		Component c = getComponentAt(p);
@@ -252,6 +262,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setDisplayedFiles(java.util.List<File> files) {
 
 		// Clears view and also clears "selected files" vector.
@@ -301,6 +312,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	 * @param enabled Whether or not to allow the selection of multiple
 	 *        files.
 	 */
+	@Override
 	public void setMultiSelectionEnabled(boolean enabled) {
 		// This method doesn't do anything; rather, the view actually polls
 		// the file chooser when a new file is selected, to find out whether
@@ -315,6 +327,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	 *        the file chooser's <code>currentDirectory</code>, then
 	 *        they are not selected.
 	 */
+	@Override
 	public void setSelectedFiles(File[] files) {
 
 		clearSelection();
@@ -551,6 +564,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		int __x, __y;
 		Rectangle startingBounds;
 
+		@Override
 		public void mousePressed(MouseEvent e) {
 
 			int modifiers = e.getModifiers();
@@ -592,6 +606,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		}
 
 
+		@Override
 		public void mouseReleased(MouseEvent e) {
 
 			int modifiers = e.getModifiers();
@@ -633,6 +648,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 
 		}
 
+		@Override
 		public void mouseDragged(MouseEvent e) {   
 			if ( startingBounds == null ) {
 				// (STEVE) Yucky work around for bug ID 4106552
@@ -676,15 +692,19 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 
 		}
 
+		@Override
 		public void mouseMoved(MouseEvent e) {
 		}
 
+		@Override
 		public void mouseEntered(MouseEvent e) {
 		}
 
+		@Override
 		public void mouseExited(MouseEvent e) {
 		}
 
+		@Override
 		public void mouseClicked(MouseEvent e) {
 
 			// If they clicked on a label and not the icons view, we need to

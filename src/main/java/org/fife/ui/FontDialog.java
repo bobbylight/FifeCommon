@@ -168,8 +168,7 @@ public class FontDialog extends JDialog implements ActionListener,
 		Box fontSizePanel = Box.createVerticalBox();
 		DefaultListModel listModel = new DefaultListModel();
 		for (int i=2; i<=40; i++) {
-			// TODO: Use Integer.valueOf(i) in 1.5.
-			listModel.addElement(new Integer(i));//Integer.valueOf(i));
+			listModel.addElement(Integer.valueOf(i));
 		}
 		fontSizeList = new JList(listModel);
 		fontSizeList.setSelectionModel(new RListSelectionModel());
@@ -252,6 +251,7 @@ public class FontDialog extends JDialog implements ActionListener,
 
 
 	// What to do when some property of the prospective new font changes.
+	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		String command = e.getActionCommand();
@@ -580,8 +580,7 @@ public class FontDialog extends JDialog implements ActionListener,
 		boldCheckBox.setSelected(toSelect.isBold());
 		italicCheckBox.setSelected(toSelect.isItalic());
 		// Underlining is handled separately.
-		// TODO: Use Integer.valueOf() in 1.5.
-		fontSizeList.setSelectedValue(new Integer(toSelect.getSize()), true);
+		fontSizeList.setSelectedValue(Integer.valueOf(toSelect.getSize()), true);
 
 	}
 
@@ -631,6 +630,7 @@ public class FontDialog extends JDialog implements ActionListener,
 
 
 	// Listen for when they change font or font size.
+	@Override
 	public void valueChanged(ListSelectionEvent e) {
 
 		ListSelectionModel lsm = (ListSelectionModel)e.getSource();
@@ -668,6 +668,7 @@ public class FontDialog extends JDialog implements ActionListener,
 			this.monospaced = monospaced;
 		}
 
+		@Override
 		public int compareTo(Object obj) {
 			int value = -1;
 			// We cheat here as we know we'll be comparing Strings (font

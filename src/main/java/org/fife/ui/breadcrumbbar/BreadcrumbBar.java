@@ -179,6 +179,7 @@ public class BreadcrumbBar extends JComponent {
 			tb.setSelectedIcon(downArrowIcon);
 tb.addChangeListener(new ChangeListener() {
 
+	@Override
 	public void stateChanged(ChangeEvent e) {
 		JToggleButton tb = (JToggleButton)e.getSource();
 		Container parent = tb.getParent();
@@ -295,15 +296,16 @@ tb.addChangeListener(new ChangeListener() {
 		try {
 			icon = fsv.getSystemIcon(dir);
 		} catch (NullPointerException npe) {
-			// Bugs in 1.4.2, fixed in 1.5+
+			// Bugs in 1.4.2, fixed in 1.5+, but keeping this here just in case.
 			// TODO: Grab default directory icon
 			icon = null;
 		} catch (RuntimeException re) {
 			throw re; // FindBugs
 		} catch (/*FileNotFound,IO*/Exception e) {
-			// Bugs in 1.4.2, fixed in 1.5+
-			// This seems to still happen in 1.5, when trying to get an
-			// icon for a folder on a DVD/blu-ray/etc.  1.6 is fine
+			// Bugs in 1.4.2, fixed in 1.5+.  This seems to still happen in 1.5,
+			// though, when trying to get an icon for a folder on a
+			// DVD/blu-ray/etc.  1.6 is fine, but keeping this here just
+			// in case.
 			// TODO: Grab default directory icon
 			icon = null;
 		}
@@ -575,13 +577,16 @@ tb.addChangeListener(new ChangeListener() {
 			this.source = source;
 		}
 
+		@Override
 		public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 		}
 
+		@Override
 		public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
 			source.setSelected(false);
 		}
 
+		@Override
 		public void popupMenuCanceled(PopupMenuEvent e) {
 			source.setSelected(false);
 		}
@@ -591,6 +596,7 @@ tb.addChangeListener(new ChangeListener() {
 
 	private class DownArrowIcon implements Icon {
 
+		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 
 			Color fg = c.getForeground();
@@ -605,10 +611,12 @@ tb.addChangeListener(new ChangeListener() {
 
 		}
 
+		@Override
 		public int getIconWidth() {
 			return 8;
 		}
 
+		@Override
 		public int getIconHeight() {
 			return 10;
 		}
@@ -622,6 +630,7 @@ tb.addChangeListener(new ChangeListener() {
 			return component<230 ? (component+20) : component;
 		}
 
+		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 
 			Color fg = c.getForeground();
@@ -655,10 +664,12 @@ tb.addChangeListener(new ChangeListener() {
 
 		}
 
+		@Override
 		public int getIconWidth() {
 			return 8;
 		}
 
+		@Override
 		public int getIconHeight() {
 			return 8;
 		}
@@ -674,6 +685,7 @@ tb.addChangeListener(new ChangeListener() {
 
 		private List<JMenuItem> rootMenuItems;
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			Object source = e.getSource();
@@ -733,6 +745,7 @@ tb.addChangeListener(new ChangeListener() {
 
 			if (dir!=null) {
 				File[] children = dir.listFiles(new FileFilter() {
+					@Override
 					public boolean accept(File file) {
 						return file.isDirectory();
 					}
@@ -796,6 +809,7 @@ tb.addChangeListener(new ChangeListener() {
 
 		}
 
+		@Override
 		public void keyPressed(KeyEvent e) {
 			Object source = e.getSource();
 			if (dirField==source) { // Always true
@@ -806,9 +820,11 @@ tb.addChangeListener(new ChangeListener() {
 			}
 		}
 
+		@Override
 		public void keyReleased(KeyEvent e) {
 		}
 
+		@Override
 		public void keyTyped(KeyEvent e) {
 		}
 

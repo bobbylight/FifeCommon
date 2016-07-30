@@ -266,6 +266,7 @@ class DockableWindowGroup extends JPanel {
 			super.setSelectedIndex(index);
 			final DockableWindow dwind = (DockableWindow)getSelectedComponent();
 			SwingUtilities.invokeLater(new Runnable() {
+				@Override
 				public void run() {
 					dwind.focused();
 				}
@@ -373,6 +374,7 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 			label.setText(title);
 		}
 
+		@Override
 		public void stateChanged(ChangeEvent e) {
 			int index = tabbedPane.getSelectedIndex();
 			if (index>-1) {
@@ -491,6 +493,7 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 				putValue(SMALL_ICON, icon);
 			}
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				parent.setCollapsed(true);
 			}

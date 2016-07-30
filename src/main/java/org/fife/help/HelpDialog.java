@@ -403,6 +403,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 
 	// Callback for when an action occurs.
+	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		Object source = e.getSource();
@@ -1404,12 +1405,14 @@ public class HelpDialog extends JFrame implements ActionListener {
 			implements ChangeListener, HyperlinkListener, DocumentListener,
 					KeyListener, TreeSelectionListener {
 
+		@Override
 		public void changedUpdate(DocumentEvent e) {
 		}
 
 		/**
 		 * Called whenever the user clicks on a hyperlink in editorPane.
 		 */
+		@Override
 		public void hyperlinkUpdate(HyperlinkEvent e) {
 
 			HyperlinkEvent.EventType eventType = e.getEventType();
@@ -1460,6 +1463,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		 * Called whenever indexField or searchField's contents are
 		 * inserted into.
 		 */
+		@Override
 		public void insertUpdate(DocumentEvent e) {
 			Document doc = e.getDocument();
 			// If it was the index text field that changed...
@@ -1482,6 +1486,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		/**
 		 * Called whenever the user presses a key in indexField or searchField.
 		 */
+		@Override
 		public void keyPressed(KeyEvent e) {
 
 			// The only keypress we're interested in is the "Enter" key.
@@ -1526,9 +1531,11 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 		}
 
+		@Override
 		public void keyReleased(KeyEvent e) {
 		}
 
+		@Override
 		public void keyTyped(KeyEvent e) {
 		}
 
@@ -1553,6 +1560,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		/**
 		 * Called whenever indexField or searchField's contents are shortened.
 		 */
+		@Override
 		public void removeUpdate(DocumentEvent e) {
 			Document doc = e.getDocument();
 			// If it was the index text field that changed...
@@ -1579,6 +1587,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		 * Called whenever the user clicks on the Contents, Index, or
 		 * Search tabs.
 		 */
+		@Override
 		public void stateChanged(ChangeEvent e) {
 			int selection = ((JTabbedPane)e.getSource()).getSelectedIndex();
 			JTextField field = null;
@@ -1591,6 +1600,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 			if (field!=null) {
 				final JTextField field2 = field;
 				SwingUtilities.invokeLater(new Runnable() {
+					@Override
 					public void run() {
 						field2.requestFocusInWindow();
 						field2.selectAll();
@@ -1604,6 +1614,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		 * This will display the help HTML corresponding to the TOC tree node
 		 * selected in the right-hand pane.
 		 */
+		@Override
 		public void valueChanged(TreeSelectionEvent tse) {
 
 			// Get the node they clicked on.

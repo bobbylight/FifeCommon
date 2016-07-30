@@ -50,6 +50,7 @@ public class DefaultFilePasteCallback implements FilePasteCallback {
 	 * the number of files copied, and the name of the file currently being
 	 * copied.
 	 */
+	@Override
 	public boolean filePasteUpdate(int pasteCount, int total,
 			File justPastedFile) {
 		monitor.setProgress(pasteCount-1);
@@ -58,9 +59,8 @@ public class DefaultFilePasteCallback implements FilePasteCallback {
 			if (noteFormat==null) {
 				noteFormat = msg.getString("Dialog.ProgressMonitor.NoteFormat");
 			}
-			// TODO: When Java 1.4 support dropped, use Integer.valueOf()
-			Object[] args = { new Integer(pasteCount), new Integer(total),
-					justPastedFile.getAbsolutePath() };
+			Object[] args = { Integer.valueOf(pasteCount),
+					Integer.valueOf(total), justPastedFile.getAbsolutePath() };
 			String note = MessageFormat.format(noteFormat, args);
 			monitor.setNote(note);
 			//System.out.println(note);
@@ -72,6 +72,7 @@ public class DefaultFilePasteCallback implements FilePasteCallback {
 	/**
 	 * Hides the progress monitor, if it is visible.
 	 */
+	@Override
 	public void pasteOperationCompleted(int pasteCount) {
 		monitor.close();
 	}

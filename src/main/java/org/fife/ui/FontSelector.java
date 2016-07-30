@@ -101,6 +101,7 @@ public class FontSelector extends JPanel implements ActionListener {
 	/**
 	 * Listens for actions in this panel.
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		// If the user clicked the "Browse" button for fonts...

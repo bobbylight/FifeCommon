@@ -79,6 +79,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	 */
 	public static final Comparator<?> COMPARABLE_COMPARATOR =
 			new Comparator<Object>() {
+		@Override
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		public int compare(Object o1, Object o2) {
 			return ((Comparable)o1).compareTo(o2);
@@ -91,6 +92,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	 */
 	public static final Comparator<?> LEXICAL_COMPARATOR =
 			new Comparator<Object>() {
+		@Override
 		public int compare(Object o1, Object o2) {
 			return o1.toString().compareTo(o2.toString());
 		}
@@ -407,10 +409,12 @@ public class FileExplorerTableModel extends AbstractTableModel {
 
 	// TableModel interface methods 
 
+	@Override
 	public int getRowCount() {
 		return (tableModel == null) ? 0 : tableModel.getRowCount();
 	}
 
+	@Override
 	public int getColumnCount() {
 		return (tableModel == null) ? 0 : tableModel.getColumnCount();
 	}
@@ -430,6 +434,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 		return tableModel.isCellEditable(modelIndex(row), column);
 	}
 
+	@Override
 	public Object getValueAt(int row, int column) {
 		return tableModel.getValueAt(modelIndex(row), column);
 	}
@@ -452,6 +457,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 			this.priority = priority;
 		}
 
+		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 
 			Color color = c == null ? Color.GRAY : c.getBackground();             
@@ -488,10 +494,12 @@ public class FileExplorerTableModel extends AbstractTableModel {
 
 		}
 
+		@Override
 		public int getIconWidth() {
 			return size;
 		}
 
+		@Override
 		public int getIconHeight() {
 			return size;
 		}
@@ -523,6 +531,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 			this.modelIndex = index;
 		}
 
+		@Override
 		@SuppressWarnings("unchecked")
 		public int compareTo(Row r2) {
 
@@ -613,6 +622,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 			return delegate;
 		}
 
+		@Override
 		public Component getTableCellRendererComponent(JTable table, 
 											Object value,
 											boolean isSelected, 
@@ -648,6 +658,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 
 	private class TableModelHandler implements TableModelListener {
 
+		@Override
 		public void tableChanged(TableModelEvent e) {
 
 			// If we're not sorting by anything, just pass the event along.             

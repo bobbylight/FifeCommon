@@ -156,6 +156,7 @@ public class RColorSwatchesButton extends RColorButton {
 	 */
 	private class SwatchesActionListener implements ActionListener {
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (popup==null) {
 				popup = new ColorPopupMenu();

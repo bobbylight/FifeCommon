@@ -65,6 +65,7 @@ public class BreadcrumbBarTest extends JFrame implements PropertyChangeListener{
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				String substanceClass = substancePkg + "GraphiteGlassLookAndFeel";
 				UIManager.installLookAndFeel("Substance", substanceClass);
@@ -80,6 +81,7 @@ public class BreadcrumbBarTest extends JFrame implements PropertyChangeListener{
 	}
 
 
+	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 
 		String propName = e.getPropertyName();
@@ -101,6 +103,7 @@ public class BreadcrumbBarTest extends JFrame implements PropertyChangeListener{
 			putValue(NAME, laf.substring(dot+1));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
 				UIManager.setLookAndFeel(laf);

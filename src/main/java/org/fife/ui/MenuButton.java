@@ -214,6 +214,7 @@ public class MenuButton extends JButton {
 
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			Point location = getLocation();
 			location.y = getHeight();
@@ -239,6 +240,7 @@ public class MenuButton extends JButton {
 			arrowIcon = new DownArrowIcon();
 		}
 
+		@Override
 		public int getIconHeight() {
 			if (otherIcon==null)
 				return arrowIcon.getIconHeight();
@@ -246,6 +248,7 @@ public class MenuButton extends JButton {
 						arrowIcon.getIconHeight());
 		}
 
+		@Override
 		public int getIconWidth() {
 			if (otherIcon==null)
 				return arrowIcon.getIconWidth();
@@ -272,6 +275,7 @@ public class MenuButton extends JButton {
 			return x;
 		}
 
+		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			if (c.getComponentOrientation().isLeftToRight()) {
 				x = _paintOtherIcon(c, g, x, y);
@@ -304,14 +308,17 @@ public class MenuButton extends JButton {
 			ycoord = new int[3];
 		}
 
+		@Override
 		public int getIconHeight() {
 			return SIZE;
 		}
 
+		@Override
 		public int getIconWidth() {
 			return SIZE;
 		}
 
+		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			Color color = UIManager.getColor("Label.foreground");
 			if (color==null) { // The button's foreground, should be the same

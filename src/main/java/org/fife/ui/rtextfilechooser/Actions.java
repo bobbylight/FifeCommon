@@ -56,6 +56,7 @@ public interface Actions {
 			putValue(Action.NAME, chooser.getString("AddToFavorites"));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			File dir = chooser.getCurrentDirectory();
 			chooser.addToFavorites(dir.getAbsolutePath());
@@ -81,6 +82,7 @@ public interface Actions {
 					KeyStroke.getKeyStroke(KeyEvent.VK_C, mod));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			// Get the selected files.  If there are no selected files (i.e.,
@@ -127,6 +129,7 @@ public interface Actions {
 					KeyStroke.getKeyStroke(KeyEvent.VK_C, mod));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			// Get the selected files.  If there are no selected files (i.e.,
@@ -184,6 +187,7 @@ public interface Actions {
 					KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, modifiers));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			// Get the selected files.  If there are no selected files (i.e.,
@@ -302,6 +306,7 @@ public interface Actions {
 					KeyStroke.getKeyStroke(KeyEvent.VK_V, mod));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			File destDir = chooser.getCurrentDirectory();
@@ -371,6 +376,7 @@ public interface Actions {
 					KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			chooser.refreshView();
 		}
@@ -390,6 +396,7 @@ public interface Actions {
 					KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			File file = chooser.getView().getSelectedFile();
@@ -466,6 +473,7 @@ public interface Actions {
 			putValue(Action.NAME, getString(method.localizationKey));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			File file = chooser.getSelectedFile();
@@ -553,6 +561,7 @@ public interface Actions {
 			this.selector = selector;
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			FileIOExtras extras = FileIOExtras.getInstance();
@@ -593,6 +602,7 @@ public interface Actions {
 					KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			File parent = chooser.getCurrentDirectory().getParentFile();
 			if (parent!=null) {

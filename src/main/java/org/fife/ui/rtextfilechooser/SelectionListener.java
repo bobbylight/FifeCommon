@@ -43,6 +43,7 @@ class SelectionListener implements ListSelectionListener {
 	 *
 	 * @param e The selection event.
 	 */
+	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		if (!e.getValueIsAdjusting()) {
 			chooser.synchronizeTextFieldWithView();

@@ -61,6 +61,7 @@ public class FileListTransferable implements Transferable, ClipboardOwner {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getTransferData(DataFlavor flavor)
 									throws UnsupportedFlavorException {
 
@@ -105,6 +106,7 @@ public class FileListTransferable implements Transferable, ClipboardOwner {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public DataFlavor[] getTransferDataFlavors() {
 
 		List<DataFlavor> flavors = new ArrayList<DataFlavor>();
@@ -122,6 +124,7 @@ public class FileListTransferable implements Transferable, ClipboardOwner {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isDataFlavorSupported(DataFlavor flavor) {
 		DataFlavor[] flavors = getTransferDataFlavors();
 		for (int i=0; i<flavors.length; i++) {
@@ -133,6 +136,7 @@ public class FileListTransferable implements Transferable, ClipboardOwner {
 	}
 
 
+	@Override
 	public void lostOwnership(Clipboard clipboard, Transferable contents) {
 		// Do nothing
 	}

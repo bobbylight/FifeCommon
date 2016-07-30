@@ -80,11 +80,6 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 	private TreeCellRenderer cellRenderer;
 
-	/**
-	 * Whether we're running in a Java 6 or higher JVM.
-	 */
-	private static final boolean IS_JAVA_6_PLUS;
-
 
 	/**
 	 * Constructor.  This will create a tree with a root node for each root
@@ -156,11 +151,9 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 		File selectedFile = getSelectedFile();
 
-		openInMenu.setEnabled(IS_JAVA_6_PLUS && selectedFile!=null);
-		if (IS_JAVA_6_PLUS) {
-			systemEditAction.setEnabled(selectedFile!=null);
-			systemViewAction.setEnabled(selectedFile!=null);
-		}
+		openInMenu.setEnabled(selectedFile!=null);
+		systemEditAction.setEnabled(selectedFile!=null);
+		systemViewAction.setEnabled(selectedFile!=null);
 
 		boolean enable = selectedFile!=null;
 		copyAction.setEnabled(enable);
@@ -218,14 +211,12 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 											FileSystemTree.class.getName());
 
 		openInMenu = new JMenu(bundle.getString("PopupMenu.OpenIn"));
-		if (IS_JAVA_6_PLUS) {
-			systemEditAction = new Actions.SystemOpenAction(this,
-					Actions.SystemOpenAction.OpenMethod.EDIT);
-			openInMenu.add(systemEditAction);
-			systemViewAction = new Actions.SystemOpenAction(this,
-					Actions.SystemOpenAction.OpenMethod.OPEN);
-			openInMenu.add(systemViewAction);
-		}
+		systemEditAction = new Actions.SystemOpenAction(this,
+				Actions.SystemOpenAction.OpenMethod.EDIT);
+		openInMenu.add(systemEditAction);
+		systemViewAction = new Actions.SystemOpenAction(this,
+				Actions.SystemOpenAction.OpenMethod.OPEN);
+		openInMenu.add(systemViewAction);
 		popup.add(openInMenu);
 
 		popup.addSeparator();
@@ -505,6 +496,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 * @see #getSelectedFileName
 	 * @see #setSelectedFile
 	 */
+	@Override
 	public File getSelectedFile() {
 		TreePath path = getSelectionPath();
 		if (path!=null) {
@@ -526,6 +518,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 *
 	 * @return The selected files.
 	 */
+	@Override
 	public File[] getSelectedFiles() {
 		File file = getSelectedFile();
 		if (file!=null) {
@@ -581,6 +574,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		tsm.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
 		tsm.addTreeSelectionListener(new TreeSelectionListener() {
+			@Override
 			public void valueChanged(TreeSelectionEvent e) {
 				scrollPathToVisible(e.getPath());
 			}
@@ -793,6 +787,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		// This is often called before the tree is displayed.
 		final TreePath path2 = path;
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				setSelectionPath(path2);
 				scrollPathToVisible(path2);
@@ -828,13 +823,6 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			SwingUtilities.updateComponentTreeUI(popup);
 		}
 
-	}
-
-
-	static {
-		// Some actions only work with Java 6+.
-		String ver = System.getProperty("java.specification.version");
-		IS_JAVA_6_PLUS = !ver.startsWith("1.4") && !ver.startsWith("1.5");
 	}
 
 

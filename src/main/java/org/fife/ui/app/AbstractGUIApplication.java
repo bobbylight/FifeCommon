@@ -288,6 +288,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 *
 	 * @see #getAboutDialog()
 	 */
+	@Override
 	public void about() {
 		try {
 			getAboutDialog().setVisible(true);
@@ -303,6 +304,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * @see #createActions(GUIApplicationPrefs)
 	 * @see #getAction(String)
 	 */
+	@Override
 	public void addAction(String key, Action action) {
 		actions.addAction(key, action);
 	}
@@ -417,6 +419,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 *
 	 * @param t The exception/throwable that occurred.
 	 */
+	@Override
 	public final void displayException(Throwable t) {
 		displayException(this, t);
 	}
@@ -447,6 +450,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * @param owner The dialog that threw the Exception.
 	 * @param t The exception/throwable that occurred.
 	 */
+	@Override
 	public final void displayException(Dialog owner, Throwable t) {
 		displayException(owner, t, null);
 	}
@@ -486,6 +490,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * @param owner The child frame that threw the Exception.
 	 * @param t The exception/throwable that occurred.
 	 */
+	@Override
 	public final void displayException(Frame owner, Throwable t) {
 		displayException(owner, t, null);
 	}
@@ -523,6 +528,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 *
 	 * The default implementation simply calls <code>System.exit(0)</code>.
 	 */
+	@Override
 	public void doExit() {
 		System.exit(0);
 	}
@@ -535,6 +541,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * @see org.fife.ui.AboutDialog
 	 * @see #createAboutDialog()
 	 */
+	@Override
 	public JDialog getAboutDialog() {
 		if (aboutDialog==null) {
 			aboutDialog = createAboutDialog();
@@ -550,6 +557,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * @see #addAction(String, Action)
 	 * @see #createActions(GUIApplicationPrefs)
 	 */
+	@Override
 	public Action getAction(String key) {
 		return actions.getAction(key);
 	}
@@ -560,6 +568,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 *
 	 * @see #getAction(String)
 	 */
+	@Override
 	public SortedSet<String> getActionKeys() {
 		return actions.getActionKeys();
 	}
@@ -568,6 +577,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Action[] getActions() {
 		return actions.getActions();
 	}
@@ -593,6 +603,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 *
 	 * @return The Help dialog.
 	 */
+	@Override
 	public abstract HelpDialog getHelpDialog();
 
 
@@ -602,6 +613,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 *
 	 * @return The directory.
 	 */
+	@Override
 	public String getInstallLocation() {
 		return installLocation;
 	}
@@ -614,6 +626,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 *
 	 * @return The language being used by this application.
 	 */
+	@Override
 	public String getLanguage() {
 		return language;
 	}
@@ -690,6 +703,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public OS getOS() {
 		return OS.get();
 	}
@@ -711,6 +725,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * @return The resource bundle.
 	 * @see #getString(String, Object...)
 	 */
+	@Override
 	public ResourceBundle getResourceBundle() {
 		if (resourceBundle==null) {
 			resourceBundle = ResourceBundle.getBundle(
@@ -737,6 +752,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * @return The status bar.
 	 * @see #setStatusBar
 	 */
+	@Override
 	public StatusBar getStatusBar() {
 		return statusBar;
 	}
@@ -749,6 +765,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 *         have a status bar, <code>null</code> is returned.
 	 * @see #setStatusBarVisible
 	 */
+	@Override
 	public boolean getStatusBarVisible() {
 		return statusBar!=null ? statusBar.isVisible() : false;
 	}
@@ -774,6 +791,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * @return The toolbar.
 	 * @see #setToolBar
 	 */
+	@Override
 	public CustomizableToolBar getToolBar() {
 		return toolBar;
 	}
@@ -786,6 +804,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 *         toolbar, <code>false</code> is returned.
 	 * @see #setToolBarVisible
 	 */
+	@Override
 	public boolean getToolBarVisible() {
 		return toolBar!=null ? toolBar.isVisible() : false;
 	}
@@ -796,6 +815,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 *
 	 * @return The version string.
 	 */
+	@Override
 	public abstract String getVersionString();
 
 
@@ -805,6 +825,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * @return <code>true</code> if this applicaiton's window is maximized,
 	 *         or <code>false</code> if it isn't.
 	 */
+	@Override
 	public boolean isMaximized() {
 		return getExtendedState()==MAXIMIZED_BOTH;
 	}
@@ -834,6 +855,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public T loadPreferences() {
 		T prefs = null;
@@ -858,6 +880,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * Mac OS X, and should be overridden to do whatever makes sense in your
 	 * application to "open a file."
 	 */
+	@Override
 	public abstract void openFile(final String fileName);
 
 
@@ -917,6 +940,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * JVM.  This is a hook for the standard Apple application menu.  This
 	 * method should be overridden to show the Options dialog.
 	 */
+	@Override
 	public abstract void preferences();
 
 
@@ -1002,6 +1026,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 *
 	 * @see #doExit()
 	 */
+	@Override
 	public void quit() {
 		doExit();
 	}
@@ -1020,6 +1045,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 		MenuSelectionManager.defaultManager().addChangeListener(
 			new ChangeListener() {
+				@Override
 				public void stateChanged(ChangeEvent e) {
 					if (statusBar==null) {
 						return;
@@ -1117,6 +1143,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * @param language The language to use.  If <code>null</code>,
 	 *        English will be used.
 	 */
+	@Override
 	public void setLanguage(String language) {
 		this.language = language==null ? "en" : language;
 	}
@@ -1140,6 +1167,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * @param statusBar The status bar to use.
 	 * @see #getStatusBar
 	 */
+	@Override
 	public void setStatusBar(StatusBar statusBar) {
 		if (statusBar!=null && !statusBar.equals(this.statusBar)) {
 			StatusBar old = this.statusBar;
@@ -1159,6 +1187,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * @param visible Whether the status bar is to be visible.
 	 * @see #getStatusBarVisible
 	 */
+	@Override
 	public void setStatusBarVisible(boolean visible) {
 		if (statusBar!=null && statusBar.isVisible()!=visible) {
 			statusBar.setVisible(visible);
@@ -1175,6 +1204,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * @param toolBar The toolbar to use.
 	 * @see #getToolBar
 	 */
+	@Override
 	public void setToolBar(CustomizableToolBar toolBar) {
 		if (toolBar!=null && !toolBar.equals(this.toolBar)) {
 			CustomizableToolBar old = this.toolBar;
@@ -1195,6 +1225,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * @param visible Whether the toolbar should be visible.
 	 * @see #getToolBarVisible
 	 */
+	@Override
 	public void setToolBarVisible(boolean visible) {
 		if (toolBar!=null && toolBar.isVisible()!=visible) {
 			toolBar.setVisible(visible);
@@ -1264,7 +1295,8 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
             super(app, msg, nameKey);
         }
 
-        public void actionPerformed(ActionEvent e) {
+        @Override
+		public void actionPerformed(ActionEvent e) {
 
             AbstractGUIApplication<?> app = getApplication();
             app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -1305,6 +1337,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 			this.title = title;
 		}
 
+		@Override
 		public void run() {
 
 			if (title != null) {

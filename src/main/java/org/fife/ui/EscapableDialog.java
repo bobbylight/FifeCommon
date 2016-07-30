@@ -169,6 +169,7 @@ public class EscapableDialog extends JDialog {
 		if (closes) {
 			im.put(ks, ESCAPE_KEY);
 	   		actionMap.put(ESCAPE_KEY, new AbstractAction() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					escapePressed();
 				}

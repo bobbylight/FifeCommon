@@ -196,14 +196,17 @@ public class TitledPanel extends JPanel {
 			this.dark = dark;
 		}
 
+		@Override
 		public Insets getBorderInsets(Component c) {
 			return insets;
 		}
 
+		@Override
 		public boolean isBorderOpaque() {
 			return true;
 		}
 
+		@Override
 		public void paintBorder(Component c, Graphics g, int x, int y,
 							int width, int height) {
 			Rectangle bounds = c.getBounds();

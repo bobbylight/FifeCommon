@@ -518,6 +518,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 		 *
 		 * @param c Not used.
 		 */
+		@Override
 		public Insets getBorderInsets(Component c) {
 			return insets;
 		}
@@ -527,6 +528,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 		 *
 		 * @return This method always returns <code>true</code>.
 		 */
+		@Override
 		public boolean isBorderOpaque() {
 			return true;
 		}
@@ -542,6 +544,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 		 * @param width The width of the component.
 		 * @param height The height of the component.
 		 */
+		@Override
 		public void paintBorder(Component c, Graphics g, int x, int y,
 							int width, int height) {
 

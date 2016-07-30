@@ -243,11 +243,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private static final String FAVORITES_ENCODING	= "UTF-8";
 
 	/**
-	 * Whether we're running in a Java 6 or higher JVM.
-	 */
-	private static final boolean IS_JAVA_6_PLUS;
-
-	/**
 	 * The resource bundle for file choosers.
 	 */
 	static final ResourceBundle msg = ResourceBundle.getBundle(
@@ -582,6 +577,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/**
 	 * Listens for actions in this file dialog.
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		String actionCommand = e.getActionCommand();
@@ -864,9 +860,11 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		// We need to use the view's "selected files" for the edit/view actions.
 		// Since our view can change, we wrap it in this class.
 		FileSelector selector = new FileSelector() {
+			@Override
 			public File getSelectedFile() {
 				return getView().getSelectedFile();
 			}
+			@Override
 			public File[] getSelectedFiles() {
 				return getView().getSelectedFiles();
 			}
@@ -955,7 +953,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 				int count = view.getSelectedFiles().length;
 				boolean filesSelected = count>0;
 				openMenuItem.setEnabled(filesSelected);
-				openInMenu.setEnabled(IS_JAVA_6_PLUS && filesSelected);
+				openInMenu.setEnabled(filesSelected);
 				renameAction.setEnabled(filesSelected);
 				copyAction.setEnabled(filesSelected);
 				copyPathAction.setEnabled(filesSelected);
@@ -1148,23 +1146,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @return The default encoding.
 	 */
 	public static final String getDefaultEncoding() {
-		// TODO: Change to "Charset.defaultCharset().name() when 1.4 support
-		// is no longer needed.
-		// NOTE:  file.encoding is not required to be set, so we provide a
-		// fallback method for determing default encoding.
-		String encoding = System.getProperty("file.encoding");
-		if (encoding==null) {
-			try {
-				File f = File.createTempFile("rtext", null);
-				FileWriter w = new FileWriter(f);
-				encoding = w.getEncoding();
-				w.close();
-				f.delete();
-			} catch (IOException ioe) {
-				encoding = "US-ASCII";
-			}
-		}
-		return encoding;
+		return Charset.defaultCharset().name();
 	}
 
 
@@ -1583,6 +1565,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @see #setSelectedFile(File)
 	 * @see #setSelectedFiles(File[])
 	 */
+	@Override
 	public File getSelectedFile() {
 		return selectedFiles[0];
 	}
@@ -1596,6 +1579,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @see #setSelectedFile
 	 * @see #setSelectedFiles
 	 */
+	@Override
 	public File[] getSelectedFiles() {
 		return selectedFiles.clone();
 	}
@@ -1694,6 +1678,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		// Make the Escape key hide the dialog, etc.
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "OnEsc");
 		actionMap.put("OnEsc",new AbstractAction() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					cancelButton.doClick(0);
 				}
@@ -1896,6 +1881,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 *
 	 * @param e The event.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 
 		String name = e.getPropertyName();
@@ -2882,25 +2868,21 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	}
 
 
-	static {
-		// Some actions only work with Java 6+.
-		String ver = System.getProperty("java.specification.version");
-		IS_JAVA_6_PLUS = !ver.startsWith("1.4") && !ver.startsWith("1.5");
-	}
-
-
 	/**
 	 * Populates the "Favorites" popup menu when the "Favorites" menu
 	 * button is clicked.
 	 */
 	private class FavoritesPopupListener implements PopupMenuListener {
 
+		@Override
 		public void popupMenuCanceled(PopupMenuEvent e) {
 		}
 
+		@Override
 		public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
 		}
 
+		@Override
 		public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 
 			// Remove items added when popup previously became visible.
@@ -2980,6 +2962,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 */
 	private class RTextFileChooserItemListener implements ItemListener {
 
+		@Override
 		public void itemStateChanged(ItemEvent e) {
 
 			// Don't do anything if we're in the process of changing directories.
@@ -3015,6 +2998,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private class TextFieldListener extends FocusAdapter
 									implements DocumentListener {
 
+		@Override
 		public void changedUpdate(DocumentEvent e) {
 		}
 
@@ -3026,10 +3010,12 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			acceptButton.setEnabled(charCount>0);
 		}
 
+		@Override
 		public void insertUpdate(DocumentEvent e) {
 			handleDocumentChange(e);
 		}
 
+		@Override
 		public void removeUpdate(DocumentEvent e) {
 			handleDocumentChange(e);
 		}

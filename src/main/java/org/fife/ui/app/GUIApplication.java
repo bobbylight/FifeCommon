@@ -395,6 +395,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 *
 		 * @param e The action event.
 		 */
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
 				getApplication().getAboutDialog().setVisible(true);
@@ -454,6 +455,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 *
 		 * @param e The action event.
 		 */
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			getApplication().doExit();
 		}
@@ -510,6 +512,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 *
 		 * @param e The action event.
 		 */
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			GUIApplication app = getApplication();
 			if (app instanceof Component) {
@@ -584,6 +587,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 *
 		 * @param e The action event.
 		 */
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			GUIApplication app = getApplication();
 			app.setStatusBarVisible(!app.getStatusBarVisible());
@@ -639,6 +643,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 		 *
 		 * @param e The action event.
 		 */
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			GUIApplication app = getApplication();
 			app.setToolBarVisible(!app.getToolBarVisible());

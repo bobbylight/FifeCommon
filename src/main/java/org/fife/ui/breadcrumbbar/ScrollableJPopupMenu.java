@@ -265,6 +265,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 			this.increment = increment;
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			firstItemIndex += increment;
 			refresh();

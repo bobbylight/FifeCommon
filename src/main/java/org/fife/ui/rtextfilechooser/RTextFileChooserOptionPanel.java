@@ -149,6 +149,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	 *
 	 * @param e The action that occurred.
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		String actionCommand = e.getActionCommand();
@@ -360,6 +361,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	 *
 	 * @param e An event describing the change.
 	 */
+	@Override
 	public void modifiableTableChanged(ModifiableTableChangeEvent e) {
 		hasUnsavedChanges = true;
 		firePropertyChange(COLOR_CHANGED_PROPERTY, null,
@@ -502,6 +504,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			Object source = e.getSource();
 			if (source==okButton)
@@ -509,6 +512,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 			setVisible(false);
 		}
 
+		@Override
 		public void changedUpdate(DocumentEvent e) {
 		}
 
@@ -520,10 +524,12 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 			return extensionField.getText();
 		}
 
+		@Override
 		public void insertUpdate(DocumentEvent e) {
 			okButton.setEnabled(true);
 		}
 
+		@Override
 		public void removeUpdate(DocumentEvent e) {
 			okButton.setEnabled(extensionField.getDocument().getLength()>0);
 		}
@@ -546,6 +552,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		public int showMappingDialog() {
 			rc = CANCEL; // Set here in case they "X" the dialog out.
 			SwingUtilities.invokeLater(new Runnable() {
+				@Override
 				public void run() {
 					extensionField.requestFocusInWindow();
 					extensionField.selectAll();
@@ -557,6 +564,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 			return rc;
 		}
 
+		@Override
 		public void stateChanged(ChangeEvent e) {
 			// Ensure the document has text in it.
 			okButton.setEnabled(extensionField.getDocument().getLength()>0);
@@ -579,6 +587,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 			return row>0;
 		}
 
+		@Override
 		public Object[] getNewRowInfo(Object[] oldData) {
 			if (dialog==null)
 				dialog = new ExtensionColorMappingDialog(getOptionsDialog());

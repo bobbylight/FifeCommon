@@ -2,7 +2,7 @@
  * 11/14/2003
  *
  * ImageFileFilter - A FileFilter that filters everything except image files
- * processed by Swing (*.jpg, *.gif, *.png and *.bmp (on 1.5+)).
+ * processed by Swing (*.jpg, *.gif, *.png and *.bmp).
  * Copyright (C) 2003 Robert Futrell
  * http://fifesoft.com/rtext
  * Licensed under a modified BSD license.
@@ -20,7 +20,7 @@ import org.fife.ui.rtextfilechooser.Utilities;
 /**
  * A file filter for <code>JFileChooser</code>s that filters everything except
  * image files supported by Swing (<code>*.gif</code>, <code>*.jpg</code>,
- * <code>*.png</code>, and <code>*.bmp</code> (on 1.5+)).
+ * <code>*.png</code>, and <code>*.bmp</code>).
  *
  * @author Robert Futrell
  * @version 1.0

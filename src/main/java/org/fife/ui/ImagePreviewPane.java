@@ -61,6 +61,7 @@ public class ImagePreviewPane extends JComponent
 	 * Listens for when the user selects a new file in the parent
 	 * <code>javax.swing.JFileChooser</code>.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 
 		String propName = e.getPropertyName();

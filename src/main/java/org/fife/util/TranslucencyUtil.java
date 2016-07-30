@@ -11,6 +11,8 @@ package org.fife.util;
 
 import java.awt.Window;
 
+import org.fife.ui.UIUtil;
+
 
 /**
  * Utilities for translucent windows in Java 6 update 10 and newer.
@@ -37,16 +39,9 @@ public abstract class TranslucencyUtil {
 
 		if (instance==null) {
 
-			String ver = System.getProperty("java.specification.version");
-
 			try {
 
-				if ("1.4".equals(ver) || "1.5".equals(ver)) {
-					// Translucency is not supported in these versions.
-					instance = new DummyTranslucencyUtil();
-				}
-
-				else if ("1.6".equals(ver)) {
+				if (UIUtil.isPreJava7()) {
 					Class<?> clazz = Class.forName(
 								"org.fife.util.Java6TranslucencyUtil");
 					instance = (TranslucencyUtil)clazz.newInstance();

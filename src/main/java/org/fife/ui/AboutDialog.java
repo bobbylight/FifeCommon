@@ -138,6 +138,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 		// (starting in J2SE 5.0, this isn't the default behavior;
 		// the last tab added is initially shown).
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				tabbedPane.setSelectedIndex(0);
 			}
@@ -149,6 +150,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 	/**
 	 * Called whenever an action occurs in this dialog.
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		String actionCommand = e.getActionCommand();
 		if (actionCommand.equals("OK")) {
@@ -279,6 +281,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			escapePressed();
 		}

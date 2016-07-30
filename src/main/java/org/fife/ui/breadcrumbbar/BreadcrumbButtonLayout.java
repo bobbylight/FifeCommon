@@ -35,10 +35,12 @@ class BreadcrumbButtonLayout implements LayoutManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addLayoutComponent(String name, Component comp) {
 	}
 
 
+	@Override
 	public void layoutContainer(Container parent) {
 
 		synchronized (parent.getTreeLock()) {
@@ -121,6 +123,7 @@ class BreadcrumbButtonLayout implements LayoutManager {
 	}
 
 
+	@Override
 	public Dimension minimumLayoutSize(Container parent) {
 		return preferredLayoutSize(parent);
 	}
@@ -129,6 +132,7 @@ class BreadcrumbButtonLayout implements LayoutManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Dimension preferredLayoutSize(Container parent) {
 
 		synchronized (parent.getTreeLock()) {
@@ -164,6 +168,7 @@ class BreadcrumbButtonLayout implements LayoutManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void removeLayoutComponent(Component comp) {
 	}
 

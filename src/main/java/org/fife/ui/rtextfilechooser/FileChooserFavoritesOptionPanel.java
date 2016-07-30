@@ -198,6 +198,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 	 *
 	 * @param e An event describing the change.
 	 */
+	@Override
 	public void modifiableTableChanged(ModifiableTableChangeEvent e) {
 		hasUnsavedChanges = true;
 		firePropertyChange(FAVORITES_PROPERTY, null, new Integer(e.getRow()));
@@ -319,6 +320,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			Object source = e.getSource();
 			if (source==okButton) {
@@ -343,6 +345,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 			}
 		}
 
+		@Override
 		public void changedUpdate(DocumentEvent e) {
 		}
 
@@ -350,10 +353,12 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 			return dirField.getText();
 		}
 
+		@Override
 		public void insertUpdate(DocumentEvent e) {
 			okButton.setEnabled(true);
 		}
 
+		@Override
 		public void removeUpdate(DocumentEvent e) {
 			okButton.setEnabled(dirField.getDocument().getLength()>0);
 		}
@@ -365,6 +370,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 		public int showEditFavoriteDialog() {
 			rc = CANCEL; // Set here in case they "X" the dialog out.
 			SwingUtilities.invokeLater(new Runnable() {
+				@Override
 				public void run() {
 					dirField.requestFocusInWindow();
 					dirField.selectAll();
@@ -387,6 +393,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 
 		private EditFavoriteDialog dialog;
 
+		@Override
 		public Object[] getNewRowInfo(Object[] oldData) {
 			if (dialog==null) {
 				dialog = new EditFavoriteDialog(getOptionsDialog());

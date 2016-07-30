@@ -26,6 +26,7 @@ public abstract class StatusBarPlugin extends StatusBarPanel implements Plugin {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getOptionsDialogPanelParentPanelID() {
 		return parentOptionPanelID;
 	}

@@ -563,6 +563,7 @@ class FilePasteThread extends GUIWorkerThread {
 
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			Object source = e.getSource();
 			if (okButton==source) {
@@ -668,6 +669,7 @@ class FilePasteThread extends GUIWorkerThread {
 
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			Object source = e.getSource();
 			if (yes==source) {
@@ -757,6 +759,7 @@ class FilePasteThread extends GUIWorkerThread {
 			init(source, dest);
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			Object source = e.getSource();
@@ -874,6 +877,7 @@ class FilePasteThread extends GUIWorkerThread {
 			doForAll = false;
 		}
 
+		@Override
 		public void run() {
 			NameCollisionDialog ncd = null;
 			if (parent instanceof Frame) {

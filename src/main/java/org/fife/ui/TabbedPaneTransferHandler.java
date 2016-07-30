@@ -89,9 +89,11 @@ public class TabbedPaneTransferHandler extends TransferHandler
 	}
 
 
+	@Override
 	public void dragEnter(DropTargetDragEvent e) {}
 
 
+	@Override
 	public void dragExit(DropTargetEvent e) {
 		Component c = e.getDropTargetContext().getComponent();
 		if (c instanceof DrawDnDIndicatorTabbedPane) {
@@ -104,6 +106,7 @@ public class TabbedPaneTransferHandler extends TransferHandler
 	 * Called when a drag-and-drop operation is pending, and the mouse is
 	 * hovering over the destination component.
 	 */
+	@Override
 	public void dragOver(DropTargetDragEvent e) {
 
 		mouseLocation = e.getLocation();
@@ -156,6 +159,7 @@ public class TabbedPaneTransferHandler extends TransferHandler
 	}
 
 
+	@Override
 	public void drop(DropTargetDropEvent e) {
 		Component c = e.getDropTargetContext().getComponent();
 		if (c instanceof DrawDnDIndicatorTabbedPane) {
@@ -164,6 +168,7 @@ public class TabbedPaneTransferHandler extends TransferHandler
 	}
 
 
+	@Override
 	public void dropActionChanged(DropTargetDragEvent e) {}
 
 
@@ -346,6 +351,7 @@ public class TabbedPaneTransferHandler extends TransferHandler
 	 */
 	protected void selectTab(final JTabbedPane tabbedPane, final int index) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				tabbedPane.setSelectedIndex(index);
 			}
@@ -385,6 +391,7 @@ public class TabbedPaneTransferHandler extends TransferHandler
 								getBoundsAt(transferData.tabIndex);
 		}
 
+		@Override
 		public Object getTransferData(DataFlavor flavor)
 								throws UnsupportedFlavorException {
 			if (!isDataFlavorSupported(flavor)) {
@@ -393,10 +400,12 @@ public class TabbedPaneTransferHandler extends TransferHandler
 			return transferData;
 		}
 
+		@Override
 		public DataFlavor[] getTransferDataFlavors() {
 			return new DataFlavor[] { tabFlavor };
 		}
 
+		@Override
 		public boolean isDataFlavorSupported(DataFlavor flavor) {
 			return tabFlavor.equals(flavor);
 		}

@@ -118,6 +118,7 @@ public abstract class WizardPlugin implements Plugin, GUIApplicationConstants {
 	 *
 	 * @return The options panel.
 	 */
+	@Override
 	public abstract PluginOptionsDialogPanel getOptionsDialogPanel();
 
 

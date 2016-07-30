@@ -136,16 +136,19 @@ class RootManager {
 
 		private int i = 0;
 
+		@Override
 		public boolean hasNext() {
 			return i<rootCount;
 		}
 
+		@Override
 		public File next() {
 			if (!hasNext())
 				throw new NoSuchElementException();
 			return roots[i++];
 		}
 
+		@Override
 		public void remove() {
 			throw new UnsupportedOperationException("Cannot remove roots");
 		}

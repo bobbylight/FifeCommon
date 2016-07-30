@@ -64,7 +64,7 @@ import org.fife.ui.app.ExtendedLookAndFeelInfo;
  * <code>GUIApplication</code>.  The <code>minJavaVersion</code> attribute is
  * optional, and specifies the minimum Java version the JRE must be for the
  * application to offer this LookAndFeel as a choice.  This should be a double
- * value, such as "1.5", "1.6", etc.
+ * value, such as "1.7", "1.8", etc.
  * </p>
  * 
  * @author Robert Futrell
@@ -158,6 +158,7 @@ public class ThirdPartyLookAndFeelManager {
 			dir = new File(appRoot, dirName);
 		}
 		File[] files = dir.listFiles(new FileFilter() {
+			@Override
 			public boolean accept(File pathname) {
 				return pathname.getName().endsWith(".jar");
 			}

@@ -75,6 +75,7 @@ public class RScrollPane extends JScrollPane implements ActionListener {
 	 *
 	 * @param e The action event.
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		String command = e.getActionCommand();

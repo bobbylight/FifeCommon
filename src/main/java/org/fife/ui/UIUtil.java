@@ -27,7 +27,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Locale;
 import java.util.Map;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -573,13 +572,8 @@ public class UIUtil {
 	 */
 	public static final int getMnemonic(ResourceBundle msg, String key) {
 		int mnemonic = 0;
-		try {
-			Object value = msg.getObject(key);
-			if (value instanceof String) {
-				mnemonic = ((String)value).charAt(0);
-			}
-		} catch (MissingResourceException mre) {
-			// Swallow.  TODO: When we drop 1.4/1.5 support, use containsKey().
+		if (msg.containsKey(key)) {
+			mnemonic = msg.getString(key).charAt(0);
 		}
 		return mnemonic;
 	}
@@ -666,24 +660,12 @@ public class UIUtil {
 
 
 	/**
-	 * Returns whether this current JVM is Java 5 or earlier.
-	 *
-	 * @return Whether the current JVM is Java 5 or earlier.
-	 */
-	public static final boolean isPreJava6() {
-		return JAVA_VERSION==null ||
-			JAVA_VERSION.startsWith("1.5") || JAVA_VERSION.startsWith("1.4");
-	}
-
-
-	/**
 	 * Returns whether this current JVM is Java 6 or earlier.
 	 *
 	 * @return Whether the current JVM is Java 6 or earlier.
 	 */
 	public static final boolean isPreJava7() {
-		return JAVA_VERSION==null ||
-				JAVA_VERSION.startsWith("1.6") || isPreJava6();
+		return JAVA_VERSION==null || JAVA_VERSION.startsWith("1.6");
 	}
 
 

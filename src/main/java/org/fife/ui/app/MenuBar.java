@@ -11,7 +11,6 @@ package org.fife.ui.app;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
@@ -81,12 +80,9 @@ public class MenuBar extends JMenuBar {
 	 */
 	protected JMenu createMenu(ResourceBundle msg, String textKey) {
 		JMenu menu = new JMenu(msg.getString(textKey));
-		// TODO: When we remove Java 1.4/1.5 support, use msg.containsKey()
 		String mnemonicKey = textKey + MNEMONIC_SUFFIX;
-		try {
+		if (msg.containsKey(mnemonicKey)) {
 			menu.setMnemonic((int)msg.getString(mnemonicKey).charAt(0));
-		} catch (MissingResourceException mre) {
-			// Swallow
 		}
 		return menu;
 	}
@@ -104,12 +100,9 @@ public class MenuBar extends JMenuBar {
 	 */
 	protected JMenuItem createMenuItem(ResourceBundle msg, String textKey) {
 		JMenuItem item = new JMenuItem(msg.getString(textKey));
-		// TODO: When we remove Java 1.4/1.5 support, use msg.containsKey()
 		String mnemonicKey = textKey + MNEMONIC_SUFFIX;
-		try {
+		if (msg.containsKey(mnemonicKey)) {
 			item.setMnemonic((int)msg.getString(mnemonicKey).charAt(0));
-		} catch (MissingResourceException mre) {
-			// Swallow
 		}
 		return item;
 	}

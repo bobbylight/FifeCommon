@@ -89,6 +89,7 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 	 *
 	 * @param e The action event.
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		String command = e.getActionCommand();
@@ -96,8 +97,7 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 		if ("ToggleDetails".equals(command)) {
 			detailsButton.toggleCollapsed();
 			detailsButton.repaint();
-			// Need cast for setPreferredSize() to work in 1.4.
-			JPanel cp = (JPanel)getContentPane(); // Okay cast - we made it
+			Container cp = getContentPane();
 			Dimension d = null;
 			if (textPanel.getParent()==null) {
 				cp.add(textPanel);
@@ -216,6 +216,7 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 		JButton okButton = new JButton(msg.getString("Close"));
 		okButton.setMnemonic(msg.getString("CloseMnemonic").charAt(0));
 		okButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
 			}
@@ -267,9 +268,7 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 		descArea.firePropertyChange("wrapStyleWord", false, true);
 		// NOTE: Why must we reset cp's preferred size to keep pack()
 		// actually working here?
-		// Need cast for setPreferredSize() to work in 1.4.
-		JPanel cp = (JPanel)getContentPane(); // Okay cast since we made it
-		cp.setPreferredSize(null);
+		getContentPane().setPreferredSize(null);
 		pack(); // Resize for new message
 	}
 

@@ -179,6 +179,7 @@ class PluginLoader {
 			}
 			final Constructor<?> cnst = c.getConstructor(params);
 			SwingUtilities.invokeLater(new Runnable() {
+				@Override
 				public void run() {
 					try {
 						Plugin p = (Plugin)cnst.newInstance(objs);
@@ -222,6 +223,7 @@ class PluginLoader {
 
 		// Get all jars in the plugin directory.
 		File[] jars = pluginDir.listFiles(new FileFilter() {
+			@Override
 			public boolean accept(File f) {
 				return f.getName().endsWith(".jar");
 			}
@@ -285,6 +287,7 @@ class PluginLoader {
 					} catch (final Exception e) {
 						e.printStackTrace();
 						SwingUtilities.invokeLater(new Runnable() {
+							@Override
 							public void run() {
 								app.displayException(e);
 							}

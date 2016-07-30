@@ -252,6 +252,7 @@ public class CustomizableToolBar extends JToolBar {
 				cbMenuItem = new JCheckBoxMenuItem(
 					new AbstractAction(title) {
 						private static final long serialVersionUID = 1L;
+						@Override
 						public void actionPerformed(ActionEvent e) {
 							button.setVisible(!button.isVisible());
 							repaint();
@@ -325,6 +326,7 @@ public class CustomizableToolBar extends JToolBar {
 			super(name);
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			/* 8.5.2004/pwy: the assumption that getUI returns a BasicToolBarUI
@@ -371,6 +373,7 @@ public class CustomizableToolBar extends JToolBar {
 			super(name);
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			Component[] c = getComponents();
 			int num = c.length;

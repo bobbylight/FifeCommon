@@ -83,15 +83,13 @@ public class TagEntry {
 	 */
 	private static final String fixEscapes(String pattern) {
 
-		// TODO: Replace with StringBuilder and use better append methods
-		// in 1.5.
 		StringBuilder sb = new StringBuilder();
 
 		int old = 0;
 		int pos = 0;
 		int len = pattern.length();
 		while (old<len && (pos=pattern.indexOf('\\', old))>-1) {
-			sb.append(pattern.substring(old, pos)); // Replace in 1.5!
+			sb.append(pattern, old, pos);
 			if (pos<len-1) { // Should always be true
 				char ch = pattern.charAt(++pos);
 				switch (ch) {
@@ -118,7 +116,7 @@ public class TagEntry {
 			old = ++pos;
 		}
 		if (old<len) {
-			sb.append(pattern.substring(old)); // Replace in 1.5!
+			sb.append(pattern.substring(old));
 		}
 
 		return sb.toString();

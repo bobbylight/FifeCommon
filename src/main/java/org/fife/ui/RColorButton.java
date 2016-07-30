@@ -133,14 +133,17 @@ public class RColorButton extends JButton {
 			return color;
 		}
 
+		@Override
 		public int getIconWidth() {
 			return width;
 		}
 
+		@Override
 		public int getIconHeight() {
 			return height;
 		}
 
+		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			if (color!=null) {
 				g.setColor(color);
@@ -156,6 +159,7 @@ public class RColorButton extends JButton {
 	 */
 	protected class RColorButtonActionListener implements ActionListener {
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			Color chosenColor = JColorChooser.showDialog(
 									RColorButton.this,

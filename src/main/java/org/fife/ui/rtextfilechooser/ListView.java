@@ -81,6 +81,7 @@ class ListView extends JList implements RTextFileChooserView {
 	/**
 	 * Clears all files displayed by this view.
 	 */
+	@Override
 	public void clearDisplayedFiles() {
 		// setListData() replaces our ListModel, with a non-DefaultListModel
 		// model, which we don't want to do
@@ -94,6 +95,7 @@ class ListView extends JList implements RTextFileChooserView {
 	 *
 	 * @param file The file that is to be visible.
 	 */
+	@Override
 	public void ensureFileIsVisible(File file) {
 
 		// This will always be true because we explicitly set the
@@ -125,6 +127,7 @@ class ListView extends JList implements RTextFileChooserView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Color getDefaultFileColor() {
 		return getForeground();
 	}
@@ -135,6 +138,7 @@ class ListView extends JList implements RTextFileChooserView {
 	 *
 	 * @return The number of files currently being displayed.
 	 */
+	@Override
 	public int getDisplayedFileCount() {
 		return getModel().getSize();
 	}
@@ -147,6 +151,7 @@ class ListView extends JList implements RTextFileChooserView {
 	 * @return The file at that point (or <code>null</code> if there isn't
 	 *         one???).
 	 */
+	@Override
 	public File getFileAtPoint(Point p) {
 		int row = locationToIndex(p);
 		return (File)getModel().getElementAt(row);
@@ -159,6 +164,7 @@ class ListView extends JList implements RTextFileChooserView {
 	 * @return The selected file, or <code>null</code> if no file is
 	 *         selected.
 	 */
+	@Override
 	public File getSelectedFile() {
 		return (File)getSelectedValue();
 	}
@@ -169,6 +175,7 @@ class ListView extends JList implements RTextFileChooserView {
 	 *
 	 * @return An array of all selected files.
 	 */
+	@Override
 	public File[] getSelectedFiles() {
 
 		Object[] objArray = getSelectedValues();
@@ -213,6 +220,7 @@ class ListView extends JList implements RTextFileChooserView {
 	 * this view, but nobody else knows about these listeners except for the
 	 * view.
 	 */
+	@Override
 	public void removeAllListeners() {
 		removeMouseListener(mouseListener);
 		removeListSelectionListener(selectionListener);
@@ -225,6 +233,7 @@ class ListView extends JList implements RTextFileChooserView {
 	 *
 	 * @param p The point at which a file should be selected.
 	 */
+	@Override
 	public void selectFileAtPoint(Point p) {
 		int row = locationToIndex(p);
 		Rectangle bounds = getCellBounds(row, row);
@@ -240,6 +249,7 @@ class ListView extends JList implements RTextFileChooserView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setDisplayedFiles(List<File> files) {
 		// setListData() replaces our ListModel, with a non-DefaultListModel
 		// model, which we don't want to do
@@ -258,6 +268,7 @@ class ListView extends JList implements RTextFileChooserView {
 	 * @param enabled Whether or not to allow the selection of multiple
 	 *        files.
 	 */
+	@Override
 	public void setMultiSelectionEnabled(boolean enabled) {
 		getSelectionModel().setSelectionMode(
 				enabled ? ListSelectionModel.MULTIPLE_INTERVAL_SELECTION :
@@ -272,6 +283,7 @@ class ListView extends JList implements RTextFileChooserView {
 	 *        the file chooser's <code>currentDirectory</code>, then
 	 *        they are not selected.
 	 */
+	@Override
 	public void setSelectedFiles(File[] files) {
 
 		int num = files.length;

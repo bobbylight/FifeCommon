@@ -184,6 +184,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 		// Not sure why, but we have to do this later, else this text field's
 		// size is reported as 0 and the popup's width is calculated wrong.
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				discoverParentWindow();
 			}
@@ -227,6 +228,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 	 * Called when the text component's document receives a style change.
 	 * Since it is a plain document, this is never called.
 	 */
+	@Override
 	public void changedUpdate(DocumentEvent e) {
 	}
 
@@ -260,6 +262,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 	 * Called when the parent dialog/frame of this text field is hidden.
 	 * This should not be overridden.
 	 */
+	@Override
 	public void componentHidden(ComponentEvent e) {
 		processParentComponentEvent(e);
 	}
@@ -269,6 +272,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 	 * Called when the parent dialog/frame of this text field is moved.
 	 * This should not be overridden.
 	 */
+	@Override
 	public void componentMoved(ComponentEvent e) {
 		processParentComponentEvent(e);
 	}
@@ -278,6 +282,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 	 * Called when the parent dialog/frame of this text field is resized.
 	 * This should not be overridden.
 	 */
+	@Override
 	public void componentResized(ComponentEvent e) {
 		processParentComponentEvent(e);
 	}
@@ -287,6 +292,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 	 * Called when the parent dialog/frame of this text field is shown.
 	 * This should not be overridden.
 	 */
+	@Override
 	public void componentShown(ComponentEvent e) {
 		processParentComponentEvent(e);
 	}
@@ -461,9 +467,11 @@ System.out.println("DEBUG: *** parent is null");
 	/**
 	 * Called when text is inserted into this text component.
 	 */
+	@Override
 	public void insertUpdate(DocumentEvent e) {
 		if (isShowing() && fileSystemAware && !ignoreDocumentUpdates) {
 			SwingUtilities.invokeLater(new Runnable() {
+				@Override
 				public void run() {
 					String entered = updateComboBoxContents();
 					if (getAutoCompleteFileName()) {
@@ -488,6 +496,7 @@ System.out.println("DEBUG: *** parent is null");
 
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "OnDown");
 		actionMap.put("OnDown", new AbstractAction() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (popupWindow!=null && popupWindow.isVisible()) {
 					int index = fileList.getSelectedIndex();
@@ -501,6 +510,7 @@ System.out.println("DEBUG: *** parent is null");
 
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "OnUp");
 		actionMap.put("OnUp", new AbstractAction() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (popupWindow!=null && popupWindow.isVisible()) {
 					int index = fileList.getSelectedIndex();
@@ -515,6 +525,7 @@ System.out.println("DEBUG: *** parent is null");
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0),
 												"OnPageDown");
 		actionMap.put("OnPageDown", new AbstractAction() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (popupWindow!=null && popupWindow.isVisible()) {
 					int index = fileList.getSelectedIndex();
@@ -531,6 +542,7 @@ System.out.println("DEBUG: *** parent is null");
 
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0),"OnPageUp");
 		actionMap.put("OnPageUp", new AbstractAction() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (popupWindow!=null && popupWindow.isVisible()) {
 					int index = fileList.getSelectedIndex();
@@ -546,6 +558,7 @@ System.out.println("DEBUG: *** parent is null");
 
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "OnEsc");
 		actionMap.put("OnEsc", new AbstractAction() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Hide the popup window if necessary;
 				// otherwise, call the default binding.
@@ -599,6 +612,7 @@ System.out.println("DEBUG: *** parent is null");
 		// advantage of the auto-completing of the next matching filename.
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "OnTab");
 		actionMap.put("OnTab", new AbstractAction() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Skip to end of selection if necessary, otherwise,
 				// do the default and focus the next component.
@@ -624,6 +638,7 @@ System.out.println("DEBUG: *** parent is null");
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
 								InputEvent.SHIFT_MASK), "OnShiftTab");
 		actionMap.put("OnShiftTab", new AbstractAction() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Programmatically focus previous component as focus keys
 				// have been disabled.
@@ -709,9 +724,11 @@ System.out.println("DEBUG: *** parent is null");
 	/**
 	 * Called when text is removed from the text component's document.
 	 */
+	@Override
 	public void removeUpdate(DocumentEvent e) {
 		if (isShowing() && fileSystemAware && !ignoreDocumentUpdates) {
 			SwingUtilities.invokeLater(new Runnable() {
+				@Override
 				public void run() {
 					updateComboBoxContents();
 				}
@@ -772,6 +789,7 @@ System.out.println("DEBUG: *** parent is null");
 		// Lazily create the file filter used.
 		if (directoriesOnly) {
 			directoriesOnlyFilenameFilter = new FilenameFilter() {
+				@Override
 				public boolean accept(File parentDir, String fileName) {
 					return new File(parentDir.getAbsolutePath(),
 									fileName).isDirectory();
@@ -1061,6 +1079,7 @@ System.out.println("DEBUG: *** parent is null");
 	 *
 	 * @param e The event.
 	 */
+	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		// NOTE: Use SwingUtilities#invokeLater() here to avoid a Swing
 		// "bug" - Calling JList#getSelectedValue() from a list selection
@@ -1084,6 +1103,7 @@ System.out.println("DEBUG: *** parent is null");
 			this.dir = dir;
 		}
 
+		@Override
 		public void run() {
 			//long start = System.currentTimeMillis();
 			//System.out.println("Starting at: " + start);
@@ -1103,6 +1123,7 @@ System.out.println("DEBUG: *** parent is null");
 	 */
 	private class ListValueChangedRunnable implements Runnable {
 
+		@Override
 		public void run() {
 			ignoreDocumentUpdates = true;
 			String selectedValue = (String)fileList.getSelectedValue();

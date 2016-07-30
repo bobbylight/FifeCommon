@@ -10,7 +10,6 @@
 package org.fife.ui;
 
 import java.net.URL;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
@@ -113,19 +112,13 @@ public abstract class StandardAction extends AbstractAction {
 	 */
 	public StandardAction(ResourceBundle msg, String key) {
 
-		// TODO: Use msg.containsKey() when we drop 1.4/1.5 support
-		try {
+		if (msg.containsKey(key)) {
 			setName(msg.getString(key));
-		} catch (MissingResourceException mre) {
-			// Swallow
 		}
 
-		// TODO: Use msg.containsKey() when we drop 1.4/1.5 support
-		try {
-			String mnemonicKey = key + ".Mnemonic";
+		String mnemonicKey = key + ".Mnemonic";
+		if (msg.containsKey(mnemonicKey)) {
 			setMnemonic(msg.getString(mnemonicKey).charAt(0));
-		} catch (MissingResourceException mre) {
-			// Swallow
 		}
 
 		// Try OS-specific shortcut first, then generic shortcut
@@ -138,12 +131,9 @@ public abstract class StandardAction extends AbstractAction {
 			setDefaultAccelerator(ks);
 		}
 
-		// TODO: Use msg.containsKey() when we drop 1.4/1.5 support
-		try {
-			String shortDescKey = key + ".ShortDesc";
+		String shortDescKey = key + ".ShortDesc";
+		if (msg.containsKey(shortDescKey)) {
 			setShortDescription(msg.getString(shortDescKey));
-		} catch (MissingResourceException mre) {
-			// Swallow
 		}
 	}
 
@@ -196,18 +186,14 @@ public abstract class StandardAction extends AbstractAction {
 	 * @return The key stroke, or <code>null</code> if the property is not
 	 *         found or the value is not a valid key stroke.
 	 */
-	private static final KeyStroke getKeyStroke(ResourceBundle msg,
-			String key) {
-		// TODO: Use msg.containsKey() when we drop 1.4/1.5 support
+	private static final KeyStroke getKeyStroke(ResourceBundle msg,String key) {
 		KeyStroke ks = null;
-		try {
+		if (msg.containsKey(key)) {
 			String temp = msg.getString(key);
 			if (temp!=null) {
 				temp = massageAcceleratorString(temp);
 				ks = KeyStroke.getKeyStroke(temp);
 			}
-		} catch (MissingResourceException mre) {
-			// Swallow
 		}
 		return ks;
 	}
@@ -360,8 +346,7 @@ public abstract class StandardAction extends AbstractAction {
 	 * @see #getMnemonic()
 	 */
 	public void setMnemonic(int mnemonic) {
-		// TODO: When we drop 1.4 support, use Integer.valueOf(mnemonic).
-		putValue(MNEMONIC_KEY, mnemonic>0 ? new Integer(mnemonic) : null);
+		putValue(MNEMONIC_KEY, mnemonic>0 ? Integer.valueOf(mnemonic) : null);
 	}
 
 
@@ -405,7 +390,6 @@ public abstract class StandardAction extends AbstractAction {
 					suffix = ".Solaris";
 					break;
 				default:
-					suffix = null;
 					break;
 			}
 		}

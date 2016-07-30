@@ -181,6 +181,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	/**
 	 * Clears all files displayed by this view.
 	 */
+	@Override
 	public void clearDisplayedFiles() {
 		((DefaultTableModel)getModel()).setRowCount(0); // Just so the file list gets erased.
 	}
@@ -191,6 +192,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 *
 	 * @param file The file that is to be visible.
 	 */
+	@Override
 	public void ensureFileIsVisible(File file) {
 		int row = getRowFor(file);
 		if (row!=-1)
@@ -225,6 +227,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Color getDefaultFileColor() {
 		return getForeground();
 	}
@@ -242,6 +245,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 *
 	 * @return The number of files currently being displayed.
 	 */
+	@Override
 	public int getDisplayedFileCount() {
 		return getRowCount();
 	}
@@ -254,6 +258,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * @return The file at that point, or <code>null</code> if there isn't
 	 *         one.
 	 */
+	@Override
 	public File getFileAtPoint(Point p) {
 		int row = rowAtPoint(p);
 		return row==-1 ? null : (File)getValueAt(row, 0);
@@ -324,6 +329,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * @return The selected file, or <code>null</code> if no file is
 	 *         selected.
 	 */
+	@Override
 	public File getSelectedFile() {
 		int index = getSelectedRow();
 		return index==-1 ? null : (File)getValueAt(index, 0);
@@ -335,6 +341,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 *
 	 * @return An array of all selected files.
 	 */
+	@Override
 	public File[] getSelectedFiles() {
 
 		int[] selectedRows = getSelectedRows();
@@ -424,6 +431,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * this view, but nobody else knows about these listeners except for the
 	 * view.
 	 */
+	@Override
 	public void removeAllListeners() {
 		removeMouseListener(mouseListener);
 		removeKeyListener(keyListener);
@@ -450,6 +458,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 *
 	 * @param p The point at which a file should be selected.
 	 */
+	@Override
 	public void selectFileAtPoint(Point p) {
 		int row = rowAtPoint(p); // -1 if p isn't actually in table.
 		setRowSelectionInterval(row, row);
@@ -462,6 +471,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 *
 	 * @param files The files to display.
 	 */
+	@Override
 	public void setDisplayedFiles(List<File> files) {
 
 		DetailsViewModel tableModel =
@@ -481,6 +491,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * @param enabled Whether or not to allow the selection of multiple
 	 *        files.
 	 */
+	@Override
 	public void setMultiSelectionEnabled(boolean enabled) {
 		getSelectionModel().setSelectionMode(
 				enabled ? ListSelectionModel.MULTIPLE_INTERVAL_SELECTION :
@@ -495,6 +506,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 *        the file chooser's <code>currentDirectory</code>, then
 	 *        they are not selected.
 	 */
+	@Override
 	public void setSelectedFiles(File[] files) {
 		int num = files.length;
 		if(num>0) {
@@ -584,6 +596,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 			this.files = files;
 		}
 
+		@Override
 		public void run() {
 
 			int i = 0;
@@ -607,6 +620,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 				i = max;
 				SwingUtilities.invokeLater(new Runnable() {
+					@Override
 					public void run() {
 						addFileAttributes(batch);
 					}
@@ -752,6 +766,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 */
 	private static class FileComparator implements Comparator<File> {
 
+		@Override
 		public int compare(File f1, File f2) {
 			boolean f1IsDir = f1.isDirectory();
 			boolean f2IsDir = f2.isDirectory();
@@ -784,6 +799,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 			this.modified = modified;
 		}
 
+		@Override
 		public int compareTo(FileModifiedWrapper w2) {
 			if (modified==w2.modified) {
 				return 0;
@@ -812,6 +828,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 			this.size = size;
 		}
 
+		@Override
 		public int compareTo(FileSizeWrapper w2) {
 			if (size==w2.size) {
 				return 0;

@@ -177,6 +177,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	/**
 	 * Listens for action events in this dialog.
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		String actionCommand = e.getActionCommand();
@@ -431,6 +432,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 * basically just listens for the user to change a value, so it can
 	 * activate the "Apply" button.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 		if (!applyButton.isEnabled())
 			applyButton.setEnabled(true);
@@ -695,6 +697,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	/**
 	 * Listens for the user to select values in the tree.
 	 */
+	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 
 		// Be careful and check for nulls as we support branch nodes not

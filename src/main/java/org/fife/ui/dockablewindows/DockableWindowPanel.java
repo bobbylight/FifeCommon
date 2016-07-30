@@ -201,6 +201,7 @@ public class DockableWindowPanel extends JPanel
 	 *
 	 * @param e The dockable window event.
 	 */
+	@Override
 	public void dockableWindowPositionChanged(DockableWindowEvent e) {
 		DockableWindow window = (DockableWindow)e.getSource();
 		// Remove window from old position.  Note that we should not
@@ -219,6 +220,7 @@ public class DockableWindowPanel extends JPanel
 	 *
 	 * @param e The dockable window event.
 	 */
+	@Override
 	public void dockableWindowPositionWillChange(DockableWindowEvent e) {
 	}
 
@@ -345,6 +347,7 @@ public class DockableWindowPanel extends JPanel
 	 *
 	 * @param e The property change event.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 
 		String name = e.getPropertyName();
@@ -779,19 +782,24 @@ public class DockableWindowPanel extends JPanel
 				}
 			}
 
+			@Override
 			public void mouseClicked(MouseEvent e) {
 			}
 
+			@Override
 			public void mouseEntered(MouseEvent e) {
 			}
 
+			@Override
 			public void mouseExited(MouseEvent e) {
 			}
 
+			@Override
 			public void mousePressed(MouseEvent e) {
 				maybeShowPopup(e);
 			}
 
+			@Override
 			public void mouseReleased(MouseEvent e) {
 				maybeShowPopup(e);
 			}
@@ -810,6 +818,7 @@ public class DockableWindowPanel extends JPanel
 					b.putClientProperty("DockableWindow", dwind);
 					final int index = i;
 					b.addActionListener(new ActionListener() {
+						@Override
 						public void actionPerformed(ActionEvent e) {
 							windowPanel.setActiveDockableWindow(index);
 							setCollapsed(false);

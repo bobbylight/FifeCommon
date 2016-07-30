@@ -32,6 +32,7 @@ public abstract class AbstractPlugin implements Plugin {
 
 	protected AbstractPlugin() {
 		UIManager.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				String property = e.getPropertyName();
 				if ("lookAndFeel".equals(property)) {
@@ -45,6 +46,7 @@ public abstract class AbstractPlugin implements Plugin {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getOptionsDialogPanelParentPanelID() {
 		return parentOptionPanelID;
 	}

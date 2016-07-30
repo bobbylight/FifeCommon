@@ -314,6 +314,7 @@ public class WizardPluginDialog extends JDialog {
 	 */
 	private class Listener implements ActionListener {
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			String actionCommand = e.getActionCommand();

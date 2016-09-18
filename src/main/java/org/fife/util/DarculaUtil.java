@@ -29,13 +29,37 @@ public class DarculaUtil {
 
 
 	/**
-	 * Returns whether the currently installed LookAndFeel is Substance.
+	 * Returns whether the currently installed LookAndFeel is Darcula.
 	 *
-	 * @return Whether the currently installed LookAndFeel is Substance.
+	 * @return Whether the currently installed LookAndFeel is Darcula.
+	 * @see #isDarculaLookAndFeel(String)
 	 */
-	public static boolean isSubstanceInstalled() {
-		LookAndFeel laf = UIManager.getLookAndFeel();
-		return laf != null && "DarculaLaf".equals(laf.getClass().getSimpleName());
+	public static boolean isDarculaInstalled() {
+		return isDarculaLookAndFeel(UIManager.getLookAndFeel());
+	}
+
+
+	/**
+	 * Returns whether a LookAndFeel is Darcula.
+	 *
+	 * @param laf The LookAndFeel.
+	 * @return Whether the LaF is Darcula.
+	 * @see #isDarculaInstalled()
+	 */
+	public static boolean isDarculaLookAndFeel(LookAndFeel laf) {
+		return laf != null && isDarculaLookAndFeel(laf.getClass().getSimpleName());
+	}
+
+
+	/**
+	 * Returns whether a LookAndFeel is Darcula.
+	 *
+	 * @param laf The class name of the LookAndFeel.
+	 * @return Whether the LaF is Darcula.
+	 * @see #isDarculaInstalled()
+	 */
+	public static boolean isDarculaLookAndFeel(String laf) {
+		return laf != null && laf.endsWith("DarculaLaf");
 	}
 
 

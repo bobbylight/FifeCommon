@@ -214,6 +214,19 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 
 
 	/**
+	 * Fires an options-related event to all options panels.  This is a crude
+	 * way for one options panel to interact with others.
+	 *
+	 * @param event The event, which should not be {@code null}.
+	 */
+	void broadcast(String event) {
+		for (OptionsDialogPanel panel : optionsPanels) {
+			panel.optionsEvent(event);
+		}
+	}
+
+
+	/**
 	 * Returns the key to use to store/retrieve a panel in the CardLayout
 	 * display panel.
 	 *

@@ -385,6 +385,22 @@ public abstract class OptionsDialogPanel extends JPanel {
 
 
 	/**
+	 * Called when an options-related event is broadcasted to all panels in
+	 * the parent options dialog.<p>
+	 * The default implementation simply forwards the event to all of its child
+	 * panels, if any.  Subclasses should be sure to call the super
+	 * implementation to continue this behavior.
+	 *
+	 * @param event The event.
+	 */
+	public void optionsEvent(String event) {
+		for (OptionsDialogPanel panel : childPanels) {
+			panel.optionsEvent(event);
+		}
+	}
+
+
+	/**
 	 * Sets the icon to use for this option panel in the dialog.
 	 *
 	 * @param icon The icon to use, or <code>null</code> for none.

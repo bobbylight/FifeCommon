@@ -219,7 +219,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 *
 	 * @param event The event, which should not be {@code null}.
 	 */
-	void broadcast(String event) {
+	public void broadcast(String event) {
 		for (OptionsDialogPanel panel : optionsPanels) {
 			panel.optionsEvent(event);
 		}

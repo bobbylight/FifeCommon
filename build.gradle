@@ -38,7 +38,7 @@ compileJava {
 		}
 	}
 	else {
-		println "Note: It is recommended to set your boot classpath to a Java 5 JDK, which you have not done."
+		println "Note: It is recommended to set your boot classpath to a Java 6 JDK, which you have not done."
 	}
 	options.compilerArgs << "-Xlint:deprecation" << '-Xlint:unchecked'
 }

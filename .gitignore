@@ -4,4 +4,6 @@ dist
 build
 .gradle
 fife.common_Source.zip
-
+.settings/
+.project
+.classpath

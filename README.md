@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/bobbylight/FifeCommon.svg?branch=master)](https://travis-ci.org/bobbylight/FifeCommon)
+
 FifeCommon is a base library for building Java Swing applications.  It handles the following tasks:
 
 * Application lifecycle (bootstrap, plugin loading, cleanup, shutdown)

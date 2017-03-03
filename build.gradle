@@ -21,7 +21,7 @@ task wrapper(type: Wrapper) {
 }
 
 checkstyle {
-	toolVersion = '7.0'
+	toolVersion = '7.6'
 	configFile = 'config/checkstyle/checkstyle.xml' as File
 }
 

@@ -319,7 +319,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @param language The language to use.  If <code>null</code>,
 	 *        English will be used.
 	 */
-	void setLanguage(final String language);
+	void setLanguage(String language);
 
 
 	/**

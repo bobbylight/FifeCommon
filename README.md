@@ -25,7 +25,7 @@ This can be added to `<maven-home>/gradle.properties` if desired, to avoid diffs
 `gradle.properties`.  For example:
 
     On Windows:
-      java6CompileBootClasspath=C:/java/jdk1.8.0_102/jre/lib/rt.jar
+      java6CompileBootClasspath=c:/java/32/jdk1.6.0_45/jre/lib/rt.jar
     On OS X:
       java6CompileBootClasspath=/Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home/jre/lib/rt.jar
 

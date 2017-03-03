@@ -1,3 +1,7 @@
+/*
+ * Licensed under a modified BSD license.
+ * See the included license file for details.
+ */
 package org.fife.ui.dockablewindows;
 
 import java.awt.Color;

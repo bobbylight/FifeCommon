@@ -882,7 +882,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * application to "open a file."
 	 */
 	@Override
-	public abstract void openFile(final String fileName);
+	public abstract void openFile(String fileName);
 
 
 	/**

@@ -27,14 +27,11 @@ class BreadcrumbButtonLayout implements LayoutManager {
 	private int vgap;
 
 
-	public BreadcrumbButtonLayout() {
+	BreadcrumbButtonLayout() {
 		vgap = 0;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void addLayoutComponent(String name, Component comp) {
 	}
@@ -165,9 +162,6 @@ class BreadcrumbButtonLayout implements LayoutManager {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void removeLayoutComponent(Component comp) {
 	}

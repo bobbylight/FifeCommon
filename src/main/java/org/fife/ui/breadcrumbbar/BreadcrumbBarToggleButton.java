@@ -23,7 +23,7 @@ import javax.swing.plaf.ButtonUI;
 class BreadcrumbBarToggleButton extends JToggleButton {
 
 
-	public BreadcrumbBarToggleButton(Icon icon) {
+	BreadcrumbBarToggleButton(Icon icon) {
 		super(icon);
 	}
 

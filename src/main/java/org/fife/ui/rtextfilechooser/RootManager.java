@@ -27,7 +27,7 @@ import javax.swing.filechooser.FileSystemView;
  * @author Robert Futrell
  * @version 1.0
  */
-class RootManager {
+final class RootManager {
 
 	private File[] roots;
 	private int rootCount;
@@ -49,7 +49,7 @@ class RootManager {
 	 *
 	 * @return An array of the roots of the local file system.
 	 */
-	private static final File[] getAllRoots() {
+	private static File[] getAllRoots() {
 		FileSystemView fsv = FileSystemView.getFileSystemView();
 		ArrayList<File> list = new ArrayList<File>(Arrays.asList(fsv.getRoots()));
 		File[] moreRoots = File.listRoots();

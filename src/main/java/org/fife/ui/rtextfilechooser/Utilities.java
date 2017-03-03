@@ -40,7 +40,7 @@ import org.fife.ui.rtextfilechooser.filters.ExtensionFileFilter;
  * @version 1.0
  * @see RTextFileChooser
  */
-public class Utilities {
+public final class Utilities {
 
 	private static final String EXTENSION		= "Extension";
 	private static final String EXTENSION_FILTER	= "ExtensionFileFilter";
@@ -51,7 +51,7 @@ public class Utilities {
 	/**
 	 * Should only be accessed on the EDT.
 	 */
-	private static final DateFormat lastModifiedDateFormat =
+	private static final DateFormat LAST_MODIFIED_DATE_FORMAT =
 							new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 
 	/**
@@ -64,6 +64,14 @@ public class Utilities {
 		fileSizeFormat.setGroupingUsed(true);
 		fileSizeFormat.setMinimumFractionDigits(0);
 		fileSizeFormat.setMaximumFractionDigits(1);
+	}
+
+
+	/**
+	 * Private constructor to prevent instantiation.
+	 */
+	private Utilities() {
+		// Do nothing
 	}
 
 
@@ -176,7 +184,7 @@ InputSource is = new InputSource(new FileReader(file));
 	 *
 	 * @return Whether the current clipboard buffer contains files.
 	 */
-	public static final boolean getClipboardContainsFileList() {
+	public static boolean getClipboardContainsFileList() {
 		Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
 		Transferable contents = clip.getContents(null);
 		DataFlavor accepted = DataFlavor.javaFileListFlavor;
@@ -191,7 +199,7 @@ InputSource is = new InputSource(new FileReader(file));
 	 * @return The extension, or <code>null</code> if the file name has no
 	 *         extension.
 	 */
-	public static final String getExtension(String fileName) {
+	public static String getExtension(String fileName) {
 		int lastDot = fileName.lastIndexOf('.');
 		return lastDot>-1 ? fileName.substring(lastDot+1) : null;
 	}
@@ -206,7 +214,7 @@ InputSource is = new InputSource(new FileReader(file));
 	 * @return The string.  Note that this will be invalid if <code>file</code>
 	 *         is a directory.
 	 */
-	public static final String getFileSizeStringFor(File file) {
+	public static String getFileSizeStringFor(File file) {
 		return getFileSizeStringFor(file.length(), false);
 	}
 
@@ -221,7 +229,7 @@ InputSource is = new InputSource(new FileReader(file));
 	 * @return The string.
 	 * @see #getFileSizeStringFor(File)
 	 */
-	public static final String getFileSizeStringFor(long size,
+	public static String getFileSizeStringFor(long size,
 										boolean reportInKB) {
 
 		String str = null;
@@ -243,7 +251,7 @@ InputSource is = new InputSource(new FileReader(file));
 
 			// Keep dividing by 1024 until you get the largest unit that goes
 			// into this file's size.
-			while ( count<4 && ((tempSize = prevSize/1024f)>=1)) {
+			while (count<4 && ((tempSize = prevSize/1024f)>=1)) {
 				prevSize = tempSize;
 				count++;
 			}
@@ -272,9 +280,9 @@ InputSource is = new InputSource(new FileReader(file));
 	 * @param date The date, as a <code>long</code>.
 	 * @return A string representation of the date.
 	 */
-	public static final String getLastModifiedString(long date) {
+	public static String getLastModifiedString(long date) {
 		Date date2 = new Date(date);
-		return lastModifiedDateFormat.format(date2); // Okay as called on EDT
+		return LAST_MODIFIED_DATE_FORMAT.format(date2); // Okay as called on EDT
 	}
 
 
@@ -283,7 +291,7 @@ InputSource is = new InputSource(new FileReader(file));
 	 * file chooser.  See the description of the XML file format in the
 	 * Javadoc for method {@link #addFileFilters}.
 	 *
-	 * @param node The XML node from which to read.
+	 * @param root The XML node from which to read.
 	 * @param chooser The file chooser to which to add file filters.
 	 * @throws IOException If an I/O error occurs.
 	 */

@@ -25,7 +25,7 @@ public abstract class FileIOExtras {
 	/**
 	 * Singleton instance.
 	 */
-	private static FileIOExtras INSTANCE;
+	private static FileIOExtras instance;
 
 	/**
 	 * Whether we've attempted to load the singleton instance.
@@ -46,7 +46,7 @@ public abstract class FileIOExtras {
 	 * @return The instance, or <code>null</code> if this platform
 	 *         does not support this feature.
 	 */
-	public synchronized static FileIOExtras getInstance() {
+	public static synchronized FileIOExtras getInstance() {
 		if (!loaded) {
 			loaded = true;
 			String os = System.getProperty("os.name");
@@ -54,19 +54,19 @@ public abstract class FileIOExtras {
 				String arch = System.getProperty("os.arch");
 				try {
 					if ("x86".equals(arch)) {
-						INSTANCE = new Win32FileIOExtras();
+						instance = new Win32FileIOExtras();
 					}
 					else if ("amd64".equals(arch)) {
-						INSTANCE = new x64FileIOExtras();
+						instance = new x64FileIOExtras();
 					}
 				} catch (UnsatisfiedLinkError ule) {
 					// dll not found.  We'll fall back to Java's
 					// File.delete().
-					INSTANCE = null; // Keep FindBugs happy
+					instance = null; // Keep FindBugs happy
 				}
 			}
 		}
-		return INSTANCE;
+		return instance;
 	}
 
 

@@ -23,7 +23,7 @@ import org.pushingpixels.substance.internal.ui.SubstanceTableUI.TableCellId;
 /**
  * Renderer used for columns displaying <code>File</code>s in a
  * <code>JTable</code> when Substance is installed.
- * 
+ *
  * @author Robert Futrell
  * @version 1.0
  * @see DetailsViewFileNameRenderer
@@ -34,7 +34,7 @@ class DetailsViewSubstanceFileNameRenderer
 	private RTextFileChooser chooser;
 
 
-	public DetailsViewSubstanceFileNameRenderer(RTextFileChooser chooser) {
+	DetailsViewSubstanceFileNameRenderer(RTextFileChooser chooser) {
 		this.chooser = chooser;
 	}
 
@@ -71,7 +71,7 @@ class DetailsViewSubstanceFileNameRenderer
 	}
 
 
-	private static final boolean substanceAndRollover(JTable table, int row,
+	private static boolean substanceAndRollover(JTable table, int row,
 			int col) {
 		// Already know we're Substance if this renderer is installed...
 		SubstanceTableUI ui = (SubstanceTableUI)table.getUI();

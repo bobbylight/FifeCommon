@@ -23,7 +23,8 @@ import java.util.prefs.Preferences;
  * @author Robert Futrell
  * @version 0.7
  */
-class FileChooserPreferences {
+@SuppressWarnings("checkstyle:VisibilityModifier")
+final class FileChooserPreferences {
 
 	public boolean showHiddenFiles;
 	public boolean fileSystemAware;

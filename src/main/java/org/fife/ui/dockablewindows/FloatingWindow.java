@@ -28,7 +28,7 @@ class FloatingWindow extends JFrame {
 	 *
 	 * @param window The dockable window to display.
 	 */
-	public FloatingWindow(DockableWindow window) {
+	FloatingWindow(DockableWindow window) {
 		setContentPane(window);
 		setTitle(window.getDockableWindowTitle());
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);

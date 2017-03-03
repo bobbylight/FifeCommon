@@ -23,15 +23,15 @@ public interface DrawDnDIndicatorTabbedPane {
 
 
 	/**
-	 * Clears the rectangle indicating where the new tab will be "dropped."
+	 * Clears the rectangle indicating where the new tab will be "dropped".
 	 *
 	 * @see #setDnDIndicatorRect
 	 */
-	public void clearDnDIndicatorRect();
+	void clearDnDIndicatorRect();
 
 
 	/**
-	 * Sets the rectangle indicating where the new tab will be "dropped."
+	 * Sets the rectangle indicating where the new tab will be "dropped".
 	 *
 	 * @param x The x-location of the rectangle.
 	 * @param y The y-location of the rectangle.
@@ -39,7 +39,7 @@ public interface DrawDnDIndicatorTabbedPane {
 	 * @param height The height of the rectangle.
 	 * @see #clearDnDIndicatorRect
 	 */
-	public void setDnDIndicatorRect(int x, int y, int width, int height);
+	void setDnDIndicatorRect(int x, int y, int width, int height);
 
 
 }

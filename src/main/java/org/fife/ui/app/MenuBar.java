@@ -47,7 +47,7 @@ public class MenuBar extends JMenuBar {
 		add(menu, getExtraMenuInsertionIndex());
 	}
 
-	private static final void configureMenuItem(JMenuItem item, String desc) {
+	private static void configureMenuItem(JMenuItem item, String desc) {
 		// Since these menu items are often configured with Actions, we must
 		// explicitly set the tool tip text to null
 		item.setToolTipText(null);

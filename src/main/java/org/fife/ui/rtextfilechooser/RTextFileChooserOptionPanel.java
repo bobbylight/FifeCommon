@@ -232,9 +232,9 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		UIUtil.fixComboOrientation(openFilesStyleCombo);
 
 		/*
-		openFilesStyleCombo.addSpecialItem(msg.getString("Bold"),
+		openFilesStyleCombo.addSpecialItem(MSG.getString("Bold"),
 								""+RTextFileChooser.STYLE_BOLD);
-		openFilesStyleCombo.addSpecialItem(msg.getString("Italic"),
+		openFilesStyleCombo.addSpecialItem(MSG.getString("Italic"),
 								""+RTextFileChooser.STYLE_ITALIC);
 		*/
 		openFilesStyleCombo.addLabelValuePair(msg.getString("Underline"),
@@ -272,7 +272,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	 *
 	 * @return The cell renderer.
 	 */
-	private static final TableCellRenderer createTextColorCellRenderer() {
+	private static TableCellRenderer createTextColorCellRenderer() {
 		TableCellRenderer renderer = null;
 		if (SubstanceUtil.isSubstanceInstalled()) {
 			// Use reflection to avoid hard dependency on Substance.
@@ -408,7 +408,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 
 		private static final long serialVersionUID = 1L;
 
-		public ColorTableModel(String extensionHeader, String colorHeader) {
+		ColorTableModel(String extensionHeader, String colorHeader) {
 			super(new Object[] { extensionHeader, colorHeader }, 0);
 		}
 
@@ -450,7 +450,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		private JButton cancelButton;
 		private int rc;
 
-		public ExtensionColorMappingDialog(JDialog owner) {
+		ExtensionColorMappingDialog(JDialog owner) {
 
 			super(owner);
 			ComponentOrientation orientation = ComponentOrientation.

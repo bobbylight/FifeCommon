@@ -23,6 +23,7 @@ import javax.swing.UIManager;
  * @author Robert Futrell
  * @version 1.0
  */
+@SuppressWarnings("checkstyle:VisibilityModifier")
 class BreadcrumbBarButtonColorSet {
 
 	public Color defaultFG;
@@ -68,7 +69,7 @@ class BreadcrumbBarButtonColorSet {
 	}
 
 
-	public static final Color darker (Color c) {
+	public static final Color darker(Color c) {
 		final float factor = 1f - BRIGHTNESS_FACTOR;
 		float r = c.getRed() * factor;
 		float g = c.getGreen() * factor;
@@ -119,7 +120,7 @@ class BreadcrumbBarButtonColorSet {
 	 *        Look and Feel.
 	 * @return Whether the button colors will need extra brightening.
 	 */
-	private static final boolean needsExtraBrightening(JTextField textField) {
+	private static boolean needsExtraBrightening(JTextField textField) {
 		String laf = UIManager.getLookAndFeel().getClass().getName();
 		return laf.endsWith(".WindowsLookAndFeel") &&
 					Color.white.equals(textField.getBackground()) ||

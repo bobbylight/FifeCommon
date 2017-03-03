@@ -25,7 +25,7 @@ import javax.swing.UIManager;
  * @author Robert Futrell
  * @version 1.0
  */
-public class SubstanceUtil {
+public final class SubstanceUtil {
 
 	public static final String FOREGROUND_COLOR			= "ForegroundColor";
 
@@ -59,6 +59,14 @@ public class SubstanceUtil {
 	private static final String PKG = "org.pushingpixels.substance.api.";
 
 	private static final String LAFWIDGET_PKG = "org.pushingpixels.lafwidget.";
+
+
+	/**
+	 * Private constructor to prevent instantiation.
+	 */
+	private SubstanceUtil() {
+		// Do nothing
+	}
 
 
 	/**

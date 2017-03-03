@@ -155,7 +155,7 @@ public class PrintPreviewDialog extends EscapableDialog
 		sizeComboBox.addItemListener(this);
 		toolBarPanel.add(sizeComboBox);
 		numPagesComboBox = new JComboBox(
-			new String[] { "1", "2", "3", "4" } );
+			new String[] { "1", "2", "3", "4" });
 		UIUtil.fixComboOrientation(numPagesComboBox);
 		numPagesComboBox.addItemListener(this);
 		toolBarPanel.add(numPagesComboBox);
@@ -182,7 +182,9 @@ public class PrintPreviewDialog extends EscapableDialog
 		try {
 			while (printable.print(h, pageFormat, numPages) == Printable.PAGE_EXISTS)
 				numPages++;
-		} catch (PrinterException pe) { pe.printStackTrace(); }
+		} catch (PrinterException pe) {
+			pe.printStackTrace();
+		}
 		h.dispose();
 
 		// Get ready to go!
@@ -214,7 +216,7 @@ public class PrintPreviewDialog extends EscapableDialog
 		}
 
 		else if (actionCommand.equals("PrevPage")) {
-			setCursor( Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			try {
 				decrementPreviewPage();
 			} finally { // To ensure GUI stays correct.
@@ -358,7 +360,7 @@ public class PrintPreviewDialog extends EscapableDialog
 	 * @param scale The scale of the page, in percent.
 	 * @return The cursor to display while over the page.
 	 */
-	private final Cursor getCursorForScale(int scale) {
+	private Cursor getCursorForScale(int scale) {
 		return scale>=100 ? zoomOutCursor : zoomInCursor;
 	}
 
@@ -379,7 +381,7 @@ public class PrintPreviewDialog extends EscapableDialog
 	 *        wider or shorter cursor than this value.
 	 * @return The cursor.
 	 */
-	private static final Cursor getCustomCursor(Image image, Point hotspot,
+	private static Cursor getCustomCursor(Image image, Point hotspot,
 						String name, int preferredWidth,
 						int preferredHeight) {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -415,7 +417,7 @@ public class PrintPreviewDialog extends EscapableDialog
 	 *
 	 * @return The border.
 	 */
-	private synchronized final Border getPagePreviewBorder() {
+	private synchronized Border getPagePreviewBorder() {
 		if (pagePreviewBorder==null)
 			pagePreviewBorder = new MatteBorder(1, 1, 2, 2,
 									Color.BLACK);
@@ -506,7 +508,7 @@ public class PrintPreviewDialog extends EscapableDialog
 
 		if (e.getStateChange()==ItemEvent.SELECTED) {
 
-			setCursor( Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
 			if (source.equals(sizeComboBox)) {
 				String choice = (String)e.getItem();
@@ -520,8 +522,9 @@ public class PrintPreviewDialog extends EscapableDialog
 					for (int i=0; i<pageImage.length; i++)
 						if (pageImage[i]!=null) {
 							pageImage[i].setScaledSize(w,h);
-							if (setNewCursor==true)
+							if (setNewCursor) {
 								pageImage[i].setCursor(newCursor);
+							}
 						}
 				}
 				previewPanel.revalidate();
@@ -540,7 +543,7 @@ public class PrintPreviewDialog extends EscapableDialog
 			}
 
 			updateButtons();
-			setCursor( Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
 		}
 
@@ -684,7 +687,7 @@ public class PrintPreviewDialog extends EscapableDialog
 		protected BufferedImage sourceImage;
 		protected Image drawImage;
 
-		public PagePreview(int width, int height, BufferedImage source,
+		PagePreview(int width, int height, BufferedImage source,
 							Cursor cursorToUse) {
 			sourceImage = source;
 			setScaledSize(width, height);

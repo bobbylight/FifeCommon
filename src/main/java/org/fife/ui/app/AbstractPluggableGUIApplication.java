@@ -29,6 +29,7 @@ import org.fife.ui.dockablewindows.DockableWindowPanel;
  * An extension of <code>AbstractGUIApplication</code> adding the ability to
  * add/remove plug-ins.
  *
+ * @param <T> The preferences class for this application.
  * @author Robert Futrell
  * @version 0.5
  */
@@ -313,7 +314,7 @@ public abstract class AbstractPluggableGUIApplication<T extends GUIApplicationPr
 	 * top, left, bottom, and right of some main content.
 	 */
 	private static final class MainContentPanel extends DockableWindowPanel {
-	
+
 		public boolean addPlugin(GUIPlugin plugin) {
 			boolean success = true;
 			Iterator<DockableWindow> i = plugin.dockableWindowIterator();

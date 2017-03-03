@@ -20,6 +20,12 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 
 
+/**
+ * Manages icons for {@code RTextFileChooser} and {@code FileSystemTree}.
+ *
+ * @author Robert Futrell
+ * @version 1.0
+ */
 class FileChooserIconManager {
 
 	protected Icon folderIcon;
@@ -28,12 +34,12 @@ class FileChooserIconManager {
 	protected Icon computerIcon;
 	protected Icon fileIcon;
 
-	private static final FileSystemView fileSystemView = FileSystemView.
+	private static final FileSystemView FILE_SYSTEM_VIEW = FileSystemView.
 												getFileSystemView();
 	private Map<File, Icon> iconCache;
 
 
-	public FileChooserIconManager() {
+	FileChooserIconManager() {
 		iconCache = new HashMap<File, Icon>(50);
 		createDefaultIcons();
 	}
@@ -164,7 +170,7 @@ class FileChooserIconManager {
 			// and is not a root folder, so we must guard against that here.
 			if (f.exists() || RootManager.getInstance().isRoot(f)) {
 				try {
-					icon = fileSystemView.getSystemIcon(f);
+					icon = FILE_SYSTEM_VIEW.getSystemIcon(f);
 				} catch (/*FileNotFound*/Exception fnfe) {
 					// This happens, for example, on Windows when no such
 					// file "f" exists - the FileSystemView must check for
@@ -176,13 +182,13 @@ class FileChooserIconManager {
 
 			// If it didn't, see if it matches one of our defaults.
 			if (icon==null) {
-				if (fileSystemView.isFloppyDrive(f)) {
+				if (FILE_SYSTEM_VIEW.isFloppyDrive(f)) {
 					icon = floppyDriveIcon;
 				}
-				else if (fileSystemView.isDrive(f)) {
+				else if (FILE_SYSTEM_VIEW.isDrive(f)) {
 					icon = hardDriveIcon;
 				}
-				else if (fileSystemView.isComputerNode(f)) {
+				else if (FILE_SYSTEM_VIEW.isComputerNode(f)) {
 					icon = computerIcon;
 				}
 				else if (f.isDirectory()) {

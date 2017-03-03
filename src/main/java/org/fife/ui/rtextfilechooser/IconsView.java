@@ -51,7 +51,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	 *
 	 * @param chooser The owning file chooser.
 	 */
-	public IconsView(RTextFileChooser chooser) {
+	IconsView(RTextFileChooser chooser) {
 
 		this.chooser = chooser;
 		setImportantColors();
@@ -105,8 +105,10 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		for (int i=0; i<count; i++) {
 			try {
 				frames[i].setSelected(false);
-			} catch (PropertyVetoException pve) {}
-		}	
+			} catch (PropertyVetoException pve) {
+				// Do nothing
+			}
+		}
 	}
 
 
@@ -276,13 +278,15 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 			Color fg = (chooser.getShowHiddenFiles() && file.isHidden()) ?
 							chooser.getHiddenFileColor() :
 							info.labelTextColor;
-			IconInternalFrame frame = new IconInternalFrame(file, 
+			IconInternalFrame frame = new IconInternalFrame(file,
 									info.icon, fg);
 
 			add(frame);
 			try {
 				frame.setSelected(false);
-			} catch (PropertyVetoException pve) {}
+			} catch (PropertyVetoException pve) {
+				// Do nothing
+			}
 
 		}
 
@@ -355,11 +359,14 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	}
 
 
+	/**
+	 * A label that renders an icon.
+	 */
 	class IconLabel extends JLabel {
 
 		private static final long serialVersionUID = 1L;
 
-		public IconLabel(String name, Icon icon, int format) {
+		IconLabel(String name, Icon icon, int format) {
 			super(name, icon, format);
 			setToolTipText("freaky"); // We must do this for tooltips to work (???).
 		}
@@ -420,6 +427,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	/**
 	 * An internal frame representing a file.
 	 */
+	@SuppressWarnings("checkstyle:MemberName")
 	class IconInternalFrame extends JInternalFrame implements
 					java.awt.event.MouseListener, MouseMotionListener {
 
@@ -430,11 +438,11 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		private int defaultHeight;
 		private Color unselectedFG;
 
-		public IconInternalFrame(File file, Icon icon, Color fg) {
+		IconInternalFrame(File file, Icon icon, Color fg) {
 			this(file, icon, fg, 0,0);
 		}
 
-		public IconInternalFrame(File file, Icon icon, Color color, int x, int y) {
+		IconInternalFrame(File file, Icon icon, Color color, int x, int y) {
 
 			this.file = file;
 			unselectedFG = color;
@@ -583,8 +591,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 				// the selection.
 				if (!chooser.isMultiSelectionEnabled() ||
 					((modifiers&InputEvent.SHIFT_MASK)==0 &&
-					 (modifiers&InputEvent.CTRL_MASK)==0))
-				{
+					 (modifiers&InputEvent.CTRL_MASK)==0)) {
 					clearSelection();
 				}
 
@@ -613,7 +620,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 
 			// If they just released a left-click, stop any dragging.
 			if ((modifiers&InputEvent.BUTTON1_MASK)!=0) {
-				getDesktopManager().endDraggingFrame(this);	
+				getDesktopManager().endDraggingFrame(this);
 				_x = 0;
 				_y = 0;
 				__x = 0;
@@ -649,19 +656,19 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		}
 
 		@Override
-		public void mouseDragged(MouseEvent e) {   
-			if ( startingBounds == null ) {
+		public void mouseDragged(MouseEvent e) {
+			if (startingBounds == null) {
 				// (STEVE) Yucky work around for bug ID 4106552
 				return;
 			}
-                                     
+
 			Point p = SwingUtilities.convertPoint(this,
 										e.getX(), e.getY(), null);
 			int deltaX = _x - p.x;
 			int deltaY = _y - p.y;
 			int newX, newY;
 			Insets i = getInsets();
-        
+
 			// Move the window.
 			if ((e.getModifiers()&InputEvent.BUTTON1_MASK)!=InputEvent.BUTTON1_MASK) {
     	               // don't allow moving of frames if the left mouse

@@ -42,7 +42,7 @@ class DetailsViewFileNameRenderer extends DefaultTableCellRenderer {
 	private boolean isAlreadyOpened;
 
 
-	public DetailsViewFileNameRenderer(RTextFileChooser chooser) {
+	DetailsViewFileNameRenderer(RTextFileChooser chooser) {
 		this.chooser = chooser;
 	}
 
@@ -93,7 +93,7 @@ class DetailsViewFileNameRenderer extends DefaultTableCellRenderer {
 		paintIconR.x = paintIconR.y = paintIconR.width = paintIconR.height = 0;
 		paintTextR.x = paintTextR.y = paintTextR.width = paintTextR.height = 0;
 
-		String clippedText = 
+		String clippedText =
 				SwingUtilities.layoutCompoundLabel(this,
 									fm,
 									text,

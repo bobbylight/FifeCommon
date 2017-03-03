@@ -45,7 +45,7 @@ public class RColorSwatchesButton extends RColorButton {
 	private static final int NUM_COLUMNS			  = 6;
 	private static final String MSG	  = "org.fife.ui.RColorSwatchesButton";
 
-	private static final Color[] predefinedColors = new Color[] {
+	private static final Color[] PREDEFINED_COLORS = new Color[] {
 		Color.RED,
 		new Color(255,128,128),
 		new Color(255,153,0),
@@ -178,7 +178,7 @@ public class RColorSwatchesButton extends RColorButton {
 
 		private static final long serialVersionUID = 1L;
 
-		public ColorPopupMenu() {
+		ColorPopupMenu() {
 
 			// Create the listener.
 			popupListener = new PopupListener();
@@ -188,17 +188,17 @@ public class RColorSwatchesButton extends RColorButton {
 			GridBagConstraints c = new GridBagConstraints();
 
 			int i = 0;
-			int length = predefinedColors.length;
+			int length = PREDEFINED_COLORS.length;
 			while (i<length) {
-		
+
 				c.fill = GridBagConstraints.BOTH;
 				c.weightx = 1.0;
 				c.gridwidth = 1; // The default value.
 				for (int j=0; j<NUM_COLUMNS-1; j++)
-					addSwatch(predefinedColors[i+j], layout, c);
+					addSwatch(PREDEFINED_COLORS[i+j], layout, c);
 
 				c.gridwidth = GridBagConstraints.REMAINDER; //end row
-				addSwatch(predefinedColors[i+NUM_COLUMNS-1], layout, c);
+				addSwatch(PREDEFINED_COLORS[i+NUM_COLUMNS-1], layout, c);
 
 				i += NUM_COLUMNS;
 
@@ -280,8 +280,8 @@ public class RColorSwatchesButton extends RColorButton {
 
 		private static Color background;
 
-		public SwatchMenuItemUI() {
-			// When LAF is set to something other than a subclass of 
+		SwatchMenuItemUI() {
+			// When LAF is set to something other than a subclass of
 			// BasicLookAndFeel (e.g. GTK, Synth, Nimbus), it's possible
 			// that the LAF doesn't set some properties set in
 			// BasicLookAndFeel that BasicMenuItemUI (and hence its

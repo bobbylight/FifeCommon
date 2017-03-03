@@ -24,8 +24,6 @@ import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 
-import org.fife.ui.app.ExtendedLookAndFeelInfo;
-
 
 /**
  * <p>
@@ -45,7 +43,7 @@ import org.fife.ui.app.ExtendedLookAndFeelInfo;
  * <p>
  * The XML file read should have the following format:
  * </p>
- * 
+ *
  * <pre>
  *   &lt;?xml version="1.0" encoding="UTF-8" ?&gt;
  *   &lt;ThirdPartyLookAndFeels&gt;
@@ -54,7 +52,7 @@ import org.fife.ui.app.ExtendedLookAndFeelInfo;
  *      ... other LookAndFeel tags if desired ...
  *   &lt;/ThirdPartyLookAndFeels&gt;
  * </pre>
- * 
+ *
  * <p>
  * where <code>name</code> is the name of the Look and Feel (as appears in
  * RText's menu), <code>class</code> is the main Look and Feel class, such as
@@ -66,7 +64,7 @@ import org.fife.ui.app.ExtendedLookAndFeelInfo;
  * application to offer this LookAndFeel as a choice.  This should be a double
  * value, such as "1.7", "1.8", etc.
  * </p>
- * 
+ *
  * @author Robert Futrell
  * @version 1.0
  */
@@ -248,7 +246,7 @@ public class ThirdPartyLookAndFeelManager {
 
 				// Might be a Look and Feel declaration.
 				if (LOOK_AND_FEEL.equals(elemName)) {
-	
+
 					// Shouldn't have any children.
 					NodeList childNodes = child.getChildNodes();
 					if (childNodes!=null && childNodes.getLength()>0) {

@@ -9,10 +9,10 @@ import org.fife.ui.StandardAction;
  * The action type used by all instances of <code>GUIApplication</code>.  This
  * class not only provides ease-of-use methods, but knows how to look up its
  * properties in a resource bundle.<p>
- * 
+ *
  * For example, you could define an action to create a new document like so in
  * a properties file:
- * 
+ *
  * <pre>
  * NewAction=New
  * NewAction.Mnemonic=N
@@ -25,29 +25,30 @@ import org.fife.ui.StandardAction;
  * label "New", mnemonic 'N', an appropriate short description that gets
  * displayed in the application's status bar on rollover, and an accelerator.
  * </p>
- * 
+ *
  * <p>
- * For accelerators, the standard syntax for key strokes defined 
+ * For accelerators, the standard syntax for key strokes defined
  * <a href="https://docs.oracle.com/javase/7/docs/api/javax/swing/KeyStroke.html#getKeyStroke(java.lang.String)">here</a>
  * can be used.  In addition, the string literal "default" maps to "ctrl" on
  * Windows and Linux, and "meta" on OS X.
  * </p>
- * 
+ *
  * <p>
  * In addition, OS-specific accelerators can be defined, for example:
  * </p>
- * 
+ *
  * <pre>
  * NextTabAction.Accelerator.OSX=meta shift BRACELEFT
  * NextTabAction.Accelerator.Windows=ctrl PAGE_DOWN
  * NextTabAction.Accelerator.Linux=ctrl TAB
  * </pre>
- * 
+ *
  * <p>
  * If the appropriate OS-specific accelerator is defined for an action, it is
  * used, otherwise, the OS-agnostic accelerator is used, if defined.
  * </p>
- * 
+ *
+ * @param <T> The parent application's class.
  * @author Robert Futrell
  * @version 0.6
  * @see org.fife.ui.app.GUIApplication
@@ -83,7 +84,7 @@ public abstract class AppAction<T extends GUIApplication> extends StandardAction
 	 * then those properties are set as well.  Further, if an accelerator is
 	 * defined, it is set as both the action's active accelerator and default
 	 * accelerator.<p>
-	 * 
+	 *
 	 * You can provide OS-specific accelerators for actions by defining any of
 	 * the following properties:
 	 * <ul>
@@ -117,7 +118,7 @@ public abstract class AppAction<T extends GUIApplication> extends StandardAction
 	 * then those properties are set as well.  Further, if an accelerator is
 	 * defined, it is set as both the action's active accelerator and default
 	 * accelerator.<p>
-	 * 
+	 *
 	 * You can provide OS-specific accelerators for actions by defining any of
 	 * the following properties:
 	 * <ul>
@@ -158,7 +159,7 @@ public abstract class AppAction<T extends GUIApplication> extends StandardAction
 	 * then those properties are set as well.  Further, if an accelerator is
 	 * defined, it is set as both the action's active accelerator and default
 	 * accelerator.<p>
-	 * 
+	 *
 	 * You can provide OS-specific accelerators for actions by defining any of
 	 * the following properties:
 	 * <ul>

@@ -39,7 +39,7 @@ public class TabbedPaneTransferHandler extends TransferHandler
 	 * of <code>JTabbedPane</code>.  While we're actually dnd'ing a "tab" and
 	 * its contents, the component both sending and receiving is a JTabbedPane.
 	 */
-	private static final String mimeType =
+	private static final String MIME_TYPE =
 							DataFlavor.javaJVMLocalObjectMimeType +
 							";class=javax.swing.JTabbedPane";
 
@@ -65,7 +65,7 @@ public class TabbedPaneTransferHandler extends TransferHandler
 	 */
 	public TabbedPaneTransferHandler() {
 		try {
-			tabFlavor = new DataFlavor(mimeType);
+			tabFlavor = new DataFlavor(MIME_TYPE);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace(); // Never happens
 		}
@@ -245,7 +245,7 @@ public class TabbedPaneTransferHandler extends TransferHandler
 		return MOVE;
 	}
 
-	
+
 	/**
 	 * Does the flavor list have a Tab flavor?
 	 *

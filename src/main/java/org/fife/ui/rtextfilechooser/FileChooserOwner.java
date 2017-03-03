@@ -26,7 +26,7 @@ public interface FileChooserOwner {
 	 *
 	 * @return The file chooser.
 	 */
-	public RTextFileChooser getFileChooser();
+	RTextFileChooser getFileChooser();
 
 
 }

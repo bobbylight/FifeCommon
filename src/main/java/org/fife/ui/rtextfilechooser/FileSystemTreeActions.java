@@ -64,7 +64,7 @@ class FileSystemTreeActions {
 		private static ResourceBundle msg = ResourceBundle.getBundle(
 							"org.fife.ui.rtextfilechooser.FileSystemTree");
 
-		public AbstractTreeAction(FileSystemTree tree) {
+		AbstractTreeAction(FileSystemTree tree) {
 			this.tree = tree;
 		}
 
@@ -83,7 +83,7 @@ class FileSystemTreeActions {
 		private Window window;
 		private boolean hard;
 
-		public DeleteAction(Window parent, FileSystemTree tree, boolean hard) {
+		DeleteAction(Window parent, FileSystemTree tree, boolean hard) {
 			super(tree);
 			putValue(NAME, getString("Delete"));
 			this.hard = hard;
@@ -135,12 +135,12 @@ class FileSystemTreeActions {
 			if (count==1) {
 				String fileName = files[0].getName();
 				choice = JOptionPane.showConfirmDialog(window,
-					RTextFileChooser.msg.
+					RTextFileChooser.MSG.
 							getString("DeleteConfirmPrompt") + fileName + "?");
 			}
 			else { // count>1
 				choice = JOptionPane.showConfirmDialog(window,
-					RTextFileChooser.msg.
+					RTextFileChooser.MSG.
 							getString("DeleteMultipleConfirmPrompt"));
 			}
 
@@ -150,11 +150,11 @@ class FileSystemTreeActions {
 					if (!files[i].delete()) {
 						Object[] arguments = { files[i].getName() };
 						String msg = MessageFormat.format(
-							RTextFileChooser.msg.getString("DeleteFailText"),
+							RTextFileChooser.MSG.getString("DeleteFailText"),
 							arguments);
 						JOptionPane.showMessageDialog(window,
 							msg,
-							RTextFileChooser.msg.getString("Error"),
+							RTextFileChooser.MSG.getString("Error"),
 							JOptionPane.ERROR_MESSAGE);
 					}
 				}
@@ -185,7 +185,7 @@ class FileSystemTreeActions {
 		private File root;
 		private DefaultTreeCellEditor delegate;
 
-		public FileTreeCellEditor(final FileSystemTree fst,
+		FileTreeCellEditor(final FileSystemTree fst,
 									DefaultTreeCellRenderer renderer,
 									File root, final boolean dir) {
 
@@ -292,7 +292,7 @@ class FileSystemTreeActions {
 	/**
 	 * A base class for actions that create files or folders.
 	 */
-	private static abstract class AbstractNewFileOrFolderAction
+	private abstract static class AbstractNewFileOrFolderAction
 			extends AbstractTreeAction implements CellEditorListener {
 
 		protected TreeCellEditor editor;
@@ -439,7 +439,7 @@ class FileSystemTreeActions {
 	 */
 	static class NewFileAction extends AbstractNewFileOrFolderAction {
 
-		public NewFileAction(FileSystemTree tree) {
+		NewFileAction(FileSystemTree tree) {
 			super(tree, "NewFile");
 		}
 
@@ -469,7 +469,7 @@ class FileSystemTreeActions {
 	 */
 	static class NewFolderAction extends AbstractNewFileOrFolderAction {
 
-		public NewFolderAction(FileSystemTree tree) {
+		NewFolderAction(FileSystemTree tree) {
 			super(tree, "NewFolder");
 		}
 
@@ -495,7 +495,7 @@ class FileSystemTreeActions {
 	 */
 	static class PasteAction extends AbstractTreeAction {
 
-		public PasteAction(FileSystemTree tree) {
+		PasteAction(FileSystemTree tree) {
 			super(tree);
 			putValue(NAME, getString("Paste"));
 			putValue(MNEMONIC_KEY,
@@ -572,7 +572,7 @@ class FileSystemTreeActions {
 	 */
 	static class RefreshAction extends AbstractTreeAction {
 
-		public RefreshAction(FileSystemTree tree) {
+		RefreshAction(FileSystemTree tree) {
 			super(tree);
 			putValue(NAME, getString("Refresh"));
 			putValue(MNEMONIC_KEY,

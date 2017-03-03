@@ -60,7 +60,7 @@ public class WizardPluginDialog extends JDialog {
 
 	private int retVal;
 
-	private static final ResourceBundle msg = ResourceBundle.getBundle(
+	private static final ResourceBundle MSG = ResourceBundle.getBundle(
 									"org.fife.ui.app.WizardDialog");
 
 
@@ -112,20 +112,20 @@ public class WizardPluginDialog extends JDialog {
 							new BevelDividerBorder(SwingConstants.TOP),
 							UIUtil.getEmpty5Border()));
 		JPanel temp = new JPanel(new GridLayout(1,4, 5,5));
-		cancelButton = new JButton(msg.getString("Button.Cancel"));
+		cancelButton = new JButton(MSG.getString("Button.Cancel"));
 		cancelButton.setActionCommand("Cancel");
 		cancelButton.addActionListener(listener);
 		temp.add(cancelButton);
-		backButton = new JButton(msg.getString("Button.Back"));
+		backButton = new JButton(MSG.getString("Button.Back"));
 		backButton.setActionCommand("Back");
 		backButton.addActionListener(listener);
 		backButton.setEnabled(false);
 		temp.add(backButton);
-		nextButton = new JButton(msg.getString("Button.Next"));
+		nextButton = new JButton(MSG.getString("Button.Next"));
 		nextButton.setActionCommand("Next");
 		nextButton.addActionListener(listener);
 		temp.add(nextButton);
-		finishedButton = new JButton(msg.getString("Button.Finished"));
+		finishedButton = new JButton(MSG.getString("Button.Finished"));
 		finishedButton.setActionCommand("Finished");
 		finishedButton.addActionListener(listener);
 		finishedButton.setEnabled(false);
@@ -268,7 +268,7 @@ public class WizardPluginDialog extends JDialog {
 		}
 
 		if (currentPanel>0 && currentPanel<=stepCount) {
-			String temp = msg.getString("Dialog.InStepTitle");
+			String temp = MSG.getString("Dialog.InStepTitle");
 			title = MessageFormat.format(temp,
 					new Object[] { title, ""+currentPanel, ""+stepCount });
 		}
@@ -285,7 +285,7 @@ public class WizardPluginDialog extends JDialog {
 
 		private JLabel header;
 
-		public HeaderPanel() {
+		HeaderPanel() {
 			setLayout(new BorderLayout());
 			JPanel headerPanel = new JPanel(new BorderLayout());
 			headerPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -323,8 +323,8 @@ public class WizardPluginDialog extends JDialog {
 				if (plugin.promptBeforeCancel()) {
 					int rc = JOptionPane.showConfirmDialog(
 							WizardPluginDialog.this,
-							msg.getString("MessageBox.ExitPrompt.Text"),
-							msg.getString("MessageBox.ExitPrompt.Title"),
+							MSG.getString("MessageBox.ExitPrompt.Text"),
+							MSG.getString("MessageBox.ExitPrompt.Title"),
 							JOptionPane.YES_NO_OPTION,
 							JOptionPane.QUESTION_MESSAGE);
 					if (rc!=JOptionPane.YES_OPTION)

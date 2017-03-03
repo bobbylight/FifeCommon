@@ -27,7 +27,6 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
@@ -49,7 +48,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 	private JTabbedPane tabbedPane;
 	private Component appPanel;
 
-	private static final ResourceBundle msg =
+	private static final ResourceBundle MSG =
 		ResourceBundle.getBundle("org.fife.ui.AboutDialog");
 
 
@@ -86,30 +85,18 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 
 		// Add a panel to the tabbed pane about the Java environment.
 		JPanel temp = UIUtil.newTabbedPanePanel();
-		temp = UIUtil.newTabbedPanePanel();
 		temp.setLayout(new BorderLayout());
 		temp.setBorder(UIUtil.getEmpty5Border());
-		temp.add(new JLabel(msg.getString("EnvironInfo")),
+		temp.add(new JLabel(MSG.getString("EnvironInfo")),
 						BorderLayout.NORTH);
-		JTable table = new JTable(new PropertiesTableModel(msg)) {
-			/**
-			 * Overridden to ensure the table completely fills the JViewport it
-			 * is sitting in.  Note in Java 6 this could be taken care of by the
-			 * method JTable#setFillsViewportHeight(boolean).
-			 */
-			@Override
-			public boolean getScrollableTracksViewportHeight() {
-				Component parent = getParent();
-				return parent instanceof JViewport ?
-					parent.getHeight()>getPreferredSize().height : false;
-			}
-		};
+		JTable table = new JTable(new PropertiesTableModel(MSG));
+		table.setFillsViewportHeight(true);
 		UIUtil.fixJTableRendererOrientations(table);
 		table.setTableHeader(null);
 		// Make scroll pane's visible area "too small" so that the About dialog
 		// will only be as large as the largest panel added by the user.
 		temp.add(new RScrollPane(10,10, table));
-		tabbedPane.add(msg.getString("Environment"), temp);
+		tabbedPane.add(MSG.getString("Environment"), temp);
 
 		JPanel aboutAppPanel = createAboutApplicationPanel();
 		if (aboutAppPanel!=null) { // Should always be true.
@@ -117,10 +104,10 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 		}
 
 		// Add the OK and license buttons.
-		okButton = UIUtil.newButton(msg, "OK", "OKButtonMnemonic");
+		okButton = UIUtil.newButton(MSG, "OK", "OKButtonMnemonic");
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
-		licenseButton = UIUtil.newButton(msg, "License",
+		licenseButton = UIUtil.newButton(MSG, "License",
 										"LicenseButtonMnemonic");
 		licenseButton.setActionCommand("License");
 		licenseButton.addActionListener(this);
@@ -129,7 +116,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 
 		// Put everything into a neat little package.
 		getRootPane().setDefaultButton(okButton);
-		setTitle(title!=null ? title : msg.getString("AboutDialogTitle"));
+		setTitle(title!=null ? title : MSG.getString("AboutDialogTitle"));
 		setModal(true);
 		applyComponentOrientation(orientation);
 		pack();
@@ -204,8 +191,8 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 	}
 
 
-	private static final String getModifiedBsdText() {
-		String text = null;
+	private static String getModifiedBsdText() {
+		String text;
 		try {
 			text = IOUtil.readFully(AboutDialog.class. // Subclasses
 					getResourceAsStream("modifiedBsdLicense.txt"));
@@ -233,7 +220,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 			appPanel = null;
 		}
 		else { // Adding app panel
-			String title = msg.getString("Tab.Application");
+			String title = MSG.getString("Tab.Application");
 			tabbedPane.insertTab(title, null, panel, null, 0);
 			appPanel = panel;
 		}
@@ -254,7 +241,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 			ComponentOrientation o = ComponentOrientation.
 									getOrientation(getLocale());
 
-			setTitle(msg.getString("LicenseDialogTitle"));
+			setTitle(MSG.getString("LicenseDialogTitle"));
 			JPanel cp = new ResizableFrameContentPane(new BorderLayout());
 			cp.setBorder(UIUtil.getEmpty5Border());
 			setContentPane(cp);
@@ -268,7 +255,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 			textArea.setCaretPosition(0);
 			RScrollPane scrollPane = new RScrollPane(textArea);
 			cp.add(scrollPane);
-			JButton okButton = UIUtil.newButton(msg, "OK",
+			JButton okButton = UIUtil.newButton(MSG, "OK",
 											"OKButtonMnemonic");
 			okButton.addActionListener(this);
 			Container buttons = UIUtil.createButtonFooter(okButton);
@@ -297,7 +284,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 	 */
 	private static class PropertiesTableModel extends DefaultTableModel {
 
-		public PropertiesTableModel(ResourceBundle msg) {
+		PropertiesTableModel(ResourceBundle msg) {
 			super(9, 2);
 			setValueAt(msg.getString("Environment.Label.JavaVendor"), 0,0);
 			setValueAt(System.getProperty("java.vendor"), 0,1);

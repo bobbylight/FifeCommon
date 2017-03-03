@@ -31,7 +31,7 @@ class SelectionListener implements ListSelectionListener {
 	 *
 	 * @param chooser The file chooser.
 	 */
-	public SelectionListener(RTextFileChooser chooser) {
+	SelectionListener(RTextFileChooser chooser) {
 		this.chooser = chooser;
 	}
 

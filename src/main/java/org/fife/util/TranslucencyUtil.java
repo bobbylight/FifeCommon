@@ -42,9 +42,7 @@ public abstract class TranslucencyUtil {
 			try {
 
 				if (UIUtil.isPreJava7()) {
-					Class<?> clazz = Class.forName(
-								"org.fife.util.Java6TranslucencyUtil");
-					instance = (TranslucencyUtil)clazz.newInstance();
+					instance = new Java6TranslucencyUtil();
 				}
 
 				else { // Java 1.7 +

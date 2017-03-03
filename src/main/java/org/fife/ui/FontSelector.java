@@ -44,8 +44,8 @@ public class FontSelector extends JPanel implements ActionListener {
 	public static final String FONT_PROPERTY		= "font";
 	public static final String FONT_COLOR_PROPERTY	= "fontColor";
 
-	private static final String MSG = "org.fife.ui.FontSelector";
-	private static final ResourceBundle msg = ResourceBundle.getBundle(MSG);
+	private static final ResourceBundle MSG = ResourceBundle.getBundle(
+			"org.fife.ui.FontSelector");
 
 
 	/**
@@ -70,20 +70,20 @@ public class FontSelector extends JPanel implements ActionListener {
 		switch (type) {
 			default:
 			case LABELED:
-				JLabel label = new JLabel(msg.getString("FontTitle"));
+				JLabel label = new JLabel(MSG.getString("FontTitle"));
 				label.setLabelFor(field);
 				labelComp = label;
 				break;
 			case NOT_LABELED:
 				break;
 			case CHECK_BOX:
-				JCheckBox cb = new JCheckBox(msg.getString("FontTitle"), true);
+				JCheckBox cb = new JCheckBox(MSG.getString("FontTitle"), true);
 				cb.addActionListener(this);
 				labelComp = cb;
 				break;
 		}
 
-		browseButton = new JButton(msg.getString("Browse"));
+		browseButton = new JButton(MSG.getString("Browse"));
 		browseButton.addActionListener(this);
 
 		if (labelComp!=null) {
@@ -110,14 +110,14 @@ public class FontSelector extends JPanel implements ActionListener {
 			Window parent = SwingUtilities.getWindowAncestor(this);
 			FontDialog fd = null;
 			if (parent instanceof Frame) {
-				fd = new FontDialog((Frame)parent, msg.getString("Font"),
+				fd = new FontDialog((Frame)parent, MSG.getString("Font"),
 									field.getDisplayedFont(),
 									fontColor,
 									underlineSelectable,
 									colorSelectable);
 			}
 			else {
-				fd = new FontDialog((Dialog)parent, msg.getString("Font"),
+				fd = new FontDialog((Dialog)parent, MSG.getString("Font"),
 						field.getDisplayedFont(),
 						fontColor,
 						underlineSelectable,
@@ -321,7 +321,7 @@ public class FontSelector extends JPanel implements ActionListener {
 
 		private Font displayedFont;
 
-		public FontTextField() {
+		FontTextField() {
 			setEditable(false);
 		}
 

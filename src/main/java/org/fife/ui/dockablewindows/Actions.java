@@ -15,7 +15,7 @@ import javax.swing.JPopupMenu;
  * @author Robert Futrell
  * @version 1.0
  */
-public class Actions {
+public final class Actions {
 
 
 	/**
@@ -88,7 +88,7 @@ public class Actions {
 		protected DockableWindowPanel dwindPanel;
 
 
-		public DockableActionBase(DockableWindowPanel dwindPanel) {
+		DockableActionBase(DockableWindowPanel dwindPanel) {
 			this.dwindPanel = dwindPanel;
 		}
 
@@ -98,7 +98,7 @@ public class Actions {
 		 * nested popup menus.
 		 *
 		 * @param source The source component (a JMenuItem).
-		 * @return The original invoking component of the 
+		 * @return The original invoking component of the action.
 		 */
 		protected JComponent getOriginalInvoker(Container source) {
 			JPopupMenu popup = (JPopupMenu)source.getParent();

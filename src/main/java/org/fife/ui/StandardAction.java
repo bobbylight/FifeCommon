@@ -19,10 +19,10 @@ import javax.swing.KeyStroke;
 
 /**
  * An action that can configure itself from a properties file.<p>
- * 
+ *
  * For example, you could define an action to create a new document like so in
  * a properties file:
- * 
+ *
  * <pre>
  * NewAction=New
  * NewAction.Mnemonic=N
@@ -35,29 +35,29 @@ import javax.swing.KeyStroke;
  * label "New", mnemonic 'N', an appropriate short description that gets
  * displayed in the application's status bar on rollover, and an accelerator.
  * </p>
- * 
+ *
  * <p>
- * For accelerators, the standard syntax for key strokes defined 
+ * For accelerators, the standard syntax for key strokes defined
  * <a href="https://docs.oracle.com/javase/7/docs/api/javax/swing/KeyStroke.html#getKeyStroke(java.lang.String)">here</a>
  * can be used.  In addition, the string literal "default" maps to "ctrl" on
  * Windows and Linux, and "meta" on OS X.
  * </p>
- * 
+ *
  * <p>
  * In addition, OS-specific accelerators can be defined, for example:
  * </p>
- * 
+ *
  * <pre>
  * NextTabAction.Accelerator.OSX=meta shift BRACELEFT
  * NextTabAction.Accelerator.Windows=ctrl PAGE_DOWN
  * NextTabAction.Accelerator.Linux=ctrl TAB
  * </pre>
- * 
+ *
  * <p>
  * If the appropriate OS-specific accelerator is defined for an action, it is
  * used, otherwise, the OS-agnostic accelerator is used, if defined.
  * </p>
- * 
+ *
  * @author Robert Futrell
  * @version 0.6
  * @see org.fife.ui.app.GUIApplication
@@ -93,7 +93,7 @@ public abstract class StandardAction extends AbstractAction {
 	 * then those properties are set as well.  Further, if an accelerator is
 	 * defined, it is set as both the action's active accelerator and default
 	 * accelerator.<p>
-	 * 
+	 *
 	 * You can provide OS-specific accelerators for actions by defining any of
 	 * the following properties:
 	 * <ul>
@@ -186,7 +186,7 @@ public abstract class StandardAction extends AbstractAction {
 	 * @return The key stroke, or <code>null</code> if the property is not
 	 *         found or the value is not a valid key stroke.
 	 */
-	private static final KeyStroke getKeyStroke(ResourceBundle msg,String key) {
+	private static KeyStroke getKeyStroke(ResourceBundle msg,String key) {
 		KeyStroke ks = null;
 		if (msg.containsKey(key)) {
 			String temp = msg.getString(key);
@@ -242,15 +242,15 @@ public abstract class StandardAction extends AbstractAction {
 	 *        <code>"default O"</code> or <code>"ctrl SPACE"</code>.
 	 * @return A (possibly) modified version of that string.
 	 */
-	private static final String massageAcceleratorString(String accelerator) {
+	private static String massageAcceleratorString(String accelerator) {
 
-		final String DEFAULT = "default ";
-		int index = accelerator.indexOf(DEFAULT);
+		final String defaultStr = "default ";
+		int index = accelerator.indexOf(defaultStr);
 
 		if (index>-1) {
 			String replacement = OS.get() == OS.MAC_OS_X ? "meta ":"control ";
 			accelerator = accelerator.substring(0, index) + replacement +
-					accelerator.substring(index + DEFAULT.length());
+					accelerator.substring(index + defaultStr.length());
 		}
 
 		return accelerator;
@@ -285,7 +285,7 @@ public abstract class StandardAction extends AbstractAction {
 	 * Sets the default accelerator for this action.  Applications typically
 	 * won't call this method directly, as the default accelerator is usually
 	 * set from the properties file we're loaded from.
-	 * 
+	 *
 	 * @param accelerator The new default accelerator, which may be
 	 *        <code>null</code>.
 	 * @see #getDefaultAccelerator()
@@ -323,8 +323,8 @@ public abstract class StandardAction extends AbstractAction {
 	public void setIcon(String res) {
 		setIcon(getClass().getResource(res));
 	}
-	
-	
+
+
 	/**
 	 * Sets the icon of this action.
 	 *
@@ -336,8 +336,8 @@ public abstract class StandardAction extends AbstractAction {
 	public void setIcon(URL res) {
 		setIcon(new ImageIcon(res));
 	}
-	
-	
+
+
 	/**
 	 * Sets the mnemonic for this action.
 	 *
@@ -372,7 +372,7 @@ public abstract class StandardAction extends AbstractAction {
 	}
 
 
-	private static final String shortcutExtension(OS os) {
+	private static String shortcutExtension(OS os) {
 		String extension = ".Accelerator";
 		String suffix = null;
 		if (os != null) {

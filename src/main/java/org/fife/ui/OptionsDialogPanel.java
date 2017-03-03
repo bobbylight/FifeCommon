@@ -288,7 +288,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 
 	/**
 	 * Returns all child panels of this options panel.
-	 * 
+	 *
 	 * @return All child panels.  This may be empty, but will never be
 	 *         <code>null</code>.  This list is a copy and can be modified.
 	 * @see #getChildPanel(int)
@@ -488,6 +488,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 * contains a <code>JComponent</code> that had invalid input, and a
 	 * <code>String</code> to display as the error message.
 	 */
+	@SuppressWarnings("checkstyle:VisibilityModifier")
 	public static class OptionsPanelCheckResult {
 
 		public OptionsDialogPanel panel;

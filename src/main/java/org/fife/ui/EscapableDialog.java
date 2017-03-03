@@ -1,7 +1,6 @@
 package org.fife.ui;
 
-import java.awt.Dialog;
-import java.awt.Frame;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
@@ -40,9 +39,9 @@ public class EscapableDialog extends JDialog {
 	/**
 	 * Constructor.
 	 *
-	 * @param owner The parent dialog.
+	 * @param owner The parent window.
 	 */
-	public EscapableDialog(Dialog owner) {
+	public EscapableDialog(Window owner) {
 		super(owner);
 		init();
 	}
@@ -51,11 +50,11 @@ public class EscapableDialog extends JDialog {
 	/**
 	 * Constructor.
 	 *
-	 * @param owner The parent dialog.
+	 * @param owner The parent window.
 	 * @param modal Whether this dialog should be modal.
 	 */
-	public EscapableDialog(Dialog owner, boolean modal) {
-		super(owner, modal);
+	public EscapableDialog(Window owner, boolean modal) {
+		super(owner, modal ? Dialog.DEFAULT_MODALITY_TYPE : ModalityType.MODELESS);
 		init();
 	}
 
@@ -63,10 +62,10 @@ public class EscapableDialog extends JDialog {
 	/**
 	 * Constructor.
 	 *
-	 * @param owner The parent dialog.
+	 * @param owner The parent window.
 	 * @param title The title of the dialog.
 	 */
-	public EscapableDialog(Dialog owner, String title) {
+	public EscapableDialog(Window owner, String title) {
 		super(owner, title);
 		init();
 	}
@@ -75,60 +74,12 @@ public class EscapableDialog extends JDialog {
 	/**
 	 * Constructor.
 	 *
-	 * @param owner The parent dialog.
+	 * @param owner The parent window.
 	 * @param title The title of the dialog.
 	 * @param modal Whether this dialog should be modal.
 	 */
-	public EscapableDialog(Dialog owner, String title, boolean modal) {
-		super(owner, title, modal);
-		init();
-	}
-
-
-	/**
-	 * Constructor.
-	 *
-	 * @param owner The parent frame.
-	 */
-	public EscapableDialog(Frame owner) {
-		super(owner);
-		init();
-	}
-
-
-	/**
-	 * Constructor.
-	 *
-	 * @param owner The parent frame.
-	 * @param modal Whether this frame should be modal.
-	 */
-	public EscapableDialog(Frame owner, boolean modal) {
-		super(owner, modal);
-		init();
-	}
-
-
-	/**
-	 * Constructor.
-	 *
-	 * @param owner The parent frame.
-	 * @param title The title of the frame.
-	 */
-	public EscapableDialog(Frame owner, String title) {
-		super(owner, title);
-		init();
-	}
-
-
-	/**
-	 * Constructor.
-	 *
-	 * @param owner The parent frame.
-	 * @param title The title of the frame.
-	 * @param modal Whether this frame should be modal.
-	 */
-	public EscapableDialog(Frame owner, String title, boolean modal) {
-		super(owner, title, modal);
+	public EscapableDialog(Window owner, String title, boolean modal) {
+		super(owner, title, modal ? Dialog.DEFAULT_MODALITY_TYPE : ModalityType.MODELESS);
 		init();
 	}
 

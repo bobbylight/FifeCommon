@@ -84,7 +84,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 									getOrientation(getLocale());
 
 		ResourceBundle msg = ResourceBundle.getBundle(MSG);
-	
+
 		setName(msg.getString("Favorites"));
 		setBorder(UIUtil.getEmpty5Border());
 		setLayout(new BorderLayout());
@@ -270,7 +270,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 		private JButton cancelButton;
 		private int rc;
 
-		public EditFavoriteDialog(JDialog owner) {
+		EditFavoriteDialog(JDialog owner) {
 
 			super(owner);
 			ComponentOrientation orientation = ComponentOrientation.
@@ -428,7 +428,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 
 		private String[] columnNames;
 
-		public FavoritesTableModel(String favoriteHeader) {
+		FavoritesTableModel(String favoriteHeader) {
 			columnNames = new String[1];
 			columnNames[0] = favoriteHeader;
 		}

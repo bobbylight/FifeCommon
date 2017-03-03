@@ -25,11 +25,11 @@ import org.fife.util.SubstanceUtil;
  * renderer is dynamically loaded and used, otherwise, suitable defaults
  * are used.  I love how Substance makes it a pain in the ass to do custom
  * renderers!
- * 
+ *
  * @author Robert Futrell
  * @version 1.0
  */
-class FileChooserViewRendererFactory {
+final class FileChooserViewRendererFactory {
 
 
 	/**
@@ -41,7 +41,7 @@ class FileChooserViewRendererFactory {
 
 	/**
 	 * Returns the renderer to use for all non-special columns in "details
-	 * view."
+	 * view".
 	 *
 	 * @return the renderer to use.
 	 */
@@ -60,7 +60,7 @@ class FileChooserViewRendererFactory {
 
 
 	/**
-	 * Returns the renderer to use in the "list view."
+	 * Returns the renderer to use in the "list view".
 	 *
 	 * @param chooser The file chooser.
 	 * @return The renderer.
@@ -94,7 +94,7 @@ class FileChooserViewRendererFactory {
 
 
 	/**
-	 * Returns the renderer to use for file names in the "details view."
+	 * Returns the renderer to use for file names in the "details view".
 	 *
 	 * @param chooser The file chooser.
 	 * @return The renderer to use.

@@ -42,7 +42,7 @@ class ListView extends JList implements RTextFileChooserView {
 	 *
 	 * @param chooser The file chooser that owns this list view.
 	 */
-	public ListView(RTextFileChooser chooser) {
+	ListView(RTextFileChooser chooser) {
 
 		super(new DefaultListModel()); // Ensure we have a DefaultListModel.
 		this.chooser = chooser;

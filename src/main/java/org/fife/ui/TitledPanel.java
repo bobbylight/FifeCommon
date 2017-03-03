@@ -66,7 +66,7 @@ public class TitledPanel extends JPanel {
 		topPanel.add(iconLabel, BorderLayout.LINE_END);
 		topPanel.setBorder(border==BEVEL_BORDER ? new BottomBevelBorder() :
 							BorderFactory.createLineBorder(Color.GRAY));
-		
+
 		// Add the "top panel" to the top of us, and the content in our
 		// middle.
 		setLayout(new BorderLayout());
@@ -129,6 +129,9 @@ public class TitledPanel extends JPanel {
 	}
 
 
+	/**
+	 * Renders a gradient.
+	 */
 	private static class GradientPanel extends JPanel {
 
 		private static final long serialVersionUID = 1L;
@@ -181,9 +184,12 @@ public class TitledPanel extends JPanel {
 	}
 
 
+	/**
+	 * Renders a bevel at the bottom of this border.
+	 */
 	public static class BottomBevelBorder implements Border {
 
-		private static final Insets insets = new Insets(0, 0, 2, 0);
+		private static final Insets INSETS = new Insets(0, 0, 2, 0);
 
 		private Color light, dark;
 
@@ -198,7 +204,7 @@ public class TitledPanel extends JPanel {
 
 		@Override
 		public Insets getBorderInsets(Component c) {
-			return insets;
+			return INSETS;
 		}
 
 		@Override

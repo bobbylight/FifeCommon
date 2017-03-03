@@ -25,7 +25,7 @@ import org.pushingpixels.substance.internal.ui.SubstanceListUI;
 /**
  * The renderer for the "list view" of the file chooser when Substance is
  * installed.
- * 
+ *
  * @author Robert Futrell
  * @version 1.0
  */
@@ -34,13 +34,13 @@ class ListViewSubstanceCellRenderer extends SubstanceDefaultListCellRenderer {
 	private RTextFileChooser chooser;
 
 
-	public ListViewSubstanceCellRenderer(RTextFileChooser chooser) {
+	ListViewSubstanceCellRenderer(RTextFileChooser chooser) {
 		this.chooser = chooser;
 		setOpaque(true);
 	}
 
 
-	private final Color getForegroundColor(File file, FileTypeInfo fti) {
+	private Color getForegroundColor(File file, FileTypeInfo fti) {
 		Color color = null;
 		if (chooser.getShowHiddenFiles() && file.isHidden()) {
 			color = chooser.getHiddenFileColor();
@@ -110,7 +110,7 @@ class ListViewSubstanceCellRenderer extends SubstanceDefaultListCellRenderer {
 		// aligned in this case.
 		if (getComponentOrientation().isLeftToRight()) {
 			int w2 = Math.min(width, this.getPreferredSize().width+4);
-			super.setBounds(x, y, w2, height); 
+			super.setBounds(x, y, w2, height);
 		}
 		else {
 			super.setBounds(x,y, width,height);
@@ -118,7 +118,7 @@ class ListViewSubstanceCellRenderer extends SubstanceDefaultListCellRenderer {
 	}
 
 
-	private static final boolean substanceAndRollover(JList list, int index) {
+	private static boolean substanceAndRollover(JList list, int index) {
 		// Already know we're Substance if this renderer is installed...
 		SubstanceListUI ui = (SubstanceListUI)list.getUI();
 		ComponentState state = ui.getCellState(index, list);

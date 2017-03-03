@@ -34,7 +34,7 @@ class BreadcrumbBarButtonUI extends BasicButtonUI {
 	private BreadcrumbBarButtonColorSet colors;
 
 
-	public BreadcrumbBarButtonUI() {
+	BreadcrumbBarButtonUI() {
 		colors = new BreadcrumbBarButtonColorSet();
 	}
 

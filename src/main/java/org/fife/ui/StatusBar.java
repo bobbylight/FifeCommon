@@ -177,7 +177,7 @@ public class StatusBar extends StatusBarPanel implements MouseListener {
 	 * @return The number of panels on the right of the status bar that must
 	 *         stay on the right.
 	 */
-	private final int fromRight() {
+	private int fromRight() {
 		if (getStyle()==WINDOWS_XP_STYLE)
 			return 2;
 		return 1;

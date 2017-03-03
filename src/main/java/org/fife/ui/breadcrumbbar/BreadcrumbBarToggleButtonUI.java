@@ -49,7 +49,7 @@ public class BreadcrumbBarToggleButtonUI extends BasicToggleButtonUI {
 		colors.initialize(b);
 		b.putClientProperty("breadcrumbBorderColor", colors.borderColor);
 	}
-   
+
 
 	@Override
 	public void paint(Graphics g, JComponent c) {

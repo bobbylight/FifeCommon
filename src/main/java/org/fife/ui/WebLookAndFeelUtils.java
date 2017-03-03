@@ -25,25 +25,32 @@ import javax.swing.plaf.ButtonUI;
  * it assumes you're building your application from the ground up with it,
  * so we have to tweak it somewhat to make it look OK with an application like
  * RText that uses "standard" Swing paradigms.<p>
- * 
+ *
  * Note that WebLookAndFeel is a little dangerous for applications to support,
  * since it uses lots of Sun-internal APIs and so may break at a moment's
  * notice.<p>
- * 
+ *
  * WebLookAndFeel also requires Java 6+, so everything is done by reflection.
  * Everything in this class works as of the WebLaF 1.26 beta.
  *
  * @author Robert Futrell
  * @version 1.0
  */
-public class WebLookAndFeelUtils {
+public final class WebLookAndFeelUtils {
 
 	private static final String LAF_CLASS_NAME = "com.alee.laf.WebLookAndFeel";
 	private static final String BUTTON_UI_CLASS_NAME = "com.alee.laf.button.WebButtonUI";
 	private static final String MENU_BAR_STYLE_CLASS = "com.alee.laf.menu.WebMenuBarStyle";
 	private static final String STYLE_CONSTANTS_CLASS = "com.alee.laf.StyleConstants";
 
-	public static boolean decorateFrames = true;
+	private static boolean decorateFrames = true;
+
+
+	/**
+	 * Private constructor to prevent instantiation.
+	 */
+	private WebLookAndFeelUtils() {
+	}
 
 
 	/**
@@ -112,7 +119,7 @@ public class WebLookAndFeelUtils {
 					Field f = styleClazz.getDeclaredField("attached");
 					Object style = f.get(null);
 					m.invoke(toolBar.getUI(), style);
-					
+
 				}
 
 			} catch (RuntimeException re) { // FindBugs
@@ -126,7 +133,7 @@ public class WebLookAndFeelUtils {
 	}
 
 
-	private static final void fixToolbarButtonImpl(JButton button)
+	private static void fixToolbarButtonImpl(JButton button)
 			throws Exception {
 
 		ButtonUI ui = button.getUI();
@@ -158,11 +165,22 @@ public class WebLookAndFeelUtils {
 
 
 	/**
+	 * Returns whether frames should be decorated.
+	 *
+	 * @return Whether frames should be decorated.
+	 * @see #setDecorateFrames(boolean)
+	 */
+	public static boolean getDecorateFrames() {
+		return decorateFrames;
+	}
+
+
+	/**
 	 * Installs system properties specific to this Look and Feel.
-	 * 
+	 *
 	 * @param cl the class loader.
 	 */
-	public static final void installWebLookAndFeelProperties(ClassLoader cl) {
+	public static void installWebLookAndFeelProperties(ClassLoader cl) {
 
 		// Don't override non-UIResource borders!
 		//String honorBorders = WebLookAndFeel.PROPERTY_HONOR_USER_BORDERS;
@@ -184,11 +202,11 @@ public class WebLookAndFeelUtils {
 			}
 			m = clazz.getDeclaredMethod("setDecorateDialogs", boolean.class);
 			m.invoke(null, Boolean.TRUE);
-			
+
 //			clazz = Class.forName(STYLE_CONSTANTS_CLASS, true, cl);
 //			Field rolloverDecoratedOnly = clazz.getDeclaredField("rolloverDecoratedOnly");
 //			rolloverDecoratedOnly.set(null, Boolean.TRUE);
-			
+
 			if (decorateFrames) {
 				clazz = Class.forName(MENU_BAR_STYLE_CLASS, true, cl);
 				Field f = clazz.getDeclaredField("undecorated");
@@ -208,7 +226,7 @@ public class WebLookAndFeelUtils {
 	 * @param laf The class name.
 	 * @return Whether that class name is for the Web Look and Feel.
 	 */
-	public static final boolean isWebLookAndFeel(String laf) {
+	public static boolean isWebLookAndFeel(String laf) {
 		return laf.equals(LAF_CLASS_NAME);
 	}
 
@@ -218,9 +236,20 @@ public class WebLookAndFeelUtils {
 	 *
 	 * @return Whether the Web Look and Feel is installed.
 	 */
-	public static final boolean isWebLookAndFeelInstalled() {
+	public static boolean isWebLookAndFeelInstalled() {
 		LookAndFeel laf = UIManager.getLookAndFeel();
 		return isWebLookAndFeel(laf.getClass().getName());
+	}
+
+
+	/**
+	 * Sets whether frames should be decorated.
+	 *
+	 * @param decorateFrames Whether frames should be decorated.
+	 * @see #getDecorateFrames()
+	 */
+	public static void setDecorateFrames(boolean decorateFrames) {
+		WebLookAndFeelUtils.decorateFrames = decorateFrames;
 	}
 
 

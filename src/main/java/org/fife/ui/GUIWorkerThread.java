@@ -46,7 +46,7 @@ public abstract class GUIWorkerThread {
 	}
 
 
-	/** 
+	/**
 	 * Compute the value to be returned by the <code>get</code> method.  This
 	 * method should be overridden to do all the CPU-intensive stuff that
 	 * you don't want to do in the event dispatch thread.
@@ -68,13 +68,13 @@ public abstract class GUIWorkerThread {
 
 
 	/**
-	 * Return the value created by the <code>construct</code> method.  
+	 * Return the value created by the <code>construct</code> method.
 	 * Returns null if either the constructing thread or the current
 	 * thread was interrupted before a value was produced.
 	 *
 	 * Note that this method could cause deadlock if it is called outside
 	 * of the <code>finished</code> method.
-	 * 
+	 *
 	 * @return The value created by the <code>construct</code> method.
 	 */
 	public Object get() {
@@ -92,14 +92,14 @@ public abstract class GUIWorkerThread {
 	}
 
 
-	/** 
-	 * Get the value produced by the worker thread, or null if it 
+	/**
+	 * Get the value produced by the worker thread, or null if it
 	 * hasn't been constructed yet.
 	 *
 	 * @return The produced value.
 	 */
-	protected synchronized Object getValue() { 
-		return value; 
+	protected synchronized Object getValue() {
+		return value;
 	}
 
 
@@ -133,7 +133,7 @@ public abstract class GUIWorkerThread {
 
 		// Create the thread that will actually do the dirty work and then
 		// set up our doFinished thread to run on the event-dispatch thread.
-		Runnable doConstruct = new Runnable() { 
+		Runnable doConstruct = new Runnable() {
 					@Override
 					public void run() {
 						try {
@@ -151,11 +151,11 @@ public abstract class GUIWorkerThread {
 	}
 
 
-	/** 
-	 * Set the value produced by worker thread 
+	/**
+	 * Set the value produced by worker thread.
 	 */
-	private synchronized void setValue(Object x) { 
-		value = x; 
+	private synchronized void setValue(Object x) {
+		value = x;
 	}
 
 
@@ -169,15 +169,25 @@ public abstract class GUIWorkerThread {
 	}
 
 
-	/** 
+	/**
 	 * Class to maintain reference to current worker thread
 	 * under separate synchronization control.
 	 */
 	private static class ThreadVar {
+
 		private Thread thread;
-		ThreadVar(Thread t) { thread = t; }
-		synchronized Thread get() { return thread; }
-		synchronized void clear() { thread = null; }
+
+		ThreadVar(Thread t) {
+			thread = t;
+		}
+
+		synchronized Thread get() {
+			return thread;
+		}
+
+		synchronized void clear() {
+			thread = null;
+		}
 	}
 
 

@@ -12,7 +12,7 @@ package org.fife.ui.modifiabletable;
 
 /**
  * A base class for <code>RowHandler</code> implementations.
- * 
+ *
  * @author Robert Futrell
  * @version 1.0
  */

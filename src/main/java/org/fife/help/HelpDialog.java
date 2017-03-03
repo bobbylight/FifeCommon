@@ -68,7 +68,7 @@ import org.fife.ui.app.GUIApplication;
  * The dialog contains a pane with Contents, Index, and Search tabs, each
  * of which yields the expected way to find help.  Help pages should be
  * HTML.<p>
- * 
+ *
  * Features of <code>HelpDialog</code> include:
  * <ul>
  *    <li>Contents/Index/Search pane - Works just like most Windows programs'
@@ -411,13 +411,13 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 		// If they click on the "Display" button on the index tab, show
 		// the help they selected.
-		if (source.equals( indexDisplayButton )) {
+		if (source.equals(indexDisplayButton)) {
 			loadSelectedHelpPageIndex();
 		}
 
 		// If they click on the "Display" button on the search tab, show the
 		// help they selected.
-		else if (source.equals( searchDisplayButton )) {
+		else if (source.equals(searchDisplayButton)) {
 			loadSelectedHelpPageSearch();
 		}
 
@@ -438,7 +438,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 			// Increment the "position" in history and update the page.
 			if (historyPos>0) {
 				historyPos--;
-				setHelpPageURL(history.get(historyPos).url);
+				setHelpPageURL(history.get(historyPos).getUrl());
 			}
 			else {
 				// Root must be visible but not contain a page.  So we'll
@@ -466,7 +466,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 			// Increment the "position" in history and update the page.
 			historyPos++;
-			setHelpPageURL(history.get(historyPos).url);
+			setHelpPageURL(history.get(historyPos).getUrl());
 
 			// If they've gone forward to the final page, they can't go
 			// forward any longer.
@@ -534,7 +534,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 			HelpTreeNode node = (HelpTreeNode)child.getUserObject();
 			String contents = getContents(node); // will be non-null.
 			contents = contents.replaceAll("<[^>]*>", "");
-			if (contents.toLowerCase().indexOf(searchStringLower) != -1)
+			if (contents.toLowerCase().contains(searchStringLower))
 				arrayList.add(node);
 
 			// If this node has children, we must search them too for
@@ -568,13 +568,13 @@ public class HelpDialog extends JFrame implements ActionListener {
 		String contents = "";
 
 		// node.url may be null if we're in a branch node (or may not).
-		if (node!=null && node.url!=null) {
+		if (node!=null && node.getUrl()!=null) {
 
 			// Read in the file.
 			try {
 
 				BufferedReader in = new BufferedReader(
-					new InputStreamReader(node.url.openConnection().
+					new InputStreamReader(node.getUrl().openConnection().
 												getInputStream()));
 				try {
 					contents = HelpDialog.read(in);
@@ -607,9 +607,9 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 					// Otherwise, insert HTML tag to "highlight" found text in yellow.
 					int tempEnd = pos + searchStringLength;
-					contents = contents.substring(0, pos) + "<font bgcolor=\"#FFFF00\">"
-							+ contents.substring(pos, tempEnd) + "</font>"
-							+ contents.substring(tempEnd, contents.length());
+					contents = contents.substring(0, pos) + "<font bgcolor=\"#FFFF00\">" +
+							contents.substring(pos, tempEnd) + "</font>" +
+							contents.substring(tempEnd, contents.length());
 					int startPos = pos + searchStringLength +
 								"<font bgcolor=\"#FFFF00\">".length() +
 								"</font>".length();
@@ -655,7 +655,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 	 *
 	 * @return The resource bundle.
 	 */
-	private final ResourceBundle getHelpBundle() {
+	private ResourceBundle getHelpBundle() {
 		return ResourceBundle.getBundle(
 				"org.fife.help.HelpDialog", getLocale());
 	}
@@ -742,7 +742,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 	 * @param path The path to the file for which to guess the content type.
 	 * @return The content type.
 	 */
-	private static final String guessContentType(String path) {
+	private static String guessContentType(String path) {
 		if (path!=null) {
 			String lower = path.toLowerCase();
 			if (lower.endsWith("html") || lower.endsWith("htm") ||
@@ -1014,10 +1014,10 @@ public class HelpDialog extends JFrame implements ActionListener {
 		// If there's only one match, just display it.
 		if (size==1) {
 			HelpTreeNode node = matchNodes.get(0);
-			if (node.url!=null) {
+			if (node.getUrl()!=null) {
 				updateHistory = true;
 				highlightSearchString = false;
-				setHelpPageURL(node.url);
+				setHelpPageURL(node.getUrl());
 			}
 		}
 
@@ -1028,10 +1028,10 @@ public class HelpDialog extends JFrame implements ActionListener {
 			int selectedIndex = tfDialog.getSelectedIndex();
 			if (selectedIndex != -1) {
 				HelpTreeNode node = matchNodes.get(selectedIndex);
-				if (node.url!=null) {
+				if (node.getUrl()!=null) {
 					updateHistory = true;
 					highlightSearchString = false;
-					setHelpPageURL(node.url);
+					setHelpPageURL(node.getUrl());
 				}
 			}
 
@@ -1053,13 +1053,13 @@ public class HelpDialog extends JFrame implements ActionListener {
 		HelpTreeNode chosenNode = (HelpTreeNode)searchList.getSelectedValue();
 
 		// Now, set the html in the right-hand pane to be the page associated with this node.
-		if (chosenNode.url != null) {
+		if (chosenNode.getUrl() != null) {
 
 			// We do want this page remembered in the history, and we
 			// want searchString highlighted.
 			updateHistory = true;
 			highlightSearchString = true;
-			setHelpPageURL(chosenNode.url);
+			setHelpPageURL(chosenNode.getUrl());
 
 		} // End of if (chosenNode.url != null).
 
@@ -1094,7 +1094,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 	 * Reads the text from a specified reader and returns it in a
 	 * <code>String</code>.  This method is stolen from
 	 * <code>DefaultEditorKit</code> and modified to save into a string
-	 * rather than a <code>Document</code>.</p>
+	 * rather than a <code>Document</code>.<p>
 	 *
 	 * Any of CR, LF, and CR/LF will be interpreted as the end-of-line
 	 * marker if found, and will be transformed into <code>\n</code> in
@@ -1106,7 +1106,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 	 */
 	private static final int BUF_SIZE	= 16384;
 	private static String read(Reader in) throws IOException {
-	
+
 		char[] buff = new char[BUF_SIZE];
 		int nch;
 		boolean lastWasCR = false;
@@ -1292,7 +1292,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 								getPathForRow(i).getLastPathComponent();
 			tocTree.expandRow(i);
 			HelpTreeNode htn = (HelpTreeNode)temp.getUserObject();
-			if (htn.url!=null && htn.url.equals(url)) {
+			if (htn.getUrl()!=null && htn.getUrl().equals(url)) {
 				tocTree.setSelectionRow(i);
 				tocTree.scrollRowToVisible(i);
 				return;
@@ -1392,7 +1392,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 	 * @return Whether the specified node is an Attribute node with the
 	 *         specified name.
 	 */
-	private static final boolean validateAttributeNode(Node node, String name) {
+	private static boolean validateAttributeNode(Node node, String name) {
 		return (node!=null && node.getNodeType()==Node.ATTRIBUTE_NODE &&
 				node.getNodeName().equals(name));
 	}
@@ -1467,7 +1467,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		public void insertUpdate(DocumentEvent e) {
 			Document doc = e.getDocument();
 			// If it was the index text field that changed...
-			if ( doc.equals(indexField.getDocument()) ) {
+			if (doc.equals(indexField.getDocument())) {
 				// Find closest match to entered text in index list and highlight it.
 				int closestMatch = indexList.getNextMatch(
 						indexField.getText(), 0, Position.Bias.Forward);
@@ -1477,7 +1477,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 				}
 			}
 			// If it was the search text field that changed...
-			else if ( doc.equals(searchField.getDocument()) ) {
+			else if (doc.equals(searchField.getDocument())) {
 				// Ensure that the "List Topics" button is enabled.
 				listTopicsButton.setEnabled(true);
 			}
@@ -1490,20 +1490,20 @@ public class HelpDialog extends JFrame implements ActionListener {
 		public void keyPressed(KeyEvent e) {
 
 			// The only keypress we're interested in is the "Enter" key.
-			if ( e.getKeyCode() == KeyEvent.VK_ENTER ) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 
 				Object source = e.getSource();
 
 				// If they pressed Enter while in the index tab, load the
 				// help page currently selected.
-				if ( source.equals(indexField) || source.equals(indexList) ) {
+				if (source.equals(indexField) || source.equals(indexList)) {
 					if (indexList.getSelectedIndex()!=-1)
 						loadSelectedHelpPageIndex();
 				}
 
 				// If they press Enter while in searchField, display a list
 				// of Help topics.
-				else if (source.equals( searchField )) {
+				else if (source.equals(searchField)) {
 					searchString = searchField.getText();	// Remember the searched-for text.
 					if (!searchString.equals(""))
 						populateSearchList();
@@ -1511,17 +1511,17 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 				// If they press Enter while in searchList, display the
 				// help topic they choose.
-				else if (source.equals( searchList )) {
+				else if (source.equals(searchList)) {
 					if (indexList.getSelectedIndex()!=-1)
 						loadSelectedHelpPageSearch();
 				}
 
 				// If they press enter while on an expandable node in the
 				// tocTree, toggle whether it's expanded.
-				else if (source.equals( tocTree )) {
+				else if (source.equals(tocTree)) {
 					int row = tocTree.getMaxSelectionRow();
 					// These are okay since tree is single-selection.
-					if (tocTree.isExpanded(row)==true)
+					if (tocTree.isExpanded(row))
 						tocTree.collapseRow(row);
 					else
 						tocTree.expandRow(row);
@@ -1564,7 +1564,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		public void removeUpdate(DocumentEvent e) {
 			Document doc = e.getDocument();
 			// If it was the index text field that changed...
-			if ( doc.equals(indexField.getDocument()) ) {
+			if (doc.equals(indexField.getDocument())) {
 				// Find closest match to entered text in index list and
 				// highlight it.
 				int closestMatch = indexList.getNextMatch(
@@ -1575,7 +1575,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 				}
 			}
 			// If it was the search text field that changed...
-			else if ( doc.equals(searchField.getDocument()) ) {
+			else if (doc.equals(searchField.getDocument())) {
 				// If there is no more text in the search field,
 				// disable the "List Topics" button.
 				if (doc.getLength() == 0)
@@ -1630,13 +1630,13 @@ public class HelpDialog extends JFrame implements ActionListener {
 			// Now, set the html in the right-hand pane to be the page
 			// associated with this node.  NOTE: Must check for null URL's
 			// as often, branch nodes don't have HTML associated with them.
-			if (htn.url != null) {
+			if (htn.getUrl() != null) {
 
 				// As we support both plain text and HTML as help pages,
 				// first check whether our text should be displayed as HTML.
 				// We must re-set the IgnoreCharsetDirective property as
 				// setContentType() gives us a new document.
-				String contentType = guessContentType(htn.url.getPath());
+				String contentType = guessContentType(htn.getUrl().getPath());
 				if (!contentType.equals(editorPane.getContentType())) {
 					editorPane.setContentType(contentType);
 					//editorPane.setDocument(editorPane.getEditorKit().createDefaultDocument());

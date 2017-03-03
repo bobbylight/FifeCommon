@@ -32,7 +32,7 @@ public class RScrollPane extends JScrollPane implements ActionListener {
 
 	// Mouse position RELATIVE TO THE SCROLLBAR when the user opens a
 	// scrollbar's popup menu.
-	private int mouseX, mouseY;	
+	private int mouseX, mouseY;
 
 
 	/**
@@ -252,7 +252,7 @@ public class RScrollPane extends JScrollPane implements ActionListener {
 	 * @param menu The popup menu to which to add the item.
 	 * @param msg The resource bundle containing text, etc.
 	 */
-	private final void addMenuItem(String key, String actionCommand,
+	private void addMenuItem(String key, String actionCommand,
 							JPopupMenu menu, ResourceBundle msg) {
 		JMenuItem item = new JMenuItem(msg.getString(key));
 		item.setActionCommand(actionCommand);

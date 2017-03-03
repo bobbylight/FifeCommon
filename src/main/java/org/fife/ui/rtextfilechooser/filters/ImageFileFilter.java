@@ -85,7 +85,7 @@ public class ImageFileFilter extends FileFilter {
 	 * @param ext The extension to check.
 	 * @return Whether the extension is for a supported image file type.
 	 */
-	private static final boolean isValidExtension(String ext) {
+	private static boolean isValidExtension(String ext) {
 		return ext!=null &&
 			("gif".equals(ext) || "jpg".equals(ext) || "png".equals(ext) ||
 					"bmp".equals(ext));

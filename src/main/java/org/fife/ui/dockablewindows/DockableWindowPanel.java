@@ -530,8 +530,7 @@ public class DockableWindowPanel extends JPanel
 	 */
 	public void setDockingStyle(int style) {
 		if (dockingStyle!=style &&
-			(style==LARGE_ON_SIDES || style==LARGE_ON_TOP_AND_BOTTOM))
-		{
+			(style==LARGE_ON_SIDES || style==LARGE_ON_TOP_AND_BOTTOM)) {
 			dockingStyle = style;
 			// TODO: Switch necessary panels.
 		}
@@ -553,7 +552,7 @@ public class DockableWindowPanel extends JPanel
 		private boolean collapsed;
 		private CollapsedPanel collapsedPanel;
 
-		public ContentPanel() {
+		ContentPanel() {
 			super(new BorderLayout());
 		}
 

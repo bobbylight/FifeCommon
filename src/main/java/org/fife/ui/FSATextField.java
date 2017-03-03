@@ -41,7 +41,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 
 	/**
 	 * File filter used if directories-only mode is set.
-	 */	
+	 */
 	private FilenameFilter directoriesOnlyFilenameFilter;
 
 	/**
@@ -368,7 +368,7 @@ System.out.println("DEBUG: *** parent is null");
 	 * @param ch The character to search for.
 	 * @return The number of instances of the character in the String.
 	 */
-	private static final int getCharCount(String str, char ch) {
+	private static int getCharCount(String str, char ch) {
 		int count = 0;
 		int prev = 0;
 		int offs = 0;
@@ -453,7 +453,7 @@ System.out.println("DEBUG: *** parent is null");
 	 *
 	 * @return Whether or not the underlying OS is case-insensitive.
 	 */
-	private static final boolean getIgnoreCase() {
+	private static boolean getIgnoreCase() {
 		String os = System.getProperty("os.name");
 		boolean ignoreCase = false;
 		if (os!=null) {
@@ -630,7 +630,7 @@ System.out.println("DEBUG: *** parent is null");
 				// Programmatically focus next component as focus keys have
 				// been disabled.
 				KeyboardFocusManager.getCurrentKeyboardFocusManager().
-										focusNextComponent(); 
+										focusNextComponent();
 			}
 		});
 
@@ -643,7 +643,7 @@ System.out.println("DEBUG: *** parent is null");
 				// Programmatically focus previous component as focus keys
 				// have been disabled.
 				KeyboardFocusManager.getCurrentKeyboardFocusManager().
-										focusPreviousComponent(); 
+										focusPreviousComponent();
 			}
 		});
 
@@ -947,7 +947,7 @@ System.out.println("DEBUG: *** parent is null");
 		else {
 			t2 = new File(currentDirectory);
 		}
-	
+
 		// An attempt to speed things up in the common case.  If the
 		// directory they're working in hasn't changed, we don't
 		// have to get the list of files in the directory (as it is cached).
@@ -1097,9 +1097,9 @@ System.out.println("DEBUG: *** parent is null");
 	private class GetContentsRunnable implements Runnable {
 
 		private File dir;
-		public String[] containedFiles;
+		String[] containedFiles;
 
-		public GetContentsRunnable(File dir) {
+		GetContentsRunnable(File dir) {
 			this.dir = dir;
 		}
 

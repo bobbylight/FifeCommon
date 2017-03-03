@@ -433,7 +433,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 * @return The child node representing the specified file, or
 	 *         <code>null</code> if none of the children specified the file.
 	 */
-	private static final FileSystemTreeNode getChildRepresentingFile(
+	private static FileSystemTreeNode getChildRepresentingFile(
 								FileSystemTreeNode node, Object file) {
 		if (file==null)
 			return null;
@@ -783,7 +783,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			// Won't work on a leaf node, but who cares...
 			expandPath(path);
 		}
-		
+
 		// This is often called before the tree is displayed.
 		final TreePath path2 = path;
 		SwingUtilities.invokeLater(new Runnable() {
@@ -826,9 +826,12 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	}
 
 
+	/**
+	 * The model used by this tree.
+	 */
 	public static class FileSystemTreeModel extends DefaultTreeModel {
 
-		public FileSystemTreeModel(TreeNode root) {
+		FileSystemTreeModel(TreeNode root) {
 			super(root);
 		}
 
@@ -915,8 +918,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		public Component getTreeCellRendererComponent(JTree tree,
 									Object value, boolean sel,
 									boolean expanded, boolean leaf,
-									int row, boolean hasFocus) 
-		{
+									int row, boolean hasFocus) {
 
 			super.getTreeCellRendererComponent(tree, value, sel, expanded,
 										leaf, row, hasFocus);

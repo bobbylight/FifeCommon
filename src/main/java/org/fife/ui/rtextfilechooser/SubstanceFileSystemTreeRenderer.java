@@ -21,7 +21,7 @@ import org.pushingpixels.substance.api.renderers.SubstanceDefaultTreeCellRendere
 /**
  * Renderer used in file system trees when Substance is installed.  I love how
  * Substance makes custom renderers a pain in the ass!
- * 
+ *
  * @author Robert Futrell
  * @version 1.0
  */
@@ -32,7 +32,7 @@ class SubstanceFileSystemTreeRenderer extends SubstanceDefaultTreeCellRenderer {
 	private FileSystemTree tree;
 
 
-	public SubstanceFileSystemTreeRenderer(FileSystemTree tree) {
+	SubstanceFileSystemTreeRenderer(FileSystemTree tree) {
 		this.tree = tree;
 	}
 

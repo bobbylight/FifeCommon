@@ -30,7 +30,7 @@ import javax.swing.JWindow;
 
 /**
  * A window to display while your Swing application is loading; it behaves
- * just like a "splash screen."
+ * just like a "splash screen".
  *
  * @author Robert Futrell
  * @version 0.6
@@ -42,7 +42,7 @@ public class SplashScreen extends JWindow {
 	private JLabel imageLabel; // Forced repaint needed on OS X
 	private ProgressBar progressBar;
 
-	private static final int statusBarHeight	= 25;
+	private static final int STATUS_BAR = 25;
 
 
 	/**
@@ -148,9 +148,9 @@ public class SplashScreen extends JWindow {
 					Color foreground1, Color foreground2,
 					Color textColor) {
 			setBackground(background);
-			preferredSize = new Dimension(width, statusBarHeight);
+			preferredSize = new Dimension(width, STATUS_BAR);
 			paint = new GradientPaint(0.0f,0.0f, foreground1,
-								0.0f,statusBarHeight, foreground2);
+								0.0f, STATUS_BAR, foreground2);
 			this.textColor = textColor;
 			update(text, percentComplete);
 		}
@@ -202,7 +202,7 @@ public class SplashScreen extends JWindow {
 					int stringLength = fm.charsWidth(
 								text.toCharArray(), 0,text.length());
 					textX = (getWidth()-stringLength)/2;
-					textY = (statusBarHeight + fm.getAscent())/2;
+					textY = (STATUS_BAR + fm.getAscent())/2;
 				}
 			}
 			this.percentComplete = percentComplete;

@@ -23,7 +23,6 @@ import java.util.Vector;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -174,7 +173,7 @@ public class ModifiableTable extends JPanel {
 	 * @param buttons A bit flag representing what buttons to display.
 	 * @see #setRowHandler
 	 */
-	public ModifiableTable(DefaultTableModel model, Object[] columnNames, 
+	public ModifiableTable(DefaultTableModel model, Object[] columnNames,
 						String buttonLocation, int buttons) {
 		this(model, columnNames, buttonLocation, buttons, null);
 	}
@@ -195,7 +194,7 @@ public class ModifiableTable extends JPanel {
 	 *        buttons are to be added.
 	 * @see #setRowHandler
 	 */
-	public ModifiableTable(DefaultTableModel model, Object[] columnNames, 
+	public ModifiableTable(DefaultTableModel model, Object[] columnNames,
 						String buttonLocation, int buttons,
 						List<? extends Action> customButtons) {
 
@@ -367,22 +366,11 @@ public class ModifiableTable extends JPanel {
 	 *        column names.
 	 * @return The table.
 	 */
-	private final JTable createTable(DefaultTableModel model,
+	private JTable createTable(DefaultTableModel model,
 									Object[] columnNames) {
 		if (columnNames!=null)
 			model.setColumnIdentifiers(columnNames);
 		JTable table = new JTable(model) {
-			/**
-			 * Overridden to ensure the table completely fills the JViewport it
-			 * is sitting in.  Note in Java 6 this could be taken care of by the
-			 * method JTable#setFillsViewportHeight(boolean).
-			 */
-			@Override
-			public boolean getScrollableTracksViewportHeight() {
-				Component parent = getParent();
-				return parent instanceof JViewport ?
-					parent.getHeight()>getPreferredSize().height : false;
-			}
 			/**
 			 * Overridden so that, if this component is disabled, the table
 			 * also appears disabled (why doesn't this happen by default???).
@@ -400,6 +388,7 @@ public class ModifiableTable extends JPanel {
 			}
 		};
 		table.setShowGrid(false);
+		table.setFillsViewportHeight(true);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getSelectionModel().addListSelectionListener(listener);
 		table.addMouseListener(listener);
@@ -487,7 +476,7 @@ public class ModifiableTable extends JPanel {
 	 * greater than <code>0</code>, then the rows
 	 * <code>0</code> through <code>getFirstMovableRow()-1</code> can not be
 	 * moved up or down, and other rows cannot be moved up into them.<p>
-	 * 
+	 *
 	 * This property is ignored if this modifiable table is not displaying the
 	 * "move up" and "move down" buttons.
 	 *
@@ -656,13 +645,13 @@ public class ModifiableTable extends JPanel {
 	 * greater than <code>0</code>, then the rows
 	 * <code>0</code> through <code>getFirstMovableRow()-1</code> can not be
 	 * moved up or down, and other rows cannot be moved up into them.<p>
-	 * 
+	 *
 	 * Typically, if this is modified, you'll also want to ensure your
 	 * <code>RowHandler</code> forbids the removal of the unmovable rows.<p>
-	 * 
+	 *
 	 * This property is ignored if this modifiable table is not displaying the
 	 * "move up" and "move down" buttons.
-	 * 
+	 *
 	 * @param firstMovableRow The first movable row.  This should be greater
 	 *        than <code>0</code>.
 	 * @see #getFirstMovableRow()
@@ -703,7 +692,7 @@ public class ModifiableTable extends JPanel {
 	class Listener extends MouseAdapter implements ActionListener,
 							ListSelectionListener {
 
-		public Listener() {
+		Listener() {
 		}
 
 		@Override
@@ -720,7 +709,6 @@ public class ModifiableTable extends JPanel {
 			}
 			else if (MOVE_UP_COMMAND.equals(command)) {
 				moveRow(-1);
-				
 			}
 			else if (MOVE_DOWN_COMMAND.equals(command)) {
 				moveRow(1);

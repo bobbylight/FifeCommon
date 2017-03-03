@@ -16,6 +16,7 @@ package org.fife.ui.rtextfilechooser.extras;
  * @author Robert Futrell
  * @version 1.1
  */
+@SuppressWarnings("checkstyle:TypeName")
 class x64FileIOExtras extends Win32FileIOExtras {
 
 

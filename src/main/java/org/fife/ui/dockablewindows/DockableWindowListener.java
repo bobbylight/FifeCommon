@@ -26,7 +26,7 @@ public interface DockableWindowListener extends EventListener {
 	 *
 	 * @param e The dockable window event.
 	 */
-	public void dockableWindowPositionChanged(DockableWindowEvent e);
+	void dockableWindowPositionChanged(DockableWindowEvent e);
 
 
 	/**
@@ -35,7 +35,7 @@ public interface DockableWindowListener extends EventListener {
 	 * @param e The dockable window.  The specified "new position" is the
 	 *        position that the dockable window will be in.
 	 */
-	public void dockableWindowPositionWillChange(DockableWindowEvent e);
+	void dockableWindowPositionWillChange(DockableWindowEvent e);
 
 
 }

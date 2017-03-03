@@ -27,12 +27,12 @@ import javax.swing.plaf.basic.BasicBorders;
 class ButtonBorder extends BasicBorders.MarginBorder {
 
 
-	private static final boolean isArrowActivated(AbstractButton b) {
+	private static boolean isArrowActivated(AbstractButton b) {
 		return Boolean.TRUE==b.getClientProperty(BreadcrumbBar.ARROW_ACTIVATED);
 	}
 
 
-	private static final boolean isArrowSelected(AbstractButton b) {
+	private static boolean isArrowSelected(AbstractButton b) {
 		return Boolean.TRUE==b.getClientProperty(BreadcrumbBar.ARROW_SELECTED);
 	}
 

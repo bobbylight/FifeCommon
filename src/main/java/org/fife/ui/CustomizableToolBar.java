@@ -322,7 +322,7 @@ public class CustomizableToolBar extends JToolBar {
 
 		private static final long serialVersionUID = 1L;
 
-		public LockAction(String name) {
+		LockAction(String name) {
 			super(name);
 		}
 
@@ -330,7 +330,7 @@ public class CustomizableToolBar extends JToolBar {
 		public void actionPerformed(ActionEvent e) {
 
 			/* 8.5.2004/pwy: the assumption that getUI returns a BasicToolBarUI
-			is not coorect on all platforms. The method used below is more portable. 
+			is not coorect on all platforms. The method used below is more portable.
 				CustomizableToolBar cbt = CustomizableToolBar.this;
 				cbt.setFloatable(!cbt.isFloatable());
 			05/13/2004 - ref:  The proposed fix actually doesn't work quite right on
@@ -343,7 +343,7 @@ public class CustomizableToolBar extends JToolBar {
 			ToolBarUI ui = getUI();
 			if (ui instanceof BasicToolBarUI) {
 				boolean floating = ((BasicToolBarUI)ui).isFloating();
-				if (floating==true) {
+				if (floating) {
 					((BasicToolBarUI)ui).setFloating(false, new Point(0,0));
 					setFloatable(false);
 				}
@@ -369,7 +369,7 @@ public class CustomizableToolBar extends JToolBar {
 
 		private static final long serialVersionUID = 1L;
 
-		public ResetAction(String name) {
+		ResetAction(String name) {
 			super(name);
 		}
 

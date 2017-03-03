@@ -30,7 +30,7 @@ class FileChooserViewTransferHandler extends TransferHandler {
 	private RTextFileChooserView view;
 
 
-	public FileChooserViewTransferHandler(RTextFileChooserView view) {
+	FileChooserViewTransferHandler(RTextFileChooserView view) {
 		this.view = view;
 	}
 

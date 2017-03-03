@@ -22,26 +22,26 @@ public interface DockableWindowConstants {
 	/**
 	 * Integer constant representing the top of the window.
 	 */
-	public static final int TOP		= 0;
+	int TOP		= 0;
 
 	/**
 	 * Integer constant representing the left of the window.
 	 */
-	public static final int LEFT		= 1;
+	int LEFT		= 1;
 
 	/**
 	 * Integer constant representing the bottom of the window.
 	 */
-	public static final int BOTTOM	= 2;
+	int BOTTOM	= 2;
 
 	/**
 	 * Integer constant representing the right of the window.
 	 */
-	public static final int RIGHT		= 3;
+	int RIGHT		= 3;
 
 	/**
 	 * Integer constant representing a floating window.
 	 */
-	public static final int FLOATING	= 4;
+	int FLOATING	= 4;
 
 }

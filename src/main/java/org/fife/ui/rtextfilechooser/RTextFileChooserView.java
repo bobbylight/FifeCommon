@@ -31,13 +31,13 @@ interface RTextFileChooserView extends FileSelector {
 	/**
 	 * Clears all files displayed by this view.
 	 */
-	public void clearDisplayedFiles();
+	void clearDisplayedFiles();
 
 
 	/**
 	 * Makes sure there are no selected files in this view.
 	 */
-	public void clearSelection();
+	void clearSelection();
 
 
 	/**
@@ -45,7 +45,7 @@ interface RTextFileChooserView extends FileSelector {
 	 *
 	 * @param file The file that is to be visible.
 	 */
-	public void ensureFileIsVisible(File file);
+	void ensureFileIsVisible(File file);
 
 
 	/**
@@ -53,7 +53,7 @@ interface RTextFileChooserView extends FileSelector {
 	 *
 	 * @return The color used.
 	 */
-	public Color getDefaultFileColor();
+	Color getDefaultFileColor();
 
 
 	/**
@@ -61,7 +61,7 @@ interface RTextFileChooserView extends FileSelector {
 	 *
 	 * @return The number of files currently being displayed.
 	 */
-	public int getDisplayedFileCount();
+	int getDisplayedFileCount();
 
 
 	/**
@@ -71,7 +71,7 @@ interface RTextFileChooserView extends FileSelector {
 	 * @return The file at that point (or <code>null</code> if there isn't
 	 *         one???  This may very-well be view-dependent).
 	 */
-	public File getFileAtPoint(Point p);
+	File getFileAtPoint(Point p);
 
 
 	/**
@@ -90,7 +90,7 @@ interface RTextFileChooserView extends FileSelector {
 	 *
 	 * @param p The point at which a file should be selected.
 	 */
-	public void selectFileAtPoint(Point p);
+	void selectFileAtPoint(Point p);
 
 
 	/**
@@ -99,7 +99,7 @@ interface RTextFileChooserView extends FileSelector {
 	 * @param files The list of files to display.  These files
 	 *        are not necessarily sorted by file name.
 	 */
-	public void setDisplayedFiles(List<File> files);
+	void setDisplayedFiles(List<File> files);
 
 
 	/**
@@ -108,7 +108,7 @@ interface RTextFileChooserView extends FileSelector {
 	 * @param enabled Whether or not to allow the selection of multiple
 	 *        files.
 	 */
-	public void setMultiSelectionEnabled(boolean enabled);
+	void setMultiSelectionEnabled(boolean enabled);
 
 
 	/**
@@ -118,7 +118,7 @@ interface RTextFileChooserView extends FileSelector {
 	 *        the file chooser's <code>currentDirectory</code>, then
 	 *        they are not selected.
 	 */
-	public void setSelectedFiles(File[] files);
+	void setSelectedFiles(File[] files);
 
 
 }

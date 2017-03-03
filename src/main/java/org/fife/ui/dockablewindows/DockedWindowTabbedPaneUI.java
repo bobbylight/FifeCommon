@@ -63,14 +63,11 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 	/**
 	 * Constructor.
 	 */
-	public DockedWindowTabbedPaneUI() {
+	DockedWindowTabbedPaneUI() {
 		croppedTitlesList = new ArrayList<String>();
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected int calculateTabHeight(int tabPlacement, int tabIndex,
 									int fontHeight) {
@@ -149,11 +146,11 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 	 * version of the tab's title, if necessary.
 	 */
 	@Override
-	protected void layoutLabel(int tabPlacement, 
+	protected void layoutLabel(int tabPlacement,
 						FontMetrics metrics, int tabIndex,
 						String title, Icon icon,
-						Rectangle tabRect, Rectangle iconRect, 
-						Rectangle textRect, boolean isSelected ) {
+						Rectangle tabRect, Rectangle iconRect,
+						Rectangle textRect, boolean isSelected) {
 
 		textRect.x = textRect.y = iconRect.x = iconRect.y = 0;
 
@@ -200,14 +197,14 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 
 	@Override
 	protected void paintContentBorderTopEdge(Graphics g, int tabPlacement,
-									int selectedIndex, 
+									int selectedIndex,
 									int x, int y, int w, int h) {
 	}
 
 
 	@Override
 	protected void paintContentBorderBottomEdge(Graphics g, int tabPlacement,
-									int selectedIndex, 
+									int selectedIndex,
 									int x, int y, int w, int h) {
 
 		// Top line, touching bottom of contents
@@ -243,7 +240,7 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 
 	@Override
 	protected void paintContentBorderLeftEdge(Graphics g, int tabPlacement,
-										int selectedIndex, 
+										int selectedIndex,
 										int x, int y, int w, int h) {
 		g.setColor(DockableWindowUtil.getDockableWindowBorderColor());
 //		g.drawLine(x, y, x, y+h-1);
@@ -254,7 +251,7 @@ g.drawLine(x,y, x,y2);
 
 	@Override
 	protected void paintContentBorderRightEdge(Graphics g, int tabPlacement,
-										int selectedIndex, 
+										int selectedIndex,
 										int x, int y, int w, int h) {
 		g.setColor(DockableWindowUtil.getDockableWindowBorderColor());
 //		g.drawLine(x+w-1, y, x+w-1, y+h-1);
@@ -264,11 +261,11 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 
     @Override
 	protected void paintTab(Graphics g, int tabPlacement,
-            Rectangle[] rects, int tabIndex, 
+            Rectangle[] rects, int tabIndex,
             Rectangle iconRect, Rectangle textRect) {
     	super.paintTab(g, tabPlacement, rects, tabIndex, iconRect, textRect);
     }
- 
+
 	/**
 	 * Paints the background of a tab.
 	 */
@@ -372,7 +369,7 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 	@Override
 	protected void paintText(Graphics g, int tabPlacement,
 						Font font, FontMetrics metrics, int tabIndex,
-						String title, Rectangle textRect, 
+						String title, Rectangle textRect,
 						boolean isSelected) {
 
 		// Get our (probably) cropped title; don't use the uncropped one.
@@ -402,7 +399,7 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 		g.setColor(fg);
 		g.drawString(title, textRect.x, textRect.y+metrics.getAscent());
 
-	} 
+	}
 
 
 	/**
@@ -415,7 +412,7 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 	 */
 	class PluginTabbedPaneLayout extends TabbedPaneLayout {
 
-		public PluginTabbedPaneLayout() {
+		PluginTabbedPaneLayout() {
 		}
 
 		@Override
@@ -468,7 +465,7 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 					// calculate content area bounds
 					cx = insets.left + contentInsets.left;
 					cy = insets.top + contentInsets.top;
-					cw = bounds.width - insets.left - insets.right - 
+					cw = bounds.width - insets.left - insets.right -
 						contentInsets.left - contentInsets.right;
 					ch = bounds.height - insets.top - insets.bottom - th -
 						contentInsets.top - contentInsets.bottom;
@@ -495,7 +492,7 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 			FontMetrics metrics = getFontMetrics();
 			int fontHeight = metrics.getHeight();
 			Dimension size = tabPane.getSize();
-			Insets insets = tabPane.getInsets(); 
+			Insets insets = tabPane.getInsets();
 			Insets tabAreaInsets = getTabAreaInsets(tabPlacement);
 			//int fontHeight = metrics.getHeight();
 			//int selectedIndex = tabPane.getSelectedIndex();
@@ -560,8 +557,8 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 
 			// If right to left, flip x positions and adjust by widths
 			if (!leftToRight) {
-				int rightMargin = size.width 
-							- (insets.right + tabAreaInsets.right);
+				int rightMargin = size.width -
+							(insets.right + tabAreaInsets.right);
 				for (int i=0; i<tabCount; i++)
 					rects[i].x = rightMargin - rects[i].x - rects[i].width;
 			}

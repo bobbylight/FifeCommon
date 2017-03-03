@@ -92,7 +92,7 @@ public class StatusBarPanel extends JPanel {
 		super.paintComponent(g); // Fill in background.
 
 		// Draw the shadow.
-		if (isShadowEnabled()==true) {
+		if (isShadowEnabled()) {
 
 			int width = getWidth();
 			int height = getHeight();

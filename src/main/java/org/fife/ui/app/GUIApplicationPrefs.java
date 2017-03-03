@@ -22,11 +22,13 @@ import javax.swing.UIManager;
  * subclasses will override and load/store more information specific to each
  * application.
  *
+ * @param <T> The parent application type.
  * @author Robert Futrell
  * @version 0.2
  * @see GUIApplication
  * @see AbstractGUIApplication
  */
+@SuppressWarnings("checkstyle:VisibilityModifier")
 public abstract class GUIApplicationPrefs<T extends GUIApplication>
 								implements GUIApplicationConstants {
 
@@ -84,7 +86,7 @@ public abstract class GUIApplicationPrefs<T extends GUIApplication>
 	 * @see #populateCommonPreferences(GUIApplication)
 	 */
 	protected void populateCommonPreferences(GUIApplication app, String lnf) {
-		
+
 		if (lnf==null) {
 			lnf = UIManager.getLookAndFeel().getClass().getName();
 		}
@@ -97,7 +99,7 @@ public abstract class GUIApplicationPrefs<T extends GUIApplication>
 		toolbarVisible			= app.getToolBarVisible();
 		statusBarVisible		= app.getStatusBarVisible();
 		language					= app.getLanguage();
-		
+
 	}
 
 

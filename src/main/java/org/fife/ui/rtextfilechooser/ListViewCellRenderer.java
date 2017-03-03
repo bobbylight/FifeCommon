@@ -21,7 +21,7 @@ import org.fife.ui.UIUtil;
 
 /**
  * The default renderer for the "list view" of the file chooser.
- * 
+ *
  * @author Robert Futrell
  * @version 1.0
  */
@@ -30,14 +30,14 @@ class ListViewCellRenderer extends DefaultListCellRenderer {
 	private RTextFileChooser chooser;
 
 
-	public ListViewCellRenderer(RTextFileChooser chooser) {
+	ListViewCellRenderer(RTextFileChooser chooser) {
 		this.chooser = chooser;
 		setOpaque(true);
 	}
 
 
-	private final Color getForegroundColor(File file, FileTypeInfo fti) {
-		Color color = null;
+	private Color getForegroundColor(File file, FileTypeInfo fti) {
+		Color color;
 		if (chooser.getShowHiddenFiles() && file.isHidden()) {
 			color = chooser.getHiddenFileColor();
 		}
@@ -105,7 +105,7 @@ class ListViewCellRenderer extends DefaultListCellRenderer {
 		// aligned in this case.
 		if (getComponentOrientation().isLeftToRight()) {
 			int w2 = Math.min(width, this.getPreferredSize().width+4);
-			super.setBounds(x, y, w2, height); 
+			super.setBounds(x, y, w2, height);
 		}
 		else {
 			super.setBounds(x,y, width,height);

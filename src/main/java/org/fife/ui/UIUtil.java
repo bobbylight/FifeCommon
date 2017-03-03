@@ -9,20 +9,10 @@
  */
 package org.fife.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.ComponentOrientation;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.GridLayout;
-import java.awt.LayoutManager;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.Method;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Locale;
@@ -59,11 +49,7 @@ import javax.swing.table.TableCellRenderer;
  * @author Robert Futrell
  * @version 1.0
  */
-public class UIUtil {
-
-	private static boolean desktopCreationAttempted;
-	private static Object desktop;
-	private static final Object LOCK_DESKTOP_CREATION = new Object();
+public final class UIUtil {
 
 	/*
 	 * -1 => Not yet determined, 0 => no, 1 => yes.
@@ -105,8 +91,7 @@ public class UIUtil {
 	 *
 	 * @param uri The URI to open.  If this is <code>null</code>, nothing
 	          happens and this method returns <code>false</code>.
-	 * @return Whether the operation was successful.  This will be
-	 *         <code>false</code> on JRE's older than 1.6.
+	 * @return Whether the operation was successful
 	 * @see #browse(URI)
 	 */
 	public static boolean browse(String uri) {
@@ -126,8 +111,7 @@ public class UIUtil {
 	 *
 	 * @param uri The URI to open.  If this is <code>null</code>, nothing
 	          happens and this method returns <code>false</code>.
-	 * @return Whether the operation was successful.  This will be
-	 *         <code>false</code> on JRE's older than 1.6.
+	 * @return Whether the operation was successful.
 	 * @see #browse(String)
 	 */
 	public static boolean browse(URI uri) {
@@ -135,17 +119,13 @@ public class UIUtil {
 		boolean success = false;
 
 		if (uri!=null) {
-			Object desktop = getDesktop();
-			if (desktop!=null) {
+			Desktop desktop = getDesktop();
+			if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
 				try {
-					Method m = desktop.getClass().getDeclaredMethod(
-								"browse", new Class[] { URI.class });
-					m.invoke(desktop, new Object[] { uri });
+					desktop.browse(uri);
 					success = true;
-				} catch (RuntimeException re) {
-					throw re; // Keep FindBugs happy
-				} catch (Exception e) {
-					// Ignore, just return "false" below.
+				} catch (IOException ioe) {
+					// Ignore, just return "false" below
 				}
 			}
 		}
@@ -158,13 +138,13 @@ public class UIUtil {
 	/**
 	 * Creates a "footer" containing two buttons (typically OK and Cancel)
 	 * for a dialog.
-	 * 
+	 *
 	 * @param ok The OK button.
 	 * @param cancel The Cancel button.
 	 * @return The footer component for the dialog.
-	 * @see #createButtonFooter(Container) 
+	 * @see #createButtonFooter(Container)
 	 */
-	public static final Container createButtonFooter(JButton ok,
+	public static Container createButtonFooter(JButton ok,
 			JButton cancel) {
 		return createButtonFooter(ok, cancel, -1);
 	}
@@ -173,16 +153,16 @@ public class UIUtil {
 	/**
 	 * Creates a "footer" containing two buttons (typically OK and Cancel)
 	 * for a dialog.
-	 * 
+	 *
 	 * @param ok The OK button.
 	 * @param cancel The Cancel button.
 	 * @param topPadding The amount of padding to place above the buttons.  If
 	 *        this is less than <code>0</code>, a default value of 10 pixels
 	 *        is used.
 	 * @return The footer component for the dialog.
-	 * @see #createButtonFooter(Container) 
+	 * @see #createButtonFooter(Container)
 	 */
-	public static final Container createButtonFooter(JButton ok,
+	public static Container createButtonFooter(JButton ok,
 			JButton cancel, int topPadding) {
 		JPanel temp = new JPanel(new GridLayout(1,2, 5,5));
 		temp.add(ok);
@@ -200,13 +180,13 @@ public class UIUtil {
 	/**
 	 * Creates a "footer" component, typically containing buttons, for a
 	 * dialog.
-	 *  
+	 *
 	 * @param buttons The container of buttons, or whatever components that
 	 *        should be in the footer component.
 	 * @return The footer component for the dialog.
-	 * @see #createButtonFooter(JButton, JButton) 
+	 * @see #createButtonFooter(JButton, JButton)
 	 */
-	public static final Container createButtonFooter(Container buttons) {
+	public static Container createButtonFooter(Container buttons) {
 		return createButtonFooter(buttons, -1);
 	}
 
@@ -214,17 +194,17 @@ public class UIUtil {
 	/**
 	 * Creates a "footer" component, typically containing buttons, for a
 	 * dialog.
-	 *  
+	 *
 	 * @param buttons The container of buttons, or whatever components that
 	 *        should be in the footer component.
 	 * @param topPadding The amount of padding to place above the buttons.  If
 	 *        this is less than <code>0</code>, a default value of 10 pixels
 	 *        is used.
 	 * @return The footer component for the dialog.
-	 * @see #createButtonFooter(JButton, JButton) 
+	 * @see #createButtonFooter(JButton, JButton)
 	 * @see #createButtonFooter(Container, int, int)
 	 */
-	public static final Container createButtonFooter(Container buttons,
+	public static Container createButtonFooter(Container buttons,
 			int topPadding) {
 		return createButtonFooter(buttons, topPadding, -1);
 	}
@@ -233,7 +213,7 @@ public class UIUtil {
 	/**
 	 * Creates a "footer" component, typically containing buttons, for a
 	 * dialog.
-	 *  
+	 *
 	 * @param buttons The container of buttons, or whatever components that
 	 *        should be in the footer component.
 	 * @param topPadding The amount of padding to place above the buttons.  If
@@ -246,7 +226,7 @@ public class UIUtil {
 	 * @see #createButtonFooter(JButton, JButton)
 	 * @see #createButtonFooter(Container, int)
 	 */
-	public static final Container createButtonFooter(Container buttons,
+	public static Container createButtonFooter(Container buttons,
 			int topPadding, int sidePadding) {
 
 		if (topPadding<0) {
@@ -293,7 +273,7 @@ public class UIUtil {
 	 *        component's value.
 	 * @return The derived color.
 	 */
-	public static final Color deriveColor(Color orig, int darker) {
+	public static Color deriveColor(Color orig, int darker) {
 
 		int red = orig.getRed()-darker;
 		int green = orig.getGreen()-darker;
@@ -318,7 +298,7 @@ public class UIUtil {
 	 * @param width The minimum (preferred) width for the button.
 	 * @see #ensureDefaultButtonWidth(JButton)
 	 */
-	public static final void ensureButtonWidth(JButton button, int width) {
+	public static void ensureButtonWidth(JButton button, int width) {
 		Dimension prefSize = button.getPreferredSize();
 		if (prefSize.width<width) {
 			prefSize.width = width;
@@ -335,7 +315,7 @@ public class UIUtil {
 	 * @param button The button to possibly elongate.
 	 * @see #ensureButtonWidth(JButton, int)
 	 */
-	public static final void ensureDefaultButtonWidth(JButton button) {
+	public static void ensureDefaultButtonWidth(JButton button) {
 		ensureButtonWidth(button, DEFAULT_BUTTON_SIZE);
 	}
 
@@ -345,7 +325,7 @@ public class UIUtil {
 	 *
 	 * @param tree The tree.
 	 */
-	public static void expandAllNodes(final JTree tree) {
+	public static void expandAllNodes(JTree tree) {
 		// Do separately for nested panels.
 		int j=0;
 		while (j<tree.getRowCount()) {
@@ -426,7 +406,7 @@ public class UIUtil {
 	 * @param combo The combo box.
 	 * @return The values, or an empty array for none.
 	 */
-	public static final String[] getCommaSeparatedValues(JComboBox combo) {
+	public static String[] getCommaSeparatedValues(JComboBox combo) {
 		String value = (String)combo.getSelectedItem();
 		return value.trim().split("\\s*,?\\s+");
 	}
@@ -441,7 +421,7 @@ public class UIUtil {
 	 * @return The spring constraints for the specified component contained
 	 *         in <code>parent</code>.
 	 */
-	private static final SpringLayout.Constraints getConstraintsForCell(
+	private static SpringLayout.Constraints getConstraintsForCell(
 										int row, int col,
 										Container parent, int cols) {
 		SpringLayout layout = (SpringLayout) parent.getLayout();
@@ -452,43 +432,12 @@ public class UIUtil {
 
 	/**
 	 * Returns the singleton <code>java.awt.Desktop</code> instance, or
-	 * <code>null</code> if it is unsupported on this platform (or the JRE
-	 * is older than 1.6).
+	 * <code>null</code> if it is unsupported on this platform.
 	 *
-	 * @return The desktop, as an {@link Object}.
+	 * @return The desktop, or {@code null}.
 	 */
-	private static Object getDesktop() {
-
-		synchronized (LOCK_DESKTOP_CREATION) {
-
-			if (!desktopCreationAttempted) {
-
-				desktopCreationAttempted = true;
-
-				try {
-					Class<?> desktopClazz = Class.forName("java.awt.Desktop");
-					Method m = desktopClazz.
-						getDeclaredMethod("isDesktopSupported");
-
-					boolean supported = ((Boolean)m.invoke(null)).
-												booleanValue();
-					if (supported) {
-						m = desktopClazz.getDeclaredMethod("getDesktop");
-						desktop = m.invoke(null);
-					}
-
-				} catch (RuntimeException re) {
-					throw re; // Keep FindBugs happy
-				} catch (Exception e) {
-					// Ignore; keeps desktop as null.
-				}
-
-			}
-
-		}
-
-		return desktop;
-
+	public static Desktop getDesktop() {
+		return Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
 	}
 
 
@@ -511,7 +460,7 @@ public class UIUtil {
 	 * @return The HTML form of the color.  If <code>color</code> is
 	 *         <code>null</code>, <code>#000000</code> is returned.
 	 */
-	public static final String getHTMLFormatForColor(Color color) {
+	public static String getHTMLFormatForColor(Color color) {
 
 		if (color==null) {
 			return "#000000";
@@ -549,7 +498,7 @@ public class UIUtil {
 	 *
 	 * @return The color to use for hyperlinks.
 	 */
-	public static final Color getHyperlinkForeground() {
+	public static Color getHyperlinkForeground() {
 
 		// This property is defined by all standard LaFs, even Nimbus (!),
 		// but you never know what crazy LaFs there are...
@@ -565,12 +514,12 @@ public class UIUtil {
 
 	/**
 	 * Returns the mnemonic specified by the given key in a resource bundle.
-	 * 
+	 *
 	 * @param msg The resource bundle.
 	 * @param key The key for the mnemonic.
 	 * @return The mnemonic, or <code>0</code> if not found.
 	 */
-	public static final int getMnemonic(ResourceBundle msg, String key) {
+	public static int getMnemonic(ResourceBundle msg, String key) {
 		int mnemonic = 0;
 		if (msg.containsKey(key)) {
 			mnemonic = msg.getString(key).charAt(0);
@@ -664,7 +613,7 @@ public class UIUtil {
 	 *
 	 * @return Whether the current JVM is Java 6 or earlier.
 	 */
-	public static final boolean isPreJava7() {
+	public static boolean isPreJava7() {
 		return JAVA_VERSION==null || JAVA_VERSION.startsWith("1.6");
 	}
 
@@ -674,7 +623,7 @@ public class UIUtil {
 	 *
 	 * @return Whether the current JVM is Java 7 or earlier.
 	 */
-	public static final boolean isPreJava8() {
+	public static boolean isPreJava8() {
 		return JAVA_VERSION==null ||
 				JAVA_VERSION.startsWith("1.7") || isPreJava7();
 	}
@@ -688,7 +637,7 @@ public class UIUtil {
 	 * @param fg The foreground color.
 	 * @return Whether it is a "light" foreground color.
 	 */
-	public static final boolean isLightForeground(Color fg) {
+	public static boolean isLightForeground(Color fg) {
 		return fg.getRed()>0xa0 && fg.getGreen()>0xa0 && fg.getBlue()>0xa0;
 	}
 
@@ -712,7 +661,7 @@ public class UIUtil {
 	 * @param xPad The x-padding between cells.
 	 * @param yPad The y-padding between cells.
 	 */
-	public static final void makeSpringCompactGrid(Container parent, int rows,
+	public static void makeSpringCompactGrid(Container parent, int rows,
 								int cols, int initialX, int initialY,
 								int xPad, int yPad) {
 
@@ -771,11 +720,11 @@ public class UIUtil {
 	/**
 	 * Returns the default key for a button or menu item's mnemonic, based
 	 * on its root key.
-	 * 
+	 *
 	 * @param key The key.
 	 * @return The mnemonic key.
 	 */
-	private static final String mnemonicKey(String key) {
+	private static String mnemonicKey(String key) {
 		return key + ".Mnemonic";
 	}
 
@@ -790,7 +739,7 @@ public class UIUtil {
 	 * @param key The key into the bundle containing the string text value.
 	 * @return The check box.
 	 */
-	public static final JCheckBox newCheckBox(ResourceBundle bundle,
+	public static JCheckBox newCheckBox(ResourceBundle bundle,
 			String key) {
 		JCheckBox cb = new JCheckBox(bundle.getString(key));
 		cb.setMnemonic(getMnemonic(bundle, mnemonicKey(key)));
@@ -811,7 +760,7 @@ public class UIUtil {
 	 * @see #newButton(ResourceBundle, String, ActionListener)
 	 * @see #newButton(ResourceBundle, String, String, ActionListener)
 	 */
-	public static final JButton newButton(ResourceBundle bundle, String key) {
+	public static JButton newButton(ResourceBundle bundle, String key) {
 		return newButton(bundle, key, mnemonicKey(key));
 	}
 
@@ -830,7 +779,7 @@ public class UIUtil {
 	 * @see #newButton(ResourceBundle, String, String)
 	 * @see #newButton(ResourceBundle, String, String, ActionListener)
 	 */
-	public static final JButton newButton(ResourceBundle bundle,
+	public static JButton newButton(ResourceBundle bundle,
 			String key, ActionListener listener) {
 		return newButton(bundle, key, mnemonicKey(key), listener);
 	}
@@ -848,7 +797,7 @@ public class UIUtil {
 	 * @see #newButton(ResourceBundle, String, ActionListener)
 	 * @see #newButton(ResourceBundle, String, String, ActionListener)
 	 */
-	public static final JButton newButton(ResourceBundle bundle,
+	public static JButton newButton(ResourceBundle bundle,
 								String textKey, String mnemonicKey) {
 		return newButton(bundle, textKey, mnemonicKey, null);
 	}
@@ -867,7 +816,7 @@ public class UIUtil {
 	 * @see #newButton(ResourceBundle, String)
 	 * @see #newButton(ResourceBundle, String, ActionListener)
 	 */
-	public static final JButton newButton(ResourceBundle bundle,
+	public static JButton newButton(ResourceBundle bundle,
 			String textKey, String mnemonicKey, ActionListener listener) {
 		JButton b = new JButton(bundle.getString(textKey));
 		b.setMnemonic(getMnemonic(bundle, mnemonicKey));
@@ -887,7 +836,7 @@ public class UIUtil {
 	 * @param key The key into the bundle containing the string text value.
 	 * @return The <code>JLabel</code>.
 	 */
-	public static final JLabel newLabel(ResourceBundle msg, String key) {
+	public static JLabel newLabel(ResourceBundle msg, String key) {
 		return newLabel(msg, key, null);
 	}
 
@@ -903,7 +852,7 @@ public class UIUtil {
 	 *        that specific component.
 	 * @return The <code>JLabel</code>.
 	 */
-	public static final JLabel newLabel(ResourceBundle msg, String key,
+	public static JLabel newLabel(ResourceBundle msg, String key,
 			Component labelFor) {
 		JLabel label = new JLabel(msg.getString(key));
 		label.setDisplayedMnemonic(getMnemonic(msg, mnemonicKey(key)));
@@ -925,7 +874,7 @@ public class UIUtil {
 	 * @return The menu.
 	 * @see #newMenuItem(ResourceBundle, String, Action)
 	 */
-	public static final JMenu newMenu(ResourceBundle bundle, String key) {
+	public static JMenu newMenu(ResourceBundle bundle, String key) {
 		JMenu menu = new JMenu(bundle.getString(key));
 		menu.setMnemonic(getMnemonic(bundle, mnemonicKey(key)));
 		return menu;
@@ -945,7 +894,7 @@ public class UIUtil {
 	 * @see #newMenuItem(Action)
 	 * @see #newMenu(ResourceBundle, String)
 	 */
-	public static final JMenuItem newMenuItem(ResourceBundle bundle,
+	public static JMenuItem newMenuItem(ResourceBundle bundle,
 			String key, Action action) {
 		JMenuItem menuItem = new JMenuItem(bundle.getString(key));
 		menuItem.setMnemonic(getMnemonic(bundle, mnemonicKey(key)));
@@ -957,12 +906,12 @@ public class UIUtil {
 
 	/**
 	 * Returns a menu item configured to use an action.
-	 * 
+	 *
 	 * @param action The action.
 	 * @return The menu item.
 	 * @see #newMenuItem(ResourceBundle, String, Action)
 	 */
-	public static final JMenuItem newMenuItem(Action action) {
+	public static JMenuItem newMenuItem(Action action) {
 		JMenuItem menuItem = new JMenuItem(action);
 		menuItem.setToolTipText(null); // Clear SHORT_DESC being set to tool tip
 		return menuItem;
@@ -983,7 +932,7 @@ public class UIUtil {
 	 * @see #newRadio(ResourceBundle, String, ButtonGroup, ActionListener)
 	 * @see #newRadio(ResourceBundle, String, ButtonGroup, ActionListener, boolean)
 	 */
-	public static final JRadioButton newRadio(ResourceBundle msg,
+	public static JRadioButton newRadio(ResourceBundle msg,
 				String keyRoot, ButtonGroup bg) {
 		return newRadio(msg, keyRoot, bg, null, false);
 	}
@@ -1005,7 +954,7 @@ public class UIUtil {
 	 * @see #newRadio(ResourceBundle, String, ButtonGroup)
 	 * @see #newRadio(ResourceBundle, String, ButtonGroup, ActionListener, boolean)
 	 */
-	public static final JRadioButton newRadio(ResourceBundle msg,
+	public static JRadioButton newRadio(ResourceBundle msg,
 				String keyRoot, ButtonGroup bg, ActionListener listener) {
 		return newRadio(msg, keyRoot, bg, listener, false);
 	}
@@ -1028,7 +977,7 @@ public class UIUtil {
 	 * @see #newRadio(ResourceBundle, String, ButtonGroup)
 	 * @see #newRadio(ResourceBundle, String, ButtonGroup, ActionListener)
 	 */
-	public static final JRadioButton newRadio(ResourceBundle msg,
+	public static JRadioButton newRadio(ResourceBundle msg,
 				String keyRoot, ButtonGroup bg, ActionListener listener,
 				boolean selected) {
 		JRadioButton radio = new JRadioButton(msg.getString(keyRoot));
@@ -1133,7 +1082,7 @@ public class UIUtil {
 	/**
 	 * Sets the rendering hints on a graphics object to those closest to the
 	 * system's desktop values.<p>
-	 * 
+	 *
 	 * See <a href="http://download.oracle.com/javase/6/docs/api/java/awt/doc-files/DesktopProperties.html">AWT
 	 * Desktop Properties</a> for more information.
 	 *

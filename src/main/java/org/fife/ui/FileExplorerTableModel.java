@@ -69,7 +69,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	public static final int NOT_SORTED = 0;
 	public static final int ASCENDING = 1;
 
-	private static Directive EMPTY_DIRECTIVE = new Directive(-1, NOT_SORTED);
+	private static final Directive EMPTY_DIRECTIVE = new Directive(-1, NOT_SORTED);
 
 	// How much darker columns get when table is sorted by them.
 	private static final int DARK_AMOUNT	= 15;
@@ -407,7 +407,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	}
 
 
-	// TableModel interface methods 
+	// TableModel interface methods
 
 	@Override
 	public int getRowCount() {
@@ -445,13 +445,16 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	}
 
 
+	/**
+	 * A simple arrow icon.
+	 */
 	private static class Arrow implements Icon {
 
 		private boolean descending;
 		private int size;
 		private int priority;
 
-		public Arrow(boolean descending, int size, int priority) {
+		Arrow(boolean descending, int size, int priority) {
 			this.descending = descending;
 			this.size = size;
 			this.priority = priority;
@@ -460,29 +463,29 @@ public class FileExplorerTableModel extends AbstractTableModel {
 		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 
-			Color color = c == null ? Color.GRAY : c.getBackground();             
+			Color color = c == null ? Color.GRAY : c.getBackground();
 
-			// In a compound sort, make each successive triangle 20% 
-			// smaller than the previous one. 
+			// In a compound sort, make each successive triangle 20%
+			// smaller than the previous one.
 			int dx = (int)(size/2.0*Math.pow(0.8, priority));
 			int dy = descending ? dx : -dx;
 
-			// Align icon (roughly) with font baseline. 
+			// Align icon (roughly) with font baseline.
 			y = y + 5*size/6 + (descending ? -dy : 0);
 			int shift = descending ? 1 : -1;
 			g.translate(x, y);
 
-			// Right diagonal. 
+			// Right diagonal.
 			g.setColor(color.darker());
 			g.drawLine(dx / 2, dy, 0, 0);
 			g.drawLine(dx / 2, dy + shift, 0, shift);
-            
-			// Left diagonal. 
+
+			// Left diagonal.
 			g.setColor(color.brighter());
 			g.drawLine(dx / 2, dy, dx, 0);
 			g.drawLine(dx / 2, dy + shift, dx, shift);
-            
-			// Horizontal line. 
+
+			// Horizontal line.
 			if (descending)
 				g.setColor(color.darker().darker());
 			else
@@ -515,7 +518,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 		private int column;
 		private int direction;
 
-		public Directive(int column, int direction) {
+		Directive(int column, int direction) {
 			this.column = column;
 			this.direction = direction;
 		}
@@ -523,11 +526,14 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	}
 
 
+	/**
+	 * Simple representation of row data.
+	 */
 	private class Row implements Comparable<Row> {
 
 		private int modelIndex;
 
-		public Row(int index) {
+		Row(int index) {
 			this.modelIndex = index;
 		}
 
@@ -566,6 +572,9 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	}
 
 
+	/**
+	 * Listens for mouse events in this component.
+	 */
 	private class MouseHandler extends MouseAdapter {
 
 		@Override
@@ -583,8 +592,8 @@ public class FileExplorerTableModel extends AbstractTableModel {
 						if (!e.isControlDown()) {
 							cancelSorting();
 						}
-						// Cycle the sorting states through {NOT_SORTED, ASCENDING, DESCENDING} or 
-						// {NOT_SORTED, DESCENDING, ASCENDING} depending on whether shift is pressed. 
+						// Cycle the sorting states through {NOT_SORTED, ASCENDING, DESCENDING} or
+						// {NOT_SORTED, DESCENDING, ASCENDING} depending on whether shift is pressed.
 						status = status + (e.isShiftDown() ? -1 : 1);
 						status = (status + 4) % 3 - 1; // signed mod, returning {-1, 0, 1}
 						setSortingStatus(column, status);
@@ -623,14 +632,13 @@ public class FileExplorerTableModel extends AbstractTableModel {
 		}
 
 		@Override
-		public Component getTableCellRendererComponent(JTable table, 
+		public Component getTableCellRendererComponent(JTable table,
 											Object value,
-											boolean isSelected, 
+											boolean isSelected,
 											boolean hasFocus,
-											int row, 
-											int column)
-		{
-			Component c = delegate.getTableCellRendererComponent(table, 
+											int row,
+											int column) {
+			Component c = delegate.getTableCellRendererComponent(table,
 									value, isSelected, hasFocus, row, column);
 			if (c instanceof JLabel) {
 				JLabel l = (JLabel) c;
@@ -656,59 +664,61 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	}
 
 
+	/**
+	 * Listens for changes in the table model.
+	 */
 	private class TableModelHandler implements TableModelListener {
 
 		@Override
 		public void tableChanged(TableModelEvent e) {
 
-			// If we're not sorting by anything, just pass the event along.             
+			// If we're not sorting by anything, just pass the event along.
 			if (!isSorting()) {
 				clearSortingState();
 				fireTableChanged(e);
 				return;
 			}
-                
-			// If the table structure has changed, cancel the sorting; the             
-			// sorting columns may have been either moved or deleted from             
-			// the model. 
+
+			// If the table structure has changed, cancel the sorting; the
+			// sorting columns may have been either moved or deleted from
+			// the model.
 			if (e.getFirstRow() == TableModelEvent.HEADER_ROW) {
 				cancelSorting();
 				fireTableChanged(e);
 				return;
 			}
 
-			// We can map a cell event through to the view without widening             
-			// when the following conditions apply: 
-			// 
-			// a) all the changes are on one row (e.getFirstRow() == e.getLastRow()) and, 
+			// We can map a cell event through to the view without widening
+			// when the following conditions apply:
+			//
+			// a) all the changes are on one row (e.getFirstRow() == e.getLastRow()) and,
 			// b) all the changes are in one column (column != TableModelEvent.ALL_COLUMNS) and,
-			// c) we are not sorting on that column (getSortingStatus(column) == NOT_SORTED) and, 
+			// c) we are not sorting on that column (getSortingStatus(column) == NOT_SORTED) and,
 			// d) a reverse lookup will not trigger a sort (modelToView != null)
 			//
 			// Note: INSERT and DELETE events fail this test as they have column == ALL_COLUMNS.
-			// 
-			// The last check, for (modelToView != null) is to see if modelToView 
-			// is already allocated. If we don't do this check; sorting can become 
-			// a performance bottleneck for applications where cells  
-			// change rapidly in different parts of the table. If cells 
-			// change alternately in the sorting column and then outside of             
-			// it this class can end up re-sorting on alternate cell updates - 
-			// which can be a performance problem for large tables. The last 
-			// clause avoids this problem. 
+			//
+			// The last check, for (modelToView != null) is to see if modelToView
+			// is already allocated. If we don't do this check; sorting can become
+			// a performance bottleneck for applications where cells
+			// change rapidly in different parts of the table. If cells
+			// change alternately in the sorting column and then outside of
+			// it this class can end up re-sorting on alternate cell updates -
+			// which can be a performance problem for large tables. The last
+			// clause avoids this problem.
 			int column = e.getColumn();
-			if (e.getFirstRow() == e.getLastRow()
-				&& column != TableModelEvent.ALL_COLUMNS
-				&& getSortingStatus(column) == NOT_SORTED
-				&& modelToView != null)
-			{
+			if (e.getFirstRow() == e.getLastRow() &&
+				column != TableModelEvent.ALL_COLUMNS &&
+				getSortingStatus(column) == NOT_SORTED &&
+				modelToView != null) {
 				int viewIndex = getModelToView()[e.getFirstRow()];
-				fireTableChanged(new TableModelEvent(FileExplorerTableModel.this, 
-											viewIndex, viewIndex, 
+				fireTableChanged(new TableModelEvent(FileExplorerTableModel.this,
+											viewIndex, viewIndex,
 											column, e.getType()));
 				return;
 			}
 
-			// Something has happened to the data that may have invalidated the row order. 
+			// Something has happened to the data that may have invalidated the row order.
 			clearSortingState();
 			fireTableDataChanged();
 			return;

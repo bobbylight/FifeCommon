@@ -77,18 +77,18 @@ class FilePasteThread extends GUIWorkerThread {
 	private String errorDialogTitle;
 	private String confirmationDialogTitle;
 
-	private static final String MSG = "org.fife.ui.rtextfilechooser.FilePaste";
-	private static final ResourceBundle msg = ResourceBundle.getBundle(MSG);
+	private static final ResourceBundle MSG = ResourceBundle.getBundle(
+			"org.fife.ui.rtextfilechooser.FilePaste");
 
 
-	public FilePasteThread(Frame parent, List<File> files, File destDir,
+	FilePasteThread(Frame parent, List<File> files, File destDir,
 			FilePasteCallback callback) {
 		this.parent = parent;
 		init(files, destDir, callback);
 	}
 
 
-	public FilePasteThread(Dialog parent, List<File> files, File destDir,
+	FilePasteThread(Dialog parent, List<File> files, File destDir,
 			FilePasteCallback callback) {
 		this.parent = parent;
 		init(files, destDir, callback);
@@ -141,7 +141,7 @@ class FilePasteThread extends GUIWorkerThread {
 	}
 
 
-	private static final File createUniqueDestFile(File dir, String name) {
+	private static File createUniqueDestFile(File dir, String name) {
 
 		String orig = name;
 		int lastDot = name.lastIndexOf('.');
@@ -390,7 +390,7 @@ class FilePasteThread extends GUIWorkerThread {
 		if (confirmationDialogTitle!=null) {
 			return confirmationDialogTitle;
 		}
-		return msg.getString("ConfirmationDialog.Title");
+		return MSG.getString("ConfirmationDialog.Title");
 	}
 
 
@@ -398,7 +398,7 @@ class FilePasteThread extends GUIWorkerThread {
 		if (errorDialogTitle!=null) {
 			return errorDialogTitle;
 		}
-		return msg.getString("ErrorDialog.Title");
+		return MSG.getString("ErrorDialog.Title");
 	}
 
 
@@ -434,7 +434,7 @@ class FilePasteThread extends GUIWorkerThread {
 	 * @param map The map of maps.
 	 * @return The size of the map of maps.
 	 */
-	private static final int getSizeRecursive(List<FileTreeNode> map) {
+	private static int getSizeRecursive(List<FileTreeNode> map) {
 
 		int count = 0;
 
@@ -450,13 +450,13 @@ class FilePasteThread extends GUIWorkerThread {
 	}
 
 
-	private static final String getString(String key) {
-		return msg.getString(key);
+	private static String getString(String key) {
+		return MSG.getString(key);
 	}
 
 
-	private static final String getString(String key, String... args) {
-		String str = msg.getString(key);
+	private static String getString(String key, String... args) {
+		String str = MSG.getString(key);
 		return MessageFormat.format(str, (Object[])args);
 	}
 
@@ -521,18 +521,21 @@ class FilePasteThread extends GUIWorkerThread {
 	}
 
 
+	/**
+	 * A dialog stating that content cannot be copied.
+	 */
 	private class CannotCopyDialog extends EscapableDialog
 			implements ActionListener {
 
 		private JButton okButton;
 		private boolean continueCopying;
 
-		public CannotCopyDialog(Dialog parent, String msg) {
+		CannotCopyDialog(Dialog parent, String msg) {
 			super(parent);
 			init(msg);
 		}
 
-		public CannotCopyDialog(Frame parent, String msg) {
+		CannotCopyDialog(Frame parent, String msg) {
 			super(parent);
 			init(msg);
 		}
@@ -545,10 +548,10 @@ class FilePasteThread extends GUIWorkerThread {
 			SelectableLabel desc = new SelectableLabel(msg);
 			cp.add(desc, BorderLayout.NORTH);
 
-			okButton = UIUtil.newButton(FilePasteThread.msg,
+			okButton = UIUtil.newButton(FilePasteThread.MSG,
 					"Dialog.CannotCopy.ContinueCopyingFiles");
 			okButton.addActionListener(this);
-			JButton cancelButton = UIUtil.newButton(FilePasteThread.msg,
+			JButton cancelButton = UIUtil.newButton(FilePasteThread.MSG,
 					"Dialog.CannotCopy.CancelRemainingCopies");
 			cancelButton.addActionListener(this);
 			Container footer = UIUtil.createButtonFooter(okButton,cancelButton);
@@ -575,6 +578,9 @@ class FilePasteThread extends GUIWorkerThread {
 	}
 
 
+	/**
+	 * A dialog stating that a directory already exists.
+	 */
 	private class DirExistsDialog extends JDialog implements ActionListener {
 
 		private JCheckBox rememberCB;
@@ -582,17 +588,17 @@ class FilePasteThread extends GUIWorkerThread {
 		private JButton no;
 		private boolean copyFilesIntoDirectory;
 
-		public DirExistsDialog(Dialog parent, File dir) {
+		DirExistsDialog(Dialog parent, File dir) {
 			super(parent);
 			init(dir);
 		}
 
-		public DirExistsDialog(Frame parent, File dir) {
+		DirExistsDialog(Frame parent, File dir) {
 			super(parent);
 			init(dir);
 		}
 
-		public boolean getCopyFilesIntoDirectory() {
+		boolean getCopyFilesIntoDirectory() {
 			return copyFilesIntoDirectory;
 		}
 
@@ -626,7 +632,9 @@ class FilePasteThread extends GUIWorkerThread {
 				int lastNewline = 0;
 				while ((newline=message.indexOf('\n', lastNewline))>-1) {
 					String temp = message.substring(lastNewline, newline);
-					if (temp.length()==0) { temp  = " "; }
+					if (temp.length()==0) {
+						temp  = " ";
+					}
 					topText.add(new JLabel(temp));
 					lastNewline = newline + 1;
 				}
@@ -640,14 +648,14 @@ class FilePasteThread extends GUIWorkerThread {
 			topPanel.add(temp);
 
 			JPanel bottom = new JPanel(new BorderLayout());
-			rememberCB = UIUtil.newCheckBox(msg,
+			rememberCB = UIUtil.newCheckBox(MSG,
 					"Dialog.DirExists.RememberMyDecision");
 			temp = new JPanel(new BorderLayout());
 			temp.add(rememberCB, BorderLayout.LINE_START);
 			bottom.add(temp, BorderLayout.NORTH);
-			yes = UIUtil.newButton(msg, "Dialog.DirExists.Yes");
+			yes = UIUtil.newButton(MSG, "Dialog.DirExists.Yes");
 			yes.addActionListener(this);
-			no = UIUtil.newButton(msg, "Dialog.DirExists.No");
+			no = UIUtil.newButton(MSG, "Dialog.DirExists.No");
 			no.addActionListener(this);
 			Container buttonPanel = UIUtil.createButtonFooter(yes, no, 0);
 			buttonPanel.add(rememberCB, BorderLayout.LINE_START);
@@ -684,9 +692,12 @@ class FilePasteThread extends GUIWorkerThread {
 	}
 
 
+	/**
+	 * A panel stating information about a file.
+	 */
 	private static class FileInfoPanel extends JPanel {
 
-		public FileInfoPanel(String title, File file) {
+		FileInfoPanel(String title, File file) {
 
 			setBorder(BorderFactory.createCompoundBorder(
 					BorderFactory.createTitledBorder(title),
@@ -697,16 +708,16 @@ class FilePasteThread extends GUIWorkerThread {
 
 			String text = "<html><b>" + file.getName() + "</b><br>" +
 					file.getAbsolutePath() + "<br>" +
-					msg.getString("FileInfo.Size") + " " +
+					MSG.getString("FileInfo.Size") + " " +
 			        Utilities.getFileSizeStringFor(file) + "<br>" +
-					msg.getString("FileInfo.DateModified") + " " +
+					MSG.getString("FileInfo.DateModified") + " " +
 			        Utilities.getLastModifiedString(file.lastModified());
 			SelectableLabel label = new SelectableLabel(text);
 			add(label);
 
 		}
 
-		private static final Icon getIcon(File file) {
+		private static Icon getIcon(File file) {
 
 			Icon icon = null;
 
@@ -742,6 +753,9 @@ class FilePasteThread extends GUIWorkerThread {
 	}
 
 
+	/**
+	 * A dialog describing a file name collision.
+	 */
 	private class NameCollisionDialog extends JDialog implements ActionListener{
 
 		private JList list;
@@ -749,12 +763,12 @@ class FilePasteThread extends GUIWorkerThread {
 		private JButton okButton;
 		private int result;
 
-		public NameCollisionDialog(Dialog parent, File source, File dest) {
+		NameCollisionDialog(Dialog parent, File source, File dest) {
 			super(parent);
 			init(source, dest);
 		}
 
-		public NameCollisionDialog(Frame parent, File source, File dest) {
+		NameCollisionDialog(Frame parent, File source, File dest) {
 			super(parent);
 			init(source, dest);
 		}
@@ -830,7 +844,7 @@ class FilePasteThread extends GUIWorkerThread {
 			RScrollPane sp = new RScrollPane(list);
 			middle.add(sp);
 			middle.add(Box.createVerticalStrut(5));
-			doForAllCB = UIUtil.newCheckBox(msg,
+			doForAllCB = UIUtil.newCheckBox(MSG,
 					"Dialog.NameCollision.RememberForFutureFiles");
 			JPanel temp = new JPanel(new BorderLayout());
 			temp.add(doForAllCB, BorderLayout.LINE_START);
@@ -840,7 +854,7 @@ class FilePasteThread extends GUIWorkerThread {
 			temp.add(middle, BorderLayout.NORTH);
 			cp.add(temp);
 
-			okButton = UIUtil.newButton(msg, "Button.OK");
+			okButton = UIUtil.newButton(MSG, "Button.OK");
 			okButton.addActionListener(this);
 			Container footer = UIUtil.createButtonFooter(okButton);
 			cp.add(footer, BorderLayout.SOUTH);
@@ -864,13 +878,13 @@ class FilePasteThread extends GUIWorkerThread {
 	 */
 	private class NameCollisionResolver implements Runnable {
 
-		public int result;
-		public boolean doForAll;
+		private int result;
+		private boolean doForAll;
 
 		private File file;
 		private File dest;
 
-		public NameCollisionResolver(File file, File dest) {
+		NameCollisionResolver(File file, File dest) {
 			this.file = file;
 			this.dest = dest;
 			result = 0;
@@ -896,18 +910,21 @@ class FilePasteThread extends GUIWorkerThread {
 	}
 
 
-	static class UserDecisions {
+	/**
+	 * A simple container around the user's decisions about when to overwrite, etc.
+	 */
+	private static class UserDecisions {
 
-		public static final int PROMPT = 0;
-		public static final int OVERWRITE = 1;
-		public static final int RENAME = 2;
-		public static final int SKIP = 3;
+		private static final int PROMPT = 0;
+		private static final int OVERWRITE = 1;
+		private static final int RENAME = 2;
+		private static final int SKIP = 3;
 
-		public int nameCollision;
-		public int dirNameCollision;
-		public boolean cancelEverything;
+		private int nameCollision;
+		private int dirNameCollision;
+		private boolean cancelEverything;
 
-		public UserDecisions() {
+		UserDecisions() {
 			nameCollision = PROMPT;
 			dirNameCollision = PROMPT;
 		}
@@ -939,7 +956,7 @@ class FilePasteThread extends GUIWorkerThread {
 		};
 
 		FilePasteThread.paste(parent, files, dest, callback);
-		
+
 	}
 
 
@@ -949,7 +966,7 @@ class FilePasteThread extends GUIWorkerThread {
 	 * is <code>null</code>; if it is non-<code>null</code> (even just empty),
 	 * it represents a folder.
 	 */
-	private static class FileTreeNode {
+	private static final class FileTreeNode {
 
 		private File node;
 		private List<FileTreeNode> children;

@@ -212,7 +212,7 @@ public class ExtensionFileFilter extends FileFilter {
 	 * @param requestedCheck The requested case checking.  If this value is
 	 *        <code>SYSTEM_CASE_CHECK</code>, we'll figure it out ourselves.
 	 */
-	private static final boolean doCaseCheck(CaseCheck requestedCheck) {
+	private static boolean doCaseCheck(CaseCheck requestedCheck) {
 		switch (requestedCheck) {
 			case CASE_CHECK:
 				return true;
@@ -252,7 +252,7 @@ public class ExtensionFileFilter extends FileFilter {
 	 * Enumeration describing whether or not to check a file name for
 	 * proper casing for the current OS.
 	 */
-	public static enum CaseCheck {
+	public enum CaseCheck {
 		SYSTEM_CASE_CHECK,
 		CASE_CHECK,
 		NO_CASE_CHECK

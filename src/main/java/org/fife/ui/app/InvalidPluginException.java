@@ -20,9 +20,6 @@ package org.fife.ui.app;
  */
 public class InvalidPluginException extends Exception {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 182575532328519085L;
 
 

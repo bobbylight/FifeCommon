@@ -14,8 +14,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.plaf.LabelUI;
 
-import org.fife.ui.UIUtil;
-
 
 /**
  * A clickable hyperlink.

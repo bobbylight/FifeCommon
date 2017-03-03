@@ -212,12 +212,15 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 	}
 
 
+	/**
+	 * A menu item that's just a "down" arrow, denoting the menu has more items than are visible.
+	 */
 	private static class ArrowMenuItem extends JMenuItem {
 
 		private Icon arrowIcon;
 		private Icon disabledArrowIcon;
 
-		public ArrowMenuItem(Icon icon) {
+		ArrowMenuItem(Icon icon) {
 			// We only temporarily set the menu item's standard icon, just so
 			// we can use Swing to get our "disabled" version.  Then we clear
 			// it so we can draw the icon ourselves, in the text area.
@@ -239,8 +242,11 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 	}
 
 
+	/**
+	 * Listens for mousse events in the menu.
+	 */
 	private static class MenuMouseAdapter extends MouseAdapter {
-		   
+
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			JMenuItem item = (JMenuItem)e.getSource();
@@ -257,11 +263,14 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 	}
 
 
+	/**
+	 * Programmatically scrolls the menu.
+	 */
 	private class MenuScrollAction extends AbstractAction {
 
 		private int increment;
 
-		public MenuScrollAction(int increment) {
+		MenuScrollAction(int increment) {
 			this.increment = increment;
 		}
 

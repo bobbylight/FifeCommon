@@ -28,7 +28,7 @@ class Win32FileIOExtras extends FileIOExtras {
 	 *
 	 * @throws UnsatisfiedLinkError If the required native dll is not found.
 	 */
-	public Win32FileIOExtras() {
+	Win32FileIOExtras() {
 		loadNativeLibrary();
 	}
 
@@ -101,9 +101,6 @@ class Win32FileIOExtras extends FileIOExtras {
 						boolean confirmation, boolean silent);
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean showFilePropertiesDialog(Window parent, String file) {
 		long hwnd = parent!=null ? getHwnd(parent) : 0;
@@ -113,7 +110,7 @@ class Win32FileIOExtras extends FileIOExtras {
 
 	/**
 	 * Does the dirty work of displaying the properties dialog for a file.
-	 * 
+	 *
 	 * @param hwnd The handle to the parent window, or <code>0</code> if
 	 *        unknown.
 	 * @param file The file whose properties should be displayed.

@@ -48,7 +48,7 @@ class DockableWindowGroup extends JPanel {
 	/**
 	 * Constructor.
 	 */
-	public DockableWindowGroup(ContentPanel parent) {
+	DockableWindowGroup(ContentPanel parent) {
 		this.parent = parent;
 		setLayout(new BorderLayout());
 		tabbedPane = new DockedTabbedPane();
@@ -215,7 +215,7 @@ class DockableWindowGroup extends JPanel {
 
 		private JPopupMenu popup;
 
-		public DockedTabbedPane() {
+		DockedTabbedPane() {
 			super(BOTTOM);
 			setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 			enableEvents(AWTEvent.MOUSE_EVENT_MASK);
@@ -297,7 +297,7 @@ class DockableWindowGroup extends JPanel {
 		private Color gradient1;
 		private Color gradient2;
 
-		public TitlePanel(String title) {
+		TitlePanel(String title) {
 			super(new BorderLayout());
 			setBorder(BorderFactory.createEmptyBorder(0,5,0,5));
 			refreshGradientColors();
@@ -324,10 +324,10 @@ class DockableWindowGroup extends JPanel {
 		 * @return
 		 */
 		public Color darker(Color c) {
-			final double FACTOR = 0.85;
-			return new Color(Math.max((int)(c.getRed()  *FACTOR), 0), 
-					Math.max((int)(c.getGreen()*FACTOR), 0),
-					Math.max((int)(c.getBlue() *FACTOR), 0));
+			final double factor = 0.85;
+			return new Color(Math.max((int)(c.getRed() * factor), 0),
+					Math.max((int)(c.getGreen()*factor), 0),
+					Math.max((int)(c.getBlue() *factor), 0));
 		}
 
 		@Override
@@ -484,9 +484,12 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 			}
 		}
 
+		/**
+		 * Action that minimizes this panel.
+		 */
 		private class MinimizeAction extends AbstractAction {
 
-			public MinimizeAction() {
+			MinimizeAction() {
 				putValue(SHORT_DESCRIPTION, // tool tip
 						DockableWindow.getString("Button.Minimize"));
 				Icon icon = new ImageIcon(getClass().getResource("minimize.png"));

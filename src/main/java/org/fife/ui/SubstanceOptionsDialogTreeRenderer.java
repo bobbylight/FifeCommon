@@ -20,7 +20,7 @@ import org.pushingpixels.substance.api.renderers.SubstanceDefaultTreeCellRendere
 /**
  * Renderer used in the Options dialog's tree when Substance is installed.  I
  * love how Substance makes custom renderers a pain in the ass!
- * 
+ *
  * @author Robert Futrell
  * @version 1.0
  */

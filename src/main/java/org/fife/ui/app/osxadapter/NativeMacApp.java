@@ -9,12 +9,12 @@ package org.fife.ui.app.osxadapter;
  */
 public interface NativeMacApp {
 
-	public void about();
+	void about();
 
-	public void openFile(String file);
+	void openFile(String file);
 
-	public void preferences();
+	void preferences();
 
-	public void quit();
+	void quit();
 
 }

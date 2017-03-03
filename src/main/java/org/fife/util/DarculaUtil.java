@@ -16,15 +16,23 @@ import javax.swing.plaf.ComponentUI;
 /**
  * Utility methods to make FifeCommon mesh better with the Darcula Look and
  * Feel.
- * 
+ *
  * @author Robert Futrell
  * @version 1.0
  */
-public class DarculaUtil {
+public final class DarculaUtil {
 
 
 	public static boolean isDarculaUI(ComponentUI ui) {
 		return ui.getClass().getSimpleName().contains("Darcula");
+	}
+
+
+	/**
+	 * Private constructor to prevent instantiation.
+	 */
+	private DarculaUtil() {
+		// Do nothing
 	}
 
 

@@ -173,7 +173,7 @@ public class SelectableLabel extends JTextPane {
 					UIUtil.getHTMLFormatForColor(linkFG) + "; }";
 			doc.getStyleSheet().addRule(aRule);
 		}
-		
+
 	}
 
 

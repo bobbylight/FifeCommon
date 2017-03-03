@@ -17,7 +17,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -86,9 +85,9 @@ public class BreadcrumbBar extends JComponent {
 	static final String ARROW_ACTIVATED		= "arrowActivatedPropety";
 	static final String ARROW_SELECTED		= "arrowSelected";
 
-	private static final String pkg = "org/fife/ui/breadcrumbbar/";
+	private static final String PKG = "org/fife/ui/breadcrumbbar/";
 
-	private static final FileSystemView fsv = FileSystemView.getFileSystemView();
+	private static final FileSystemView FSV = FileSystemView.getFileSystemView();
 
 
 	public BreadcrumbBar() {
@@ -186,10 +185,9 @@ tb.addChangeListener(new ChangeListener() {
 		if (parent==null) {
 			return;
 		}
-		Boolean activate = Boolean.valueOf(tb.getModel().isRollover() ||
-				tb.getModel().isArmed());
-		Boolean selected = Boolean.valueOf(tb.isSelected() ||
-				tb.getModel().isPressed());
+		Boolean activate = tb.getModel().isRollover() ||
+				tb.getModel().isArmed();
+		Boolean selected = tb.isSelected() || tb.getModel().isPressed();
 		for (int i=1; i<parent.getComponentCount(); i++) {
 			if (parent.getComponent(i)==tb) {
 				AbstractButton b = (AbstractButton)parent.getComponent(i-1);
@@ -200,13 +198,13 @@ tb.addChangeListener(new ChangeListener() {
 			}
 		}
 	}
-	
+
 });
 			b = tb;
 		}
 		else {
 			String name = loc.getName();
-			if (name.length()==0 && fsv.isDrive(loc)) {
+			if (name.length()==0 && FSV.isDrive(loc)) {
 				name = loc.getAbsolutePath(); // Was "", on Windows at least
 			}
 			if (name.length()==0) { // Root directory "/", on OS X at least...
@@ -243,7 +241,7 @@ tb.addChangeListener(new ChangeListener() {
 	}
 
 
-	private static final JMenuItem createMenuItem(File root, String name,
+	private static JMenuItem createMenuItem(File root, String name,
 			Icon icon) {
 		JMenuItem item = new JMenuItem(name, icon);
 		item.putClientProperty(PROPERTY_LOCATION, root);
@@ -251,7 +249,7 @@ tb.addChangeListener(new ChangeListener() {
 	}
 
 
-	private static final void displayRelativeTo(JPopupMenu popup, Component c) {
+	private static void displayRelativeTo(JPopupMenu popup, Component c) {
 		int x = 0;
 		if (!popup.getComponentOrientation().isLeftToRight()) {
 			x = c.getWidth() - popup.getPreferredSize().width;
@@ -291,10 +289,10 @@ tb.addChangeListener(new ChangeListener() {
 	}
 
 
-	private static final Icon getIcon(File dir) {
-		Icon icon = null;
+	private static Icon getIcon(File dir) {
+		Icon icon;
 		try {
-			icon = fsv.getSystemIcon(dir);
+			icon = FSV.getSystemIcon(dir);
 		} catch (NullPointerException npe) {
 			// Bugs in 1.4.2, fixed in 1.5+, but keeping this here just in case.
 			// TODO: Grab default directory icon
@@ -324,7 +322,7 @@ tb.addChangeListener(new ChangeListener() {
 	}
 
 
-	private static final String getName(File dir) {
+	private static String getName(File dir) {
 		return FileDisplayNames.get().getName(dir);
 	}
 
@@ -358,11 +356,11 @@ tb.addChangeListener(new ChangeListener() {
 	 * @param name The name of the image to load.
 	 * @return The image
 	 */
-	private static final BufferedImage loadImage(String name) {
+	private static BufferedImage loadImage(String name) {
 
 		BufferedImage image = null;
 
-		name = pkg + name;
+		name = PKG + name;
 		ClassLoader cl = BreadcrumbBar.class.getClassLoader();
 
 		try {
@@ -404,9 +402,9 @@ tb.addChangeListener(new ChangeListener() {
 		buttonPanel.add(rootButton, 0);
 		backButton = createBackButton();
 		buttonPanel.add(backButton, 1);
-		Icon icon = null;
+		Icon icon;
 		try {
-			icon = fsv.getSystemIcon(shownLocation);
+			icon = FSV.getSystemIcon(shownLocation);
 		} catch (NullPointerException npe) {
 			// getSystemIcon() throws an NPE when shownLocation is null.  We
 			// check for this before calling refresh(), but we're being
@@ -434,7 +432,7 @@ tb.addChangeListener(new ChangeListener() {
 //				getDataBuffer()).getData();
 //		int o = oldColor.getRGB();
 //		int n = newColor.getRGB();
-//		
+//
 //		for (int i=0; i<imgArray.length; i++) {
 //			if (imgArray[i]==o) {
 //				imgArray[i] = n;
@@ -475,7 +473,7 @@ tb.addChangeListener(new ChangeListener() {
 	/**
 	 * Changes the directory shown by this breadcrumb bar.  This will
 	 * automatically change the mode to {@link #BREADCRUMB_MODE}.<p>
-	 * 
+	 *
 	 * This method fires a property change event of type
 	 * {@link #PROPERTY_LOCATION}.
 	 *
@@ -568,12 +566,15 @@ tb.addChangeListener(new ChangeListener() {
 	}
 
 
+	/**
+	 * Listens for popup menu events in this component.
+	 */
 	private static class BreadcrumbPopupMenuListener
 					implements PopupMenuListener {
 
 		private JToggleButton source;
 
-		public BreadcrumbPopupMenuListener(JToggleButton source) {
+		BreadcrumbPopupMenuListener(JToggleButton source) {
 			this.source = source;
 		}
 
@@ -594,6 +595,9 @@ tb.addChangeListener(new ChangeListener() {
 	}
 
 
+	/**
+	 * A down arrow icon.
+	 */
 	private class DownArrowIcon implements Icon {
 
 		@Override
@@ -602,12 +606,12 @@ tb.addChangeListener(new ChangeListener() {
 			Color fg = c.getForeground();
 			g.setColor(fg);
 
-			((Graphics2D)g).translate(x, y);
+			g.translate(x, y);
 			g.drawLine(0,3, 6,3);
 			g.drawLine(1,4, 5,4);
 			g.drawLine(2,5, 4,5);
 			g.drawLine(3,6, 3,6);
-			((Graphics2D)g).translate(-x, -y);
+			g.translate(-x, -y);
 
 		}
 
@@ -624,9 +628,12 @@ tb.addChangeListener(new ChangeListener() {
 	}
 
 
+	/**
+	 * A horizontal arrow icon.
+	 */
 	private class HorizArrowIcon implements Icon {
 
-		private final int brighten(int component) {
+		private int brighten(int component) {
 			return component<230 ? (component+20) : component;
 		}
 
@@ -638,7 +645,7 @@ tb.addChangeListener(new ChangeListener() {
 			Color highlight = new Color(brighten(fg.getRed()),
 					brighten(fg.getGreen()), brighten(fg.getBlue()));
 
-			((Graphics2D)g).translate(x, y);
+			g.translate(x, y);
 			ComponentOrientation o = getComponentOrientation();
 			if (o.isLeftToRight()) {
 				g.drawLine(2,1, 2,6);
@@ -660,7 +667,7 @@ tb.addChangeListener(new ChangeListener() {
 				g.drawLine(3,2, 3,2);
 				g.drawLine(2,3, 2,3);
 			}
-			((Graphics2D)g).translate(-x, -y);
+			g.translate(-x, -y);
 
 		}
 

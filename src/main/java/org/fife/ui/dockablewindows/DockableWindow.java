@@ -80,8 +80,8 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	 */
 	private Icon icon;
 
-	private static final String MSG = "org.fife.ui.dockablewindows.DockableWindows";
-	private static final ResourceBundle msg = ResourceBundle.getBundle(MSG);
+	private static final ResourceBundle MSG = ResourceBundle.getBundle(
+			"org.fife.ui.dockablewindows.DockableWindows");
 
 
 	/**
@@ -173,7 +173,7 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	/**
 	 * Called when the user clicks on the tab for this dockable window.
 	 * This focuses the "primary" component in the window, if any.
-	 * 
+	 *
 	 * @return Whether the primary component was focused.
 	 */
 	public boolean focused() {
@@ -266,7 +266,7 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	 * @return The localized message.
 	 */
 	static String getString(String key) {
-		return msg.getString(key);
+		return MSG.getString(key);
 	}
 
 

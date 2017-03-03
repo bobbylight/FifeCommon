@@ -29,7 +29,7 @@ import javax.swing.KeyStroke;
  * A mapping of keys to actions.  Instances of
  * <code>AbstractGUIApplication</code> use this class to keep track of their
  * actions, and to simply loading and saving their customized shortcuts.
- * 
+ *
  * @author Robert Futrell
  * @version 1.0
  */
@@ -106,11 +106,11 @@ public class ActionRegistry {
 	 * be a standard Java properties file; its keys correspond to the action
 	 * keys in this registry, and its values correspond go the
 	 * {@link KeyStroke}s to use for action accelerators.<p>
-	 * 
+	 *
 	 * If any property key doesn't have a corresponding action in this registry,
 	 * it is ignored.  If any property value isn't a valid
 	 * <code>KeyStroke</code>, it is ignored.
-	 * 
+	 *
 	 * @param file The properties file to load.
 	 * @throws IOException If an IO error occurs reading the file.
 	 * @see #saveShortcuts(File)
@@ -151,7 +151,7 @@ public class ActionRegistry {
 	 * file.  Property keys are the action keys, property values are the
 	 * <code>KeyStroke</code>s for the shortcuts for each action.  Actions
 	 * with no shortcut will have an empty string value for their property.
-	 * 
+	 *
 	 * @param file The file to save to.
 	 * @throws IOException If an IO error occurs writing the file.
 	 * @see #loadShortcuts(File)
@@ -166,7 +166,7 @@ public class ActionRegistry {
 			String value = ks==null ? "" : ks.toString();
 			props.setProperty(key, value);
 		}
-		
+
 		BufferedOutputStream out = new BufferedOutputStream(
 				new FileOutputStream(file));
 		try {
@@ -174,7 +174,7 @@ public class ActionRegistry {
 		} finally {
 			out.close();
 		}
-		
+
 	}
 
 

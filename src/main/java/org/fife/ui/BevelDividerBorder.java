@@ -27,7 +27,7 @@ import javax.swing.border.Border;
  * @version 0.8
  */
 public class BevelDividerBorder implements Border, SwingConstants {
-	
+
 	private int location;
 	private int slack;
 	private Color light;
@@ -189,7 +189,7 @@ public class BevelDividerBorder implements Border, SwingConstants {
 		g.drawLine(x1,y1, x2,y2);
 		g.setColor(light==null ? c.getBackground().brighter() : light);
 		g.drawLine(x1+xinc,y1+yinc, x2+xinc,y2+yinc);
-		
+
 	}
 
 

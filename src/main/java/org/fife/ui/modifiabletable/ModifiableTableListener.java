@@ -29,7 +29,7 @@ public interface ModifiableTableListener extends EventListener {
 	 *
 	 * @param e An event describing the change.
 	 */
-	public void modifiableTableChanged(ModifiableTableChangeEvent e);
+	void modifiableTableChanged(ModifiableTableChangeEvent e);
 
 
 }

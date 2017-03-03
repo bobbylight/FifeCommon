@@ -23,7 +23,7 @@ import javax.swing.filechooser.FileSystemView;
  * @author Robert Futrell
  * @version 1.0
  */
-public class FileDisplayNames {
+public final class FileDisplayNames {
 
 	private Map<File, String> rootNameCache;
 

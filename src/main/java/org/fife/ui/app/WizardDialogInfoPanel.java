@@ -53,7 +53,7 @@ public class WizardDialogInfoPanel extends JPanel {
 	}
 
 
-	/** 
+	/**
 	 * Returns the preferred size of this panel.  This is overridden just
 	 * so wizard dialogs don't get too large.
 	 *
@@ -85,7 +85,7 @@ public class WizardDialogInfoPanel extends JPanel {
 	 * This gives the panel to do anything "extra" it wants to do.<p>
 	 *
 	 * The default implementation does nothing.
-	 * 
+	 *
 	 * @see #isDisplayed
 	 */
 	public void isAccepted() {

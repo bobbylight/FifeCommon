@@ -10,7 +10,7 @@ import javax.swing.UIManager;
  * @author Robert Futrell
  * @version 1.0
  */
-class DockableWindowUtil {
+final class DockableWindowUtil {
 
 
 	/**

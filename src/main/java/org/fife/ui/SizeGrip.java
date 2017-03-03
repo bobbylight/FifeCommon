@@ -48,7 +48,7 @@ class SizeGrip extends StatusBarPanel {
 	/**
 	 * Constructor.
 	 */
-	public SizeGrip() {
+	SizeGrip() {
 
 		MouseHandler adapter = new MouseHandler();
 		addMouseListener(adapter);
@@ -195,13 +195,14 @@ class SizeGrip extends StatusBarPanel {
 	 * @author Robert Futrell
 	 * @version 1.0
 	 */
-	/*
-	 * NOTE: We use SwingUtilities.convertPointToScreen() instead of just using
-	 * the locations relative to the corner component because the latter proved
-	 * buggy - stretch the window too wide and some kind of arithmetic error
-	 * started happening somewhere - our window would grow way too large.
-	 */
 	private class MouseHandler extends MouseInputAdapter {
+
+		/*
+         * NOTE: We use SwingUtilities.convertPointToScreen() instead of just using
+         * the locations relative to the corner component because the latter proved
+         * buggy - stretch the window too wide and some kind of arithmetic error
+         * started happening somewhere - our window would grow way too large.
+         */
 
 		private Point origPos;
 

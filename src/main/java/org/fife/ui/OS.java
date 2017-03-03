@@ -51,7 +51,7 @@ public enum OS {
 	private static OS os;
 
 
-	private OS(boolean caseSensitive) {
+	OS(boolean caseSensitive) {
 		this.caseSensitive = caseSensitive;
 	}
 

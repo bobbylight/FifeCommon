@@ -137,7 +137,7 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 	 * @param t The throwable.
 	 * @return The stack trace.
 	 */
-	private static final String getStackTraceText(Throwable t) {
+	private static String getStackTraceText(Throwable t) {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append(t.toString()).append("\n");
 		StackTraceElement[] ste = t.getStackTrace();
@@ -273,19 +273,22 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 	}
 
 
+	/**
+	 * A button to toggle the visibility of a "details" section in the dialog.
+	 */
 	private static class DetailsButton extends JButton {
 
 		private String mainText;
 		private boolean collapsed;
 
-		public DetailsButton(String text) {
+		DetailsButton(String text) {
 			mainText = text;
 			setCollapsed(true);
 		}
 
 		public void setCollapsed(boolean collapsed) {
 			this.collapsed = collapsed;
-			String text = null;
+			String text;
 			ComponentOrientation o = getComponentOrientation();
 			if (collapsed) {
 				text = o.isLeftToRight() ? (mainText + " >>") :

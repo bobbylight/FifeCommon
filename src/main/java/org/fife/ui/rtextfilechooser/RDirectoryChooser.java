@@ -213,7 +213,7 @@ public class RDirectoryChooser extends EscapableDialog {
 	private class Listener implements ActionListener, TreeSelectionListener,
 							PropertyChangeListener {
 
-		public Listener() {
+		Listener() {
 		}
 
 		@Override

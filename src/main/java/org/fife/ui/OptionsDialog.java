@@ -188,7 +188,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 
 		else if (actionCommand.equals("OK")) {
 			boolean result = doApply((Frame)getParent());
-			if (result==true)
+			if (result)
 				this.setVisible(false);
 		}
 
@@ -233,7 +233,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 * @param panel The options panel.
 	 * @return The key.
 	 */
-	private static final String createKeyForPanel(OptionsDialogPanel panel) {
+	private static String createKeyForPanel(OptionsDialogPanel panel) {
 		String key = panel.getName();
 		while ((panel=panel.getParentPanel())!=null) {
 			key = panel.getName() + "-" + key;
@@ -247,7 +247,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 *
 	 * @return The renderer to use.
 	 */
-	private static final TreeCellRenderer createTreeCellRenderer() {
+	private static TreeCellRenderer createTreeCellRenderer() {
 		if (SubstanceUtil.isSubstanceInstalled()) {
 			//  Use reflection to avoid compile-time dependencies form this
 			// class to Substance.
@@ -383,7 +383,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 
 	/**
 	 * Returns the option panel with a specific ID.
-	 * 
+	 *
 	 * @param id The ID to search for.
 	 * @return The option panel, or <code>null</code> if none with the
 	 *         specified ID is found.
@@ -620,7 +620,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 			}
 		}
 
-		for (Enumeration<?> e=node.children(); e.hasMoreElements(); ) {
+		for (Enumeration<?> e=node.children(); e.hasMoreElements();) {
 			node = (DefaultMutableTreeNode)e.nextElement();
 			if (setSelectedOptionsPanelImpl(nameOrId, node)) {
 				return true;
@@ -677,7 +677,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 */
 	}
 
-		
+
 	/**
 	 * This method is overridden to ensure that all nodes in the tree are
 	 * expanded (as if they're not, the size of the window and its widgets
@@ -701,7 +701,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		// Initially select the first node.
 		int[] selectedRows = optionTree.getSelectionRows();
 		if (selectedRows==null || selectedRows.length==0) {
-			optionTree.setSelectionRow(0); 
+			optionTree.setSelectionRow(0);
 		}
 		super.setVisible(visible);
 	}

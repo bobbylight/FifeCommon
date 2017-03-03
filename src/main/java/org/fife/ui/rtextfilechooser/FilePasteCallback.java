@@ -38,8 +38,7 @@ public interface FilePasteCallback {
 	 *         this is <code>true</code>, any remaining files will not be
 	 *         copied.
 	 */
-	public boolean filePasteUpdate(int pasteCount, int total,
-					File justPastedFile);
+	boolean filePasteUpdate(int pasteCount, int total, File justPastedFile);
 
 
 	/**
@@ -47,7 +46,7 @@ public interface FilePasteCallback {
 	 *
 	 * @param pasteCount The total number of files ultimately pasted.
 	 */
-	public void pasteOperationCompleted(int pasteCount);
+	void pasteOperationCompleted(int pasteCount);
 
 
 }

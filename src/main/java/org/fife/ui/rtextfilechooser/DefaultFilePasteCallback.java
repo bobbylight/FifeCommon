@@ -30,8 +30,8 @@ public class DefaultFilePasteCallback implements FilePasteCallback {
 	private ProgressMonitor monitor;
 	private String noteFormat;
 
-	private static final String MSG = "org.fife.ui.rtextfilechooser.FilePaste";
-	private static final ResourceBundle msg = ResourceBundle.getBundle(MSG);
+	private static final ResourceBundle MSG = ResourceBundle.getBundle(
+			"org.fife.ui.rtextfilechooser.FilePaste");
 
 
 	/**
@@ -41,7 +41,7 @@ public class DefaultFilePasteCallback implements FilePasteCallback {
 	 */
 	public DefaultFilePasteCallback(Component parent) {
 		monitor = new ProgressMonitor(parent,
-				msg.getString("Dialog.ProgressMonitor.Title"), "", 0, 1);
+				MSG.getString("Dialog.ProgressMonitor.Title"), "", 0, 1);
 	}
 
 
@@ -57,7 +57,7 @@ public class DefaultFilePasteCallback implements FilePasteCallback {
 		monitor.setMaximum(total);
 		if (justPastedFile!=null) {
 			if (noteFormat==null) {
-				noteFormat = msg.getString("Dialog.ProgressMonitor.NoteFormat");
+				noteFormat = MSG.getString("Dialog.ProgressMonitor.NoteFormat");
 			}
 			Object[] args = { Integer.valueOf(pasteCount),
 					Integer.valueOf(total), justPastedFile.getAbsolutePath() };

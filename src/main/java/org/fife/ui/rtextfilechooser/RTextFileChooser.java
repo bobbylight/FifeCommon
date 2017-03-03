@@ -245,7 +245,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/**
 	 * The resource bundle for file choosers.
 	 */
-	static final ResourceBundle msg = ResourceBundle.getBundle(
+	static final ResourceBundle MSG = ResourceBundle.getBundle(
 									"org.fife.ui.rtextfilechooser.FileChooser");
 
 	/**
@@ -594,7 +594,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			String newDirName = JOptionPane.showInputDialog(this, newFolderPrompt);
 			if (newDirName!=null) {
 				boolean result = new File(currentDirectory, newDirName).mkdir();
-				if (result==false) {
+				if (!result) {
 					JOptionPane.showMessageDialog(this, errorNewDirPrompt,
 								errorDialogTitle, JOptionPane.ERROR_MESSAGE);
 				}
@@ -826,7 +826,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	}
 
 
-	private static final boolean containsFilesAndDirectories(Object[] files) {
+	private static boolean containsFilesAndDirectories(Object[] files) {
 		int num = files.length;
 		boolean containsFile = false;
 		boolean containsDirectory = false;
@@ -842,7 +842,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	}
 
 
-	private static final boolean containsOnlyDirectories(Object[] files) {
+	private static boolean containsOnlyDirectories(Object[] files) {
 		int num = files.length;
 		for (int i=0; i<num; i++) {
 			if (!((File)files[i]).isDirectory())
@@ -907,7 +907,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		rootPane.setDefaultButton(acceptButton);
 
 		if (JDialog.isDefaultLookAndFeelDecorated()) {
-			boolean supportsWindowDecorations = 
+			boolean supportsWindowDecorations =
 				UIManager.getLookAndFeel().getSupportsWindowDecorations();
 			if (supportsWindowDecorations)
 				dialog.getRootPane().setWindowDecorationStyle(JRootPane.FILE_CHOOSER_DIALOG);
@@ -940,7 +940,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		openMenuItem.setActionCommand("PopupOpen");
 		openMenuItem.addActionListener(this);
 
-		final JMenu openInMenu = new JMenu(msg.getString("PopupMenu.OpenIn"));
+		final JMenu openInMenu = new JMenu(MSG.getString("PopupMenu.OpenIn"));
 		openInMenu.add(new JMenuItem(systemEditAction));
 		openInMenu.add(new JMenuItem(systemViewAction));
 
@@ -988,7 +988,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		ComponentOrientation o = getComponentOrientation();
 		popupMenu.applyComponentOrientation(o);
-		
+
 	}
 
 	synchronized void displayPopupMenu(JComponent view, int x, int y) {
@@ -1057,9 +1057,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * the given file has a name "org", we will prepend this with the file
 	 * chooser's <code>currentDirectory</code>.
 	 *
-	 * @param file The file for which you want a canonical path.
+	 * @param dir The file or directory for which you want a canonical path.
 	 */
-	private final File getCanonicalFileFor(File dir) {
+	private File getCanonicalFileFor(File dir) {
 		if (!dir.isAbsolute()) {
 			dir = new File(currentDirectory, dir.getPath());
 		}
@@ -1220,7 +1220,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 */
 	private static String getEncodingOf(File file) throws IOException {
 
-		byte bom[] = new byte[4];
+		byte[] bom = new byte[4];
 		int n;
 		FileInputStream in = new FileInputStream(file);
 		try {
@@ -1240,7 +1240,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 				(bom[2]==(byte)0x00) && (bom[3]==(byte)0x00)) {
 			encoding = "UTF-32LE";
 		}
-		
+
 		else if ((bom[0]==(byte)0xEF) &&
 			(bom[1]==(byte)0xBB) &&
 			(bom[2]==(byte)0xBF)) {
@@ -1364,7 +1364,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			int i;
 
 			// Parse the text for filenames in '"''s.
-			while ( (i = text.indexOf('"', 1)) != -1 ) {
+			while ((i = text.indexOf('"', 1)) != -1) {
 				fileNames.add(text.substring(1,i));
 				text = text.substring(i);	// => '" "File2.txt"'.
 				i = text.indexOf('"', 1);	// => j == 2.
@@ -1510,7 +1510,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @param key The key.
 	 * @return The mnemonic.
 	 */
-	private static final int getMnemonic(String key) {
+	private static int getMnemonic(String key) {
 
 		Object value = UIManager.get(key);
 
@@ -1604,7 +1604,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @return the localized text.
 	 */
 	public String getString(String key) {
-		return msg.getString(key);
+		return MSG.getString(key);
 	}
 
 
@@ -1785,10 +1785,10 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @return Whether or not the file name contained wildcards.
 	 */
 	private static boolean isGlobPattern(String filename) {
-		return ((File.separatorChar == '\\' && filename.indexOf('*') >= 0)
-				|| (File.separatorChar == '/' && (filename.indexOf('*') >= 0
-				|| filename.indexOf('?') >= 0
-				|| filename.indexOf('[') >= 0)));
+		return ((File.separatorChar == '\\' && filename.indexOf('*') >= 0) ||
+				(File.separatorChar == '/' && (filename.indexOf('*') >= 0 ||
+				filename.indexOf('?') >= 0 ||
+				filename.indexOf('[') >= 0)));
 	}
 
 
@@ -1947,7 +1947,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 *
 	 * @param useGlobFilter Whether or not to use the glob file filter.
 	 */
-	private final void refreshView(boolean useGlobFilter) {
+	private void refreshView(boolean useGlobFilter) {
 
 		if (!guiInitialized)
 			return;
@@ -2021,7 +2021,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @return <code>true</code> if the file filter was removed.
 	 * @see #addChoosableFileFilter
 	 * @see #getChoosableFileFilters
-	 */ 
+	 */
 	public boolean removeChoosableFileFilter(FileFilter f) {
 		if (fileFilters.contains(f)) {
 			if(getFileFilter() == f)
@@ -2297,8 +2297,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		if (filter != null) {
 			if (isMultiSelectionEnabled() && selectedFiles!=null &&
-					selectedFiles.length>0)
-			{
+					selectedFiles.length>0) {
 				List<File> fList = new ArrayList<File>();
 				boolean failed = false;
 				int num = selectedFiles.length;
@@ -2340,7 +2339,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	/**
-	 * Sets whether the filename text field is "file system aware."
+	 * Sets whether the filename text field is "file system aware".
 	 *
 	 * @param aware Whether the filename text field will be helpful and
 	 *        provide possible filename matches while you are typing in it.
@@ -2646,8 +2645,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 				// files.
 				File file = filesToSelect[0];
 				if (file.isAbsolute() &&
-						!fileSystemView.isParent(currentDirectory, file))
-				{
+						!fileSystemView.isParent(currentDirectory, file)) {
 					setCurrentDirectory(file.getParentFile());
 				}
 				view.setSelectedFiles(filesToSelect);
@@ -2750,7 +2748,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	void synchronizeTextFieldWithView() {
 
 		// Don't do anything if we're in the process of changing directories.
-		if (isChangingDirectories) 
+		if (isChangingDirectories)
 			return;
 
 		isChangingDirectories = true;

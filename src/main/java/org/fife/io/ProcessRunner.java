@@ -42,7 +42,7 @@ public class ProcessRunner implements Runnable {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param commandLine The command line to run, with each item in the
 	 *        array being a single parameter.
 	 * @throws IllegalArgumentException If <code>commandLine</code> has
@@ -204,7 +204,7 @@ public class ProcessRunner implements Runnable {
 
 	/**
 	 * Runs the current external process.
-	 * 
+	 *
 	 * @see #getStdout()
 	 * @see #getStderr()
 	 */
@@ -347,7 +347,7 @@ public class ProcessRunner implements Runnable {
 	 * idea was taken from
 	 * <a href="http://www.javaworld.com/javaworld/jw-12-2000/jw-1229-traps_p.html">
 	 * this JavaWorld article</a>.
-	 * 
+	 *
 	 * @author Robert Futrell
 	 */
 	static class StreamReaderThread extends Thread {
@@ -360,7 +360,7 @@ public class ProcessRunner implements Runnable {
 
 		/**
 		 * Constructor.
-		 * 
+		 *
 		 * @param p The running process.
 		 * @param in The stream (stdout or stderr) to read from.
 		 * @param listener A listener to send notification to as output is
@@ -368,7 +368,7 @@ public class ProcessRunner implements Runnable {
 		 * @param isStdout Whether this thread is reading stdout (as opposed
 		 *        to stderr).
 		 */
-		public StreamReaderThread(Process p, InputStream in,
+		StreamReaderThread(Process p, InputStream in,
 							ProcessRunnerOutputListener listener,
 							boolean isStdout) {
 			this.p = p;
@@ -380,7 +380,7 @@ public class ProcessRunner implements Runnable {
 
 		/**
 		 * Returns the output read from the stream.
-		 * 
+		 *
 		 * @return The stream's output, as a <code>String</code>.
 		 */
 		public String getStreamOutput() {

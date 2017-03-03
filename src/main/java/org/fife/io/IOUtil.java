@@ -21,7 +21,7 @@ import java.io.InputStreamReader;
  * @author Robert Futrell
  * @version 1.0
  */
-public class IOUtil {
+public final class IOUtil {
 
 
 	/**

@@ -29,7 +29,7 @@ import javax.swing.KeyStroke;
  * A simple wrapper for preferences for some object.  This class can be used
  * as a simpler replacement for the Java Preferences API for the following
  * reasons:
- * 
+ *
  * <ol>
  *    <li>No need to call <code>putXXX()</code> methods for each individual
  *        preference when saving preferences and <code>getXXX()</code> methods
@@ -55,7 +55,7 @@ import javax.swing.KeyStroke;
  * for its preferences, say <code>FooPrefs</code>, that extends
  * <code>Prefs</code>.  The <code>Foo</code> instance could then loads its
  * preferences like so:
- * 
+ *
  * <pre>
  * public void loadPreferences() throws IOException {
  *    FooPrefs prefs = new FooPrefs(); // Initializes to defaults
@@ -67,7 +67,7 @@ import javax.swing.KeyStroke;
  * </pre>
  *
  * and save its preferences similarly:
- * 
+ *
  * <pre>
  * public void savePreferences() throws IOException {
  *    FooPrefs prefs = new FooPrefs();
@@ -98,7 +98,7 @@ import javax.swing.KeyStroke;
  *    <li>Color
  *    <li>KeyStroke
  * </ul>
- *  
+ *
  * @author Robert Futrell
  * @version 1.0
  */
@@ -122,7 +122,7 @@ public abstract class Prefs {
 	 *        representing black is returned.
 	 * @return The string.
 	 */
-	private static final String getColorString(Color c) {
+	private static String getColorString(Color c) {
 		String str;
 		if (c==null) {
 			str = "$ff000000";
@@ -137,7 +137,7 @@ public abstract class Prefs {
 	}
 
 
-	private static final boolean isPrimitiveNumberType(Class<?> type) {
+	private static boolean isPrimitiveNumberType(Class<?> type) {
 		return int.class==type || long.class==type || short.class==type ||
 				byte.class==type || float.class==type || double.class==type;
 	}
@@ -149,7 +149,7 @@ public abstract class Prefs {
 	 * @param field The field.
 	 * @return Whether the field should be saved.
 	 */
-	private static final boolean isSavable(Field field) {
+	private static boolean isSavable(Field field) {
 		int mods = field.getModifiers();
 		return (mods&Modifier.PUBLIC)==Modifier.PUBLIC &&
 				(mods&(Modifier.TRANSIENT|Modifier.FINAL))==0;

@@ -26,9 +26,6 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
-import org.fife.ui.ResizableFrameContentPane;
-import org.fife.ui.UIUtil;
-
 
 /**
  * A dialog for editing a key stroke.
@@ -39,13 +36,13 @@ import org.fife.ui.UIUtil;
 public class GetKeyStrokeDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private KeyStroke stroke;
 	private KeyStrokeField textField;
 	private boolean canceled;
 
-	private static final String MSG = "org.fife.ui.GetKeyStrokeDialog";
-	private static final ResourceBundle msg = ResourceBundle.getBundle(MSG);
+	private static final ResourceBundle MSG = ResourceBundle.
+			getBundle("org.fife.ui.GetKeyStrokeDialog");
 
 
 	/**
@@ -55,11 +52,11 @@ public class GetKeyStrokeDialog extends JDialog {
 	 * @param initial The initial key stroke to display.
 	 */
 	public GetKeyStrokeDialog(Dialog parent, KeyStroke initial) {
-		super(parent, msg.getString("Dialog.KeyStroke.Title"));
+		super(parent, MSG.getString("Dialog.KeyStroke.Title"));
 		createUI(initial);
 	}
-	
-	
+
+
 	/**
 	 * Constructor.
 	 *
@@ -67,7 +64,7 @@ public class GetKeyStrokeDialog extends JDialog {
 	 * @param initial The initial key stroke to display.
 	 */
 	public GetKeyStrokeDialog(Frame parent, KeyStroke initial) {
-		super(parent, msg.getString("Dialog.KeyStroke.Title"));
+		super(parent, MSG.getString("Dialog.KeyStroke.Title"));
 		createUI(initial);
 	}
 
@@ -84,21 +81,21 @@ public class GetKeyStrokeDialog extends JDialog {
 		contentPane.setBorder(UIUtil.getEmpty5Border());
 
 		JPanel temp = new JPanel(new BorderLayout());
-		JLabel prompt = UIUtil.newLabel(msg, "Dialog.KeyStroke.Prompt");
+		JLabel prompt = UIUtil.newLabel(MSG, "Dialog.KeyStroke.Prompt");
 		temp.add(prompt, BorderLayout.LINE_START);
 		contentPane.add(temp);
 		contentPane.add(Box.createVerticalStrut(8));
 
 		textField = new KeyStrokeField();
-		JLabel charLabel=UIUtil.newLabel(msg, "Dialog.KeyStroke.Key",textField);
+		JLabel charLabel=UIUtil.newLabel(MSG, "Dialog.KeyStroke.Key",textField);
 		temp = new JPanel(new BorderLayout());
 		temp.add(charLabel, BorderLayout.LINE_START);
 		temp.add(textField);
 		contentPane.add(temp);
 
-		JButton ok = UIUtil.newButton(msg, "OK", listener);
+		JButton ok = UIUtil.newButton(MSG, "OK", listener);
 		ok.setActionCommand("OK");
-		JButton cancel = UIUtil.newButton(msg, "Cancel", listener);
+		JButton cancel = UIUtil.newButton(MSG, "Cancel", listener);
 		cancel.setActionCommand("Cancel");
 		JPanel buttonPanel = (JPanel)UIUtil.createButtonFooter(ok, cancel);
 		buttonPanel.setBorder(BorderFactory.createCompoundBorder(

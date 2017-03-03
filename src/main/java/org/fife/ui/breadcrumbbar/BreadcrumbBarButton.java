@@ -22,7 +22,7 @@ import javax.swing.plaf.ButtonUI;
 class BreadcrumbBarButton extends JButton {
 
 
-	public BreadcrumbBarButton(String text) {
+	BreadcrumbBarButton(String text) {
 		super(text);
 	}
 

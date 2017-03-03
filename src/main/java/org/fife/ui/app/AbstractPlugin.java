@@ -17,7 +17,7 @@ import javax.swing.UIManager;
 
 
 /**
- * Base class for <code>Plugin</code> implementations that don't need to 
+ * Base class for <code>Plugin</code> implementations that don't need to
  * extend a specific class.
  *
  * @author Robert Futrell

@@ -29,11 +29,14 @@ public class CleanSplitPaneUI extends BasicSplitPaneUI {
 	}
 
 
+	/**
+	 * A divider that renders nothing but its background color.
+	 */
 	class EmptySplitPaneDivider extends BasicSplitPaneDivider {
 
 		private static final long serialVersionUID = 1L;
 
-		public EmptySplitPaneDivider(BasicSplitPaneUI ui) {
+		EmptySplitPaneDivider(BasicSplitPaneUI ui) {
 			super(ui);
 		}
 

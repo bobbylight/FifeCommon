@@ -31,7 +31,7 @@ public interface RowHandler {
 	 * @return Whether the row should be modified.
 	 * @see #canRemoveRow(int)
 	 */
-	public boolean canModifyRow(int row);
+	boolean canModifyRow(int row);
 
 
 	/**
@@ -42,7 +42,7 @@ public interface RowHandler {
 	 * @return Whether the row should be removed.
 	 * @see #canModifyRow(int)
 	 */
-	public boolean canRemoveRow(int row);
+	boolean canRemoveRow(int row);
 
 
 	/**
@@ -54,7 +54,7 @@ public interface RowHandler {
 	 *         cancels the add/modify operation, this method should return
 	 *         <code>null</code>.
 	 */
-	public Object[] getNewRowInfo(Object[] oldData);
+	Object[] getNewRowInfo(Object[] oldData);
 
 
 	/**
@@ -62,7 +62,7 @@ public interface RowHandler {
 	 * will update their UI's.  This method is called in response to an
 	 * LaF change.
 	 */
-	public void updateUI();
+	void updateUI();
 
 
 }

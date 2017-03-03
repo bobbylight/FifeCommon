@@ -40,8 +40,13 @@ class IconDesktopManager extends DefaultDesktopManager {
 	@Override
 	public void closeFrame(JInternalFrame f) {
 		Container c = f.getParent();
-		if (f.isSelected())
-			try { f.setSelected(false); } catch (PropertyVetoException e2) { }
+		if (f.isSelected()) {
+			try {
+				f.setSelected(false);
+			} catch (PropertyVetoException e2) {
+				// Do nothing
+			}
+		}
 		if(c != null) {
 			c.remove(f);
 			c.repaint(f.getX(), f.getY(), f.getWidth(), f.getHeight());
@@ -70,7 +75,7 @@ class IconDesktopManager extends DefaultDesktopManager {
 		f.moveToFront();
 	}
 
-    
+
 	// implements javax.swing.DesktopManager
 	@Override
 	public void deactivateFrame(JInternalFrame f) {

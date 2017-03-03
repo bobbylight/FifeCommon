@@ -31,7 +31,7 @@ public class MenuButton extends JButton {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param icon The icon for this button.
 	 */
 	public MenuButton(Icon icon) {
@@ -82,7 +82,7 @@ public class MenuButton extends JButton {
 
 	/**
 	 * Adds a separator to the popup menu.
-	 * 
+	 *
 	 * @see #addMenuItem(JMenuItem)
 	 * @see #insertMenuItem(JMenuItem, int)
 	 * @see #removeItem(int)
@@ -235,7 +235,7 @@ public class MenuButton extends JButton {
 		private Icon otherIcon;
 		private static final int SPACING	= 3;
 
-		public CompoundIcon(Icon icon) {
+		CompoundIcon(Icon icon) {
 			setOtherIcon(icon);
 			arrowIcon = new DownArrowIcon();
 		}
@@ -256,7 +256,7 @@ public class MenuButton extends JButton {
 					arrowIcon.getIconWidth();
 		}
 
-		private int _paintArrowIcon(Component c, Graphics g, int x, int y) {
+		private int paintArrowIcon(Component c, Graphics g, int x, int y) {
 			y = (c.getHeight()-arrowIcon.getIconHeight())/2;
 			Graphics2D g2d = (Graphics2D)g;
 			Object old = g2d.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
@@ -267,7 +267,7 @@ public class MenuButton extends JButton {
 			return x + arrowIcon.getIconWidth() + SPACING;
 		}
 
-		private int _paintOtherIcon(Component c, Graphics g, int x, int y) {
+		private int paintOtherIcon(Component c, Graphics g, int x, int y) {
 			if (otherIcon!=null) {
 				otherIcon.paintIcon(c, g, x,y);
 				x += otherIcon.getIconWidth() + SPACING;
@@ -278,12 +278,12 @@ public class MenuButton extends JButton {
 		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			if (c.getComponentOrientation().isLeftToRight()) {
-				x = _paintOtherIcon(c, g, x, y);
-				_paintArrowIcon(c, g, x, y);
+				x = paintOtherIcon(c, g, x, y);
+				paintArrowIcon(c, g, x, y);
 			}
 			else {
-				x = _paintArrowIcon(c, g, x, y);
-				_paintOtherIcon(c, g, x, y);
+				x = paintArrowIcon(c, g, x, y);
+				paintOtherIcon(c, g, x, y);
 			}
 		}
 
@@ -303,7 +303,7 @@ public class MenuButton extends JButton {
 		int[] ycoord;
 		private static final int SIZE		= 6;
 
-		public DownArrowIcon() {
+		DownArrowIcon() {
 			xcoord = new int[3];
 			ycoord = new int[3];
 		}

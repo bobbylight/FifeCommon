@@ -27,7 +27,7 @@ public interface FileSelector {
 	 * @return The selected file, or <code>null</code> if no file is
 	 *         selected.
 	 */
-	public File getSelectedFile();
+	File getSelectedFile();
 
 
 	/**
@@ -36,7 +36,7 @@ public interface FileSelector {
 	 * @return An array of all selected files, or an empty array if no files
 	 *         are selected.
 	 */
-	public File[] getSelectedFiles();
+	File[] getSelectedFiles();
 
 
 }

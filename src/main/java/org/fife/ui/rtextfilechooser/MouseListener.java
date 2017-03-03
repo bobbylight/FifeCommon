@@ -35,7 +35,7 @@ class MouseListener extends MouseAdapter {
 	 *
 	 * @param chooser The file chooser.
 	 */
-	public MouseListener(RTextFileChooser chooser) {
+	MouseListener(RTextFileChooser chooser) {
 		this.chooser = chooser;
 	}
 

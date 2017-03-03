@@ -9,9 +9,7 @@
  */
 package org.fife.ui.rtextfilechooser;
 
-import java.awt.Component;
-import java.awt.Toolkit;
-import java.awt.Window;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -22,7 +20,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +31,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import org.fife.ui.UIUtil;
 import org.fife.ui.rtextfilechooser.extras.FileIOExtras;
 
 
@@ -47,9 +45,9 @@ public interface Actions {
 
 
 	/**
-	 * Adds the currently-viewed directory to the file chooser "favorites."
+	 * Adds the currently-viewed directory to the file chooser "favorites".
 	 */
-	static class AddToFavoritesAction extends FileChooserAction {
+	class AddToFavoritesAction extends FileChooserAction {
 
 		public AddToFavoritesAction(RTextFileChooser chooser) {
 			super(chooser);
@@ -69,7 +67,7 @@ public interface Actions {
 	/**
 	 * Copies any files selected in the file chooser's view.
 	 */
-	static class CopyAction extends FileChooserAction {
+	class CopyAction extends FileChooserAction {
 
 		private FileSelector chooser;
 
@@ -115,7 +113,7 @@ public interface Actions {
 	/**
 	 * Copies the full path of any selected files to the clipboard.
 	 */
-	static class CopyFullPathAction extends FileChooserAction {
+	class CopyFullPathAction extends FileChooserAction {
 
 		private FileSelector chooser;
 
@@ -157,7 +155,7 @@ public interface Actions {
 
 			StringSelection transferable = new StringSelection(sb.toString());
 			clipboard.setContents(transferable, transferable);
-			
+
 		}
 
 	}
@@ -166,7 +164,7 @@ public interface Actions {
 	/**
 	 * Action that handles deleting files.
 	 */
-	static class DeleteAction extends FileChooserAction {
+	class DeleteAction extends FileChooserAction {
 
 		private boolean hard;
 
@@ -276,7 +274,7 @@ public interface Actions {
 	/**
 	 * Base class for all file chooser actions.
 	 */
-	static abstract class FileChooserAction extends AbstractAction {
+	abstract class FileChooserAction extends AbstractAction {
 
 		protected RTextFileChooser chooser;
 		private static ResourceBundle msg = ResourceBundle.getBundle(
@@ -296,7 +294,7 @@ public interface Actions {
 	/**
 	 * Pastes files into the currently selected directory.
 	 */
-	static class PasteAction extends FileChooserAction {
+	class PasteAction extends FileChooserAction {
 
 		public PasteAction(RTextFileChooser chooser) {
 			super(chooser);
@@ -367,7 +365,7 @@ public interface Actions {
 	/**
 	 * Refreshes the files displayed in the file chooser's view.
 	 */
-	static class RefreshAction extends FileChooserAction {
+	class RefreshAction extends FileChooserAction {
 
 		public RefreshAction(RTextFileChooser chooser) {
 			super(chooser);
@@ -387,7 +385,7 @@ public interface Actions {
 	/**
 	 * Renames a file.
 	 */
-	static class RenameAction extends FileChooserAction {
+	class RenameAction extends FileChooserAction {
 
 		public RenameAction(RTextFileChooser chooser) {
 			super(chooser);
@@ -438,21 +436,25 @@ public interface Actions {
 	 * Opens a file with the default system editor or viewer.  Only works when
 	 * using Java 6.
 	 */
-	/*
-	 * NOTE: This method is a FileChooserAction only so we can use its
-	 * ResourceBundle.  This is somewhat of a hack.
-	 */
-	public static class SystemOpenAction extends FileChooserAction {
+	class SystemOpenAction extends FileChooserAction {
+
+		/*
+         * NOTE: This method is a FileChooserAction only so we can use its
+         * ResourceBundle.  This is somewhat of a hack.
+         */
 
 		private FileSelector chooser;
 		private OpenMethod method;
 
-		public static enum OpenMethod {
+		/**
+		 * Simple enumeration of edit vs. open.
+		 */
+		public enum OpenMethod {
 
-			OPEN("open", "SystemOpenViewer"),
-			EDIT("edit", "SystemOpenEditor");
+			OPEN(Desktop.Action.OPEN, "SystemOpenViewer"),
+			EDIT(Desktop.Action.EDIT, "SystemOpenEditor");
 
-			private OpenMethod(String method, String localizationKey) {
+			OpenMethod(Desktop.Action method, String localizationKey) {
 				this.method = method;
 				this.localizationKey = localizationKey;
 			}
@@ -461,7 +463,7 @@ public interface Actions {
 				return this == OPEN ? EDIT : OPEN;
 			}
 
-			private String method;
+			private Desktop.Action method;
 			private String localizationKey;
 
 		}
@@ -482,7 +484,7 @@ public interface Actions {
 				return;
 			}
 
-			Object desktop = getDesktop();
+			Desktop desktop = UIUtil.getDesktop();
 			if (desktop!=null) {
 				// Since OSes can be finicky over whether something is
 				// considered a "viewer" or an "editor," and usually folks
@@ -497,45 +499,30 @@ public interface Actions {
 
 		}
 
-		private static final Object getDesktop() {
-
-			try {
-
-				Class<?> desktopClazz = Class.forName("java.awt.Desktop");
-				Method m = desktopClazz.
-					getDeclaredMethod("isDesktopSupported");
-
-				boolean supported = ((Boolean)m.invoke(null)).booleanValue();
-				if (supported) {
-					m = desktopClazz.getDeclaredMethod("getDesktop");
-					return m.invoke(null);
-				}
-
-			} catch (RuntimeException re) {
-				throw re; // Keep FindBugs happy
-			} catch (Exception e) {
-				UIManager.getLookAndFeel().provideErrorFeedback(null);
-			}
-
-			return null;
-
-		}
-
-		private static final boolean openImpl(Object desktop,
+		private static boolean openImpl(Desktop desktop,
 				OpenMethod method, File file) {
-			try {
-				Method m = desktop.getClass().getDeclaredMethod(
-							method.method, new Class[] { File.class });
-				m.invoke(desktop, new Object[] { file });
-				return true;
-			} catch (RuntimeException re) {
-				throw re; // Keep FindBugs happy
-			} catch (Exception e) {
-				// Likely the UnsupportedOperationException or IOException
-				// if the file association does not exist or app fails to load.
-				// Swallow and return false below.
+
+			boolean success = false;
+
+			if (desktop.isSupported(method.method)) {
+				try {
+					switch (method.method) {
+						case OPEN:
+							desktop.open(file);
+							success = true;
+							break;
+						default:
+							desktop.edit(file);
+							success = true;
+							break;
+					}
+				} catch (IOException ioe) {
+					// Do nothing; success will return false
+				}
 			}
-			return false;
+
+			return success;
+
 		}
 
 	}
@@ -544,11 +531,12 @@ public interface Actions {
 	/**
 	 * Displays the "properties" dialog for any selected files.
 	 */
-	/*
-	 * This is a File Chooser action only to get at its resource bundle, so
-	 * this is kind of a hack.
-	 */
-	static class PropertiesAction extends FileChooserAction {
+	class PropertiesAction extends FileChooserAction {
+
+		/*
+         * This is a File Chooser action only to get at its resource bundle, so
+         * this is kind of a hack.
+         */
 
 		private FileSelector selector;
 
@@ -570,7 +558,7 @@ public interface Actions {
 				return;
 			}
 
-			File[] selected = null;
+			File[] selected;
 			if (selector instanceof RTextFileChooser) {
 				RTextFileChooser chooser = (RTextFileChooser)selector;
 				selected = chooser.getView().getSelectedFiles();
@@ -578,7 +566,7 @@ public interface Actions {
 			else {
 				selected = selector.getSelectedFiles();
 			}
-			
+
 			Window parent = SwingUtilities.
 					getWindowAncestor((Component)selector);
 			for (int i=0; i<selected.length; i++) {
@@ -591,9 +579,9 @@ public interface Actions {
 
 
 	/**
-	 * Action that makes the file chooser display one directory "higher."
+	 * Action that makes the file chooser display one directory "higher".
 	 */
-	static class UpOneLevelAction extends FileChooserAction {
+	class UpOneLevelAction extends FileChooserAction {
 
 		public UpOneLevelAction(RTextFileChooser chooser) {
 			super(chooser);

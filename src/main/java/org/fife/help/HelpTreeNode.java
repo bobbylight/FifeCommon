@@ -20,7 +20,6 @@ import java.net.URL;
  * contain instances of this class when creating a <code>HelpDialog</code>.
  *
  * @author Robert Futrell
- *
  * @version 1.0
  */
 public class HelpTreeNode {
@@ -29,12 +28,12 @@ public class HelpTreeNode {
 	 * The help page that will be loaded when the user clicks on this node in
 	 * the Contents tree.
 	 */
-	public URL url;
+	private URL url;
 
 	/**
 	 * The text of the node.
 	 */
-	public String title;
+	private String title;
 
 
 	/**
@@ -75,7 +74,26 @@ public class HelpTreeNode {
 		try {
 			url = new File(urlString).toURI().toURL();
 		} catch (Exception e) {}
-		//System.err.println(url);
+	}
+
+
+	/**
+	 * Returns the title for this tree node.
+	 *
+	 * @return The title.
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+
+	/**
+	 * Returns the URL for this tree node.
+	 *
+	 * @return The URL.
+	 */
+	public URL getUrl() {
+		return url;
 	}
 
 

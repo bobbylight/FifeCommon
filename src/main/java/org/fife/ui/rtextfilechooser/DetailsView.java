@@ -83,7 +83,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * @param statusString The title for the "Status" column.
 	 * @param lastModifiedString The title for the "Date Modified" column.
 	 */
-	public DetailsView(RTextFileChooser chooser, String nameString,
+	DetailsView(RTextFileChooser chooser, String nameString,
 					String sizeString, String typeString, String statusString,
 					String lastModifiedString) {
 
@@ -138,6 +138,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 		setTransferHandler(new FileChooserViewTransferHandler(this));
 		setDragEnabled(true);
+		setFillsViewportHeight(true);
 
 	}
 
@@ -288,7 +289,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * @return The row the specified file is in, or <code>-1</code> if it
 	 *         isn't in the view.
 	 */
-	private final int getRowFor(File file) {
+	private int getRowFor(File file) {
 
 		// FIXME:  Is there a better way to find the row of the specified
 		// file???
@@ -307,19 +308,6 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 		return -1;
 
-	}
-
-
-	/**
-	 * Overridden to ensure the table completely fills the JViewport it is
-	 * sitting in.  Note in Java 6 this could be taken care of by the method
-	 * JTable#setFillsViewportHeight(boolean).
-	 */
-	@Override
-	public boolean getScrollableTracksViewportHeight() {
-		Component parent = getParent();
-		return parent instanceof JViewport ?
-			parent.getHeight()>getPreferredSize().height : false;
 	}
 
 
@@ -546,21 +534,21 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		private int start;
 		private List<FileAttributes> fileAttrs;
 
-		public AttributeBatch(int displayCount, int start) {
+		AttributeBatch(int displayCount, int start) {
 			this.displayCount = displayCount;
 			this.start = start;
 			fileAttrs = new ArrayList<FileAttributes>();
 		}
 
-		public void addAttributes(FileAttributes attrs) {
+		void addAttributes(FileAttributes attrs) {
 			fileAttrs.add(attrs);
 		}
 
-		public FileAttributes getAttributes(int index) {
+		FileAttributes getAttributes(int index) {
 			return fileAttrs.get(index);
 		}
 
-		public int getDisplayCount() {
+		int getDisplayCount() {
 			return displayCount;
 		}
 
@@ -591,7 +579,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		private static final int BATCH_SIZE = 15;
 
 
-		public AttributeRunnable(int displayCount, List<File> files) {
+		AttributeRunnable(int displayCount, List<File> files) {
 			this.displayCount = displayCount;
 			this.files = files;
 		}
@@ -655,7 +643,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 */
 	private class DetailsViewModel extends DefaultTableModel {
 
-		public DetailsViewModel(String nameHeader, String typeHeader,
+		DetailsViewModel(String nameHeader, String typeHeader,
 							String statusHeader,
 							String sizeHeader, String lastModifiedHeader) {
 			String[] columnNames = new String[5];
@@ -706,7 +694,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 			}
 		}
 
-		private final Vector<?> getTableObjectVectorForFile(File file) {
+		private Vector<?> getTableObjectVectorForFile(File file) {
 //			boolean isDirectory = file.isDirectory();
 //			long length = isDirectory ? -1 : file.length();
 			String description = chooser.getDescription(file);
@@ -732,12 +720,12 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 */
 	private class FileAttributes {
 
-		//public File file;
-		public String status;
-		public long size;
-		public long modified;
+		//private File file;
+		private String status;
+		private long size;
+		private long modified;
 
-		public FileAttributes(File file) {
+		FileAttributes(File file) {
 			//this.file = file;
 			size = file.isDirectory() ? -1 : file.length();
 			boolean canRead = file.canRead();
@@ -795,7 +783,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 		private long modified;
 
-		public FileModifiedWrapper(long modified) {
+		FileModifiedWrapper(long modified) {
 			this.modified = modified;
 		}
 
@@ -820,11 +808,11 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * A simple wrapper for the file size column, so we don't have to have
 	 * two different renderers for Substance vs. all other LookAndFeels.
 	 */
-	private static class FileSizeWrapper implements Comparable<FileSizeWrapper>{
+	private static class FileSizeWrapper implements Comparable<FileSizeWrapper> {
 
 		private long size;
 
-		public FileSizeWrapper(long size) {
+		FileSizeWrapper(long size) {
 			this.size = size;
 		}
 

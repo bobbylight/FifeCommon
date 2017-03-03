@@ -20,10 +20,10 @@ import java.lang.reflect.Method;
 
 /**
  * Uses the "official" API for setting window opacity introduced in Java 7.
- * <p>See 
+ * <p>See
  * <a href="http://download.oracle.com/javase/tutorial/uiswing/misc/trans_shaped_windows.html">
  * here</a> for more information.<p>
- * 
+ *
  * NOTE: Java 7 introduced extra rules not included in the Java 6 com.sun API;
  * windows can not have their opacity values changed while displayable, and
  * they also cannot be non-opaque if they are decorated.  The Java 6 API did
@@ -37,9 +37,6 @@ import java.lang.reflect.Method;
 class Java7TranslucencyUtil extends TranslucencyUtil {
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public float getOpacity(Window w) {
 
@@ -62,9 +59,6 @@ class Java7TranslucencyUtil extends TranslucencyUtil {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isTranslucencySupported(boolean perPixel) {
 
@@ -123,9 +117,6 @@ class Java7TranslucencyUtil extends TranslucencyUtil {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean setOpacity(Window w, float value) {
 

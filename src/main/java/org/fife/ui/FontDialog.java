@@ -184,8 +184,9 @@ public class FontDialog extends JDialog implements ActionListener,
 		boldCheckBox = createCheckBox(msg, "Bold");
 		italicCheckBox = createCheckBox(msg, "Italic");
 		underlineCheckBox = createCheckBox(msg, "Underline");
-		if (underlineSelectable==false)
+		if (!underlineSelectable) {
 			underlineCheckBox.setEnabled(false);
+		}
 		fontFormatPanel = Box.createVerticalBox();
 		fontFormatPanel.add(boldCheckBox);
 		fontFormatPanel.add(italicCheckBox);
@@ -197,8 +198,9 @@ public class FontDialog extends JDialog implements ActionListener,
 		JButton okButton = createButton(msg, "OK");
 		JButton cancelButton = createButton(msg, "Cancel");
 		JButton colorButton = createButton(msg, "Color");
-		if (colorSelectable==false)
+		if (!colorSelectable) {
 			colorButton.setVisible(false);
+		}
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(4,1, 0,5));
 		buttonPanel.add(okButton);
@@ -346,7 +348,7 @@ public class FontDialog extends JDialog implements ActionListener,
 	 *
 	 * @return The list model.
 	 */
-	private static final DefaultListModel createFontListModel() {
+	private static DefaultListModel createFontListModel() {
 
 		// Get available fonts from the system.
 		String[] families = GraphicsEnvironment.
@@ -376,7 +378,7 @@ public class FontDialog extends JDialog implements ActionListener,
 	 * @return The set of common monospaced font names on Windows, OS X, and
 	 *         UNIX.
 	 */
-	private static final HashSet<String> createMonospacedFontsSet() {
+	private static HashSet<String> createMonospacedFontsSet() {
 		HashSet<String> set = new HashSet<String>();
 		set.add("Andale Mono");
 		set.add("Andale Mono IPA");
@@ -591,7 +593,7 @@ public class FontDialog extends JDialog implements ActionListener,
 	 * <code>fontFamily.equals()</code> to search for the item, but we need
 	 * <code>item.equals(fontFamily)</code>, since we cheat and have the
 	 * "items" (FontInfos) compare for equality correctly against Strings.
-	 * 
+	 *
 	 * @param fontFamily The font family to select.
 	 */
 	private void setSelectedFontInFontList(String fontFamily) {
@@ -660,10 +662,10 @@ public class FontDialog extends JDialog implements ActionListener,
 	 */
 	private static class FontInfo implements Comparable<Object> {
 
-		public String fontFamily;
-		public boolean monospaced;
+		private String fontFamily;
+		private boolean monospaced;
 
-		public FontInfo(String fontFamily, boolean monospaced) {
+		FontInfo(String fontFamily, boolean monospaced) {
 			this.fontFamily = fontFamily;
 			this.monospaced = monospaced;
 		}

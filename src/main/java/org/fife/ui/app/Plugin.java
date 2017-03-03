@@ -43,7 +43,7 @@ public interface Plugin {
 	 *
 	 * @return The options panel.
 	 */
-	public PluginOptionsDialogPanel getOptionsDialogPanel();
+	PluginOptionsDialogPanel getOptionsDialogPanel();
 
 
 	/**
@@ -52,10 +52,10 @@ public interface Plugin {
 	 *
 	 * @return The ID of the parent panel, or <code>null</code> if they
 	 *         should be added at the "root" level of option panels.
-	 * 
+	 *
 	 * @see #getOptionsDialogPanel()
 	 */
-	public String getOptionsDialogPanelParentPanelID();
+	String getOptionsDialogPanelParentPanelID();
 
 
 	/**
@@ -63,7 +63,7 @@ public interface Plugin {
 	 *
 	 * @return The author.
 	 */
-	public String getPluginAuthor();
+	String getPluginAuthor();
 
 
 	/**
@@ -73,7 +73,7 @@ public interface Plugin {
 	 * @return The icon for this plugin.  This value may be <code>null</code>
 	 *         to represent no icon.
 	 */
-	public Icon getPluginIcon();
+	Icon getPluginIcon();
 
 
 	/**
@@ -81,7 +81,7 @@ public interface Plugin {
 	 *
 	 * @return The plugin name.
 	 */
-	public String getPluginName();
+	String getPluginName();
 
 
 	/**
@@ -89,7 +89,7 @@ public interface Plugin {
 	 *
 	 * @return The version number of this plugin.
 	 */
-	public String getPluginVersion();
+	String getPluginVersion();
 
 
 	/**
@@ -101,14 +101,14 @@ public interface Plugin {
 	 * @param app The application to which this plugin was just added.
 	 * @see #uninstall
 	 */
-	public void install(AbstractPluggableGUIApplication<?> app);
+	void install(AbstractPluggableGUIApplication<?> app);
 
 
 	/**
 	 * Called when the GUI application is shutting down.  When this method is
 	 * called, the <code>Plugin</code> should save any preferences.
 	 */
-	public void savePreferences();
+	void savePreferences();
 
 
 	/**
@@ -120,7 +120,7 @@ public interface Plugin {
 	 * @return Whether the uninstall went cleanly.
 	 * @see #install
 	 */
-	public boolean uninstall();
+	boolean uninstall();
 
 
 }

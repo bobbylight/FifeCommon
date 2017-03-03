@@ -41,7 +41,7 @@ public class KeyStrokeCellRenderer extends DefaultTableCellRenderer {
 	 * object may not be of type <code>KeyStrokeCellRenderer</code>; Substance,
 	 * for example, requires you to subclass its own base renderer class.  I
 	 * love how Substance makes custom rendering a pain in the ass!
-	 *  
+	 *
 	 * @return A cell renderer to use for key strokes.
 	 */
 	public static TableCellRenderer create() {

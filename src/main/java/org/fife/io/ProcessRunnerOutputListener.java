@@ -27,7 +27,7 @@ public interface ProcessRunnerOutputListener {
 	 * @param stdout If <code>true</code>, this is stdout output.
 	 *        If <code>false</code>, it is stderr.
 	 */
-	public void outputWritten(Process p, String output, boolean stdout);
+	void outputWritten(Process p, String output, boolean stdout);
 
 
 	/**
@@ -40,7 +40,7 @@ public interface ProcessRunnerOutputListener {
 	 *        terminated normally, or ended abruptly but somehow without
 	 *        throwing an exception.
 	 */
-	public void processCompleted(Process p, int rc, Throwable e);
+	void processCompleted(Process p, int rc, Throwable e);
 
 
 }

@@ -107,7 +107,7 @@ class PluginLoader {
 	 *
 	 * @param app The GUI application.
 	 */
-	public PluginLoader(AbstractPluggableGUIApplication<?> app) {
+	PluginLoader(AbstractPluggableGUIApplication<?> app) {
 		this.app = app;
 		pluginDir = getPluginDir(app);
 	}
@@ -119,7 +119,7 @@ class PluginLoader {
 	 * @param attrs The main manifest attributes.
 	 * @return The priority with which to load the plugin.
 	 */
-	private static final int getLoadPriority(Attributes attrs) {
+	private static int getLoadPriority(Attributes attrs) {
 
 		int priority = 2;
 
@@ -144,7 +144,7 @@ class PluginLoader {
 	 * @param app The application.
 	 * @return The plugin jar directory.
 	 */
-	private static final File getPluginDir(
+	private static File getPluginDir(
 			AbstractPluggableGUIApplication<?> app) {
 		return new File(app.getInstallLocation(), "plugins");
 	}

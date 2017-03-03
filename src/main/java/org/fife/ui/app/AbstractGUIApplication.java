@@ -78,6 +78,7 @@ import org.fife.help.HelpDialog;
  *   <li>Necessary Mac OS X hooks.
  * </ul>
  *
+ * @param <T> The preferences class for this application.
  * @author Robert Futrell
  * @version 0.6
  * @see AbstractPluggableGUIApplication
@@ -300,7 +301,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see #createActions(GUIApplicationPrefs)
 	 * @see #getAction(String)
 	 */
@@ -553,7 +554,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see #addAction(String, Action)
 	 * @see #createActions(GUIApplicationPrefs)
 	 */
@@ -837,7 +838,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * their actions via {@link #createActions(GUIApplicationPrefs)} to
 	 * restore any user customizations to shortcuts (assuming the application
 	 * allows them).<p>
-	 * 
+	 *
 	 * If an IO error occurs, an error is displayed to the user.
 	 *
 	 * @param file The file to load from.
@@ -885,7 +886,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 
 	/**
-	 * 1.5.2004/pwy: Generic registration with the Mac OS X application menu.  
+	 * 1.5.2004/pwy: Generic registration with the Mac OS X application menu.
 	 * Checks the platform, then attempts to register with the Apple EAWT.
 	 * This method calls OSXAdapter.registerMacOSXApplication() and
 	 * OSXAdapter.enablePrefs().
@@ -913,7 +914,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 				Method prefsEnableMethod =  osxAdapter.getDeclaredMethod(
 											"enablePrefs", defArgs);
 				if (prefsEnableMethod != null) {
-					Object args[] = {Boolean.TRUE};
+					Object[] args = { Boolean.TRUE };
 					prefsEnableMethod.invoke(osxAdapter, args);
 				}
 			} catch (NoClassDefFoundError e) {
@@ -1085,7 +1086,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * file.  Implementations are expected to call this method when shutting
 	 * down, to save any user customizations to shortcuts (assuming the
 	 * application allows them).</p>
-	 * 
+	 *
 	 * <p>
 	 * If an IO error occurs, an error is displayed to the user.
 	 * </p>
@@ -1239,7 +1240,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * Updates the look and feel for all components and windows in
 	 * this <code>RText</code> instance.  This method assumes that
 	 * <code>UIManager.setLookAndFeel(lnf)</code> has already been called.<p>
-	 * 
+	 *
 	 * Subclasses should override this method to update any child
 	 * dialogs or windows, and be sure to call the super implementation
 	 * as well.
@@ -1256,6 +1257,8 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 	/**
 	 * Action to show an application's Options dialog.
+	 *
+	 * @param <T> The parent application class type.
 	 */
     public static class OptionsAction<T extends AbstractGUIApplication<?>>
     		extends AppAction<T> {
@@ -1329,9 +1332,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 		private SplashScreen splashScreen;
 		private T prefs;
 
-		public StartupRunnable(String title,
-								SplashScreen splashScreen,
-								T prefs) {
+		StartupRunnable(String title, SplashScreen splashScreen, T prefs) {
 			this.splashScreen = splashScreen;
 			this.prefs = prefs;
 			this.title = title;

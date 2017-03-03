@@ -66,7 +66,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @param action The action to add.
 	 * @see #getAction(String)
 	 */
-	public void addAction(String key, Action action);
+	void addAction(String key, Action action);
 
 
 	/**
@@ -75,7 +75,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 *
 	 * @param t The exception/throwable that occurred.
 	 */
-	public void displayException(Throwable t);
+	void displayException(Throwable t);
 
 
 	/**
@@ -87,7 +87,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @param dialog The child dialog that threw the Exception.
 	 * @param t The exception/throwable that occurred.
 	 */
-	public void displayException(Dialog dialog, Throwable t);
+	void displayException(Dialog dialog, Throwable t);
 
 
 	/**
@@ -99,7 +99,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @param frame The child frame that threw the Exception.
 	 * @param t The exception/throwable that occurred.
 	 */
-	public void displayException(Frame frame, Throwable t);
+	void displayException(Frame frame, Throwable t);
 
 
 	/**
@@ -109,7 +109,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * before the application exits.  You can also prevent the application
 	 * from closing based on the application's state in this method.
 	 */
-	public void doExit();
+	void doExit();
 
 
 	/**
@@ -118,7 +118,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @return The About dialog.
 	 * @see org.fife.ui.AboutDialog
 	 */
-	public JDialog getAboutDialog();
+	JDialog getAboutDialog();
 
 
 	/**
@@ -130,7 +130,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @see #addAction(String, Action)
 	 * @see #getActions()
 	 */
-	public Action getAction(String key);
+	Action getAction(String key);
 
 
 
@@ -140,7 +140,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @return The action keys.
 	 * @see #getAction(String)
 	 */
-	public SortedSet<String> getActionKeys();
+	SortedSet<String> getActionKeys();
 
 
 	/**
@@ -149,7 +149,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @return The actions.
 	 * @see #getAction(String)
 	 */
-	public Action[] getActions();
+	Action[] getActions();
 
 
 	/**
@@ -158,7 +158,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 *
 	 * @return The Help dialog.
 	 */
-	public HelpDialog getHelpDialog();
+	HelpDialog getHelpDialog();
 
 
 	/**
@@ -166,7 +166,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 *
 	 * @return The image.
 	 */
-	public Image getIconImage();
+	Image getIconImage();
 
 
 	/**
@@ -175,7 +175,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 *
 	 * @return The directory.
 	 */
-	public String getInstallLocation();
+	String getInstallLocation();
 
 
 	/**
@@ -184,7 +184,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @return The menu bar.
 	 * @see #setJMenuBar
 	 */
-	public JMenuBar getJMenuBar();
+	JMenuBar getJMenuBar();
 
 
 	/**
@@ -194,7 +194,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 *
 	 * @return The language being used by this application.
 	 */
-	public abstract String getLanguage();
+	String getLanguage();
 
 
 	/**
@@ -203,7 +203,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @return The location of the application's main window.
 	 * @see #getSize()
 	 */
-	public abstract Point getLocation();
+	Point getLocation();
 
 
 	/**
@@ -213,7 +213,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 *
 	 * @return The OS we're running on.
 	 */
-	public OS getOS();
+	OS getOS();
 
 
 	/**
@@ -221,7 +221,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 *
 	 * @return The resource bundle.
 	 */
-	public ResourceBundle getResourceBundle();
+	ResourceBundle getResourceBundle();
 
 
 	/**
@@ -230,7 +230,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @return The size of the application's main window.
 	 * @see #getLocation()
 	 */
-	public abstract Dimension getSize();
+	Dimension getSize();
 
 
 	/**
@@ -239,7 +239,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @return The status bar.
 	 * @see #setStatusBar
 	 */
-	public StatusBar getStatusBar();
+	StatusBar getStatusBar();
 
 
 	/**
@@ -248,7 +248,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @return Whether the status bar is visible.
 	 * @see #setStatusBarVisible
 	 */
-	public boolean getStatusBarVisible();
+	boolean getStatusBarVisible();
 
 
 	/**
@@ -257,7 +257,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @return The toolbar.
 	 * @see #setToolBar
 	 */
-	public CustomizableToolBar getToolBar();
+	CustomizableToolBar getToolBar();
 
 
 	/**
@@ -266,7 +266,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @return Whether the toolbar is visible.
 	 * @see #setToolBarVisible
 	 */
-	public boolean getToolBarVisible();
+	boolean getToolBarVisible();
 
 
 	/**
@@ -274,7 +274,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 *
 	 * @return The version string.
 	 */
-	public String getVersionString();
+	String getVersionString();
 
 
 	/**
@@ -283,7 +283,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @return <code>true</code> if this applicaiton's window is maximized, or
 	 *         <code>false</code> if it isn't.
 	 */
-	public boolean isMaximized();
+	boolean isMaximized();
 
 
 	/**
@@ -293,14 +293,14 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 *
 	 * @return This application's preferences.
 	 */
-	public GUIApplicationPrefs<?> loadPreferences();
+	GUIApplicationPrefs<?> loadPreferences();
 
 
 	/**
 	 * Repacks the GUI application's main window.  This should be called
 	 * after things are added or removed from it.
 	 */
-	public void pack();
+	void pack();
 
 
 	/**
@@ -309,7 +309,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @param menuBar The menu bar.
 	 * @see #getJMenuBar
 	 */
-	public void setJMenuBar(JMenuBar menuBar);
+	void setJMenuBar(JMenuBar menuBar);
 
 
 	/**
@@ -319,7 +319,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @param language The language to use.  If <code>null</code>,
 	 *        English will be used.
 	 */
-	public void setLanguage(final String language);
+	void setLanguage(final String language);
 
 
 	/**
@@ -328,7 +328,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @param statusBar The status bar to use.
 	 * @see #getStatusBar
 	 */
-	public void setStatusBar(StatusBar statusBar);
+	void setStatusBar(StatusBar statusBar);
 
 
 	/**
@@ -337,7 +337,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @param visible Whether the status bar is to be visible.
 	 * @see #getStatusBarVisible
 	 */
-	public void setStatusBarVisible(boolean visible);
+	void setStatusBarVisible(boolean visible);
 
 
 	/**
@@ -346,7 +346,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @param toolBar The toolbar to use.
 	 * @see #getToolBar
 	 */
-	public void setToolBar(CustomizableToolBar toolBar);
+	void setToolBar(CustomizableToolBar toolBar);
 
 
 	/**
@@ -355,15 +355,17 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * @param visible Whether the toolbar should be visible.
 	 * @see #getToolBarVisible
 	 */
-	public void setToolBarVisible(boolean visible);
+	void setToolBarVisible(boolean visible);
 
 
 	/**
 	 * The action that displays the application's About dialog.  This action
 	 * should be sufficient for most applications; it simply displays the
 	 * modal About dialog obtained from <code>getAboutDialog</code>.
+	 *
+	 * @param <T> The parent application type.
 	 */
-	public static class AboutAction<T extends GUIApplication> extends AppAction<T> {
+	class AboutAction<T extends GUIApplication> extends AppAction<T> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -410,8 +412,10 @@ public interface GUIApplication extends GUIApplicationConstants {
 	/**
 	 * Action that attempts to close the application.  This action calls
 	 * the application's <code>doExit</code> method.
+	 *
+	 * @param <T> The parent application type.
 	 */
-	public static class ExitAction<T extends GUIApplication> extends AppAction<T> {
+	class ExitAction<T extends GUIApplication> extends AppAction<T> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -467,8 +471,10 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * The action that displays the application's Help dialog.  This action
 	 * should be sufficient for most applications; it simply displays the
 	 * modal Help dialog obtained from <code>getHelpDialog</code>.
+	 *
+	 * @param <T> The parent application type.
 	 */
-	public static class HelpAction<T extends GUIApplication> extends AppAction<T> {
+	class HelpAction<T extends GUIApplication> extends AppAction<T> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -542,8 +548,10 @@ public interface GUIApplication extends GUIApplicationConstants {
 
 	/**
 	 * Action to toggle a <code>GUIApplication</code>'s status bar.
+	 *
+	 * @param <T> The parent application type.
 	 */
-	public static class ToggleStatusBarAction<T extends GUIApplication> extends AppAction<T> {
+	class ToggleStatusBarAction<T extends GUIApplication> extends AppAction<T> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -598,8 +606,10 @@ public interface GUIApplication extends GUIApplicationConstants {
 
 	/**
 	 * Action to toggle a <code>GUIApplication</code>'s toolbar.
+	 *
+	 * @param <T> The parent application type.
 	 */
-	public static class ToggleToolBarAction<T extends GUIApplication> extends AppAction<T> {
+	class ToggleToolBarAction<T extends GUIApplication> extends AppAction<T> {
 
 		private static final long serialVersionUID = 1L;
 

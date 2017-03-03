@@ -1,4 +1,4 @@
-['java', 'distribution', 'maven', 'signing'].each { apply plugin: it }
+['java', 'checkstyle', 'maven', 'signing'].each { apply plugin: it }
 
 group = 'com.fifesoft'
 archivesBaseName = 'fife.common'
@@ -17,7 +17,12 @@ dependencies {
 
 // Regenerate local gradlew
 task wrapper(type: Wrapper) {
-	gradleVersion = '2.14'
+	gradleVersion = '3.4'
+}
+
+checkstyle {
+	toolVersion = '7.0'
+	configFile = 'config/checkstyle/checkstyle.xml' as File
 }
 
 compileJava {

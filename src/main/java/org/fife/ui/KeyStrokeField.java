@@ -66,7 +66,7 @@ public class KeyStrokeField extends JTextField {
 
 	/**
 	 * Sets the key stroke currently displayed.
-	 * 
+	 *
 	 * @param ks The key stroke to display.  This may be <code>null</code>.
 	 * @see #getKeyStroke()
 	 */
@@ -76,6 +76,9 @@ public class KeyStrokeField extends JTextField {
 	}
 
 
+	/**
+	 * Listens for focus events in this component.
+	 */
 	private class FocusHandler extends FocusAdapter {
 
 		@Override

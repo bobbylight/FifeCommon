@@ -28,7 +28,7 @@ import javax.swing.JMenuItem;
 public abstract class RecentFilesMenu extends JMenu {
 
 	private int maxFileHistorySize;
-	
+
 	/**
 	 * A cache of the full paths of files in this menu, to allow us to know
 	 * the index of a specific item to move it to the top later.
@@ -36,7 +36,7 @@ public abstract class RecentFilesMenu extends JMenu {
 	private List<String> fileHistory;
 
 	private static final int DEFAULT_MAX_SIZE = 25;
-	
+
 
 	/**
 	 * Constructor.

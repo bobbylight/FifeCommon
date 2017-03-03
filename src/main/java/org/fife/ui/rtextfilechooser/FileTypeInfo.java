@@ -23,6 +23,7 @@ import javax.swing.Icon;
  * @author Robert Futrell
  * @version 0.2
  */
+@SuppressWarnings("checkstyle:VisibilityModifier")
 public class FileTypeInfo {
 
 	/**

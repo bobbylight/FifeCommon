@@ -17,10 +17,13 @@ import java.io.File;
 import javax.swing.*;
 
 
+/**
+ * A test class for the {@code BreadcrumbBar} class.
+ */
 public class BreadcrumbBarTest extends JFrame implements PropertyChangeListener{
 
 	private JTextField tf;
-	private static final String substancePkg = "org.pushingpixels.substance.api.skin.Substance";
+	private static final String SUBSTANCE_PKG = "org.pushingpixels.substance.api.skin.Substance";
 
 
 	public BreadcrumbBarTest() {
@@ -33,14 +36,14 @@ public class BreadcrumbBarTest extends JFrame implements PropertyChangeListener{
 		menu.add(new LookAndFeelAction("com.sun.java.swing.plaf.motif.MotifLookAndFeel"));
 		menu.add(new LookAndFeelAction("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel"));
 		menu.addSeparator();
-		menu.add(new LookAndFeelAction(substancePkg + "GraphiteAquaLookAndFeel"));
-		menu.add(new LookAndFeelAction(substancePkg + "GraphiteGlassLookAndFeel"));
-		menu.add(new LookAndFeelAction(substancePkg + "CeruleanLookAndFeel"));
-		menu.add(new LookAndFeelAction(substancePkg + "CremeLookAndFeel"));
-		menu.add(new LookAndFeelAction(substancePkg + "CremeCoffeeLookAndFeel"));
-		menu.add(new LookAndFeelAction(substancePkg + "BusinessLookAndFeel"));
-		menu.add(new LookAndFeelAction(substancePkg + "MistAquaLookAndFeel"));
-		menu.add(new LookAndFeelAction(substancePkg + "DustCoffeeLookAndFeel"));
+		menu.add(new LookAndFeelAction(SUBSTANCE_PKG + "GraphiteAquaLookAndFeel"));
+		menu.add(new LookAndFeelAction(SUBSTANCE_PKG + "GraphiteGlassLookAndFeel"));
+		menu.add(new LookAndFeelAction(SUBSTANCE_PKG + "CeruleanLookAndFeel"));
+		menu.add(new LookAndFeelAction(SUBSTANCE_PKG + "CremeLookAndFeel"));
+		menu.add(new LookAndFeelAction(SUBSTANCE_PKG + "CremeCoffeeLookAndFeel"));
+		menu.add(new LookAndFeelAction(SUBSTANCE_PKG + "BusinessLookAndFeel"));
+		menu.add(new LookAndFeelAction(SUBSTANCE_PKG + "MistAquaLookAndFeel"));
+		menu.add(new LookAndFeelAction(SUBSTANCE_PKG + "DustCoffeeLookAndFeel"));
 		setJMenuBar(mb);
 
 		BreadcrumbBar bb = new BreadcrumbBar();
@@ -67,7 +70,7 @@ public class BreadcrumbBarTest extends JFrame implements PropertyChangeListener{
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				String substanceClass = substancePkg + "GraphiteGlassLookAndFeel";
+				String substanceClass = SUBSTANCE_PKG + "GraphiteGlassLookAndFeel";
 				UIManager.installLookAndFeel("Substance", substanceClass);
 				String laf = substanceClass;
 				try {
@@ -93,11 +96,14 @@ public class BreadcrumbBarTest extends JFrame implements PropertyChangeListener{
 	}
 
 
+	/**
+	 * Performs a Look and Feel change.
+	 */
 	private class LookAndFeelAction extends AbstractAction {
 
 		private String laf;
 
-		public LookAndFeelAction(String laf) {
+		LookAndFeelAction(String laf) {
 			this.laf = laf;
 			int dot = laf.lastIndexOf('.');
 			putValue(NAME, laf.substring(dot+1));

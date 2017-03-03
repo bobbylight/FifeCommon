@@ -29,7 +29,7 @@ class Java6TranslucencyUtil extends TranslucencyUtil {
 	private static final String CLASS_NAME = "com.sun.awt.AWTUtilities";
 
 
-	public Java6TranslucencyUtil() {
+	Java6TranslucencyUtil() {
 	}
 
 

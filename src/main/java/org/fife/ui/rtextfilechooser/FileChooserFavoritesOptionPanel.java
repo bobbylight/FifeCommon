@@ -44,6 +44,7 @@ import org.fife.ui.modifiabletable.ModifiableTable;
 import org.fife.ui.modifiabletable.ModifiableTableChangeEvent;
 import org.fife.ui.modifiabletable.ModifiableTableListener;
 import org.fife.util.SubstanceUtil;
+import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
 
 
 /**
@@ -59,7 +60,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String FAVORITES_PROPERTY	= "Favorites";
+	private static final String FAVORITES_PROPERTY	= "Favorites";
 
 	private FavoritesTableModel model;
 	private ModifiableTable modifiableTable;
@@ -69,9 +70,6 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 
 	private static final String EDIT_FAVORITES_DIALOG_MSG =
 					"org.fife.ui.rtextfilechooser.EditFavoriteDialog";
-
-	private static final String SUBSTANCE_TABLE_RENDERER_CLASS =
-		"org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer";
 
 
 	/**
@@ -120,13 +118,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 		// later.
 		DefaultTableCellRenderer r = null;
 		if (SubstanceUtil.isSubstanceInstalled()) {
-			// Use reflection to avoid hard dependency on Substance
-			try {
-				Class<?> clazz = Class.forName(SUBSTANCE_TABLE_RENDERER_CLASS);
-				r = (DefaultTableCellRenderer)clazz.newInstance();
-			} catch (Exception e) { // Never happens
-				e.printStackTrace();
-			}
+			r = new SubstanceDefaultTableCellRenderer();
 		}
 		if (r==null) { // All other LaFs, or Substance freakishly fails
 			r = new DefaultTableCellRenderer();
@@ -201,7 +193,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 	@Override
 	public void modifiableTableChanged(ModifiableTableChangeEvent e) {
 		hasUnsavedChanges = true;
-		firePropertyChange(FAVORITES_PROPERTY, null, new Integer(e.getRow()));
+		firePropertyChange(FAVORITES_PROPERTY, null, e.getRow());
 	}
 
 
@@ -443,19 +435,19 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 			return columnNames[column];
 		}
 
-		public void initFavorites(RTextFileChooser chooser) {
+		void initFavorites(RTextFileChooser chooser) {
 			setRowCount(0);
 			String[] favorites = chooser.getFavorites(); // non-null
-			for (int i=0; i<favorites.length; i++) {
+			for (String favorite : favorites) {
 				// DefaultTableModel uses Vectors internally, so we'll
 				// use them here too.
 				Vector<String> v = new Vector<String>(1);
-				v.add(favorites[i]);
+				v.add(favorite);
 				addRow(v);
 			}
 		}
 
-		public void setChooserFavorites(RTextFileChooser chooser) {
+		void setChooserFavorites(RTextFileChooser chooser) {
 			chooser.clearFavorites();
 			for (int i=0; i<getRowCount(); i++) {
 				String favorite = (String)getValueAt(i, 0);

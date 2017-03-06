@@ -249,16 +249,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 */
 	private static TreeCellRenderer createTreeCellRenderer() {
 		if (SubstanceUtil.isSubstanceInstalled()) {
-			//  Use reflection to avoid compile-time dependencies form this
-			// class to Substance.
-			String clazzName = "org.fife.ui.SubstanceOptionsDialogTreeRenderer";
-			try {
-				Class<?> clazz = Class.forName(clazzName);
-				return (TreeCellRenderer)clazz.newInstance();
-			} catch (Exception e) {
-				e.printStackTrace();
-				// Fall through
-			}
+			return new SubstanceOptionsDialogTreeRenderer();
 		}
 		return new OptionTreeCellRenderer();
 	}

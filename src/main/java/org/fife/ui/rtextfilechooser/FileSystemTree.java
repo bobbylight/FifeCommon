@@ -15,7 +15,6 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -246,19 +245,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 */
 	private TreeCellRenderer createTreeCellRenderer() {
 		if (SubstanceUtil.isSubstanceInstalled()) {
-			// Use reflection to avoid compile-time dependencies form this
-			// class to Substance.
-			String clazzName =
-				"org.fife.ui.rtextfilechooser.SubstanceFileSystemTreeRenderer";
-			try {
-				Class<?> clazz = Class.forName(clazzName);
-				Constructor<?> cons = clazz.getConstructor(
-						new Class[] { FileSystemTree.class });
-				return (TreeCellRenderer)cons.newInstance(new Object[] {this});
-			} catch (Exception e) {
-				e.printStackTrace();
-				// Fall through
-			}
+			return new SubstanceFileSystemTreeRenderer(this);
 		}
 		return new FileSystemTreeRenderer();
 	}
@@ -681,8 +668,8 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			if (file.isDirectory()) {
 				File[] children = fileSystemView.getFiles(file, false);
 				File[] filteredChildren = filterAndSort(children);
-				for (int i=0; i<filteredChildren.length; i++) {
-					node.add(createTreeNodeFor(filteredChildren[i]));
+				for (File filteredChild : filteredChildren) {
+					node.add(createTreeNodeFor(filteredChild));
 				}
 			}
 			((FileSystemTreeModel)getModel()).nodeStructureChanged(node);

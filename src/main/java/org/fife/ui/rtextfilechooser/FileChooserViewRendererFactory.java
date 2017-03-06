@@ -10,21 +10,19 @@
  */
 package org.fife.ui.rtextfilechooser;
 
-import java.lang.reflect.Constructor;
-
 import javax.swing.ListCellRenderer;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
 import org.fife.util.SubstanceUtil;
+import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
 
 
 /**
  * Creates renderers to use for various file chooser views (list, details,
  * etc.).  If Substance is the current Look and Feel, a Substance-specific
- * renderer is dynamically loaded and used, otherwise, suitable defaults
- * are used.  I love how Substance makes it a pain in the ass to do custom
- * renderers!
+ * renderer is loaded and used, otherwise, suitable defaults are used.
+ * I love how Substance makes it a pain in the ass to do custom renderers!
  *
  * @author Robert Futrell
  * @version 1.0
@@ -47,13 +45,7 @@ final class FileChooserViewRendererFactory {
 	 */
 	public static TableCellRenderer createDefaultTableRenderer() {
 		if (SubstanceUtil.isSubstanceInstalled()) {
-			try {
-				Class<?> clazz = Class.forName(
-					"org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer");
-				return (TableCellRenderer)clazz.newInstance();
-			} catch (Exception e) { // Should never happen
-				e.printStackTrace();
-			}
+			return new SubstanceDefaultTableCellRenderer();
 		}
 		return new DefaultTableCellRenderer();
 	}
@@ -68,23 +60,12 @@ final class FileChooserViewRendererFactory {
 	public static ListCellRenderer createListViewRenderer(
 			RTextFileChooser chooser) {
 
-		ListCellRenderer renderer = null;
+		ListCellRenderer renderer;
 
 		if (SubstanceUtil.isSubstanceInstalled()) {
-			String clazzName =
-				"org.fife.ui.rtextfilechooser.ListViewSubstanceCellRenderer";
-			// Use reflection to avoid compile dependency in this class to
-			// Substance
-			try {
-				Class<?> clazz = Class.forName(clazzName);
-				Constructor<?> c = clazz.getConstructor(new Class[] { RTextFileChooser.class });
-				renderer = (ListCellRenderer)c.newInstance(new Object[] { chooser });
-			} catch (Exception e) { // Should never happen
-				e.printStackTrace();
-			}
+			renderer = new ListViewSubstanceCellRenderer(chooser);
 		}
-
-		if (renderer==null) {
+		else {
 			renderer = new ListViewCellRenderer(chooser);
 		}
 
@@ -102,22 +83,12 @@ final class FileChooserViewRendererFactory {
 	public static TableCellRenderer createTableFileNameRenderer(
 			RTextFileChooser chooser) {
 
-		TableCellRenderer renderer = null;
+		TableCellRenderer renderer;
 
 		if (SubstanceUtil.isSubstanceInstalled()) {
-			// Use reflection to avoid compile dependency in this class to
-			// Substance
-			try {
-				Class<?> clazz = Class.forName(
-					"org.fife.ui.rtextfilechooser.DetailsViewSubstanceFileNameRenderer");
-				Constructor<?> c = clazz.getConstructor(new Class[] { RTextFileChooser.class });
-				renderer = (TableCellRenderer)c.newInstance(new Object[] { chooser });
-			} catch (Exception e) { // Should never happen
-				e.printStackTrace();
-			}
+			renderer = new DetailsViewSubstanceFileNameRenderer(chooser);
 		}
-
-		if (renderer==null) {
+		else {
 			renderer = new DetailsViewFileNameRenderer(chooser);
 		}
 

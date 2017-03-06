@@ -66,12 +66,12 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String AUTO_COMPLETE_PROPERTY		= "AutoComplete";
-	public static final String COLOR_CHANGED_PROPERTY		= "ColorChanged";
-	public static final String HIDDEN_FILES_PROPERTY		= "HiddenFiles";
-	public static final String OFFER_SUGGESTIONS_PROPERTY	= "OfferSuggestions";
-	public static final String OPEN_FILES_STYLE_PROPERTY	= "OpenFilesStyle";
-	public static final String STYLE_OPEN_FILES_PROPERTY	= "StyleOpenFiles";
+	private static final String AUTO_COMPLETE_PROPERTY		= "AutoComplete";
+	private static final String COLOR_CHANGED_PROPERTY		= "ColorChanged";
+	private static final String HIDDEN_FILES_PROPERTY		= "HiddenFiles";
+	private static final String OFFER_SUGGESTIONS_PROPERTY	= "OfferSuggestions";
+	private static final String OPEN_FILES_STYLE_PROPERTY	= "OpenFilesStyle";
+	private static final String STYLE_OPEN_FILES_PROPERTY	= "StyleOpenFiles";
 
 	private JCheckBox hiddenFilesCheckBox;
 	private JCheckBox offerSuggestionsCB;
@@ -81,9 +81,6 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	private static String defaultColorString;
 	private LabelValueComboBox<String, String> openFilesStyleCombo;
 	private JCheckBox styleOpenFilesCheckBox;
-
-	private static final String SUBSTANCE_RENDERER_CLASS =
-			"org.fife.ui.rtextfilechooser.SubstanceTextColorCellRenderer";
 
 	private static final String MAPPING_DIALOG_BUNDLE	=
 				"org.fife.ui.rtextfilechooser.ExtensionColorMappingDialog";
@@ -273,17 +270,11 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	 * @return The cell renderer.
 	 */
 	private static TableCellRenderer createTextColorCellRenderer() {
-		TableCellRenderer renderer = null;
+		TableCellRenderer renderer;
 		if (SubstanceUtil.isSubstanceInstalled()) {
-			// Use reflection to avoid hard dependency on Substance.
-			try {
-				Class<?> clazz = Class.forName(SUBSTANCE_RENDERER_CLASS);
-				renderer = (TableCellRenderer)clazz.newInstance();
-			} catch (Exception e) { // Never happens
-				e.printStackTrace();
-			}
+			renderer = new SubstanceTextColorCellRenderer();
 		}
-		if (renderer==null) {
+		else {
 			renderer = new TextColorCellRenderer();
 		}
 		return renderer;
@@ -364,8 +355,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	@Override
 	public void modifiableTableChanged(ModifiableTableChangeEvent e) {
 		hasUnsavedChanges = true;
-		firePropertyChange(COLOR_CHANGED_PROPERTY, null,
-						new Integer(e.getRow()));
+		firePropertyChange(COLOR_CHANGED_PROPERTY, null, e.getRow());
 	}
 
 
@@ -412,7 +402,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 			super(new Object[] { extensionHeader, colorHeader }, 0);
 		}
 
-		public void initCustomColorTable(RTextFileChooser chooser) {
+		void initCustomColorTable(RTextFileChooser chooser) {
 			setRowCount(0);
 			Vector<Object> v = new Vector<Object>(2);
 			v.add(defaultColorString);

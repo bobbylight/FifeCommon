@@ -17,7 +17,6 @@ import javax.swing.KeyStroke;
 import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
 
 
-
 /**
  * Renderer for KeyStrokes in a JTable when Substance is installed.  I love
  * how Substance makes custom renderers a pain in the ass!

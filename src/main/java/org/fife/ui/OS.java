@@ -63,7 +63,7 @@ public enum OS {
 	 *
 	 * @return The OS we're running on.
 	 */
-	public static final OS get() {
+	public static OS get() {
 		return os;
 	}
 
@@ -83,11 +83,11 @@ public enum OS {
 		String osName = System.getProperty("os.name");
 		if (osName!=null) { // Should always be true.
 			osName = osName.toLowerCase();
-			if (osName.indexOf("windows") > -1)
+			if (osName.contains("windows"))
 				os = WINDOWS;
-			else if (osName.indexOf("mac os x") > -1)
+			else if (osName.contains("mac os x"))
 				os = MAC_OS_X;
-			else if (osName.indexOf("linux") > -1)
+			else if (osName.contains("linux"))
 				os = LINUX;
 			else
 				os = OTHER;

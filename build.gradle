@@ -16,12 +16,12 @@ dependencies {
 }
 
 // Regenerate local gradlew
-task wrapper(type: Wrapper) {
-	gradleVersion = '3.4.1'
+wrapper {
+	gradleVersion '4.8'
 }
 
 checkstyle {
-	toolVersion = '7.6'
+	toolVersion = '8.10'
 	configFile = 'config/checkstyle/checkstyle.xml' as File
 }
 
@@ -36,7 +36,7 @@ compileJava {
 	if (project.hasProperty("java6CompileBootClasspath")) {
 		if (new File(java6CompileBootClasspath).isFile()) {
 			println "Bootstrap classpath when compiling Java: ${java6CompileBootClasspath}"
-			options.bootClasspath = java6CompileBootClasspath
+			options.bootstrapClasspath = files(java6CompileBootClasspath)
 		}
 		else {
 			println "Warning: Specified java6CompileBootClasspath does not exist: ${java6CompileBootClasspath}"

@@ -542,7 +542,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		TreePath path = getPathForLocation(x, y);
 		if (path!=null) {
 			Object comp = path.getLastPathComponent();
-			if (comp!=null && comp instanceof FileSystemTreeNode) {
+			if (comp instanceof FileSystemTreeNode) {
 				FileSystemTreeNode node = (FileSystemTreeNode)comp;
 				return getName((File)node.getUserObject());
 			}
@@ -866,7 +866,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 				if (file==null) {
 					return f2==null;
 				}
-				return f2!=null && file.equals(f2);
+				return file.equals(f2);
 			}
 			return false;
 		}

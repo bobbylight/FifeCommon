@@ -72,6 +72,15 @@ public abstract class StandardAction extends AbstractAction {
 	public static final String DEFAULT_ACCELERATOR =
 			"StandardAction.DefaultAccelerator";
 
+	/**
+	 * The suffix used to look up an optional localized mnemonic by this class's constructor.
+	 */
+	public static final String MNEMONIC_SUFFIX	= ".Mnemonic";
+
+	/**
+	 * The suffix used to look up an optional localized short description by this class's constructor.
+	 */
+	public static final String SHORT_DESC_SUFFIX = ".ShortDesc";
 
 	/**
 	 * Creates an action with no name, description, shortcut, or other such
@@ -116,7 +125,7 @@ public abstract class StandardAction extends AbstractAction {
 			setName(msg.getString(key));
 		}
 
-		String mnemonicKey = key + ".Mnemonic";
+		String mnemonicKey = key + MNEMONIC_SUFFIX;
 		if (msg.containsKey(mnemonicKey)) {
 			setMnemonic(msg.getString(mnemonicKey).charAt(0));
 		}
@@ -131,7 +140,7 @@ public abstract class StandardAction extends AbstractAction {
 			setDefaultAccelerator(ks);
 		}
 
-		String shortDescKey = key + ".ShortDesc";
+		String shortDescKey = key + SHORT_DESC_SUFFIX;
 		if (msg.containsKey(shortDescKey)) {
 			setShortDescription(msg.getString(shortDescKey));
 		}

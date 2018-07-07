@@ -911,7 +911,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 					if (node2.getNodeName().equals(NAME))
 						name = treeBundle.getString(v);
 					else if (node2.getNodeName().equals(VISIBLE))
-						rootVisible = new Boolean(v).booleanValue();
+						rootVisible = Boolean.parseBoolean(v);
 					else if (node2.getNodeName().equals(PAGE_VALUE))
 						file = baseDir + v;
 				}

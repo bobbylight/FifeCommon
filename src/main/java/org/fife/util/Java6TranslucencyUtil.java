@@ -145,7 +145,7 @@ class Java6TranslucencyUtil extends TranslucencyUtil {
 			Class<?> clazz = Class.forName(CLASS_NAME);
 			Method m = clazz.getDeclaredMethod("setWindowOpaque",
 							Window.class, boolean.class);
-			m.invoke(null, w, new Boolean(opaque));
+			m.invoke(null, w, opaque);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

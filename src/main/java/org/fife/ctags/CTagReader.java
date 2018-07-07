@@ -252,7 +252,7 @@ public class CTagReader {
 	 * containing the key of the desired extension field. If no such field
 	 * of the specified key exists, the function will return null.
 	 */
-	private static final String readFieldValue(TagEntry entry, String key) {
+	private static String readFieldValue(TagEntry entry, String key) {
 
 		if (key.equals("kind"))
 			return entry.kind;
@@ -754,4 +754,4 @@ static int foo = 0;
 
 	}
 */
-};
+}

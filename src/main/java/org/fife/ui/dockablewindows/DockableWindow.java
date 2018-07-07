@@ -288,7 +288,7 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	 * @param pos A position.
 	 * @return Whether the specified position is valid.
 	 */
-	public static final boolean isValidPosition(int pos) {
+	public static boolean isValidPosition(int pos) {
 		return pos==TOP || pos==LEFT || pos==BOTTOM ||
 				pos==RIGHT || pos==FLOATING;
 	}

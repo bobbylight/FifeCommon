@@ -40,7 +40,7 @@ class BreadcrumbBarButtonColorSet {
 	private static final float BRIGHTNESS_FACTOR = 0.15f;
 
 
-	public static final Color brighter(Color c) {
+	public static Color brighter(Color c) {
 
 		int r = c.getRed();
 		int g = c.getGreen();
@@ -69,7 +69,7 @@ class BreadcrumbBarButtonColorSet {
 	}
 
 
-	public static final Color darker(Color c) {
+	public static Color darker(Color c) {
 		final float factor = 1f - BRIGHTNESS_FACTOR;
 		float r = c.getRed() * factor;
 		float g = c.getGreen() * factor;

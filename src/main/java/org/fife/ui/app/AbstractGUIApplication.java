@@ -768,7 +768,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 */
 	@Override
 	public boolean getStatusBarVisible() {
-		return statusBar!=null ? statusBar.isVisible() : false;
+		return statusBar != null && statusBar.isVisible();
 	}
 
 

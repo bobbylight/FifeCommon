@@ -307,7 +307,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 			for (int i=0; i<columnCount; i++) {
 				TableColumn col = columnModel.getColumn(table.convertColumnIndexToView(i));
 				TableCellRenderer renderer = col.getCellRenderer();
-				if (renderer!=null && renderer instanceof Component) {
+				if (renderer instanceof Component) {
 					Component c = (Component)renderer;
 					directive = getDirective(i);
 					if (directive.column!=-1 && directive.direction!=NOT_SORTED) {

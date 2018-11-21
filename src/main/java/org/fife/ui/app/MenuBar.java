@@ -9,6 +9,8 @@
  */
 package org.fife.ui.app;
 
+import org.fife.ui.StandardAction;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -28,8 +30,6 @@ import javax.swing.KeyStroke;
  * @version 0.1
  */
 public class MenuBar extends JMenuBar {
-
-	private static final String MNEMONIC_SUFFIX	= ".Mnemonic";
 
 	/**
 	 * Registry of "named" menus, so you can grab a specific menu without
@@ -69,21 +69,31 @@ public class MenuBar extends JMenuBar {
 
 
 	/**
-	 * Returns an <code>JMenu</code> with the specified text.  Further, if
-	 * there is an entry in the specified resource bundle with name
-	 * <code>textKey + ".Mnemonic"</code>, it is taken to contain the
-	 * mnemonic for the menu.
+	 * Returns an <code>JMenu</code> with the specified text.  If there
+	 * is an entry in the specified resource bundle with name
+	 * {@code textKey + ".Mnemonic"}, it is taken to contain the mnemonic for
+	 * the menu.  Further, if there is an entry in the specified resource
+	 * bundle with name {@code textKey + ".ShortDesc"}, it is taken to contain
+	 * a short description for the menu.
 	 *
 	 * @param msg The resource bundle in which to get the text.
 	 * @param textKey The key into the bundle containing the string text value.
 	 * @return The <code>JMenu</code>.
 	 */
 	protected JMenu createMenu(ResourceBundle msg, String textKey) {
+
 		JMenu menu = new JMenu(msg.getString(textKey));
-		String mnemonicKey = textKey + MNEMONIC_SUFFIX;
+
+		String mnemonicKey = textKey + StandardAction.MNEMONIC_SUFFIX;
 		if (msg.containsKey(mnemonicKey)) {
 			menu.setMnemonic((int)msg.getString(mnemonicKey).charAt(0));
 		}
+
+		String shortDescKey = textKey + StandardAction.SHORT_DESC_SUFFIX;
+		if (msg.containsKey(shortDescKey)) {
+			configureMenuItem(menu, msg.getString(shortDescKey));
+		}
+
 		return menu;
 	}
 
@@ -100,7 +110,7 @@ public class MenuBar extends JMenuBar {
 	 */
 	protected JMenuItem createMenuItem(ResourceBundle msg, String textKey) {
 		JMenuItem item = new JMenuItem(msg.getString(textKey));
-		String mnemonicKey = textKey + MNEMONIC_SUFFIX;
+		String mnemonicKey = textKey + StandardAction.MNEMONIC_SUFFIX;
 		if (msg.containsKey(mnemonicKey)) {
 			item.setMnemonic((int)msg.getString(mnemonicKey).charAt(0));
 		}
@@ -218,7 +228,7 @@ public class MenuBar extends JMenuBar {
 	 * @see #registerMenuByName(String, JMenu)
 	 */
 	public JMenu getMenuByName(String name) {
-		return namedMenus!=null ? (JMenu)namedMenus.get(name) : null;
+		return namedMenus!=null ? namedMenus.get(name) : null;
 	}
 
 

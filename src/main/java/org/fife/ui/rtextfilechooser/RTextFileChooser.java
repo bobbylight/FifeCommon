@@ -1145,7 +1145,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 *
 	 * @return The default encoding.
 	 */
-	public static final String getDefaultEncoding() {
+	public static String getDefaultEncoding() {
 		return Charset.defaultCharset().name();
 	}
 

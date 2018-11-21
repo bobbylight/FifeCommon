@@ -81,7 +81,7 @@ public class TagEntry {
 	 * @param pattern The pattern read from the ctags file.
 	 * @return The pattern, with escaped characters un-escaped.
 	 */
-	private static final String fixEscapes(String pattern) {
+	private static String fixEscapes(String pattern) {
 
 		StringBuilder sb = new StringBuilder();
 

@@ -119,7 +119,7 @@ class Java6TranslucencyUtil extends TranslucencyUtil {
 			Class<?> clazz = Class.forName(CLASS_NAME);
 			Method m = clazz.getDeclaredMethod("setWindowOpacity",
 								Window.class, float.class);
-			m.invoke(null, w, new Float(value));
+			m.invoke(null, w, value);
 		} catch (RuntimeException re) { // FindBugs - don't catch RE's
 			throw re;
 		} catch (Exception e) {
@@ -145,7 +145,7 @@ class Java6TranslucencyUtil extends TranslucencyUtil {
 			Class<?> clazz = Class.forName(CLASS_NAME);
 			Method m = clazz.getDeclaredMethod("setWindowOpaque",
 							Window.class, boolean.class);
-			m.invoke(null, w, new Boolean(opaque));
+			m.invoke(null, w, opaque);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

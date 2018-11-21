@@ -37,7 +37,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 	/**
 	 * Whether or not the underlying OS is case-insensitive.
 	 */
-	private static final boolean IGNORE_CASE = FSATextField.getIgnoreCase();
+	private static final boolean IGNORE_CASE = !OS.get().isCaseSensitive();
 
 	/**
 	 * File filter used if directories-only mode is set.
@@ -66,8 +66,8 @@ public class FSATextField extends JTextField implements ComponentListener,
 	 * Variables used by the text field to implement the "combo-box"
 	 * style list.
 	 */
-	private JList fileList;
-	private DefaultListModel fileListModel;
+	private JList<String> fileList;
+	private DefaultListModel<String> fileListModel;
 	private JScrollPane scrollPane;
 	private JWindow popupWindow;
 	private boolean directoriesOnly;
@@ -145,8 +145,8 @@ public class FSATextField extends JTextField implements ComponentListener,
 		enableEvents(AWTEvent.FOCUS_EVENT_MASK);
 		setDirectoriesOnly(directoriesOnly);
 
-		fileListModel = new DefaultListModel();
-		fileList = new JList(fileListModel);
+		fileListModel = new DefaultListModel<>();
+		fileList = new JList<>(fileListModel);
 		fileList.addListSelectionListener(this);
 		contentPane = new JPanel(new GridLayout(1,1));
 		scrollPane = new JScrollPane(fileList);
@@ -444,23 +444,6 @@ System.out.println("DEBUG: *** parent is null");
 	 */
 	public void hidePopup() {
 		setPopupVisible(false);
-	}
-
-
-	/**
-	 * Returns whether or not the current OS is case-insensitive (e.g.,
-	 * is Windows or OS X).
-	 *
-	 * @return Whether or not the underlying OS is case-insensitive.
-	 */
-	private static boolean getIgnoreCase() {
-		String os = System.getProperty("os.name");
-		boolean ignoreCase = false;
-		if (os!=null) {
-			os = os.toLowerCase();
-			ignoreCase = os.indexOf("windows")>-1 || os.indexOf("mac os x")>-1;
-		}
-		return ignoreCase;
 	}
 
 

@@ -198,9 +198,8 @@ public final class SubstanceUtil {
 			Class<?> managerClazz = Class.forName(managerClassName, true, cl);
 			Method m = managerClazz.getMethod("getInstance");
 			Object manager = m.invoke(null);
-			m = managerClazz.getMethod("setTimelineDuration",
-					new Class[] { long.class });
-			m.invoke(manager, new Object[] { new Long(millis) });
+			m = managerClazz.getMethod("setTimelineDuration", long.class);
+			m.invoke(manager, millis);
 		}
 
 	}

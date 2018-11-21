@@ -272,7 +272,7 @@ public abstract class Prefs {
 
 					else if (char.class==type) {
 						if (value.length()>0) {
-							obj = new Character(value.charAt(0));
+							obj = value.charAt(0);
 						}
 					}
 

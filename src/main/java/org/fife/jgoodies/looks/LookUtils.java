@@ -243,6 +243,7 @@ public final class LookUtils {
      * @deprecated Use {@link #IS_OS_WINDOWS_6_OR_LATER} instead
      * @since 2.0
      */
+    @Deprecated
     public static final boolean IS_OS_WINDOWS_VISTA =
         startsWith(OS_NAME, "Windows") && startsWith(OS_VERSION, "6.0");
 

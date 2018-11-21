@@ -128,7 +128,7 @@ class Java7TranslucencyUtil extends TranslucencyUtil {
 
 		try {
 			Method m = Window.class.getMethod("setOpacity", float.class);
-			m.invoke(w, new Object[] { new Float(value) });
+			m.invoke(w, new Object[] { value });
 		} catch (RuntimeException re) { // FindBugs - don't catch RE's
 			//re.printStackTrace();
 			throw re;

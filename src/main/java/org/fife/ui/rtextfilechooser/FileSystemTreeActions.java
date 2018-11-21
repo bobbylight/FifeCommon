@@ -302,7 +302,7 @@ class FileSystemTreeActions {
 			super(tree);
 			putValue(NAME, getString(keyRoot));
 			putValue(MNEMONIC_KEY,
-				new Integer(getString(keyRoot + "Mnemonic").charAt(0)));
+                    (int)getString(keyRoot + "Mnemonic").charAt(0));
 		}
 
 		@Override
@@ -576,7 +576,7 @@ class FileSystemTreeActions {
 			super(tree);
 			putValue(NAME, getString("Refresh"));
 			putValue(MNEMONIC_KEY,
-				new Integer(getString("RefreshMnemonic").charAt(0)));
+                    (int)getString("RefreshMnemonic").charAt(0));
 			putValue(ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
 		}

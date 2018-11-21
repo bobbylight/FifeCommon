@@ -11,7 +11,6 @@ package org.fife.ui.rtextfilechooser.extras;
 
 import java.awt.Component;
 import java.awt.Window;
-import java.lang.reflect.Field;
 
 
 /**
@@ -40,20 +39,8 @@ class Win32FileIOExtras extends FileIOExtras {
 	 * @return The handle for that component's peer, or <code>null</code> if
 	 *         it cannot be determined.
 	 */
-	public static long getHwnd(Component c) {
-		long hwnd = 0;
-		try {
-			Class<?> clazz = Class.forName("sun.awt.windows.WComponentPeer");
-			Field hwndField = clazz.getDeclaredField("hwnd");
-			hwndField.setAccessible(true);
-			Object val = hwndField.get(c.getPeer());
-			if (val instanceof Long) {
-				hwnd = ((Long)val).longValue();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return hwnd;
+	private static long getHwnd(Component c) {
+	    return 0; // There is no way to get the HWND of a window as of Java 9
 	}
 
 

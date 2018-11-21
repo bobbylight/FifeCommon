@@ -864,7 +864,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 		if (prefsClassName!=null) {
 			try {
 				Class<?> prefsClass = Class.forName(prefsClassName);
-				prefs = (T)prefsClass.newInstance();
+				prefs = (T)prefsClass.getDeclaredConstructor().newInstance();
 				prefs.load();
 			} catch (Exception e) {
 				displayException(e);

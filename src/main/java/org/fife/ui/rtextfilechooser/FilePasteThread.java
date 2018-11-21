@@ -758,7 +758,7 @@ class FilePasteThread extends GUIWorkerThread {
 	 */
 	private class NameCollisionDialog extends JDialog implements ActionListener{
 
-		private JList list;
+		private JList<String> list;
 		private JCheckBox doForAllCB;
 		private JButton okButton;
 		private int result;
@@ -838,7 +838,7 @@ class FilePasteThread extends GUIWorkerThread {
 				getString("Dialog.NameCollision.CopyWithNewName"),
 				getString("Dialog.NameCollision.CancelRemainingFiles"),
 			};
-			list = new JList(choices);
+			list = new JList<>(choices);
 			list.setSelectionModel(new RListSelectionModel());
 			list.setSelectedIndex(0);
 			RScrollPane sp = new RScrollPane(list);

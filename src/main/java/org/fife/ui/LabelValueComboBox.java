@@ -23,7 +23,7 @@ import javax.swing.JComboBox;
  * @author Robert Futrell
  * @version 0.1
  */
-public class LabelValueComboBox<L, V> extends JComboBox {
+public class LabelValueComboBox<L, V> extends JComboBox<L> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -39,7 +39,7 @@ public class LabelValueComboBox<L, V> extends JComboBox {
 
 
 	/**
-	 * Adds an label/value pair to this combo box. You should use this method
+	 * Adds a label/value pair to this combo box. You should use this method
 	 * to add items to this combo box instead of the standard
 	 * <code>addItem</code> method.
 	 *

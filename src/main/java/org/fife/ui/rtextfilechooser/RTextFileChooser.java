@@ -97,7 +97,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private BreadcrumbBar lookInBreadcrumbBar;
 	private FSATextField fileNameTextField;
 	private JComboBox filterCombo;
-	private JComboBox encodingCombo;
+	private JComboBox<String> encodingCombo;
 
 	/*
 	 * Any renderers/listeners.
@@ -207,7 +207,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private Dimension lastSize;
 	private int lastType;
 
-	private Vector<FileFilter> fileFilters = new Vector<FileFilter>(5,1);
+	private Vector<FileFilter> fileFilters = new Vector<>(5,1);
 	private FileFilter currentFileFilter;
 
 	private boolean isChangingDirectories;
@@ -494,7 +494,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		int bottomPanelRowCount = 2;
 		if (showEncodingCombo) {
-			encodingCombo = new JComboBox();
+			encodingCombo = new JComboBox<>();
 			UIUtil.fixComboOrientation(encodingCombo);
 			encodingCombo.setMaximumRowCount(12);
 			encodingLabel.setLabelFor(encodingCombo);

@@ -115,11 +115,11 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 	private JEditorPane editorPane;		// Right-hand pane; displays actual help.
 
-	private JList indexList;				// List of all elements in our index.
+	private JList<String> indexList;				// List of all elements in our index.
 	private JButton indexDisplayButton;	// Display button on the "Index" tab.
 	private JTextField indexField;		// Text field in which they can type in an index value.
 
-	private JList searchList;			// List of all found documents on Search panel.
+	private JList<HelpTreeNode> searchList;			// List of all found documents on Search panel.
 	private JButton searchDisplayButton;	// Display button on the "Search" tab.
 	private JButton listTopicsButton;		// Button to display help topics matching searchString.
 	private JTextField searchField;		// Text field to type a string to search for.
@@ -246,7 +246,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		indexField.addKeyListener(listener);
 		indexInputPanel.add(ilPanel);
 		indexInputPanel.add(indexField);
-		indexList = new JList(indexElements);
+		indexList = new JList<>(indexElements);
 		indexElements = null;
 		indexList.addMouseListener(listener);
 		indexList.addKeyListener(listener);
@@ -302,7 +302,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		searchInputPanel.add(ltbPanel);
 		searchInputPanel.add(Box.createVerticalStrut(5));
 		searchInputPanel.add(stlPanel);
-		searchList = new JList();
+		searchList = new JList<>();
 		searchList.addMouseListener(listener);
 		searchList.addKeyListener(listener);
 		searchList.setSelectionModel(new RListSelectionModel());
@@ -911,7 +911,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 					if (node2.getNodeName().equals(NAME))
 						name = treeBundle.getString(v);
 					else if (node2.getNodeName().equals(VISIBLE))
-						rootVisible = new Boolean(v).booleanValue();
+						rootVisible = Boolean.parseBoolean(v);
 					else if (node2.getNodeName().equals(PAGE_VALUE))
 						file = baseDir + v;
 				}
@@ -1077,7 +1077,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 			List<HelpTreeNode> matchNodes = getTreeNodesContaining(root, selected);
 
 			// Populate the searchList panel with possible places to go.
-			searchList.setListData(matchNodes.toArray());
+			searchList.setListData(matchNodes.toArray(new HelpTreeNode[0]));
 
 			// Make sure "Display" button is active or not correctly.
 			if (matchNodes.size() > 0) {

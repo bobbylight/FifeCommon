@@ -46,7 +46,7 @@ class TopicsFoundDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	private JList choicesList;
+	private JList<HelpTreeNode> choicesList;
 	private int selectedIndex = -1;
 
 	private static final String MSG = "org.fife.help.TopicsFoundDialog";
@@ -95,7 +95,7 @@ class TopicsFoundDialog extends JDialog {
 		buttonPanel.setBorder(UIUtil.getEmpty5Border());
 
 		// Create the list of choices.
-		choicesList = new JList(choices.toArray());
+		choicesList = new JList<>(choices.toArray(new HelpTreeNode[0]));
 		choicesList.addMouseListener(listener);
 		choicesList.addKeyListener(listener);
 		choicesList.setSelectionModel(new RListSelectionModel());

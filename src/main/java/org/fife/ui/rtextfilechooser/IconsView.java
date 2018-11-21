@@ -646,7 +646,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 				// event and not a release-event, so the popup menu appears.
 				mouseListener.mouseClicked(
 					new MouseEvent(IconsView.this, MouseEvent.MOUSE_CLICKED,
-								e.getWhen(), e.getModifiers(),
+								e.getWhen(), e.getModifiersEx(),
 								p.x,p.y, 1,
 								e.isPopupTrigger(), e.getButton())
 				);

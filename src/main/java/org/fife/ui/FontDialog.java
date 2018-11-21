@@ -32,8 +32,8 @@ public class FontDialog extends JDialog implements ActionListener,
 
 	private static final long serialVersionUID = 1L;
 
-	private JList fontList;
-	private JList fontSizeList;
+	private JList<FontInfo> fontList;
+	private JList<Integer> fontSizeList;
 	private JLabel sampleTextLabel;
 	private Box fontFormatPanel;
 	private JPanel samplePanel;
@@ -154,7 +154,7 @@ public class FontDialog extends JDialog implements ActionListener,
 
 		// Create a panel for choosing the font.
 		Box fontChooserPanel = Box.createVerticalBox();
-		fontList = new JList(createFontListModel());
+		fontList = new JList<>(createFontListModel());
 		fontList.setSelectionModel(new RListSelectionModel());
 		fontList.getSelectionModel().addListSelectionListener(this);
 		JScrollPane fontListScrollPane = new RScrollPane(fontList);
@@ -166,11 +166,11 @@ public class FontDialog extends JDialog implements ActionListener,
 
 		// Create a panel for choosing the font's point size.
 		Box fontSizePanel = Box.createVerticalBox();
-		DefaultListModel listModel = new DefaultListModel();
+		DefaultListModel<Integer> listModel = new DefaultListModel<>();
 		for (int i=2; i<=40; i++) {
-			listModel.addElement(Integer.valueOf(i));
+			listModel.addElement(i);
 		}
-		fontSizeList = new JList(listModel);
+		fontSizeList = new JList<>(listModel);
 		fontSizeList.setSelectionModel(new RListSelectionModel());
 		fontSizeList.getSelectionModel().addListSelectionListener(this);
 		JScrollPane fontSizeListScrollPane = new RScrollPane(fontSizeList);
@@ -348,7 +348,7 @@ public class FontDialog extends JDialog implements ActionListener,
 	 *
 	 * @return The list model.
 	 */
-	private static DefaultListModel createFontListModel() {
+	private static DefaultListModel<FontInfo> createFontListModel() {
 
 		// Get available fonts from the system.
 		String[] families = GraphicsEnvironment.
@@ -357,7 +357,7 @@ public class FontDialog extends JDialog implements ActionListener,
 		HashSet<String> monospacedFontsSet = createMonospacedFontsSet();
 
 		// Add them to a list model.
-		DefaultListModel listModel = new DefaultListModel();
+		DefaultListModel<FontInfo> listModel = new DefaultListModel<>();
 		for (int i=0; i<families.length; i++) {
 			boolean monospaced = monospacedFontsSet.contains(families[i]);
 			FontInfo fi = new FontInfo(families[i], monospaced);

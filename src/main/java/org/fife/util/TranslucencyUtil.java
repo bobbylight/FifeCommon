@@ -48,7 +48,7 @@ public abstract class TranslucencyUtil {
 				else { // Java 1.7 +
 					Class<?> clazz = Class.forName(
 								"org.fife.util.Java7TranslucencyUtil");
-					instance = (TranslucencyUtil)clazz.newInstance();
+					instance = (TranslucencyUtil)clazz.getDeclaredConstructor().newInstance();
 				}
 
 			} catch (RuntimeException re) {

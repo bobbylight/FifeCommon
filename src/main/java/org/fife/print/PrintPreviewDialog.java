@@ -76,8 +76,8 @@ public class PrintPreviewDialog extends EscapableDialog
 	private JButton prevPageButton;		// Button to view the previous page.
 	private JButton closeButton;
 
-	private JComboBox sizeComboBox;		// To choose the preview's size.
-	private JComboBox numPagesComboBox;	// To choose the number of pages to view at a time.
+	private JComboBox<String> sizeComboBox;		// To choose the preview's size.
+	private JComboBox<String> numPagesComboBox;	// To choose the number of pages to view at a time.
 
 	private int scale;					// Current scale of pages, in percent (i.e., 10 ==> 10%).
 	private int pageWidth;
@@ -147,14 +147,14 @@ public class PrintPreviewDialog extends EscapableDialog
 		closeButton.setActionCommand("Close");
 		closeButton.addActionListener(this);
 		toolBarPanel.add(closeButton);
-		sizeComboBox = new JComboBox(
+		sizeComboBox = new JComboBox<>(
 			new String[] { "10%", "25%", "33%", "50%", "66%",
 						"75%", "100%", "150%", "200%" }
 		);
 		UIUtil.fixComboOrientation(sizeComboBox);
 		sizeComboBox.addItemListener(this);
 		toolBarPanel.add(sizeComboBox);
-		numPagesComboBox = new JComboBox(
+		numPagesComboBox = new JComboBox<>(
 			new String[] { "1", "2", "3", "4" });
 		UIUtil.fixComboOrientation(numPagesComboBox);
 		numPagesComboBox.addItemListener(this);

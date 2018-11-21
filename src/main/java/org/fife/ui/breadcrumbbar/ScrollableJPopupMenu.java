@@ -47,7 +47,7 @@ import javax.swing.Timer;
  *
  * This class is based off of code on Sun's Java forums, posted by
  * DarrylBurke
- * <a href="http://forums.sun.com/thread.jspa?forumID=57&threadID=5362822">here</a>.
+ * <a href="http://forums.sun.com/thread.jspa?forumID=57&amp;threadID=5362822">here</a>.
  *
  * @author Robert Futrell
  * @version 1.0

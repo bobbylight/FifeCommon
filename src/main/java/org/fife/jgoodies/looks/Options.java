@@ -40,8 +40,6 @@ import javax.swing.text.JTextComponent;
 
 import org.fife.jgoodies.looks.common.ShadowPopup;
 
-import com.sun.java.swing.plaf.windows.WindowsComboBoxUI;
-
 /**
  * Provides access to optional features of the JGoodies L&amp;Fs
  * via a key to the system properties, via a key for the <code>UIDefaults</code>
@@ -252,7 +250,6 @@ public final class Options {
      * can be temporarily removed when painting the current value or not.
      * This is useful for custom renderers used with Windows combo boxes.
      *
-     * @see WindowsComboBoxUI#paintCurrentValue(java.awt.Graphics, java.awt.Rectangle, boolean)
      * @since 2.1
      */
     public static final String COMBO_RENDERER_IS_BORDER_REMOVABLE =

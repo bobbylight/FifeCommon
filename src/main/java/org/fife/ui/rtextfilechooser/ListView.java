@@ -30,7 +30,7 @@ import javax.swing.*;
  * @author Robert Futrell
  * @version 0.1
  */
-class ListView extends JList implements RTextFileChooserView {
+class ListView extends JList<File> implements RTextFileChooserView {
 
 	private RTextFileChooser chooser;	// The chooser that owns this list view.
 	private MouseListener mouseListener;
@@ -44,7 +44,7 @@ class ListView extends JList implements RTextFileChooserView {
 	 */
 	ListView(RTextFileChooser chooser) {
 
-		super(new DefaultListModel()); // Ensure we have a DefaultListModel.
+		super(new DefaultListModel<>()); // Ensure we have a DefaultListModel.
 		this.chooser = chooser;
 
 		// Just some other stuff to keep things looking nice.
@@ -86,7 +86,7 @@ class ListView extends JList implements RTextFileChooserView {
 		// setListData() replaces our ListModel, with a non-DefaultListModel
 		// model, which we don't want to do
 		//setListData(new File[0]);
-		setModel(new DefaultListModel());
+		setModel(new DefaultListModel<>());
 	}
 
 
@@ -154,7 +154,7 @@ class ListView extends JList implements RTextFileChooserView {
 	@Override
 	public File getFileAtPoint(Point p) {
 		int row = locationToIndex(p);
-		return (File)getModel().getElementAt(row);
+		return getModel().getElementAt(row);
 	}
 
 
@@ -166,7 +166,7 @@ class ListView extends JList implements RTextFileChooserView {
 	 */
 	@Override
 	public File getSelectedFile() {
-		return (File)getSelectedValue();
+		return getSelectedValue();
 	}
 
 
@@ -177,15 +177,7 @@ class ListView extends JList implements RTextFileChooserView {
 	 */
 	@Override
 	public File[] getSelectedFiles() {
-
-		Object[] objArray = getSelectedValues();
-		int length = objArray.length;
-
-		File[] fileArray = new File[length];
-		System.arraycopy(objArray,0, fileArray,0, length);
-
-		return fileArray;
-
+	    return getSelectedValuesList().toArray(new File[0]);
 	}
 
 
@@ -204,7 +196,7 @@ class ListView extends JList implements RTextFileChooserView {
 			return null;
 		Rectangle bounds = getCellBounds(index, index);
 		if (bounds.contains(p)) {
-			File file = (File)getModel().getElementAt(index);
+			File file = getModel().getElementAt(index);
 			if (file==null || file.isDirectory())
 				return null;
 			tip = chooser.getToolTipFor(file);
@@ -254,7 +246,7 @@ class ListView extends JList implements RTextFileChooserView {
 		// setListData() replaces our ListModel, with a non-DefaultListModel
 		// model, which we don't want to do
 		//setListData(files);
-		DefaultListModel model = new DefaultListModel();
+		DefaultListModel<File> model = new DefaultListModel<>();
 		for (File file : files) {
 			model.addElement(file);
 		}
@@ -292,24 +284,23 @@ class ListView extends JList implements RTextFileChooserView {
 			ListModel model = getModel();
 			int modelSize = model.getSize();
 
-			for (int i=0; i<num; i++) {
+            for (File f1 : files) {
 
-				File f1 = files[i];
-				if (!f1.exists())
-					continue;
-				File parentFile = f1.getParentFile();
-				if (!parentFile.equals(chooser.currentDirectory))
-					continue;
+                if (!f1.exists())
+                    continue;
+                File parentFile = f1.getParentFile();
+                if (!parentFile.equals(chooser.currentDirectory))
+                    continue;
 
-				for (int j=0; j<modelSize; j++) {
-					File f2 = (File)model.getElementAt(j);
-					if (f1.equals(f2)) {
-						addSelectionInterval(j,j);
-						break;
-					}
-				}
+                for (int j = 0; j < modelSize; j++) {
+                    File f2 = (File)model.getElementAt(j);
+                    if (f1.equals(f2)) {
+                        addSelectionInterval(j, j);
+                        break;
+                    }
+                }
 
-			}
+            }
 
 		}
 

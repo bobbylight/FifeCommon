@@ -11,6 +11,7 @@ package org.fife.ui;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URI;
@@ -540,7 +541,7 @@ public final class UIUtil {
 		if (keyStroke==null)
 			return "";
 
-		String string = KeyEvent.getKeyModifiersText(keyStroke.getModifiers());
+		String string = InputEvent.getModifiersExText(keyStroke.getModifiers());
 		if (string!=null && string.length()>0)
 			string += "+";
 		int keyCode = keyStroke.getKeyCode();

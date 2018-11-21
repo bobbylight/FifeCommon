@@ -49,7 +49,7 @@ public interface Actions {
 	 */
 	class AddToFavoritesAction extends FileChooserAction {
 
-		public AddToFavoritesAction(RTextFileChooser chooser) {
+		AddToFavoritesAction(RTextFileChooser chooser) {
 			super(chooser);
 			putValue(Action.NAME, chooser.getString("AddToFavorites"));
 		}
@@ -71,11 +71,11 @@ public interface Actions {
 
 		private FileSelector chooser;
 
-		public CopyAction(FileSelector chooser) {
+		CopyAction(FileSelector chooser) {
 			super(null);
 			this.chooser = chooser;
 			putValue(Action.NAME, getString("Copy"));
-			int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+			int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 			putValue(Action.ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_C, mod));
 		}
@@ -117,12 +117,12 @@ public interface Actions {
 
 		private FileSelector chooser;
 
-		public CopyFullPathAction(FileSelector chooser) {
+		CopyFullPathAction(FileSelector chooser) {
 			super(null);
 			this.chooser = chooser;
 			putValue(Action.NAME, getString("CopyFullPath"));
-			int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-			mod |= InputEvent.SHIFT_MASK;
+			int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+			mod |= InputEvent.SHIFT_DOWN_MASK;
 			putValue(Action.ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_C, mod));
 		}
@@ -176,11 +176,11 @@ public interface Actions {
 		 *        rather than go through OS means and possibly put into a
 		 *        Recycle Bin).
 		 */
-		public DeleteAction(RTextFileChooser chooser, boolean hard) {
+		DeleteAction(RTextFileChooser chooser, boolean hard) {
 			super(chooser);
 			putValue(Action.NAME, getString("Delete"));
 			this.hard = hard;
-			int modifiers = hard ? InputEvent.SHIFT_MASK : 0;
+			int modifiers = hard ? InputEvent.SHIFT_DOWN_MASK : 0;
 			putValue(Action.ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, modifiers));
 		}
@@ -280,7 +280,7 @@ public interface Actions {
 		private static ResourceBundle msg = ResourceBundle.getBundle(
 							"org.fife.ui.rtextfilechooser.FileChooserPopup");
 
-		public FileChooserAction(RTextFileChooser chooser) {
+		FileChooserAction(RTextFileChooser chooser) {
 			this.chooser = chooser;
 		}
 
@@ -296,10 +296,10 @@ public interface Actions {
 	 */
 	class PasteAction extends FileChooserAction {
 
-		public PasteAction(RTextFileChooser chooser) {
+		PasteAction(RTextFileChooser chooser) {
 			super(chooser);
 			putValue(NAME, getString("Paste"));
-			int mod = chooser.getToolkit().getMenuShortcutKeyMask();
+			int mod = chooser.getToolkit().getMenuShortcutKeyMaskEx();
 			putValue(ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_V, mod));
 		}
@@ -367,7 +367,7 @@ public interface Actions {
 	 */
 	class RefreshAction extends FileChooserAction {
 
-		public RefreshAction(RTextFileChooser chooser) {
+		RefreshAction(RTextFileChooser chooser) {
 			super(chooser);
 			putValue(Action.NAME, getString("Refresh"));
 			putValue(Action.ACCELERATOR_KEY,
@@ -387,7 +387,7 @@ public interface Actions {
 	 */
 	class RenameAction extends FileChooserAction {
 
-		public RenameAction(RTextFileChooser chooser) {
+		RenameAction(RTextFileChooser chooser) {
 			super(chooser);
 			putValue(Action.NAME, getString("Rename"));
 			putValue(Action.ACCELERATOR_KEY,
@@ -468,6 +468,8 @@ public interface Actions {
 
 		}
 
+		// NOTE: IntelliJ is wrong about "access can be package-private".  Must
+		// be public for library consumers
 		public SystemOpenAction(FileSelector chooser, OpenMethod method) {
 			super(null);
 			this.chooser = chooser;
@@ -540,10 +542,10 @@ public interface Actions {
 
 		private FileSelector selector;
 
-		public PropertiesAction(FileSelector selector) {
+		PropertiesAction(FileSelector selector) {
 			super(null);
 			putValue(NAME, "Properties");
-			final int alt = InputEvent.ALT_MASK;
+			final int alt = InputEvent.ALT_DOWN_MASK;
 			KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, alt);
 			putValue(ACCELERATOR_KEY, ks);
 			this.selector = selector;
@@ -583,7 +585,7 @@ public interface Actions {
 	 */
 	class UpOneLevelAction extends FileChooserAction {
 
-		public UpOneLevelAction(RTextFileChooser chooser) {
+		UpOneLevelAction(RTextFileChooser chooser) {
 			super(chooser);
 			putValue(Action.NAME, getString("UpOneLevel"));
 			putValue(Action.ACCELERATOR_KEY,

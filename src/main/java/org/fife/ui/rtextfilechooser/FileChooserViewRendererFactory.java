@@ -17,6 +17,8 @@ import javax.swing.table.TableCellRenderer;
 import org.fife.util.SubstanceUtil;
 import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
 
+import java.io.File;
+
 
 /**
  * Creates renderers to use for various file chooser views (list, details,
@@ -57,7 +59,8 @@ final class FileChooserViewRendererFactory {
 	 * @param chooser The file chooser.
 	 * @return The renderer.
 	 */
-	public static ListCellRenderer createListViewRenderer(
+	@SuppressWarnings("unchecked") // Must use DefaultListCellRenderer
+	public static ListCellRenderer<File> createListViewRenderer(
 			RTextFileChooser chooser) {
 
 		ListCellRenderer renderer;

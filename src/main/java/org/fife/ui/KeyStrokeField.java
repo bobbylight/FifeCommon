@@ -53,7 +53,7 @@ public class KeyStrokeField extends JTextField {
 		if (e.getID()==KeyEvent.KEY_PRESSED &&
 			keyCode!=KeyEvent.VK_ENTER &&
 			keyCode!=KeyEvent.VK_BACK_SPACE) {
-			int modifiers = e.getModifiers();
+			int modifiers = e.getModifiersEx();
 			setKeyStroke(KeyStroke.getKeyStroke(keyCode, modifiers));
 			return;
 		}

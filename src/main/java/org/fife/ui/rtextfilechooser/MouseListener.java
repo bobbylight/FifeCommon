@@ -11,11 +11,10 @@ package org.fife.ui.rtextfilechooser;
 
 import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import javax.swing.JComponent;
+import javax.swing.*;
 
 
 /**
@@ -59,8 +58,7 @@ class MouseListener extends MouseAdapter {
 
 		if (view.getDisplayedFileCount()>0) {
 
-			boolean wasButton1 = (e.getModifiers()&InputEvent.BUTTON1_MASK)==
-									InputEvent.BUTTON1_MASK;
+			boolean wasButton1 = SwingUtilities.isLeftMouseButton(e);
 			int clickCount = (e.getClickCount()%2)==0 ? 2 : 1;
 
 			// If they double-click, do something...

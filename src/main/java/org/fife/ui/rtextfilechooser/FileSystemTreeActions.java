@@ -87,7 +87,7 @@ class FileSystemTreeActions {
 			super(tree);
 			putValue(NAME, getString("Delete"));
 			this.hard = hard;
-			int modifiers = hard ? InputEvent.SHIFT_MASK : 0;
+			int modifiers = hard ? InputEvent.SHIFT_DOWN_MASK : 0;
 			putValue(Action.ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, modifiers));
 			this.window = parent;
@@ -499,8 +499,8 @@ class FileSystemTreeActions {
 			super(tree);
 			putValue(NAME, getString("Paste"));
 			putValue(MNEMONIC_KEY,
-					new Integer(getString("PasteMnemonic").charAt(0)));
-			int mod = tree.getToolkit().getMenuShortcutKeyMask();
+				(int)getString("PasteMnemonic").charAt(0));
+			int mod = tree.getToolkit().getMenuShortcutKeyMaskEx();
 			putValue(ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_V, mod));
 		}

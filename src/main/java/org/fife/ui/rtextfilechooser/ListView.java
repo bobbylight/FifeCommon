@@ -48,7 +48,7 @@ class ListView extends JList<File> implements RTextFileChooserView {
 		this.chooser = chooser;
 
 		// Just some other stuff to keep things looking nice.
-		ListCellRenderer cellRenderer =
+		ListCellRenderer<File> cellRenderer =
 				FileChooserViewRendererFactory.createListViewRenderer(chooser);
 		setCellRenderer(cellRenderer);
 		setLayoutOrientation(JList.VERTICAL_WRAP);

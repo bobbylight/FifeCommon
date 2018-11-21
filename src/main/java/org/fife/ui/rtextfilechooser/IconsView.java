@@ -218,6 +218,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 				x = SPACING;
 				y += frames[i].getHeight() + SPACING;
 			}
+
 		}
 
 		size.height = y+DEFAULT_ICON_WIDTH;
@@ -487,7 +488,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 				// each side, and to prevent the HTML view from messing
 				// us up view-wise.
 				Segment s = new Segment(fileName.toCharArray(), 0,fileName.length());
-				br = Utilities.getBreakLocation(s, fm, 0, getWidth()-8,
+				br = Utilities.getBreakLocation(s, fm, 0f, getWidth()-8,
 											null, 0);
 				result += fileName.substring(0,br);
 				fileName = fileName.substring(br);
@@ -575,8 +576,8 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		@Override
 		public void mousePressed(MouseEvent e) {
 
-			int modifiers = e.getModifiers();
-			if ((modifiers&InputEvent.BUTTON1_MASK)==InputEvent.BUTTON1_MASK) {
+			int modifiers = e.getModifiersEx();
+			if (SwingUtilities.isLeftMouseButton(e)) {
 
 				Point p = SwingUtilities.convertPoint(this,
 											e.getX(), e.getY(), null);
@@ -590,8 +591,8 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 				// down shift or control while clicking, we need to clear
 				// the selection.
 				if (!chooser.isMultiSelectionEnabled() ||
-					((modifiers&InputEvent.SHIFT_MASK)==0 &&
-					 (modifiers&InputEvent.CTRL_MASK)==0)) {
+					((modifiers&InputEvent.SHIFT_DOWN_MASK)==0 &&
+					 (modifiers&InputEvent.CTRL_DOWN_MASK)==0)) {
 					clearSelection();
 				}
 
@@ -616,10 +617,8 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 
-			int modifiers = e.getModifiers();
-
 			// If they just released a left-click, stop any dragging.
-			if ((modifiers&InputEvent.BUTTON1_MASK)!=0) {
+			if (SwingUtilities.isLeftMouseButton(e)) {
 				getDesktopManager().endDraggingFrame(this);
 				_x = 0;
 				_y = 0;
@@ -670,10 +669,10 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 			Insets i = getInsets();
 
 			// Move the window.
-			if ((e.getModifiers()&InputEvent.BUTTON1_MASK)!=InputEvent.BUTTON1_MASK) {
-    	               // don't allow moving of frames if the left mouse
-    	               // button was not used.
-    	               return;
+			if (!SwingUtilities.isLeftMouseButton(e)) {
+				// don't allow moving of frames if the left mouse
+				// button was not used.
+				return;
 			}
 
 			int pWidth, pHeight;
@@ -724,7 +723,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 			// Pretend like the view is the one who received the mouse click,
 			// not the internal frame.
 			mouseListener.mouseClicked(
-				new MouseEvent(IconsView.this, e.getID(), e.getWhen(), e.getModifiers(),
+				new MouseEvent(IconsView.this, e.getID(), e.getWhen(), e.getModifiersEx(),
 							p.x,p.y, e.getClickCount(),
 							e.isPopupTrigger(), e.getButton())
 			);

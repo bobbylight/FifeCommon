@@ -183,12 +183,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 		super.addNotify();
 		// Not sure why, but we have to do this later, else this text field's
 		// size is reported as 0 and the popup's width is calculated wrong.
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				discoverParentWindow();
-			}
-		});
+		SwingUtilities.invokeLater(() -> discoverParentWindow());
 	}
 
 
@@ -453,13 +448,10 @@ System.out.println("DEBUG: *** parent is null");
 	@Override
 	public void insertUpdate(DocumentEvent e) {
 		if (isShowing() && fileSystemAware && !ignoreDocumentUpdates) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					String entered = updateComboBoxContents();
-					if (getAutoCompleteFileName()) {
-						autoCompleteFileName(entered);
-					}
+			SwingUtilities.invokeLater(() -> {
+				String entered = updateComboBoxContents();
+				if (getAutoCompleteFileName()) {
+					autoCompleteFileName(entered);
 				}
 			});
 		}
@@ -619,7 +611,7 @@ System.out.println("DEBUG: *** parent is null");
 
 		// Make Shift+Tab focus the previous component (as it normally would).
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
-								InputEvent.SHIFT_MASK), "OnShiftTab");
+								InputEvent.SHIFT_DOWN_MASK), "OnShiftTab");
 		actionMap.put("OnShiftTab", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -710,12 +702,7 @@ System.out.println("DEBUG: *** parent is null");
 	@Override
 	public void removeUpdate(DocumentEvent e) {
 		if (isShowing() && fileSystemAware && !ignoreDocumentUpdates) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					updateComboBoxContents();
-				}
-			});
+			SwingUtilities.invokeLater(() -> updateComboBoxContents());
 		}
 	}
 
@@ -771,13 +758,8 @@ System.out.println("DEBUG: *** parent is null");
 	public void setDirectoriesOnly(boolean directoriesOnly) {
 		// Lazily create the file filter used.
 		if (directoriesOnly) {
-			directoriesOnlyFilenameFilter = new FilenameFilter() {
-				@Override
-				public boolean accept(File parentDir, String fileName) {
-					return new File(parentDir.getAbsolutePath(),
-									fileName).isDirectory();
-				}
-			};
+			directoriesOnlyFilenameFilter = (parentDir, fileName) ->
+				new File(parentDir.getAbsolutePath(), fileName).isDirectory();
 		}
 		this.directoriesOnly = directoriesOnly;
 	}
@@ -819,7 +801,7 @@ System.out.println("DEBUG: *** parent is null");
 	 *
 	 * @param renderer The cell renderer to use.
 	 */
-	public void setListCellRenderer(ListCellRenderer renderer) {
+	public void setListCellRenderer(ListCellRenderer<String> renderer) {
 		fileList.setCellRenderer(renderer);
 	}
 

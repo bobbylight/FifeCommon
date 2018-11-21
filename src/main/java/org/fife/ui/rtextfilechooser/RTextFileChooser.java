@@ -15,6 +15,7 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.*;
@@ -96,7 +97,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 	private BreadcrumbBar lookInBreadcrumbBar;
 	private FSATextField fileNameTextField;
-	private JComboBox filterCombo;
+	private JComboBox<FileFilter> filterCombo;
 	private JComboBox<String> encodingCombo;
 
 	/*
@@ -487,7 +488,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		fileNameTextField.getDocument().addDocumentListener(textFieldListener);
 		fileNameLabel.setLabelFor(fileNameTextField);
 
-		filterCombo = new JComboBox();
+		filterCombo = new JComboBox<>();
 		filterCombo.setMaximumRowCount(12);
 		filterLabel.setLabelFor(filterCombo);
 		filterCombo.addItemListener(itemListener);
@@ -1482,25 +1483,29 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		detailsViewIcon  = UIManager.getIcon("FileChooser.detailsViewIcon");
 		listViewIcon     = UIManager.getIcon("FileChooser.listViewIcon");
 
-		ClassLoader cl = this.getClass().getClassLoader();
-		String path = "org/fife/ui/rtextfilechooser/images/";
 		if (newFolderIcon==null) {
-			newFolderIcon = new ImageIcon(cl.getResource(path + "createnewdirectory.gif"));
+			newFolderIcon = new ImageIcon(getIconResource("createnewdirectory.gif"));
 		}
 		if (upFolderIcon==null) {
-			upFolderIcon = new ImageIcon(cl.getResource(path + "uponelevel.gif"));
+			upFolderIcon = new ImageIcon(getIconResource("uponelevel.gif"));
 		}
 		if (detailsViewIcon==null) {
-			detailsViewIcon = new ImageIcon(cl.getResource(path + "detailsview.gif"));
+			detailsViewIcon = new ImageIcon(getIconResource("detailsview.gif"));
 		}
 		if (listViewIcon==null) {
-			listViewIcon = new ImageIcon(cl.getResource(path + "listview.gif"));
+			listViewIcon = new ImageIcon(getIconResource("listview.gif"));
 		}
-		iconsViewIcon = new ImageIcon(cl.getResource(path + "listview.gif"));
+		iconsViewIcon = new ImageIcon(getIconResource("listview.gif"));
 		if (favoritesIcon==null) {
-			favoritesIcon = new ImageIcon(cl.getResource(path + "book.png"));
+			favoritesIcon = new ImageIcon(getIconResource("book.png"));
 		}
 
+	}
+
+
+	private URL getIconResource(String name) {
+		String path = "org/fife/ui/rtextfilechooser/images/";
+		return this.getClass().getClassLoader().getResource(path + name);
 	}
 
 

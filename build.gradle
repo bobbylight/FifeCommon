@@ -15,7 +15,6 @@ dependencies {
 	testCompile 'junit:junit:4.12'
 }
 
-// Regenerate local gradlew
 wrapper {
 	gradleVersion '5.0-rc-4'
 }

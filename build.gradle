@@ -6,12 +6,10 @@ archivesBaseName = 'fife.common'
 assert JavaVersion.current().isJava11Compatible()
 
 dependencies {
-	compile(
-		[ 'com.apple:AppleJavaExtensions:1.4' ],
-		[ 'com.github.insubstantial:laf-plugin:7.2.1' ],
-		[ 'com.github.insubstantial:laf-widget:7.2.1' ],
-		[ 'com.github.insubstantial:substance:7.2.1' ],
-		[ 'com.github.insubstantial:trident:7.2.1' ])
+	compile 'com.github.insubstantial:laf-plugin:7.2.1'
+	compile 'com.github.insubstantial:laf-widget:7.2.1'
+	compile 'com.github.insubstantial:substance:7.2.1'
+	compile 'com.github.insubstantial:trident:7.2.1'
 	testCompile 'junit:junit:4.12'
 }
 
@@ -42,9 +40,6 @@ ext.sharedManifest = manifest {
 
 }
 jar {
-	from ("${projectDir}/extra") {
-		include('com/apple/osxadapter/*.class')
-	}
 	manifest { from sharedManifest }
 }
 

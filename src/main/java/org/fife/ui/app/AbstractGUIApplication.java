@@ -9,23 +9,12 @@
  */
 package org.fife.ui.app;
 
-import java.awt.AWTEvent;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.ComponentOrientation;
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.text.MessageFormat;
 import java.util.Locale;
@@ -54,7 +43,6 @@ import org.fife.ui.OS;
 import org.fife.ui.OptionsDialog;
 import org.fife.ui.SplashScreen;
 import org.fife.ui.StatusBar;
-import org.fife.ui.app.osxadapter.NativeMacApp;
 import org.fife.help.HelpDialog;
 
 
@@ -75,7 +63,8 @@ import org.fife.help.HelpDialog;
  *   <li>An easy to organize/maintain the actions associated with the
  *       application's menu bar, toolbar, etc.
  *   <li>A "splash screen" interface.
- *   <li>Necessary Mac OS X hooks.
+ *   <li>Necessary Mac OS X hooks (used on any OS with OS-specific Help menu
+ *       items, Options/Preferences menu items, etc.).
  * </ul>
  *
  * @param <T> The preferences class for this application.
@@ -84,7 +73,7 @@ import org.fife.help.HelpDialog;
  * @see AbstractPluggableGUIApplication
  */
 public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> extends JFrame
-							implements GUIApplication, NativeMacApp {
+							implements GUIApplication {
 
 	/**
 	 * This property is fired whenever the status bar changes.
@@ -252,7 +241,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 		// of these locales.  RText will remember the locale last selected by
 		// the user and use it the next time it starts.
 		setLanguage(prefs==null ? "en" : prefs.language);
-		Locale locale = null;
+		Locale locale;
 		String language = getLanguage();
 		int underscore = language.indexOf('_');
 		if (underscore>-1) {
@@ -283,23 +272,6 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 
 	/**
-	 * Gets called from the OSXAdapter; this method is needed by the Mac OS X
-	 * JVM.  This is a hook for the standard Apple application menu.  This
-	 * method displays the application's About dialog.
-	 *
-	 * @see #getAboutDialog()
-	 */
-	@Override
-	public void about() {
-		try {
-			getAboutDialog().setVisible(true);
-		} catch (Exception e) {
-			displayException(e);
-		}
-	}
-
-
-	/**
 	 * {@inheritDoc}
 	 *
 	 * @see #createActions(GUIApplicationPrefs)
@@ -308,6 +280,38 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	@Override
 	public void addAction(String key, Action action) {
 		actions.addAction(key, action);
+	}
+
+
+	private void addSystemHooks() {
+
+		try {
+
+			Desktop desktop = Desktop.getDesktop();
+
+			desktop.setAboutHandler(e -> {
+				try {
+					getAboutDialog().setVisible(true);
+				} catch (Exception ex) {
+					displayException(ex);
+				}
+			});
+
+			desktop.setOpenFileHandler(e -> {
+				for (File file : e.getFiles()) {
+					openFile(file);
+				}
+			});
+
+			desktop.setPreferencesHandler(e -> preferences());
+
+			desktop.setQuitHandler((e, response) -> {
+				response.cancelQuit(); // Let our application handle quitting
+				doExit();
+			});
+		} catch (Exception e) {
+			displayException(e);
+		}
 	}
 
 
@@ -853,9 +857,6 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public T loadPreferences() {
@@ -875,73 +876,16 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 
 	/**
-	 * Gets called from the OSXAdapter; this method is needed by the Mac OS X
-	 * JVM.  This is a hook for the standard Apple application menu.  This
-	 * method gets called when we receive an open event from the finder on
-	 * Mac OS X, and should be overridden to do whatever makes sense in your
-	 * application to "open a file."
+	 * Opens a file.  Called on OS X when system hooks are enabled.
+	 *
+	 * @param file The file to open.
 	 */
-	@Override
-	public abstract void openFile(String fileName);
+	public abstract void openFile(File file);
 
 
 	/**
-	 * 1.5.2004/pwy: Generic registration with the Mac OS X application menu.
-	 * Checks the platform, then attempts to register with the Apple EAWT.
-	 * This method calls OSXAdapter.registerMacOSXApplication() and
-	 * OSXAdapter.enablePrefs().
-	 * See OSXAdapter.java for the signatures of these methods.
+	 * Called on OS X when the user opens the Options dialog.
 	 */
-	private void possibleMacOSXRegistration() {
-
-		if (getOS()==OS.MAC_OS_X) {
-
-			try {
-				Class<?> osxAdapter = Class.forName(
-									"org.fife.ui.app.osxadapter.OSXAdapter");
-				Class<?>[] defArgs = { NativeMacApp.class };
-				Method registerMethod = osxAdapter.getDeclaredMethod(
-								"registerMacOSXApplication", defArgs);
-				if (registerMethod != null) {
-					Object[] args = { this };
-					registerMethod.invoke(osxAdapter, args);
-				}
-				// This is slightly gross.  to reflectively access methods
-				// with boolean args, use "boolean.class", then pass a
-				// Boolean object in as the arg, which apparently gets
-				// converted for you by the reflection system.
-				defArgs[0] = boolean.class;
-				Method prefsEnableMethod =  osxAdapter.getDeclaredMethod(
-											"enablePrefs", defArgs);
-				if (prefsEnableMethod != null) {
-					Object[] args = { Boolean.TRUE };
-					prefsEnableMethod.invoke(osxAdapter, args);
-				}
-			} catch (NoClassDefFoundError e) {
-				// This will be thrown first if the OSXAdapter is loaded on
-				// a system without the EAWT because OSXAdapter extends
-				// ApplicationAdapter in its def
-				displayException(e);
-			} catch (ClassNotFoundException e) {
-				// This shouldn't be reached; if there's a problem with the
-				// OSXAdapter we should get the above NoClassDefFoundError
-				// first.
-				displayException(e);
-			} catch (Exception e) {
-				displayException(e);
-			}
-
-		}
-
-	}
-
-
-	/**
-	 * Gets called from the OSXAdapter; this method is needed by the Mac OS X
-	 * JVM.  This is a hook for the standard Apple application menu.  This
-	 * method should be overridden to show the Options dialog.
-	 */
-	@Override
 	public abstract void preferences();
 
 
@@ -1017,19 +961,6 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 		super.processWindowEvent(e);
 
-	}
-
-
-	/**
-	 * Gets called from the OSXAdapter; this method is needed by the Mac OS X
-	 * JVM.  This is a hook for the standard Apple application menu.  This
-	 * method calls <code>doExit</code>.
-	 *
-	 * @see #doExit()
-	 */
-	@Override
-	public void quit() {
-		doExit();
 	}
 
 
@@ -1303,7 +1234,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
             AbstractGUIApplication<?> app = getApplication();
             app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            OptionsDialog dialog = null;
+            OptionsDialog dialog;
 
             try {
                 dialog = app.getOptionsDialog();
@@ -1419,9 +1350,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 			// in case we have descriptions of them to display.
 			registerMenuSelectionManagerListener();
 
-			// 1.5.2004/pwy: If running on a Mac OS X system, enable the
-			// application menu and other Apple specific functions.
-			possibleMacOSXRegistration();
+			addSystemHooks();
 
 			// Set location/appearance properties.
 			Toolkit.getDefaultToolkit().setDynamicLayout(true);

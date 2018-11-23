@@ -1,7 +1,7 @@
 /*
  * 09/29/2010
  *
- * TranslucencyUtil.java - Utilities for translucent Windows in Java 6u10+.
+ * TranslucencyUtil.java - Utilities for translucent Windows in Java 7+.
  * Copyright (C) 2010 Robert Futrell
  * http://fifesoft.com/rtext
  * Licensed under a modified BSD license.
@@ -9,112 +9,97 @@
  */
 package org.fife.util;
 
+import java.awt.Color;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Window;
-
-import org.fife.ui.UIUtil;
 
 
 /**
- * Utilities for translucent windows in Java 6 update 10 and newer.
+ * Uses the "official" API for setting window opacity introduced in Java 7.
+ * <p>See
+ * <a href="http://download.oracle.com/javase/tutorial/uiswing/misc/trans_shaped_windows.html">
+ * here</a> for more information.<p>
+ *
+ * NOTE: Java 7 introduced extra rules not included in the Java 6 com.sun API;
+ * windows can not have their opacity values changed while displayable, and
+ * they also cannot be non-opaque if they are decorated.  The Java 6 API did
+ * not impose these restrictions.  This makes this API virtually useless unless
+ * you want a window to stay a certain degree of translucency the entire time
+ * it is visible.  Sorry.
  *
  * @author Robert Futrell
  * @version 1.0
  */
-public abstract class TranslucencyUtil {
+public class TranslucencyUtil {
 
-	/**
-	 * The singleton instance.
-	 */
 	private static TranslucencyUtil instance;
 
-
+	/**
+	 * Private constructor to prevent instantiation.
+	 */
+	private TranslucencyUtil() {
+		// Do nothing (comment for Sonar
+	}
 
 	/**
 	 * Returns the singleton instance of this class.
 	 *
-	 * @return The singleton instance, or <code>null</code> if something
-	 *         went horribly wrong.
+	 * @return The singleton instance.
 	 */
 	public static TranslucencyUtil get() {
-
 		if (instance==null) {
+			instance = new TranslucencyUtil();
+		}
+		return instance;
+	}
 
-			try {
+	public float getOpacity(Window w) {
 
-				if (UIUtil.isPreJava7()) {
-					instance = new Java6TranslucencyUtil();
-				}
+		float opacity = 1;
 
-				else { // Java 1.7 +
-					Class<?> clazz = Class.forName(
-								"org.fife.util.Java7TranslucencyUtil");
-					instance = (TranslucencyUtil)clazz.getDeclaredConstructor().newInstance();
-				}
-
-			} catch (RuntimeException re) {
-				throw re; // FindBugs
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			// Something bad happened during our reflection!
-			if (instance==null) {
-				instance = new DummyTranslucencyUtil();
-			}
-
+		// If translucency isn't supported, it must be 1f.
+		if (isTranslucencySupported(false)) {
+			opacity = w.getOpacity();
 		}
 
-		return instance;
-
+		return opacity;
 	}
 
 
-	/**
-	 * Returns the opacity of a (fully, not per-pixel, translucent) window.
-	 *
-	 * @param w The window.
-	 * @return The opacity of the window.  A value of <code>1.0f</code> means
-	 *         the window is fully opaque.
-	 * @see #setOpacity(Window, float)
-	 */
-	public abstract float getOpacity(Window w);
+	public boolean isTranslucencySupported(boolean perPixel) {
+
+		GraphicsDevice.WindowTranslucency kind = perPixel ?
+				GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSLUCENT :
+						GraphicsDevice.WindowTranslucency.TRANSLUCENT;
+		return GraphicsEnvironment.getLocalGraphicsEnvironment().
+				getDefaultScreenDevice().isWindowTranslucencySupported(kind);
+	}
 
 
-	/**
-	 * Returns whether translucency is supported by this JVM.
-	 *
-	 * @param perPixel Whether to check for per-pixel translucency (vs. just
-	 *        translucency of an entire window, which is cheaper).
-	 * @return Whether translucency is supported.
-	 */
-	public abstract boolean isTranslucencySupported(boolean perPixel);
+	public boolean setOpacity(Window w, float value) {
+
+		if (!isTranslucencySupported(false)) {
+			return false;
+		}
+
+		w.setOpacity(value);
+		return true;
+	}
 
 
-	/**
-	 * Toggles the opacity of an entire window (i.e., non-per-pixel opacity).
-	 *
-	 * @param w The window to modify.
-	 * @param value The opacity.
-	 * @return Whether the operation was successful.
-	 * @see #getOpacity(Window)
-	 * @see #setOpaque(Window, boolean)
-	 */
-	public abstract boolean setOpacity(Window w, float value);
-
-
-	/**
-	 * Toggles whether a window is fully opaque (e.g., toggles per-pixel
-	 * translucency).  To set the translucency of an entire window, on a
-	 * non-per-pixel basis (which is cheaper), use
-	 * {@link #setOpacity(Window, float)}.
-	 *
-	 * @param w The window to modify.
-	 * @param opaque Whether the window should be fully opaque (versus
-	 *        per-pixel translucent).
-	 * @return Whether the operation was successful.
-	 * @see #setOpacity(Window, float)
-	 */
-	public abstract boolean setOpaque(Window w, boolean opaque);
+	public boolean setOpaque(Window w, boolean opaque) {
+		if (!opaque && !isTranslucencySupported(true)) {
+			return false;
+		}
+		if (opaque) {
+			w.setBackground(Color.white);
+		}
+		else {
+			w.setBackground(new Color(0,0,0, 0));
+		}
+		return true;
+	}
 
 
 }

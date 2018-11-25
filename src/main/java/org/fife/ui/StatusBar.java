@@ -225,7 +225,7 @@ public class StatusBar extends StatusBarPanel implements MouseListener {
 
 			case WINDOWS_XP_STYLE:
 				return BorderFactory.createCompoundBorder(
-					new BevelDividerBorder(BevelDividerBorder.LEFT, 2),
+					new LineDividerBorder(LineDividerBorder.LEFT, 2),
 					BorderFactory.createEmptyBorder(0,3,0,3));
 
 			default:

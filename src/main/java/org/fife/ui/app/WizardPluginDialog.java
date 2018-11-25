@@ -30,7 +30,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.text.StyleContext;
 
-import org.fife.ui.BevelDividerBorder;
+import org.fife.ui.LineDividerBorder;
 import org.fife.ui.UIUtil;
 
 
@@ -109,7 +109,7 @@ public class WizardPluginDialog extends JDialog {
 		// Add the button panel at the bottom.
 		JPanel buttonPanel = new JPanel(new BorderLayout());
 		buttonPanel.setBorder(BorderFactory.createCompoundBorder(
-							new BevelDividerBorder(SwingConstants.TOP),
+							new LineDividerBorder(SwingConstants.TOP),
 							UIUtil.getEmpty5Border()));
 		JPanel temp = new JPanel(new GridLayout(1,4, 5,5));
 		cancelButton = new JButton(MSG.getString("Button.Cancel"));
@@ -290,7 +290,7 @@ public class WizardPluginDialog extends JDialog {
 			JPanel headerPanel = new JPanel(new BorderLayout());
 			headerPanel.setBorder(BorderFactory.createCompoundBorder(
 						BorderFactory.createEmptyBorder(0,0,5,0),
-						new BevelDividerBorder(SwingConstants.BOTTOM)));
+						new LineDividerBorder(SwingConstants.BOTTOM)));
 			header = new JLabel("Header");
 			// WORKAROUND for Sun JRE bug 6282887 (for JRE's pre-1.5.0-b45).
 			//Font font = header.getFont().deriveFont(Font.BOLD, 18);

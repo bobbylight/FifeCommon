@@ -10,17 +10,7 @@
  */
 package org.fife.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.ComponentOrientation;
-import java.awt.Container;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Box;
@@ -587,15 +577,18 @@ public abstract class OptionsDialogPanel extends JPanel {
 			int titleY = middleY + fm.getHeight()/2;
 
 			ComponentOrientation orientation = c.getComponentOrientation();
+			boolean isDarkLaf = UIUtil.isLightForeground(c.getForeground());
+			Color lineColor = isDarkLaf ? c.getBackground().brighter() :
+				c.getBackground().darker();
 			if (orientation.isLeftToRight()) {
 				g.drawString(title, x,titleY);
-				g.setColor(c.getBackground().darker());
+				g.setColor(lineColor);
 				g.drawLine(x+titleWidth+5, middleY, x+width, middleY);
 			}
 			else {
 				int titleX = x+width-titleWidth-1;
 				g.drawString(title, titleX,titleY);
-				g.setColor(c.getBackground().darker());
+				g.setColor(lineColor);
 				g.drawLine(x,middleY, titleX-5,middleY);
 			}
 

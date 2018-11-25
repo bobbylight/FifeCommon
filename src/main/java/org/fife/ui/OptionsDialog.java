@@ -147,7 +147,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		JComponent buttonPanel = (JComponent)UIUtil.createButtonFooter(
 				temp, -1, 10);
 		buttonPanel.setBorder(BorderFactory.createCompoundBorder(
-				new BevelDividerBorder(SwingConstants.TOP, 15),
+				new LineDividerBorder(SwingConstants.TOP, 15),
 				buttonPanel.getBorder()));
 
 		// Create a panel containing the two above panels.

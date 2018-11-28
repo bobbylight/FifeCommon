@@ -246,7 +246,7 @@ public class MenuBar extends JMenuBar {
 			throw new NullPointerException("menu name cannot be null");
 		}
 		if (namedMenus==null) {
-			namedMenus = new HashMap<String, JMenu>();
+			namedMenus = new HashMap<>();
 		}
 		namedMenus.put(name, menu);
 	}

@@ -77,7 +77,7 @@ public class DockableWindowPanel extends JPanel
 		applyComponentOrientation(orientation);
 
 		setBorder(BorderFactory.createEmptyBorder(0,3,2,3));
-		listeningTo = new TreeSet<String>();
+		listeningTo = new TreeSet<>();
 
 	}
 
@@ -156,7 +156,7 @@ public class DockableWindowPanel extends JPanel
 	 */
 	private synchronized void addDockableWindowToList(DockableWindow window) {
 		if (windowList==null)
-			windowList = new ArrayList<DockableWindow>();
+			windowList = new ArrayList<>();
 		windowList.add(window);
 	}
 
@@ -375,18 +375,18 @@ public class DockableWindowPanel extends JPanel
 
 		else if (DockableWindow.NAME_PROPERTY.equals(name)) {
 			boolean found = false;
-			for (int i=0; i<panels.length; i++) {
-				int index = panels[i].containsDockableWindow(w);
-				if (index>-1) {
-					panels[i].windowPanel.refreshTabName(index);
+			for (ContentPanel panel : panels) {
+				int index = panel.containsDockableWindow(w);
+				if (index > -1) {
+					panel.windowPanel.refreshTabName(index);
 					found = true;
 					break;
 				}
 			}
 			if (!found) {
-				for (int i=0; i<floatingWindows.length; i++) {
-					if (w==floatingWindows[i].getDockableWindow()) {
-						floatingWindows[i].refreshTitle(); // In case it changed too
+				for (FloatingWindow floatingWindow : floatingWindows) {
+					if (w == floatingWindow.getDockableWindow()) {
+						floatingWindow.refreshTitle(); // In case it changed too
 					}
 				}
 			}
@@ -394,10 +394,10 @@ public class DockableWindowPanel extends JPanel
 
 		else if (DockableWindow.TITLE_PROPERTY.equals(name)) {
 			boolean found = false;
-			for (int i=0; i<panels.length; i++) {
-				int index = panels[i].containsDockableWindow(w);
-				if (index>-1) {
-					panels[i].windowPanel.refreshTabTitle(index);
+			for (ContentPanel panel : panels) {
+				int index = panel.containsDockableWindow(w);
+				if (index > -1) {
+					panel.windowPanel.refreshTabTitle(index);
 					found = true;
 					break;
 				}
@@ -428,8 +428,8 @@ public class DockableWindowPanel extends JPanel
 	public boolean removeContentPanel(Container contentPanel) {
 		// Should only be two.
 		Component[] comps = panels[0].getComponents();
-		for (int i=0; i<comps.length; i++) {
-			if (comps[i].equals(contentPanel)) {
+		for (Component comp : comps) {
+			if (comp.equals(contentPanel)) {
 				panels[0].remove(contentPanel);
 				return true;
 			}

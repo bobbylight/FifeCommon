@@ -40,7 +40,7 @@ class FileChooserIconManager {
 
 
 	FileChooserIconManager() {
-		iconCache = new HashMap<File, Icon>(50);
+		iconCache = new HashMap<>(50);
 		createDefaultIcons();
 	}
 

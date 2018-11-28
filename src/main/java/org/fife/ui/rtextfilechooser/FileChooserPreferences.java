@@ -138,7 +138,7 @@ final class FileChooserPreferences {
 	 */
 	private static Map<String, Color> loadCustomColorsMap() {
 
-		Map<String, Color> map = new HashMap<String, Color>();
+		Map<String, Color> map = new HashMap<>();
 
 		try {
 
@@ -151,10 +151,10 @@ final class FileChooserPreferences {
 
 			int count = keys.length;
 			int prefixLength = FTI_PREFIX.length();
-			for (int i=0; i<count; i++) {
-				if (keys[i].startsWith(FTI_PREFIX)) {
-					String extension = keys[i].substring(prefixLength);
-					int packed = prefs.getInt(keys[i], DEFAULT_COLOR_INT);
+			for (String key : keys) {
+				if (key.startsWith(FTI_PREFIX)) {
+					String extension = key.substring(prefixLength);
+					int packed = prefs.getInt(key, DEFAULT_COLOR_INT);
 					Color c = new Color(packed);
 					map.put(extension, c);
 				}

@@ -265,12 +265,7 @@ class DockableWindowGroup extends JPanel {
 		public void setSelectedIndex(int index) {
 			super.setSelectedIndex(index);
 			final DockableWindow dwind = (DockableWindow)getSelectedComponent();
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					dwind.focused();
-				}
-			});
+			SwingUtilities.invokeLater(dwind::focused);
 		}
 
 		@Override

@@ -59,8 +59,8 @@ public class DefaultFilePasteCallback implements FilePasteCallback {
 			if (noteFormat==null) {
 				noteFormat = MSG.getString("Dialog.ProgressMonitor.NoteFormat");
 			}
-			Object[] args = { Integer.valueOf(pasteCount),
-					Integer.valueOf(total), justPastedFile.getAbsolutePath() };
+			Object[] args = {pasteCount,
+				total, justPastedFile.getAbsolutePath() };
 			String note = MessageFormat.format(noteFormat, args);
 			monitor.setNote(note);
 			//System.out.println(note);

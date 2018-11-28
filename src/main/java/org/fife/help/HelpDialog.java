@@ -380,7 +380,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		pack();
 
 		// Initially, the use hasn't viewed any nodes.
-		history = new ArrayList<HelpTreeNode>();
+		history = new ArrayList<>();
 		updateHistory = true;
 		clickedOnTOCTree = true;		// Initially, we assume they click on tocTree first.
 		historyPos = -1;				// Initially, there is no history to point to.
@@ -517,7 +517,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 		// Our return value.
 		List<HelpTreeNode> arrayList =
-				new ArrayList<HelpTreeNode>();
+			new ArrayList<>();
 
 		// Loop through all children of root.
 		int count = root.getChildCount();
@@ -573,13 +573,10 @@ public class HelpDialog extends JFrame implements ActionListener {
 			// Read in the file.
 			try {
 
-				BufferedReader in = new BufferedReader(
+				try (BufferedReader in = new BufferedReader(
 					new InputStreamReader(node.getUrl().openConnection().
-												getInputStream()));
-				try {
+						getInputStream()))) {
 					contents = HelpDialog.read(in);
-				} finally {
-					in.close();
 				}
 
 			} catch (IOException e) {
@@ -799,7 +796,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		if (childNodes!=null) {
 			int length = childNodes.getLength();
 			// Cache to avoid all of the text (whitespace) elements.
-			List<String> elements = new ArrayList<String>(length/2);
+			List<String> elements = new ArrayList<>(length / 2);
 			for (int i=0; i<length; i++) {
 				Node node2 = childNodes.item(i);
 				if (node2.getNodeType()==Node.TEXT_NODE)

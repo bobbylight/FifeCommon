@@ -350,7 +350,7 @@ public final class LookUtils {
             LookUtils.log(
                 logMessage
                     + " have been "
-                    + (result.booleanValue() ? "en" : "dis")
+                    + (result ? "en" : "dis")
                     + "abled in the system properties.");
         }
         return result;

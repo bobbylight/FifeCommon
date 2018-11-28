@@ -89,7 +89,7 @@ public final class SubstanceUtil {
 			Object manager = m.invoke(null);
 			m = managerClazz.getMethod("getTimelineDuration");
 			Long millis = (Long)m.invoke(manager);
-			speed = millis.longValue();
+			speed = millis;
 		}
 
 		return speed;

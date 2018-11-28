@@ -124,25 +124,17 @@ public abstract class GUIWorkerThread {
 
 		// Create a thread to call the finished() method on the
 		// event-dispatch thread after our computations are done.
-		final Runnable doFinished = new Runnable() {
-								@Override
-								public void run() {
-									finished();
-								}
-							};
+		final Runnable doFinished = this::finished;
 
 		// Create the thread that will actually do the dirty work and then
 		// set up our doFinished thread to run on the event-dispatch thread.
-		Runnable doConstruct = new Runnable() {
-					@Override
-					public void run() {
-						try {
-							setValue(construct());
-						} finally {
-							threadVar.clear();
-						}
-						SwingUtilities.invokeLater(doFinished);
-					}
+		Runnable doConstruct = () -> {
+			try {
+				setValue(construct());
+			} finally {
+				threadVar.clear();
+			}
+			SwingUtilities.invokeLater(doFinished);
 		};
 
 		Thread t = new Thread(doConstruct);

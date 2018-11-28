@@ -142,9 +142,9 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 		buffer.append(t.toString()).append("\n");
 		StackTraceElement[] ste = t.getStackTrace();
 		int count = ste.length;
-		for (int i=0; i<count; i++) {
-			buffer.append(TRACE_STEP_BEGINNING).append(ste[i].toString()).
-													append("\n");
+		for (StackTraceElement stackTraceElement : ste) {
+			buffer.append(TRACE_STEP_BEGINNING).append(stackTraceElement.toString()).
+				append("\n");
 		}
 		return buffer.toString();
 	}

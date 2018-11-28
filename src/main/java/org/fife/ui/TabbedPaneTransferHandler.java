@@ -256,8 +256,8 @@ public class TabbedPaneTransferHandler extends TransferHandler
 		if (tabFlavor == null) {
 			return false;
 		}
-		for (int i = 0; i < flavors.length; i++) {
-			if (tabFlavor.equals(flavors[i])) {
+		for (DataFlavor flavor : flavors) {
+			if (tabFlavor.equals(flavor)) {
 				return true;
 			}
 		}

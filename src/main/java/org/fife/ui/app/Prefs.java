@@ -165,12 +165,9 @@ public abstract class Prefs {
 	 * @see #load(Properties)
 	 */
 	public void load(File file) throws IOException {
-		BufferedInputStream in = new BufferedInputStream(
-										new FileInputStream(file));
-		try {
+		try (BufferedInputStream in = new BufferedInputStream(
+			new FileInputStream(file))) {
 			load(in);
-		} finally {
-			in.close();
 		}
 	}
 
@@ -206,19 +203,19 @@ public abstract class Prefs {
 		Class<?> clazz = getClass();
 		Field[] fields = clazz.getFields();
 
-		for (int i=0; i<fields.length; i++) {
+		for (Field field : fields) {
 
 			try {
 
-				String name = fields[i].getName();
+				String name = field.getName();
 				String value = props.getProperty(name);
 
-				if (value!=null) {
+				if (value != null) {
 
-					Class<?> type = fields[i].getType();
+					Class<?> type = field.getType();
 					Object obj = null;
 
-					if (int.class==type) {
+					if (int.class == type) {
 						try {
 							obj = Integer.valueOf(value);
 						} catch (NumberFormatException nfe) {
@@ -226,7 +223,7 @@ public abstract class Prefs {
 						}
 					}
 
-					else if (long.class==type) {
+					else if (long.class == type) {
 						try {
 							obj = Long.valueOf(value);
 						} catch (NumberFormatException nfe) {
@@ -234,7 +231,7 @@ public abstract class Prefs {
 						}
 					}
 
-					else if (short.class==type) {
+					else if (short.class == type) {
 						try {
 							obj = Short.valueOf(value);
 						} catch (NumberFormatException nfe) {
@@ -242,7 +239,7 @@ public abstract class Prefs {
 						}
 					}
 
-					else if (byte.class==type) {
+					else if (byte.class == type) {
 						try {
 							obj = Byte.valueOf(value);
 						} catch (NumberFormatException nfe) {
@@ -250,7 +247,7 @@ public abstract class Prefs {
 						}
 					}
 
-					else if (float.class==type) {
+					else if (float.class == type) {
 						try {
 							obj = Float.valueOf(value);
 						} catch (NumberFormatException nfe) {
@@ -258,7 +255,7 @@ public abstract class Prefs {
 						}
 					}
 
-					else if (double.class==type) {
+					else if (double.class == type) {
 						try {
 							obj = Double.valueOf(value);
 						} catch (NumberFormatException nfe) {
@@ -266,26 +263,26 @@ public abstract class Prefs {
 						}
 					}
 
-					else if (boolean.class==type) {
+					else if (boolean.class == type) {
 						obj = Boolean.valueOf(value);
 					}
 
-					else if (char.class==type) {
-						if (value.length()>0) {
+					else if (char.class == type) {
+						if (value.length() > 0) {
 							obj = value.charAt(0);
 						}
 					}
 
-					else if (String.class==type) {
+					else if (String.class == type) {
 						obj = value;
 					}
 
-					else if (String[].class==type) {
+					else if (String[].class == type) {
 						String[] temp = null;
 						int length = Integer.parseInt(value);
-						if (length>-1) { // -1 => null array
+						if (length > -1) { // -1 => null array
 							temp = new String[length];
-							for (int j=0; j<length; j++) {
+							for (int j = 0; j < length; j++) {
 								// Property will not be defined if the String
 								// should be null, so everything works out
 								temp[j] = props.getProperty(name + "." + j);
@@ -294,8 +291,8 @@ public abstract class Prefs {
 						obj = temp;
 					}
 
-					else if (Color.class==type) {
-						if (value.length()==9 && value.charAt(0)=='$') {
+					else if (Color.class == type) {
+						if (value.length() == 9 && value.charAt(0) == '$') {
 							long temp = Long.parseLong(value.substring(1), 16);
 							int rgba = (int)(temp & 0xffffffff);
 							//System.out.println("... " + temp + " > " + rgba);
@@ -303,15 +300,15 @@ public abstract class Prefs {
 						}
 					}
 
-					else if (File.class==type){
+					else if (File.class == type) {
 						// Empty value => still use default
-						if (value.length()>0) {
+						if (value.length() > 0) {
 							obj = new File(value);
 						}
 					}
 
-					else if (KeyStroke.class==type) {
-						if (value.length()>0) {
+					else if (KeyStroke.class == type) {
+						if (value.length() > 0) {
 							// returns null if formatted incorrectly
 							obj = KeyStroke.getKeyStroke(value);
 						}
@@ -319,12 +316,12 @@ public abstract class Prefs {
 
 					else {
 						throw new IOException("Unhandled field type for " +
-								"field: " + name + " (" + type + ")");
+							"field: " + name + " (" + type + ")");
 					}
 
 					// Only replace the default if a value was found
-					if (obj!=null) {
-						fields[i].set(this, obj);
+					if (obj != null) {
+						field.set(this, obj);
 					}
 
 				}
@@ -347,12 +344,9 @@ public abstract class Prefs {
 	 * @see #save(OutputStream)
 	 */
 	public void save(File file) throws IOException {
-		BufferedOutputStream out = new BufferedOutputStream(
-											new FileOutputStream(file));
-		try {
+		try (BufferedOutputStream out = new BufferedOutputStream(
+			new FileOutputStream(file))) {
 			save(out);
-		} finally {
-			out.close();
 		}
 	}
 
@@ -372,61 +366,61 @@ public abstract class Prefs {
 		Class<?> clazz = getClass();
 		Field[] fields = clazz.getFields();
 
-		for (int i=0; i<fields.length; i++) {
+		for (Field field : fields) {
 			try {
 
-				if (!isSavable(fields[i])) {
+				if (!isSavable(field)) {
 					continue;
 				}
 
-				String name = fields[i].getName();
-				Class<?> type = fields[i].getType();
-				Object value = fields[i].get(this);
+				String name = field.getName();
+				Class<?> type = field.getType();
+				Object value = field.get(this);
 				String strVal = null;
 
 				if (isPrimitiveNumberType(type) ||
-						boolean.class==type ||
-						char.class==type) {
+					boolean.class == type ||
+					char.class == type) {
 					strVal = value.toString();
 				}
 
-				else if (String.class==type) {
+				else if (String.class == type) {
 					strVal = (String)value;
 				}
 
-				else if (String[].class==type) {
+				else if (String[].class == type) {
 					// Store length of array as "main" property, then each
 					// item as an extra property of form "name.index".
 					String[] array = (String[])value;
-					if (array==null) {
+					if (array == null) {
 						strVal = "-1";
 					}
 					else {
 						strVal = Integer.toString(array.length);
-						for (int j=0; j<array.length; j++) {
+						for (int j = 0; j < array.length; j++) {
 							// No "name.N" property => String at that index
 							// was null (can't put null values into Properties)
-							if (array[j]!=null) {
+							if (array[j] != null) {
 								props.setProperty(name + "." + j, array[j]);
 							}
 						}
 					}
 				}
 
-				else if (Color.class==type) {
+				else if (Color.class == type) {
 					Color c = (Color)value;
 					strVal = getColorString(c);
 				}
 
-				else if (File.class==type) {
-					if (value!=null) {
+				else if (File.class == type) {
+					if (value != null) {
 						File file = (File)value;
 						strVal = file.getAbsolutePath();
 					}
 				}
 
-				else if (KeyStroke.class==type) {
-					if (value!=null) {
+				else if (KeyStroke.class == type) {
+					if (value != null) {
 						KeyStroke ks = (KeyStroke)value;
 						strVal = ks.toString();
 					}
@@ -434,12 +428,12 @@ public abstract class Prefs {
 
 				else {
 					throw new IOException("Unhandled field type for field: " +
-							name + " (" + type + ")");
+						name + " (" + type + ")");
 				}
 
 				// If null value/error parsing number occurred (Properties
 				// won't take null values)
-				if (strVal==null) {
+				if (strVal == null) {
 					strVal = "";
 				}
 

@@ -751,12 +751,7 @@ tb.addChangeListener(new ChangeListener() {
 		private void addItemsFor(File dir, ScrollableJPopupMenu popup) {
 
 			if (dir!=null) {
-				File[] children = dir.listFiles(new FileFilter() {
-					@Override
-					public boolean accept(File file) {
-						return file.isDirectory();
-					}
-				});
+				File[] children = dir.listFiles(File::isDirectory);
 				// children can be null e.g. on Windows, when examining an
 				// empty DVD/blu-ray drive
 				int count = children!=null ? children.length : 0;
@@ -776,8 +771,8 @@ tb.addChangeListener(new ChangeListener() {
 			}
 			else { // roots
 				List<JMenuItem> roots = getRoots();
-				for (int i=0; i<roots.size(); i++) {
-					popup.addComponent(roots.get(i));
+				for (JMenuItem root : roots) {
+					popup.addComponent(root);
 				}
 			}
 
@@ -787,7 +782,7 @@ tb.addChangeListener(new ChangeListener() {
 
 			if (rootMenuItems==null) {
 
-				rootMenuItems = new ArrayList<JMenuItem>(5);
+				rootMenuItems = new ArrayList<>(5);
 
 //				File[] rootFiles = fsv.getRoots();
 //				if (rootFiles!=null) { // Windows
@@ -802,10 +797,10 @@ tb.addChangeListener(new ChangeListener() {
 //				}
 
 				File[] rootFiles = File.listRoots();
-				for (int i=0; i<rootFiles.length; i++) {
-					String name = getName(rootFiles[i]);
-					Icon icon = getIcon(rootFiles[i]);
-					JMenuItem item = createMenuItem(rootFiles[i], name, icon);
+				for (File rootFile : rootFiles) {
+					String name = getName(rootFile);
+					Icon icon = getIcon(rootFile);
+					JMenuItem item = createMenuItem(rootFile, name, icon);
 					item.addActionListener(this);
 					rootMenuItems.add(item);
 				}

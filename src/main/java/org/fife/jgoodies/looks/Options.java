@@ -92,7 +92,7 @@ public final class Options {
      */
     private static final Map<String, String> LAF_REPLACEMENTS;
     static {
-        LAF_REPLACEMENTS = new HashMap<String, String>();
+        LAF_REPLACEMENTS = new HashMap<>();
         initializeDefaultReplacements();
     }
 
@@ -408,7 +408,7 @@ public final class Options {
      */
     public static boolean getUseSystemFonts() {
         return USE_SYSTEM_FONTS_SYSTEM_VALUE != null
-            ? USE_SYSTEM_FONTS_SYSTEM_VALUE.booleanValue()
+            ? USE_SYSTEM_FONTS_SYSTEM_VALUE
             : !Boolean.FALSE.equals(UIManager.get(USE_SYSTEM_FONTS_APP_KEY));
     }
 
@@ -423,7 +423,7 @@ public final class Options {
      * @see #USE_SYSTEM_FONTS_APP_KEY
      */
     public static void setUseSystemFonts(boolean useSystemFonts) {
-        UIManager.put(USE_SYSTEM_FONTS_APP_KEY, Boolean.valueOf(useSystemFonts));
+        UIManager.put(USE_SYSTEM_FONTS_APP_KEY, useSystemFonts);
     }
 
     /**
@@ -488,7 +488,7 @@ public final class Options {
      */
     public static boolean getUseNarrowButtons() {
         return USE_NARROW_BUTTONS_SYSTEM_VALUE != null
-            ? USE_NARROW_BUTTONS_SYSTEM_VALUE.booleanValue()
+            ? USE_NARROW_BUTTONS_SYSTEM_VALUE
             : !Boolean.FALSE.equals(UIManager.get(USE_NARROW_BUTTONS_KEY));
     }
 
@@ -505,7 +505,7 @@ public final class Options {
      * @see #USE_NARROW_BUTTONS_KEY
      */
     public static void setUseNarrowButtons(boolean b) {
-        UIManager.put(USE_NARROW_BUTTONS_KEY, Boolean.valueOf(b));
+        UIManager.put(USE_NARROW_BUTTONS_KEY, b);
     }
 
     /**
@@ -518,7 +518,7 @@ public final class Options {
      */
     public static boolean isTabIconsEnabled() {
         return TAB_ICONS_ENABLED_SYSTEM_VALUE != null
-            ? TAB_ICONS_ENABLED_SYSTEM_VALUE.booleanValue()
+            ? TAB_ICONS_ENABLED_SYSTEM_VALUE
             : !Boolean.FALSE.equals(UIManager.get(TAB_ICONS_ENABLED_KEY));
     }
 
@@ -530,7 +530,7 @@ public final class Options {
      * @see #isTabIconsEnabled()
      */
     public static void setTabIconsEnabled(boolean b) {
-        UIManager.put(TAB_ICONS_ENABLED_KEY, Boolean.valueOf(b));
+        UIManager.put(TAB_ICONS_ENABLED_KEY, b);
     }
 
 
@@ -568,7 +568,7 @@ public final class Options {
      */
     public static boolean isPopupDropShadowEnabled() {
         if (POPUP_DROP_SHADOW_ENABLED_SYSTEM_VALUE != null)
-            return POPUP_DROP_SHADOW_ENABLED_SYSTEM_VALUE.booleanValue();
+            return POPUP_DROP_SHADOW_ENABLED_SYSTEM_VALUE;
 
         Object value = UIManager.get(POPUP_DROP_SHADOW_ENABLED_KEY);
         return value == null
@@ -590,7 +590,7 @@ public final class Options {
      * @see #isPopupDropShadowEnabled()
      */
     public static void setPopupDropShadowEnabled(boolean b) {
-        UIManager.put(POPUP_DROP_SHADOW_ENABLED_KEY, Boolean.valueOf(b));
+        UIManager.put(POPUP_DROP_SHADOW_ENABLED_KEY, b);
     }
 
     /**
@@ -641,7 +641,7 @@ public final class Options {
      * @since 2.1
      */
     public static void setHiResGrayFilterEnabled(boolean b) {
-        UIManager.put(HI_RES_GRAY_FILTER_ENABLED_KEY, Boolean.valueOf(b));
+        UIManager.put(HI_RES_GRAY_FILTER_ENABLED_KEY, b);
     }
 
 
@@ -684,7 +684,7 @@ public final class Options {
      * @since 2.2
      */
     public static void setSelectOnFocusGainEnabled(boolean b) {
-        UIManager.put(SELECT_ON_FOCUS_GAIN_KEY, Boolean.valueOf(b));
+        UIManager.put(SELECT_ON_FOCUS_GAIN_KEY, b);
     }
 
 
@@ -703,7 +703,7 @@ public final class Options {
     public static boolean isSelectOnFocusGainActive(JTextComponent c) {
         Boolean enabled = getSelectOnFocusGainEnabled(c);
         if (enabled != null) {
-            return enabled.booleanValue();
+            return enabled;
         }
         return isSelectOnFocusGainEnabled();
     }

@@ -82,7 +82,7 @@ public abstract class AbstractPluggableGUIApplication<T extends GUIApplicationPr
 	public final void addPlugin(Plugin plugin) {
 
 		if (pluginList==null) {
-			pluginList = new ArrayList<Plugin>(1);
+			pluginList = new ArrayList<>(1);
 		}
 		pluginList.add(plugin);
 
@@ -209,23 +209,20 @@ public abstract class AbstractPluggableGUIApplication<T extends GUIApplicationPr
 	 * EDT.
 	 */
 	private void loadPlugins() {
-		new Thread() {
-			@Override
-			public void run() {
-				try {
-					pluginLoader = new PluginLoader(
-								AbstractPluggableGUIApplication.this);
-					pluginLoader.loadPlugins();
-				} catch (final IOException ioe) {
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							displayException(ioe);
-						}
-					});
-				}
+		new Thread(() -> {
+			try {
+				pluginLoader = new PluginLoader(
+							AbstractPluggableGUIApplication.this);
+				pluginLoader.loadPlugins();
+			} catch (final IOException ioe) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						displayException(ioe);
+					}
+				});
 			}
-		}.start();
+		}).start();
 	}
 
 

@@ -78,25 +78,25 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	 * Compares two comparable objects by their <code>compareTo</code> method.
 	 */
 	public static final Comparator<?> COMPARABLE_COMPARATOR =
-			new Comparator<Object>() {
-		@Override
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		public int compare(Object o1, Object o2) {
-			return ((Comparable)o1).compareTo(o2);
-		}
-	};
+		new Comparator<>() {
+			@Override
+			@SuppressWarnings({"unchecked", "rawtypes"})
+			public int compare(Object o1, Object o2) {
+				return ((Comparable)o1).compareTo(o2);
+			}
+		};
 
 
 	/**
 	 * Compares two objects by their string (<code>toString</code>) values.
 	 */
 	public static final Comparator<?> LEXICAL_COMPARATOR =
-			new Comparator<Object>() {
-		@Override
-		public int compare(Object o1, Object o2) {
-			return o1.toString().compareTo(o2.toString());
-		}
-	};
+		new Comparator<>() {
+			@Override
+			public int compare(Object o1, Object o2) {
+				return o1.toString().compareTo(o2.toString());
+			}
+		};
 
 
 	private Row[] viewToModel;
@@ -106,8 +106,8 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	private MouseHandler mouseListener;
 	private TableModelListener tableModelListener;
 	private Map<Class<?>, Comparator<?>> columnComparators =
-			new HashMap<Class<?>, Comparator<?>>();
-	private List<Directive> sortingColumns = new ArrayList<Directive>();
+		new HashMap<>();
+	private List<Directive> sortingColumns = new ArrayList<>();
 
 	private JTable table;
 

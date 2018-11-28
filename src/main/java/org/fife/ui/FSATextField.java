@@ -183,7 +183,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 		super.addNotify();
 		// Not sure why, but we have to do this later, else this text field's
 		// size is reported as 0 and the popup's width is calculated wrong.
-		SwingUtilities.invokeLater(() -> discoverParentWindow());
+		SwingUtilities.invokeLater(this::discoverParentWindow);
 	}
 
 
@@ -702,7 +702,7 @@ System.out.println("DEBUG: *** parent is null");
 	@Override
 	public void removeUpdate(DocumentEvent e) {
 		if (isShowing() && fileSystemAware && !ignoreDocumentUpdates) {
-			SwingUtilities.invokeLater(() -> updateComboBoxContents());
+			SwingUtilities.invokeLater(this::updateComboBoxContents);
 		}
 	}
 

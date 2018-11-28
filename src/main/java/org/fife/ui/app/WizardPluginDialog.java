@@ -101,7 +101,7 @@ public class WizardPluginDialog extends JDialog {
 
 		this.plugin = plugin;
 		listener = new Listener();
-		wizardProperties = new HashMap<String, Object>();
+		wizardProperties = new HashMap<>();
 
 		JPanel contentPane = new JPanel(new BorderLayout());
 		contentPane.setBorder(UIUtil.getEmpty5Border());

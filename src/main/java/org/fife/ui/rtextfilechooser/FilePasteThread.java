@@ -104,7 +104,7 @@ class FilePasteThread extends GUIWorkerThread {
 
 		pasteCount = 0;
 		total = 0;
-		List<FileTreeNode> toCopy = new ArrayList<FileTreeNode>();
+		List<FileTreeNode> toCopy = new ArrayList<>();
 
 		for (File file : files) {
 			if (file.isDirectory()) {
@@ -297,11 +297,8 @@ class FilePasteThread extends GUIWorkerThread {
 				NameCollisionResolver r = new NameCollisionResolver(file, dest);
 				try {
 					SwingUtilities.invokeAndWait(r);
-				} catch (InvocationTargetException ite) {
-					ite.printStackTrace();
-					return;
-				} catch (InterruptedException ie) {
-					ie.printStackTrace();
+				} catch (InvocationTargetException | InterruptedException ex) {
+					ex.printStackTrace();
 					return;
 				}
 				int result = r.result;
@@ -939,7 +936,7 @@ class FilePasteThread extends GUIWorkerThread {
 
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-		List<File> files = new ArrayList<File>();
+		List<File> files = new ArrayList<>();
 		files.add(new File("C:/temp/test.java"));
 		files.add(new File("C:/temp/FilePasteTestInput"));
 
@@ -974,13 +971,13 @@ class FilePasteThread extends GUIWorkerThread {
 		private FileTreeNode(File node, boolean isDir) {
 			this.node = node;
 			if (isDir) {
-				children = new ArrayList<FileTreeNode>();
+				children = new ArrayList<>();
 			}
 		}
 
 		private void addChild(FileTreeNode child) {
 			if (children==null) {
-				children = new ArrayList<FileTreeNode>();
+				children = new ArrayList<>();
 			}
 			children.add(child);
 		}

@@ -537,7 +537,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		AttributeBatch(int displayCount, int start) {
 			this.displayCount = displayCount;
 			this.start = start;
-			fileAttrs = new ArrayList<FileAttributes>();
+			fileAttrs = new ArrayList<>();
 		}
 
 		void addAttributes(FileAttributes attrs) {
@@ -698,7 +698,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 //			boolean isDirectory = file.isDirectory();
 //			long length = isDirectory ? -1 : file.length();
 			String description = chooser.getDescription(file);
-			Vector<Object> temp = new Vector<Object>(5);
+			Vector<Object> temp = new Vector<>(5);
 			temp.add(0, file);
 			temp.add(1, description);
 			temp.add(2, null);//status);

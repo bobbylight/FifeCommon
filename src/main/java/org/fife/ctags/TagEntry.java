@@ -57,7 +57,7 @@ public class TagEntry {
 	public TagEntry() {
 		// Initialize a small list, because we have fields dedicated to a
 		// pattern and line number, which are the common extension fields.
-		this.fieldList = new ArrayList<TagExtensionField>(1);
+		this.fieldList = new ArrayList<>(1);
 	}
 
 
@@ -69,7 +69,7 @@ public class TagEntry {
 	 *        entry.
 	 */
 	public TagEntry(String line) {
-		this.fieldList = new ArrayList<TagExtensionField>(1);
+		this.fieldList = new ArrayList<>(1);
 		parseTagLine(line);
 	}
 
@@ -154,20 +154,20 @@ public class TagEntry {
 		String[] keyValuePairs = string.split("\t");
 		int numKeyValuePairs = keyValuePairs.length;
 
-		for (int i=0; i<numKeyValuePairs; i++) {
+		for (String keyValuePair : keyValuePairs) {
 
-			int colonIndex = keyValuePairs[i].indexOf(':');
+			int colonIndex = keyValuePair.indexOf(':');
 
 			// If there was no ':', then this MUST be a 'kind' field (which
 			// is a single char always).
-			if (colonIndex==-1) {
-				kind = keyValuePairs[i];
+			if (colonIndex == -1) {
+				kind = keyValuePair;
 			}
 
 			// MUST be of the form "<key>:<value>".
 			else {
-				String key = keyValuePairs[i].substring(0,colonIndex);
-				String value = keyValuePairs[i].substring(colonIndex+1);
+				String key = keyValuePair.substring(0, colonIndex);
+				String value = keyValuePair.substring(colonIndex + 1);
 				if (key.equals("kind"))
 					kind = value;
 				else if (key.equals("file"))

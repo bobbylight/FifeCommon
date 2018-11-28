@@ -146,9 +146,9 @@ class FileSystemTreeActions {
 
 			// If they chose "yes," delete the files.
 			if (choice==JOptionPane.YES_OPTION) {
-				for (int i=0; i<count; i++) {
-					if (!files[i].delete()) {
-						Object[] arguments = { files[i].getName() };
+				for (File file : files) {
+					if (!file.delete()) {
+						Object[] arguments = {file.getName()};
 						String msg = MessageFormat.format(
 							RTextFileChooser.MSG.getString("DeleteFailText"),
 							arguments);
@@ -547,10 +547,8 @@ class FileSystemTreeActions {
 							copying = true;
 						}
 
-					} catch (UnsupportedFlavorException ufe) {
-						ufe.printStackTrace(); // Never happens
-					} catch (IOException ioe) {
-						ioe.printStackTrace();
+					} catch (UnsupportedFlavorException | IOException ex) {
+						ex.printStackTrace();
 					}
 
 				}

@@ -353,7 +353,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		}
 
 		if (favoriteList==null) {
-			favoriteList = new ArrayList<String>(1); // Usually not many.
+			favoriteList = new ArrayList<>(1); // Usually not many.
 		}
 
 		if (!favoriteList.contains(dir)) {
@@ -831,10 +831,10 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		int num = files.length;
 		boolean containsFile = false;
 		boolean containsDirectory = false;
-		for (int i=0; i<num; i++) {
-			if (((File)files[i]).isDirectory())
+		for (Object file : files) {
+			if (((File)file).isDirectory())
 				containsDirectory = true;
-			else if (((File)files[i]).isFile())
+			else if (((File)file).isFile())
 				containsFile = true;
 			if (containsDirectory && containsFile)
 				return true;
@@ -845,8 +845,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 	private static boolean containsOnlyDirectories(Object[] files) {
 		int num = files.length;
-		for (int i=0; i<num; i++) {
-			if (!((File)files[i]).isDirectory())
+		for (Object file : files) {
+			if (!((File)file).isDirectory())
 				return false;
 		}
 		return true;
@@ -1223,11 +1223,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		byte[] bom = new byte[4];
 		int n;
-		FileInputStream in = new FileInputStream(file);
-		try {
+		try (FileInputStream in = new FileInputStream(file)) {
 			n = in.read(bom, 0, bom.length);
-		} finally {
-			in.close();
 		}
 		String encoding = null;
 
@@ -1361,7 +1358,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		// Multiple files surrounded by '"''s.
 		else {
 
-			ArrayList<String> fileNames = new ArrayList<String>();
+			ArrayList<String> fileNames = new ArrayList<>();
 			int i;
 
 			// Parse the text for filenames in '"''s.
@@ -1522,7 +1519,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		if (value == null)
 			return 0;
 		else if (value instanceof Integer) {
-			return ((Integer)value).intValue();
+			return (Integer)value;
 		}
 		else if (value instanceof String) {
 			try {
@@ -1844,17 +1841,14 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	public int loadFavorites(File file) throws IOException {
 		int count = 0;
 		String line = null;
-		BufferedReader r = new BufferedReader(new InputStreamReader(
-				new FileInputStream(file), FAVORITES_ENCODING));
-		try {
-			while ((line=r.readLine())!=null) {
-				if (line.length()>0 && !line.startsWith("#")) {
+		try (BufferedReader r = new BufferedReader(new InputStreamReader(
+			new FileInputStream(file), FAVORITES_ENCODING))) {
+			while ((line = r.readLine()) != null) {
+				if (line.length() > 0 && !line.startsWith("#")) {
 					addToFavorites(line);
 					count++;
 				}
 			}
-		} finally {
-			r.close();
 		}
 		return count;
 	}
@@ -1867,8 +1861,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private void populateFilterComboBox() {
 		filterCombo.removeAllItems();
 		int max = fileFilters.size();
-		for (int i=0; i<max; i++)
-			filterCombo.addItem(fileFilters.get(i));
+		for (FileFilter fileFilter : fileFilters) filterCombo.addItem(fileFilter);
 	}
 
 
@@ -1965,25 +1958,25 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		if (files!=null) {
 
 			int num = files.length;
-			Vector<File> dirList = new Vector<File>();
-			Vector<File> fileList = new Vector<File>();
+			Vector<File> dirList = new Vector<>();
+			Vector<File> fileList = new Vector<>();
 
 			// First, separate the directories from regular files so we can
 			// sort them individually.  This part of the code could be made
 			// more compact, but it isn't just for a tad more speed.
 			FileFilter filter = (useGlobFilter ? globFilter : currentFileFilter);
 			if (fileSelectionMode==DIRECTORIES_ONLY) {
-				for (int i=0; i<num; i++) {
-					if (files[i].isDirectory())
-						dirList.add(files[i]);
+				for (File file : files) {
+					if (file.isDirectory())
+						dirList.add(file);
 				}
 			}
 			else { // FILES_AND_DIRECTORIES or FILES_ONLY.
-				for (int i=0; i<num; i++) {
-					if (files[i].isDirectory())
-						dirList.add(files[i]);
-					else if (filter.accept(files[i]))
-						fileList.add(files[i]);
+				for (File file : files) {
+					if (file.isDirectory())
+						dirList.add(file);
+					else if (filter.accept(file))
+						fileList.add(file);
 				}
 			}
 
@@ -2053,17 +2046,14 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * @see #loadFavorites(File)
 	 */
 	public void saveFavorites(File file) throws IOException {
-		PrintWriter w = new PrintWriter(new BufferedWriter(
-				new OutputStreamWriter(new FileOutputStream(file),
-										FAVORITES_ENCODING)));
-		try {
-			if (favoriteList!=null) {
+		try (PrintWriter w = new PrintWriter(new BufferedWriter(
+			new OutputStreamWriter(new FileOutputStream(file),
+				FAVORITES_ENCODING)))) {
+			if (favoriteList != null) {
 				for (String favorite : favoriteList) {
 					w.println(favorite);
 				}
 			}
-		} finally {
-			w.close();
 		}
 	}
 
@@ -2303,12 +2293,12 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		if (filter != null) {
 			if (isMultiSelectionEnabled() && selectedFiles!=null &&
 					selectedFiles.length>0) {
-				List<File> fList = new ArrayList<File>();
+				List<File> fList = new ArrayList<>();
 				boolean failed = false;
 				int num = selectedFiles.length;
-				for (int i=0; i<num; i++) {
-					if (filter.accept(selectedFiles[i])) {
-						fList.add(selectedFiles[i]);
+				for (File selectedFile : selectedFiles) {
+					if (filter.accept(selectedFile)) {
+						fList.add(selectedFile);
 					}
 					else
 						failed = true;
@@ -2771,8 +2761,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		else if (numSelected>1) {
 
 			String temp = "";
-			for (int i=0; i<numSelected; i++) {
-				temp += "\"" + files[i].getName() + "\" ";
+			for (File file : files) {
+				temp += "\"" + file.getName() + "\" ";
 			}
 
 			// We'd like to clear the text from the "Look in" field

@@ -40,7 +40,7 @@ public abstract class GUIPlugin extends AbstractPlugin
 	 * Constructor.
 	 */
 	public GUIPlugin() {
-		windowMap = new HashMap<String, DockableWindow>();
+		windowMap = new HashMap<>();
 	}
 
 

@@ -74,7 +74,7 @@ public class ProcessRunner implements Runnable {
 	 */
 	private String[] createEnvVarArray() {
 
-		Map<String, String> env = new HashMap<String, String>();
+		Map<String, String> env = new HashMap<>();
 
 		// If we want to append our environment to that of the parent process...
 		if (appendEnv) {
@@ -87,7 +87,7 @@ public class ProcessRunner implements Runnable {
 		}
 
 		// Create an array of "name=value" elements.
-		List<String> temp = new ArrayList<String>(env.size());
+		List<String> temp = new ArrayList<>(env.size());
 		for (Map.Entry<String, String> entry : env.entrySet()) {
 			temp.add(entry.getKey() + "=" + entry.getValue());
 		}
@@ -153,7 +153,7 @@ public class ProcessRunner implements Runnable {
 	 * @see #setEnvironmentVars(Map, boolean)
 	 */
 	public Map<String, String> getEnvironmentVars() {
-		Map<String, String> temp = new HashMap<String, String>();
+		Map<String, String> temp = new HashMap<>();
 		if (envVars!=null) {
 			temp.putAll(envVars);
 		}
@@ -320,7 +320,7 @@ public class ProcessRunner implements Runnable {
 			envVars.clear();
 		}
 		else {
-			envVars = new HashMap<String, String>();
+			envVars = new HashMap<>();
 		}
 		envVars.putAll(vars);
 	}

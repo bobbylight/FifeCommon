@@ -121,7 +121,7 @@ public final class ShadowPopup extends Popup {
         ShadowPopup result;
         synchronized (ShadowPopup.class) {
             if (cache == null) {
-                cache = new ArrayList<ShadowPopup>(MAX_CACHE_SIZE);
+                cache = new ArrayList<>(MAX_CACHE_SIZE);
             }
             if (cache.size() > 0) {
                 result = cache.remove(0);
@@ -361,9 +361,7 @@ public final class ShadowPopup extends Popup {
                 }
                 g.dispose();
             }
-        } catch (AWTException e) {
-            canSnapshot = false;
-        } catch (SecurityException e) {
+        } catch (AWTException | SecurityException e) {
             canSnapshot = false;
         }
     }

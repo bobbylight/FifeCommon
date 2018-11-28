@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.parsers.*;
@@ -104,7 +105,7 @@ public class ThirdPartyLookAndFeelManager {
 			// NOTE:  The lines of code below MUST be in the order they're
 			// in or stuff breaks for some reason; I'm not sure why...
 			if (count>0) {
-				List<URL> lnfJarUrlList = new ArrayList<URL>();
+				List<URL> lnfJarUrlList = new ArrayList<>();
 				for (ExtendedLookAndFeelInfo info : lnfInfo) {
 					urls = info.getURLs(appRoot);
 					for (URL url : urls) {
@@ -198,7 +199,7 @@ public class ThirdPartyLookAndFeelManager {
 		try {
 			db = dbf.newDocumentBuilder();
 			InputSource is = new InputSource(new BufferedReader(
-					new InputStreamReader(new FileInputStream(file), "UTF-8")));
+					new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)));
 			is.setEncoding("UTF-8");
 			doc = db.parse(is);
 		} catch (RuntimeException re) { // FindBugs
@@ -210,7 +211,7 @@ public class ThirdPartyLookAndFeelManager {
 
 		// Traverse the XML tree.
 		List<ExtendedLookAndFeelInfo> lafInfo =
-				new ArrayList<ExtendedLookAndFeelInfo>(1);
+			new ArrayList<>(1);
 		try {
 			loadFromXML(doc.getDocumentElement(), lafInfo);
 		} catch (IOException ioe) {

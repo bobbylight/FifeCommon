@@ -225,7 +225,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 
 		Box panel = createHorizontalBox();
 
-		openFilesStyleCombo = new LabelValueComboBox<String, String>();
+		openFilesStyleCombo = new LabelValueComboBox<>();
 		UIUtil.fixComboOrientation(openFilesStyleCombo);
 
 		/*
@@ -404,7 +404,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 
 		void initCustomColorTable(RTextFileChooser chooser) {
 			setRowCount(0);
-			Vector<Object> v = new Vector<Object>(2);
+			Vector<Object> v = new Vector<>(2);
 			v.add(defaultColorString);
 			v.add(chooser.getDefaultFileColor());
 			addRow(v);
@@ -413,7 +413,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 			if (keySet!=null) {
 				for (String extension : keySet) {
 					// DefaultTableModel uses Vectors internally.
-					v = new Vector<Object>(2);
+					v = new Vector<>(2);
 					v.add(extension);
 					v.add(map.get(extension));
 					addRow(v);

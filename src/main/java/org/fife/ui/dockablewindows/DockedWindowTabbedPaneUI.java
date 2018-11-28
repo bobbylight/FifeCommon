@@ -64,7 +64,7 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 	 * Constructor.
 	 */
 	DockedWindowTabbedPaneUI() {
-		croppedTitlesList = new ArrayList<String>();
+		croppedTitlesList = new ArrayList<>();
 	}
 
 

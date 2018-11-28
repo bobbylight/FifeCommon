@@ -86,7 +86,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 	public ScrollableJPopupMenu(int rowCount) {
 		enableEvents(java.awt.AWTEvent.MOUSE_WHEEL_EVENT_MASK);
 		visibleRowCount = rowCount;
-		children = new ArrayList<Component>(rowCount);
+		children = new ArrayList<>(rowCount);
 		MenuMouseAdapter adapter = new MenuMouseAdapter();
 		previousItem = new ArrowMenuItem(upIcon);
 		previousItem.putClientProperty(PROPERTY_TIMER, previousTimer);
@@ -167,8 +167,8 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 		if (itemCount>visibleRowCount) {
 
 			// Determine the best width for the popup.
-			for (int i=0; i<itemCount; i++) {
-				add(children.get(i));
+			for (Component child : children) {
+				add(child);
 			}
 			int w = super.getPreferredSize().width;
 			removeAll();
@@ -192,8 +192,8 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 		}
 
 		else {
-			for (int i=0; i<itemCount; i++) {
-				add(children.get(i));
+			for (Component child : children) {
+				add(child);
 			}
 		}
 

@@ -241,17 +241,18 @@ public class CustomizableToolBar extends JToolBar {
 
 		Component[] components = getComponents();
 		int num = components.length;
-		for (int i=0; i<num; i++) {
-			if (components[i] instanceof JButton) {
-				final JButton button = (JButton)components[i];
+		for (Component component : components) {
+			if (component instanceof JButton) {
+				final JButton button = (JButton)component;
 				String title = button.getText();
-				if (title==null)
+				if (title == null)
 					title = button.getToolTipText();
-				if (title==null)
+				if (title == null)
 					title = msg.getString("PopupMenu.Unknown.txt");
 				cbMenuItem = new JCheckBoxMenuItem(
 					new AbstractAction(title) {
 						private static final long serialVersionUID = 1L;
+
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							button.setVisible(!button.isVisible());
@@ -377,9 +378,9 @@ public class CustomizableToolBar extends JToolBar {
 		public void actionPerformed(ActionEvent e) {
 			Component[] c = getComponents();
 			int num = c.length;
-			for (int i=0; i<num; i++)
-				if (c[i] instanceof JButton)
-					c[i].setVisible(true);
+			for (Component component : c)
+				if (component instanceof JButton)
+					component.setVisible(true);
 		}
 
 	}

@@ -358,9 +358,9 @@ public class FontDialog extends JDialog implements ActionListener,
 
 		// Add them to a list model.
 		DefaultListModel<FontInfo> listModel = new DefaultListModel<>();
-		for (int i=0; i<families.length; i++) {
-			boolean monospaced = monospacedFontsSet.contains(families[i]);
-			FontInfo fi = new FontInfo(families[i], monospaced);
+		for (String family : families) {
+			boolean monospaced = monospacedFontsSet.contains(family);
+			FontInfo fi = new FontInfo(family, monospaced);
 			listModel.addElement(fi);
 		}
 
@@ -379,7 +379,7 @@ public class FontDialog extends JDialog implements ActionListener,
 	 *         UNIX.
 	 */
 	private static HashSet<String> createMonospacedFontsSet() {
-		HashSet<String> set = new HashSet<String>();
+		HashSet<String> set = new HashSet<>();
 		set.add("Andale Mono");
 		set.add("Andale Mono IPA");
 		set.add("Bitstream Vera Sans Mono");
@@ -582,7 +582,7 @@ public class FontDialog extends JDialog implements ActionListener,
 		boldCheckBox.setSelected(toSelect.isBold());
 		italicCheckBox.setSelected(toSelect.isItalic());
 		// Underlining is handled separately.
-		fontSizeList.setSelectedValue(Integer.valueOf(toSelect.getSize()), true);
+		fontSizeList.setSelectedValue(toSelect.getSize(), true);
 
 	}
 
@@ -646,7 +646,7 @@ public class FontDialog extends JDialog implements ActionListener,
 
 		// If they've chosen a new font size, also update the sample.
 		else if (lsm == fontSizeList.getSelectionModel()) {
-			size = ((Integer)fontSizeList.getSelectedValue()).intValue();
+			size = (Integer)fontSizeList.getSelectedValue();
 			Font newFont = sampleTextLabel.getFont().deriveFont(properties, size);
 			sampleTextLabel.setFont(newFont);
 		}

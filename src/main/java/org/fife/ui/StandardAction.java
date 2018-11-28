@@ -216,7 +216,7 @@ public abstract class StandardAction extends AbstractAction {
 	 */
 	public int getMnemonic() {
 		Integer i = (Integer)getValue(MNEMONIC_KEY);
-		return i!=null ? i.intValue() : -1;
+		return i!=null ? i : -1;
 	}
 
 
@@ -355,7 +355,7 @@ public abstract class StandardAction extends AbstractAction {
 	 * @see #getMnemonic()
 	 */
 	public void setMnemonic(int mnemonic) {
-		putValue(MNEMONIC_KEY, mnemonic>0 ? Integer.valueOf(mnemonic) : null);
+		putValue(MNEMONIC_KEY, mnemonic>0 ? mnemonic : null);
 	}
 
 

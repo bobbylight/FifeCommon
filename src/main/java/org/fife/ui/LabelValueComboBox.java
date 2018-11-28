@@ -34,7 +34,7 @@ public class LabelValueComboBox<L, V> extends JComboBox<L> {
 	 * Constructor.
 	 */
 	public LabelValueComboBox() {
-		values = new ArrayList<V>(1);
+		values = new ArrayList<>(1);
 	}
 
 

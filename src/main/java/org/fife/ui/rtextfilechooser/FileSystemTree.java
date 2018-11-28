@@ -338,17 +338,17 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	protected File[] filterAndSort(File[] files) {
 
 		int num = files.length;
-		List<File> dirList = new ArrayList<File>();
-		List<File> fileList = new ArrayList<File>();
+		List<File> dirList = new ArrayList<>();
+		List<File> fileList = new ArrayList<>();
 
 		// First, separate the directories from regular files so we can
 		// sort them individually.  This part could be made more compact,
 		// but it isn't just for a tad more speed.
-		for (int i=0; i<num; i++) {
-			if (files[i].isDirectory())
-				dirList.add(files[i]);
+		for (File file : files) {
+			if (file.isDirectory())
+				dirList.add(file);
 			else
-				fileList.add(files[i]);
+				fileList.add(file);
 		}
 
 		Collections.sort(fileList);
@@ -746,7 +746,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			return false;
 		}
 
-		List<File> parents = new ArrayList<File>();
+		List<File> parents = new ArrayList<>();
 		File f2 = file;
 		while (f2!=null) {
 			parents.add(f2);
@@ -949,7 +949,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			FileSystemTree tree = (FileSystemTree)c;
 			File file = tree.getSelectedFile();
 			if (file!=null) {
-				list = new ArrayList<File>(1);
+				list = new ArrayList<>(1);
 				list.add(file);
 			}
 			return new FileListTransferable(list);

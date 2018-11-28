@@ -57,7 +57,7 @@ public abstract class RecentFilesMenu extends JMenu {
 	public RecentFilesMenu(String name, List<String> initialContents) {
 		super(name);
 		this.maxFileHistorySize = DEFAULT_MAX_SIZE;
-		fileHistory = new ArrayList<String>(maxFileHistorySize);
+		fileHistory = new ArrayList<>(maxFileHistorySize);
 		if (initialContents!=null) {
 			for (String fileFullPath : initialContents) {
 				addFileToFileHistory(fileFullPath);
@@ -154,7 +154,7 @@ public abstract class RecentFilesMenu extends JMenu {
 	 * @see #getFileFullPath(int)
 	 */
 	public List<String> getFileHistory() {
-		return new ArrayList<String>(fileHistory);
+		return new ArrayList<>(fileHistory);
 	}
 
 

@@ -245,15 +245,15 @@ public interface Actions {
 
 			// If they chose "yes," delete the files.
 			if (choice==JOptionPane.YES_OPTION) {
-				for (int i=0; i<count; i++) {
-					if (!files[i].delete()) {
-						Object[] arguments = { files[i].getName() };
+				for (File file : files) {
+					if (!file.delete()) {
+						Object[] arguments = {file.getName()};
 						String msg = MessageFormat.format(
-									chooser.getString("DeleteFailText"),
-									arguments);
+							chooser.getString("DeleteFailText"),
+							arguments);
 						JOptionPane.showMessageDialog(chooser,
-									msg, chooser.errorDialogTitle,
-									JOptionPane.ERROR_MESSAGE);
+							msg, chooser.errorDialogTitle,
+							JOptionPane.ERROR_MESSAGE);
 					}
 				}
 				refresh();
@@ -337,10 +337,8 @@ public interface Actions {
 						copying = true;
 					}
 
-				} catch (UnsupportedFlavorException ufe) {
-					ufe.printStackTrace(); // Never happens
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
+				} catch (UnsupportedFlavorException | IOException ex) {
+					ex.printStackTrace();
 				}
 
 			}
@@ -571,8 +569,8 @@ public interface Actions {
 
 			Window parent = SwingUtilities.
 					getWindowAncestor((Component)selector);
-			for (int i=0; i<selected.length; i++) {
-				extras.showFilePropertiesDialog(parent, selected[i]);
+			for (File file : selected) {
+				extras.showFilePropertiesDialog(parent, file);
 			}
 
 		}

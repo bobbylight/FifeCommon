@@ -36,7 +36,7 @@ class IconDesktopPane extends JDesktopPane {
 	 */
 	IconDesktopPane() {
 		setDesktopManager(new IconDesktopManager());
-		selectedFrames = new ArrayList<JInternalFrame>(5);
+		selectedFrames = new ArrayList<>(5);
 	}
 
 

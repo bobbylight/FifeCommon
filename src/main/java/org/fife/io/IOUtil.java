@@ -41,14 +41,11 @@ public final class IOUtil {
 	 */
 	public static String readFully(InputStream in) throws IOException {
 		StringBuilder sb = new StringBuilder();
-		BufferedReader r = new BufferedReader(new InputStreamReader(in));
-		String line = null;
-		try {
-			while ((line=r.readLine())!=null) {
+		try (BufferedReader r = new BufferedReader(new InputStreamReader(in))) {
+			String line;
+			while ((line = r.readLine()) != null) {
 				sb.append(line).append('\n');
 			}
-		} finally {
-			r.close();
 		}
 		return sb.toString();
 	}

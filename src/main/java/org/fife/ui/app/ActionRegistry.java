@@ -42,7 +42,7 @@ public class ActionRegistry {
 
 
 	public ActionRegistry() {
-		actionMap = new HashMap<String, Action>();
+		actionMap = new HashMap<>();
 	}
 
 
@@ -85,7 +85,7 @@ public class ActionRegistry {
 	 * @return The list of all action keys.
 	 */
 	public SortedSet<String> getActionKeys() {
-		return new TreeSet<String>(actionMap.keySet());
+		return new TreeSet<>(actionMap.keySet());
 	}
 
 
@@ -124,12 +124,9 @@ public class ActionRegistry {
 
 		Properties props = new Properties();
 
-		BufferedInputStream bin = new BufferedInputStream(
-				new FileInputStream(file));
-		try {
+		try (BufferedInputStream bin = new BufferedInputStream(
+			new FileInputStream(file))) {
 			props.load(bin);
-		} finally {
-			bin.close();
 		}
 
 		Set<Map.Entry<Object, Object>> entries = props.entrySet();
@@ -167,12 +164,9 @@ public class ActionRegistry {
 			props.setProperty(key, value);
 		}
 
-		BufferedOutputStream out = new BufferedOutputStream(
-				new FileOutputStream(file));
-		try {
+		try (BufferedOutputStream out = new BufferedOutputStream(
+			new FileOutputStream(file))) {
 			props.store(out, PROPS_FILE_HEADER);
-		} finally {
-			out.close();
 		}
 
 	}

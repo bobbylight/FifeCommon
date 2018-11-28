@@ -34,7 +34,7 @@ public final class FileDisplayNames {
 	 * Private constructor to prevent instantiation.
 	 */
 	private FileDisplayNames() {
-		rootNameCache = new HashMap<File, String>();
+		rootNameCache = new HashMap<>();
 		Iterator<File> i = RootManager.getInstance().iterator();
 		while (i.hasNext()) {
 			addCachedRootName(i.next());

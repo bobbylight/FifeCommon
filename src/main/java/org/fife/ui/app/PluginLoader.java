@@ -230,31 +230,28 @@ class PluginLoader {
 		});
 		int jarCount = jars.length;
 
-		List<List<String>> plugins = new ArrayList<List<String>>(
-										LOAD_PRIORITIES.length);
+		List<List<String>> plugins = new ArrayList<>(
+			LOAD_PRIORITIES.length);
 		for (int i=0; i<LOAD_PRIORITIES.length; i++) {
-			plugins.add(new ArrayList<String>(3)); // Small
+			plugins.add(new ArrayList<>(3)); // Small
 		}
-		List<URL> urlList = new ArrayList<URL>();
+		List<URL> urlList = new ArrayList<>();
 
-		for (int i=0; i<jarCount; i++) {
+		for (File jar : jars) {
 
-			urlList.add(jars[i].toURI().toURL());
+			urlList.add(jar.toURI().toURL());
 
-			JarFile jarFile = new JarFile(jars[i]);
-			try {
+			try (JarFile jarFile = new JarFile(jar)) {
 				// If this jar contains a plugin, remember the class to load.
 				Manifest mf = jarFile.getManifest();
-				if (mf!=null) {
+				if (mf != null) {
 					Attributes attrs = mf.getMainAttributes();
 					String clazz = attrs.getValue(PLUGIN_CLASS_ATTR);
-					if (clazz!=null) {
+					if (clazz != null) {
 						int priority = getLoadPriority(attrs);
 						plugins.get(priority).add(clazz);
 					}
 				}
-			} finally {
-				jarFile.close();
 			}
 
 		}

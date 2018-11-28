@@ -66,7 +66,7 @@ public class FileListTransferable implements Transferable, ClipboardOwner {
 									throws UnsupportedFlavorException {
 
 		if (DataFlavor.javaFileListFlavor.equals(flavor)) {
-			return new ArrayList<File>(fileList); // Deep copy
+			return new ArrayList<>(fileList); // Deep copy
 		}
 
 		else if (DataFlavor.stringFlavor.equals(flavor)) {
@@ -109,7 +109,7 @@ public class FileListTransferable implements Transferable, ClipboardOwner {
 	@Override
 	public DataFlavor[] getTransferDataFlavors() {
 
-		List<DataFlavor> flavors = new ArrayList<DataFlavor>();
+		List<DataFlavor> flavors = new ArrayList<>();
 		flavors.add(DataFlavor.javaFileListFlavor);
 		if (uriListFlavor!=null) {
 			flavors.add(uriListFlavor);
@@ -127,8 +127,8 @@ public class FileListTransferable implements Transferable, ClipboardOwner {
 	@Override
 	public boolean isDataFlavorSupported(DataFlavor flavor) {
 		DataFlavor[] flavors = getTransferDataFlavors();
-		for (int i=0; i<flavors.length; i++) {
-			if (flavors[i].equals(flavor)) {
+		for (DataFlavor flavor1 : flavors) {
+			if (flavor1.equals(flavor)) {
 				return true;
 			}
 		}

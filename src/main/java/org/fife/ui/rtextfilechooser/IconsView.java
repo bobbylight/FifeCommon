@@ -83,9 +83,9 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 
 		Component[] components = getComponents();
 		int componentCount = components.length;
-		for (int i=0; i<componentCount; i++) {
-			if (components[i] instanceof IconInternalFrame) {
-				remove(components[i]);
+		for (Component component : components) {
+			if (component instanceof IconInternalFrame) {
+				remove(component);
 			}
 		}
 		if (componentCount>0)
@@ -102,9 +102,9 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		if (frames==null)
 			return;
 		int count = frames.length;
-		for (int i=0; i<count; i++) {
+		for (JInternalFrame frame : frames) {
 			try {
-				frames[i].setSelected(false);
+				frame.setSelected(false);
 			} catch (PropertyVetoException pve) {
 				// Do nothing
 			}
@@ -340,10 +340,10 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		int componentCount = getComponentCount();
 		int numToSelect = files.length;
 
-		for (int i=0; i<numToSelect; i++) {
-			for (int j=0; j<componentCount; j++) {
+		for (File file : files) {
+			for (int j = 0; j < componentCount; j++) {
 				IconInternalFrame frame = (IconInternalFrame)getComponent(j);
-				if (frame.getFile().equals(files[i])) {
+				if (frame.getFile().equals(file)) {
 					addSelectedFrame(frame);
 					break; // Go to the next iteration in the "i" loop.
 				}

@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -271,12 +272,6 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see #createActions(GUIApplicationPrefs)
-	 * @see #getAction(String)
-	 */
 	@Override
 	public void addAction(String key, Action action) {
 		actions.addAction(key, action);
@@ -289,26 +284,34 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 			Desktop desktop = Desktop.getDesktop();
 
-			desktop.setAboutHandler(e -> {
-				try {
-					getAboutDialog().setVisible(true);
-				} catch (Exception ex) {
-					displayException(ex);
-				}
-			});
+			if (desktop.isSupported(Desktop.Action.APP_ABOUT)) {
+				desktop.setAboutHandler(e -> {
+					try {
+						getAboutDialog().setVisible(true);
+					} catch (Exception ex) {
+						displayException(ex);
+					}
+				});
+			}
 
-			desktop.setOpenFileHandler(e -> {
-				for (File file : e.getFiles()) {
-					openFile(file);
-				}
-			});
+			if (desktop.isSupported(Desktop.Action.APP_OPEN_FILE)) {
+				desktop.setOpenFileHandler(e -> {
+					for (File file : e.getFiles()) {
+						openFile(file);
+					}
+				});
+			}
 
-			desktop.setPreferencesHandler(e -> preferences());
+			if (desktop.isSupported(Desktop.Action.APP_PREFERENCES)) {
+				desktop.setPreferencesHandler(e -> preferences());
+			}
 
-			desktop.setQuitHandler((e, response) -> {
-				response.cancelQuit(); // Let our application handle quitting
-				doExit();
-			});
+			if (desktop.isSupported(Desktop.Action.APP_QUIT_HANDLER)) {
+				desktop.setQuitHandler((e, response) -> {
+					response.cancelQuit(); // Let our application handle quitting
+					doExit();
+				});
+			}
 		} catch (Exception e) {
 			displayException(e);
 		}
@@ -556,32 +559,18 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see #addAction(String, Action)
-	 * @see #createActions(GUIApplicationPrefs)
-	 */
 	@Override
 	public Action getAction(String key) {
 		return actions.getAction(key);
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see #getAction(String)
-	 */
 	@Override
 	public SortedSet<String> getActionKeys() {
 		return actions.getActionKeys();
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Action[] getActions() {
 		return actions.getActions();
@@ -666,11 +655,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 		String path = AbstractGUIApplication.class.getProtectionDomain().
 				getCodeSource().getLocation().getPath();
 		String decodedPath = null;
-		try {
-			decodedPath = URLDecoder.decode(path, "UTF-8");
-		} catch (UnsupportedEncodingException uee) {
-			uee.printStackTrace();
-		}
+		decodedPath = URLDecoder.decode(path, StandardCharsets.UTF_8);
 
 		return new File(decodedPath).getParent();
 

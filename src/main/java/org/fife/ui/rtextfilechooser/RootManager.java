@@ -51,11 +51,11 @@ final class RootManager {
 	 */
 	private static File[] getAllRoots() {
 		FileSystemView fsv = FileSystemView.getFileSystemView();
-		ArrayList<File> list = new ArrayList<File>(Arrays.asList(fsv.getRoots()));
+		ArrayList<File> list = new ArrayList<>(Arrays.asList(fsv.getRoots()));
 		File[] moreRoots = File.listRoots();
-		for (int i=0; i<moreRoots.length; i++)
-			if (!list.contains(moreRoots[i]))
-				list.add(moreRoots[i]);
+		for (File moreRoot : moreRoots)
+			if (!list.contains(moreRoot))
+				list.add(moreRoot);
 		Collections.sort(list);
 		File[] fileArray = new File[list.size()];
 		return list.toArray(fileArray);

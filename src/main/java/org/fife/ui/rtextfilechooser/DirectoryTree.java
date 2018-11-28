@@ -60,14 +60,14 @@ public class DirectoryTree extends FileSystemTree {
 	protected File[] filterAndSort(File[] files) {
 
 		int num = files.length;
-		ArrayList<File> dirList = new ArrayList<File>();
+		ArrayList<File> dirList = new ArrayList<>();
 
 		// First, separate the directories from regular files so we can
 		// sort them individually.  This part could be made more compact,
 		// but it isn't just for a tad more speed.
-		for (int i=0; i<num; i++) {
-			if (files[i].isDirectory())
-				dirList.add(files[i]);
+		for (File file : files) {
+			if (file.isDirectory())
+				dirList.add(file);
 		}
 
 		Collections.sort(dirList);

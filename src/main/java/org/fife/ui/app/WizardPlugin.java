@@ -44,7 +44,7 @@ public abstract class WizardPlugin implements Plugin, GUIApplicationConstants {
 	 */
 	public WizardPlugin(GUIApplication app) {
 		this.app = app;
-		infoPanels = new ArrayList<WizardDialogInfoPanel>(3);
+		infoPanels = new ArrayList<>(3);
 	}
 
 

@@ -159,20 +159,8 @@ InputSource is = new InputSource(new FileReader(file));
 			destFile.createNewFile();
 		}
 
-		FileChannel source = null;
-		FileChannel destination = null;
-
-		try {
-			source = new FileInputStream(sourceFile).getChannel();
-			destination = new FileOutputStream(destFile).getChannel();
+		try (FileChannel source = new FileInputStream(sourceFile).getChannel(); FileChannel destination = new FileOutputStream(destFile).getChannel()) {
 			destination.transferFrom(source, 0, source.size());
-		} finally {
-			if(source != null) {
-				source.close();
-			}
-			if(destination != null) {
-				destination.close();
-			}
 		}
 
 	}
@@ -326,7 +314,7 @@ InputSource is = new InputSource(new FileReader(file));
 		// Child elements are the extensions accepted by this filter.
 		NodeList extElems = elem.getElementsByTagName(EXTENSION);
 		int extElemCount = extElems==null ? 0 : extElems.getLength();
-		List<String> extList = new ArrayList<String>(extElemCount/3);
+		List<String> extList = new ArrayList<>(extElemCount / 3);
 
 		for (int i=0; i<extElemCount; i++) {
 			Node extElem = extElems.item(i);
@@ -367,10 +355,10 @@ InputSource is = new InputSource(new FileReader(file));
 				name = nodeValue;
 			}
 			else if (IGNORE_CASE.equals(nodeName)) {
-				ignoreCase = Boolean.valueOf(nodeValue).booleanValue();
+				ignoreCase = Boolean.valueOf(nodeValue);
 			}
 			else if (SHOW_EXTENSIONS.equals(nodeName)) {
-				showExtensions = Boolean.valueOf(nodeValue).booleanValue();
+				showExtensions = Boolean.valueOf(nodeValue);
 			}
 			else {
 				throw new IOException("XML error: unknown attribute: '" +

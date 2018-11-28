@@ -84,7 +84,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 	public OptionsDialogPanel(String name) {
 		this.name = name;
 		this.hasUnsavedChanges = false;
-		childPanels = new ArrayList<OptionsDialogPanel>(0);
+		childPanels = new ArrayList<>(0);
 	}
 
 
@@ -285,7 +285,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 * @see #getChildPanelCount()
 	 */
 	public List<OptionsDialogPanel> getChildPanels() {
-		return new ArrayList<OptionsDialogPanel>(childPanels);
+		return new ArrayList<>(childPanels);
 	}
 
 

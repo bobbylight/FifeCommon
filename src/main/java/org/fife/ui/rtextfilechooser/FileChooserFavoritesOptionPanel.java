@@ -441,7 +441,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 			for (String favorite : favorites) {
 				// DefaultTableModel uses Vectors internally, so we'll
 				// use them here too.
-				Vector<String> v = new Vector<String>(1);
+				Vector<String> v = new Vector<>(1);
 				v.add(favorite);
 				addRow(v);
 			}

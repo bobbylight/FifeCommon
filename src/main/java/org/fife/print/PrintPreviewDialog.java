@@ -519,11 +519,11 @@ public class PrintPreviewDialog extends EscapableDialog
 					int w = (int)(pageWidth*scale/100.0);
 					int h = (int)(pageHeight*scale/100.0);
 					boolean setNewCursor = pageImage[0].getCursor()!=newCursor;
-					for (int i=0; i<pageImage.length; i++)
-						if (pageImage[i]!=null) {
-							pageImage[i].setScaledSize(w,h);
+					for (PagePreview pagePreview : pageImage)
+						if (pagePreview != null) {
+							pagePreview.setScaledSize(w, h);
 							if (setNewCursor) {
-								pageImage[i].setCursor(newCursor);
+								pagePreview.setCursor(newCursor);
 							}
 						}
 				}
@@ -662,7 +662,7 @@ public class PrintPreviewDialog extends EscapableDialog
 	 *        previews, in percent (i.e., 33 =&gt; 33%).
 	 */
 	public void setScale(int newScale) {
-		sizeComboBox.setSelectedItem(Integer.toString(newScale)+"%");
+		sizeComboBox.setSelectedItem(newScale + "%");
 	}
 
 

@@ -285,10 +285,10 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		// Ensure that all of the changes specified are valid.  If one isn't,
 		// scold the user, shift focus to it and bail out.
 		int numPanels = optionsPanels.length;
-		for (int i=0; i<numPanels; i++) {
+		for (OptionsDialogPanel optionsPanel1 : optionsPanels) {
 			OptionsDialogPanel.OptionsPanelCheckResult result =
-								optionsPanels[i].ensureValidInputs();
-			if (result!=null) {
+				optionsPanel1.ensureValidInputs();
+			if (result != null) {
 				setVisibleOptionPanel(result.panel);
 				// As an added bonus, if it's a text field, (which it
 				// usually (always?) will be), select the text so they
@@ -298,7 +298,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 				}
 				result.component.requestFocusInWindow();
 				JOptionPane.showMessageDialog(this, result.errorMessage,
-								"Error", JOptionPane.ERROR_MESSAGE);
+					"Error", JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
 		}
@@ -308,8 +308,8 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		// we're done!
 		doApplyImpl(owner);
 		setApplyButtonEnabled(false);
-		for (int i=0; i<numPanels; i++) {
-			optionsPanels[i].setUnsavedChanges(false);
+		for (OptionsDialogPanel optionsPanel : optionsPanels) {
+			optionsPanel.setUnsavedChanges(false);
 		}
 		return true;
 
@@ -381,7 +381,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 */
 	public OptionsDialogPanel getPanelById(String id) {
 
-		List<OptionsDialogPanel> panels = new ArrayList<OptionsDialogPanel>();
+		List<OptionsDialogPanel> panels = new ArrayList<>();
 		panels.addAll(Arrays.asList(optionsPanels));
 
 		for (OptionsDialogPanel panel : optionsPanels) {
@@ -513,9 +513,9 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		// Populate the navigation tree and the CardLayout main view.
 		root.removeAllChildren();
 		currentOptionPanel.removeAll();
-		for (int i=0; i<numOptionPanels; i++) {
-			insertOptionPanel(root, optionsPanels[i]);
-			addOptionPanel(optionsPanels[i]);
+		for (OptionsDialogPanel optionsPanel : optionsPanels) {
+			insertOptionPanel(root, optionsPanel);
+			addOptionPanel(optionsPanel);
 		}
 		UIUtil.expandAllNodes(optionTree);
 

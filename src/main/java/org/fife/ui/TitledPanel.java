@@ -17,7 +17,7 @@ import javax.swing.border.Border;
 
 /**
  * A panel suitable for a "heading" for another <code>JPanel</code>.  This
- * panel is similar to that found in Elipse's "New" and "Preferences" dialogs,
+ * panel is similar to that found in Eclipse's "New" and "Preferences" dialogs,
  * depending on how you initialize it.
  *
  * @author Robert Futrell
@@ -154,8 +154,14 @@ public class TitledPanel extends JPanel {
 				g.fillRect(0,0, w,bounds.height);
 			}
 			Graphics2D g2d = (Graphics2D)g;
-			GradientPaint paint = new GradientPaint(w,0, background,
-									bounds.width,0, gradientBG);
+			Paint paint;
+			if (gradientBG != null) { // Some themes may not use a gradient
+				paint = new GradientPaint(w, 0, background,
+					bounds.width, 0, gradientBG);
+			}
+			else {
+				paint = background;
+			}
 			g2d.setPaint(paint);
 			g2d.fill(new Rectangle(w,0, gradientWidth,bounds.height));
 		}
@@ -168,16 +174,13 @@ public class TitledPanel extends JPanel {
 			// Set by BasicLookAndFeels and Substance
 			background = UIManager.getColor("TextField.background");
 			if (background==null) {
-				// Assume a "light" default background...
-				background = Color.white;
-			}
-
-			gradientBG = UIManager.getColor("TextField.selectionBackground");
-			if (gradientBG!=null) {
-				gradientBG = gradientBG.brighter();
-			}
-			else {
-				gradientBG = new Color(160,160,255); // How to pick a color?
+				if (UIUtil.isLightForeground(getForeground())) {
+					background = getBackground().darker();
+				}
+				else {
+					// Assume a "light" default background...
+					background = Color.white;
+				}
 			}
 		}
 

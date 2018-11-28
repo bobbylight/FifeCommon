@@ -40,7 +40,7 @@ public class StatusBarPanel extends JPanel {
 	 * Constructor.
 	 */
 	public StatusBarPanel() {
-		shadowEnabled = true;
+		shadowEnabled = false;
 	}
 
 
@@ -51,7 +51,7 @@ public class StatusBarPanel extends JPanel {
 	 */
 	public StatusBarPanel(LayoutManager layout) {
 		super(layout);
-		shadowEnabled = true;
+		shadowEnabled = false;
 	}
 
 
@@ -61,12 +61,12 @@ public class StatusBarPanel extends JPanel {
 	 * a label.
 	 *
 	 * @param layout The layout to use for the panel.
-	 * @param label The label this panels hould contain.
+	 * @param label The label this panel should contain.
 	 */
 	public StatusBarPanel(LayoutManager layout, JLabel label) {
 		super(layout);
 		add(label);
-		shadowEnabled = true;
+		shadowEnabled = false;
 	}
 
 
@@ -90,11 +90,11 @@ public class StatusBarPanel extends JPanel {
 	protected void paintComponent(Graphics g) {
 
 		super.paintComponent(g); // Fill in background.
+		int width = getWidth();
 
-		// Draw the shadow.
+		// Draw the shadow
 		if (isShadowEnabled()) {
 
-			int width = getWidth();
 			int height = getHeight();
 			Color bg = getBackground();
 			// top.
@@ -125,6 +125,13 @@ public class StatusBarPanel extends JPanel {
 
 		}
 
+		else {
+			boolean isDarkLaf = UIUtil.isLightForeground(getForeground());
+			Color borderColor = isDarkLaf ? getBackground().brighter() :
+				getBackground().darker();
+			g.setColor(borderColor);
+			g.drawLine(0, 0, width, 0);
+		}
 	}
 
 

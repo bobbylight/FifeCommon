@@ -384,11 +384,13 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 		}
 
 		private void refreshGradientColors() {
+
 			gradient1 = gradient2 = null;
 			if (getUseCustomColors()) {
 				gradient1 = new Color(225,233,241);//200,200,255);
 				gradient2 = new Color(153,180,209);//40,93,220);
 			}
+
 			else if (SubstanceUtil.isSubstanceInstalled()) {
 				try {
 					gradient1 = SubstanceUtil.getSubstanceColor("ultraLightColor");
@@ -402,6 +404,10 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 			else if (WebLookAndFeelUtils.isWebLookAndFeelInstalled()) {
 				getWebLookAndFeelGradientColors();
 			}
+			else if (DarculaUtil.isDarculaInstalled()) {
+				gradient1 = gradient2 = new Color(0x3b, 0x47, 0x54);
+			}
+
 			if (gradient1==null) {
 				gradient1 = UIManager.getColor("TextField.selectionBackground");
 				if (gradient1==null) {

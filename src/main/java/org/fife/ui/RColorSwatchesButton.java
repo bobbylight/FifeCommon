@@ -19,12 +19,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
-import javax.swing.ButtonModel;
-import javax.swing.Icon;
-import javax.swing.JComponent;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 
 
@@ -279,6 +274,7 @@ public class RColorSwatchesButton extends RColorButton {
 	private static class SwatchMenuItemUI extends BasicMenuItemUI {
 
 		private static Color background;
+		private static Color armedSwatchSelectionRectColor;
 
 		SwatchMenuItemUI() {
 			// When LAF is set to something other than a subclass of
@@ -321,7 +317,7 @@ public class RColorSwatchesButton extends RColorButton {
 			// Swatches are always enabled, so we only have to check
 			// whether or not they are armed.
 			if (model.isArmed()) {
-				g.setColor(Color.BLACK);
+				g.setColor(armedSwatchSelectionRectColor);
 				g.drawRect(1,1, bounds.width-3,bounds.height-3);
 			}
 
@@ -337,11 +333,19 @@ public class RColorSwatchesButton extends RColorButton {
 		 * MenuItem.background (such as MacLookAndFeel and WebLookAndFeel).
 		 */
 		private static void refreshMenuItemBackground() {
+
 			background = UIManager.getColor("MenuItem.background");
-			if (background==null ||
-					System.getProperty("os.name").toLowerCase().contains("os x") ||
+			if (background==null ||	OS.get() == OS.MAC_OS_X ||
 					WebLookAndFeelUtils.isWebLookAndFeelInstalled()) {
 				background = new JMenuItem().getBackground();
+			}
+
+			if (UIUtil.isLightForeground(UIManager.getColor("Label.foreground"))) {
+				armedSwatchSelectionRectColor = new JPanel().getBackground().
+					brighter();
+			}
+			else {
+				armedSwatchSelectionRectColor = Color.BLACK;
 			}
 		}
 

@@ -220,7 +220,7 @@ InputSource is = new InputSource(new FileReader(file));
 	public static String getFileSizeStringFor(long size,
 										boolean reportInKB) {
 
-		String str = null;
+		String str;
 
 		if (reportInKB) {
 			String suffix = " bytes";
@@ -318,23 +318,8 @@ InputSource is = new InputSource(new FileReader(file));
 
 		for (int i=0; i<extElemCount; i++) {
 			Node extElem = extElems.item(i);
-			// TODO: Replace with this when we move to Java 5.
-			//String extension = ((Element)extElem).getTextContent();
-			//extList.add(extension);
-			StringBuilder sb = new StringBuilder();
-			NodeList childTextNodes = extElem.getChildNodes();
-			if (childTextNodes==null || childTextNodes.getLength()==0) {
-				throw new IOException("Extension tag requires child text");
-			}
-			int childCount = childTextNodes.getLength();
-			for (int j=0; j<childCount; j++) {
-				Node child = childTextNodes.item(j);
-				short type = child.getNodeType();
-				if (type==Node.TEXT_NODE || type==Node.CDATA_SECTION_NODE) {
-					sb.append(child.getNodeValue());
-				}
-			}
-			extList.add(sb.toString());
+			String extension = extElem.getTextContent();
+			extList.add(extension);
 		}
 
 		String[] extensions = new String[extList.size()];

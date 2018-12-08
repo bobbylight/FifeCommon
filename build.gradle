@@ -10,6 +10,7 @@ dependencies {
 	compile 'com.github.insubstantial:laf-widget:7.2.1'
 	compile 'com.github.insubstantial:substance:7.2.1'
 	compile 'com.github.insubstantial:trident:7.2.1'
+	compile 'org.apache.xmlgraphics:batik-rasterizer:1.10'
 	testCompile 'junit:junit:4.12'
 }
 

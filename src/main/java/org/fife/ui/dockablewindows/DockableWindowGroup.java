@@ -13,14 +13,18 @@ package org.fife.ui.dockablewindows;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.plaf.PanelUI;
 import javax.swing.plaf.TabbedPaneUI;
 import javax.swing.table.JTableHeader;
 
+import org.fife.ui.ImageTranscodingUtil;
 import org.fife.ui.UIUtil;
 import org.fife.ui.WebLookAndFeelUtils;
 import org.fife.ui.dockablewindows.DockableWindowPanel.ContentPanel;
@@ -65,7 +69,7 @@ class DockableWindowGroup extends JPanel {
 	 * @param window The dockable window to add.
 	 * @return <code>true</code> always.
 	 */
-	public boolean addDockableWindow(DockableWindow window) {
+	boolean addDockableWindow(DockableWindow window) {
 		tabbedPane.addTab(window.getDockableWindowName(),
 						window.getIcon(), window);
 		// Setting selected index causes flicker in editor caret.
@@ -85,7 +89,7 @@ class DockableWindowGroup extends JPanel {
 	 * @return The index in the tabbed pane of the dockable window, or
 	 *         <code>-1</code> if it is not in this panel.
 	 */
-	public int containsDockableWindow(DockableWindow window) {
+	int containsDockableWindow(DockableWindow window) {
 		int count = tabbedPane.getTabCount();
 		for (int i=0; i<count; i++) {
 			Component c = tabbedPane.getComponentAt(i);
@@ -97,7 +101,7 @@ class DockableWindowGroup extends JPanel {
 	}
 
 
-	public void focusActiveDockableWindow() {
+	void focusActiveDockableWindow() {
 		DockableWindow dwind = getDockableWindowAt(tabbedPane.getSelectedIndex());
 		dwind.focused();
 	}
@@ -109,7 +113,7 @@ class DockableWindowGroup extends JPanel {
 	 *
 	 * @return The dockable window count in this tabbed pane.
 	 */
-	public int getDockableWindowCount() {
+	int getDockableWindowCount() {
 		return tabbedPane.getTabCount();
 	}
 
@@ -135,7 +139,7 @@ class DockableWindowGroup extends JPanel {
 	 * @param index The index.
 	 * @return The dockable window.
 	 */
-	public DockableWindow getDockableWindowAt(int index) {
+	DockableWindow getDockableWindowAt(int index) {
 		return (DockableWindow)tabbedPane.getComponentAt(index);
 	}
 
@@ -148,7 +152,7 @@ class DockableWindowGroup extends JPanel {
 	 * @param index The index of the dockable window to refresh.
 	 * @see #refreshTabTitle(int)
 	 */
-	public void refreshTabName(int index) {
+	void refreshTabName(int index) {
 		if (index>=0 && index<tabbedPane.getTabCount()) {
 			DockableWindow w = (DockableWindow)tabbedPane.getComponentAt(index);
 			String name = w.getDockableWindowName();
@@ -167,7 +171,7 @@ class DockableWindowGroup extends JPanel {
 	 * @param index The index of the dockable window to refresh.
 	 * @see #refreshTabName(int)
 	 */
-	public void refreshTabTitle(int index) {
+	void refreshTabTitle(int index) {
 		if (index==tabbedPane.getSelectedIndex()) {
 			DockableWindow w = (DockableWindow)tabbedPane.getComponentAt(index);
 			String title = w.getDockableWindowTitle();
@@ -182,7 +186,7 @@ class DockableWindowGroup extends JPanel {
 	 * @param window The dockable window.
 	 * @return Whether or not the window was successfully removed.
 	 */
-	public boolean removeDockableWindow(DockableWindow window) {
+	boolean removeDockableWindow(DockableWindow window) {
 		int index = containsDockableWindow(window);
 		if (index>-1) {
 			tabbedPane.removeTabAt(index);
@@ -201,7 +205,7 @@ class DockableWindowGroup extends JPanel {
 	 *
 	 * @param index The dockable window to select.
 	 */
-	public void setActiveDockableWindow(int index) {
+	void setActiveDockableWindow(int index) {
 		if (index>=0 && index<tabbedPane.getTabCount()) {
 			tabbedPane.setSelectedIndex(index);
 		}
@@ -291,6 +295,7 @@ class DockableWindowGroup extends JPanel {
 		private JButton minimizeButton;
 		private Color gradient1;
 		private Color gradient2;
+		private MinimizeAction minimizeAction;
 
 		TitlePanel(String title) {
 			super(new BorderLayout());
@@ -299,7 +304,9 @@ class DockableWindowGroup extends JPanel {
 			label = new JLabel(title);
 			refreshLabelForeground();
 			add(label);
-			minimizeButton = new JButton(new MinimizeAction());
+			minimizeAction = new MinimizeAction();
+			refreshMinimizeIcon();
+			minimizeButton = new JButton(minimizeAction);
 			minimizeButton.setOpaque(false);
 			minimizeButton.setContentAreaFilled(false);
 			tb = new JToolBar();
@@ -315,8 +322,8 @@ class DockableWindowGroup extends JPanel {
 		/**
 		 * Performs a gentler "darker" operation than Color.darker().
 		 *
-		 * @param c
-		 * @return
+		 * @param c The original color.
+		 * @return The darker version of the color.
 		 */
 		public Color darker(Color c) {
 			final double factor = 0.85;
@@ -470,6 +477,24 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 			label.setForeground(c);
 		}
 
+		private void refreshMinimizeIcon() {
+			if (minimizeAction != null) {
+				Color c = label != null ? label.getForeground() : new JLabel().getForeground();
+				if (UIUtil.isLightForeground(c)) {
+					minimizeAction.setIcon("minimize_dark.svg");
+				}
+				else {
+					minimizeAction.setIcon("minimize.png");
+				}
+			}
+		}
+
+		@Override
+		public void setUI(PanelUI ui) {
+			super.setUI(ui);
+			refreshMinimizeIcon();
+		}
+
 		@Override
 		public void updateUI() {
 			super.updateUI();
@@ -483,6 +508,7 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 			if (tb!=null) {
 				WebLookAndFeelUtils.fixToolbar(tb, true);
 			}
+			refreshMinimizeIcon();
 		}
 
 		/**
@@ -493,8 +519,7 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 			MinimizeAction() {
 				putValue(SHORT_DESCRIPTION, // tool tip
 						DockableWindow.getString("Button.Minimize"));
-				Icon icon = new ImageIcon(getClass().getResource("minimize.png"));
-				putValue(SMALL_ICON, icon);
+				setIcon("minimize.png");
 			}
 
 			@Override
@@ -502,6 +527,22 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 				parent.setCollapsed(true);
 			}
 
+			void setIcon(String iconName) {
+				Icon icon = null;
+				if (iconName.endsWith(".png")) {
+					icon = new ImageIcon(getClass().getResource(iconName));
+				}
+				else {
+					try {
+						InputStream in = getClass().getResourceAsStream(iconName);
+						icon = new ImageIcon(ImageTranscodingUtil.rasterize(
+							iconName, in, 16, 16));
+					} catch (IOException ioe) {
+						ioe.printStackTrace();
+					}
+				}
+				putValue(SMALL_ICON, icon);
+			}
 		}
 
 	}

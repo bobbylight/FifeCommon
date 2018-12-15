@@ -10,10 +10,11 @@
  */
 package org.fife.ui.app;
 
+import org.fife.ui.UIUtil;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import javax.swing.LookAndFeel;
-import javax.swing.UIManager;
+import javax.swing.*;
 
 
 /**
@@ -31,13 +32,10 @@ public abstract class AbstractPlugin implements Plugin {
 
 
 	protected AbstractPlugin() {
-		UIManager.addPropertyChangeListener(new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent e) {
-				String property = e.getPropertyName();
-				if ("lookAndFeel".equals(property)) {
-					lookAndFeelChanged((LookAndFeel)e.getNewValue());
-				}
+		UIManager.addPropertyChangeListener(e -> {
+			String property = e.getPropertyName();
+			if ("lookAndFeel".equals(property)) {
+				lookAndFeelChanged((LookAndFeel)e.getNewValue());
 			}
 		});
 	}
@@ -49,6 +47,11 @@ public abstract class AbstractPlugin implements Plugin {
 	@Override
 	public String getOptionsDialogPanelParentPanelID() {
 		return parentOptionPanelID;
+	}
+
+
+	protected boolean isDarkLookAndFeel() {
+		return UIUtil.isLightForeground(new JLabel().getForeground());
 	}
 
 

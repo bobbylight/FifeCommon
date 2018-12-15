@@ -10,6 +10,9 @@
 package org.fife.ui.app;
 
 import org.fife.ui.StatusBarPanel;
+import org.fife.ui.UIUtil;
+
+import javax.swing.*;
 
 
 /**
@@ -23,12 +26,20 @@ public abstract class StatusBarPlugin extends StatusBarPanel implements Plugin {
 	private String parentOptionPanelID;
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getOptionsDialogPanelParentPanelID() {
 		return parentOptionPanelID;
+	}
+
+
+	@Override
+	public Icon getPluginIcon() {
+		return getPluginIcon(isDarkLookAndFeel());
+	}
+
+
+	protected boolean isDarkLookAndFeel() {
+		return UIUtil.isLightForeground(new JLabel().getForeground());
 	}
 
 

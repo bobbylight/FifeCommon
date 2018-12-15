@@ -27,7 +27,7 @@ import javax.swing.ImageIcon;
  * @see org.fife.ui.app.Plugin
  * @see org.fife.ui.app.GUIApplication
  */
-public abstract class WizardPlugin implements Plugin, GUIApplicationConstants {
+public abstract class WizardPlugin extends AbstractPlugin implements GUIApplicationConstants {
 
 	public static final int CANCEL	= 0;
 	public static final int SUCCESSFUL	= 1;

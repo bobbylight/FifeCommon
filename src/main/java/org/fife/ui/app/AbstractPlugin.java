@@ -41,12 +41,15 @@ public abstract class AbstractPlugin implements Plugin {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getOptionsDialogPanelParentPanelID() {
 		return parentOptionPanelID;
+	}
+
+
+	@Override
+	public Icon getPluginIcon() {
+		return getPluginIcon(isDarkLookAndFeel());
 	}
 
 

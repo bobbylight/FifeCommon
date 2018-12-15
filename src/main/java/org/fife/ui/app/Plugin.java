@@ -70,6 +70,16 @@ public interface Plugin {
 	 * Returns the icon to display beside the name of this plugin in the
 	 * application's interface.
 	 *
+	 * @return The icon for this plugin.  This value may be <code>null</code>
+	 *         to represent no icon.
+	 */
+	Icon getPluginIcon();
+
+
+	/**
+	 * Returns the icon to display beside the name of this plugin in the
+	 * application's interface.
+	 *
 	 * @param darkLookAndFeel Whether the current Look and Feel is a light-on-dark theme.
 	 *        Plugins can use this to change their icon to better match the theme,
 	 *        or simply ignore it.

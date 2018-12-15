@@ -10,6 +10,9 @@
 package org.fife.ui.app;
 
 import org.fife.ui.OptionsDialogPanel;
+import org.fife.ui.UIUtil;
+
+import javax.swing.*;
 
 
 /**
@@ -41,9 +44,12 @@ public abstract class PluginOptionsDialogPanel extends OptionsDialogPanel {
 	 * @param plugin The plugin whose options we're displaying.
 	 */
 	public PluginOptionsDialogPanel(String name, Plugin plugin) {
+
 		super(name);
 		this.plugin = plugin;
-		setIcon(plugin.getPluginIcon());
+
+		boolean isDarkLookAndFeel = UIUtil.isLightForeground(new JLabel().getForeground());
+		setIcon(plugin.getPluginIcon(isDarkLookAndFeel));
 	}
 
 

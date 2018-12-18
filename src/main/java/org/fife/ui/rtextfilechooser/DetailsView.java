@@ -103,8 +103,8 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 		fixKeyboardShortcuts();
 
-		// Make this table look just a little nicer.
-		setIntercellSpacing(new Dimension(0,0));
+		// Make this table look just a little nicer.  Small y margin, no x margin
+		setIntercellSpacing(new Dimension(0, 1));
 		setShowGrid(false);
 		setColumnSelectionAllowed(false);
 

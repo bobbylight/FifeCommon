@@ -575,7 +575,7 @@ public class FontDialog extends JDialog implements ActionListener,
 		if (toSelect==null)
 			return;
 
-		sampleTextLabel.setForeground(color!=null ? color : Color.BLACK);
+		sampleTextLabel.setForeground(color!=null ? color : new JLabel().getForeground());
 		//fontList.setSelectedValue(toSelect.getFamily(), true);
 		setSelectedFontInFontList(toSelect.getFamily());
 		fontList.ensureIndexIsVisible(fontList.getSelectedIndex());

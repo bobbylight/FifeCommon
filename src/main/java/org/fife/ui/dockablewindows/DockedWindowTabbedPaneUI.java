@@ -158,7 +158,7 @@ class DockedWindowTabbedPaneUI extends BasicTabbedPaneUI {
 		if (v != null)
 			tabPane.putClientProperty("html", v);
 
-		String croppedTitle = null;
+		String croppedTitle;
 		try {
 			croppedTitle = SwingUtilities.layoutCompoundLabel(
 											tabPane,
@@ -275,12 +275,7 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 		if (isSelected) {
 			Color c = UIManager.getColor("TabbedPane.highlight");
 			if (SubstanceUtil.isSubstanceInstalled()) {
-				try {
-					c = SubstanceUtil.getSubstanceColor(
-							SubstanceUtil.EXTRA_LIGHT_COLOR);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				c = SubstanceUtil.getExtraLightColor();
 			}
 			g.setColor(c);
 			g.fillRect(x,y, w,h);
@@ -290,12 +285,7 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 			Paint old = g2d.getPaint();
 			if (unselectedTabPaint==null) {
 				if (SubstanceUtil.isSubstanceInstalled()) {
-					try {
-						unselectedTabPaint = SubstanceUtil.getSubstanceColor(
-								SubstanceUtil.ULTRA_LIGHT_COLOR);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+					unselectedTabPaint = SubstanceUtil.getUltraLightColor();
 				}
 				if (unselectedTabPaint==null) {
 					unselectedTabPaint = new GradientPaint(0,0, Color.LIGHT_GRAY,

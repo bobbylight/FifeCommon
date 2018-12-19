@@ -14,8 +14,7 @@ import java.awt.Component;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import org.pushingpixels.substance.api.renderers.SubstanceDefaultTreeCellRenderer;
-
+import org.pushingpixels.substance.api.renderer.SubstanceDefaultTreeCellRenderer;
 
 /**
  * Renderer used in the Options dialog's tree when Substance is installed.  I

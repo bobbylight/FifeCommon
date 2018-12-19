@@ -395,8 +395,8 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 
 			else if (SubstanceUtil.isSubstanceInstalled()) {
 				try {
-					gradient1 = SubstanceUtil.getSubstanceColor("ultraLightColor");
-					gradient2 = SubstanceUtil.getSubstanceColor("lightColor");
+					gradient1 = SubstanceUtil.getUltraLightColor();
+					gradient2 = SubstanceUtil.getLightColor();
 				} catch (RuntimeException re) { // FindBugs
 					throw re;
 				} catch (Exception e) {

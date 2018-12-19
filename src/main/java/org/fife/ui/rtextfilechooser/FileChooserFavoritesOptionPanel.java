@@ -44,7 +44,7 @@ import org.fife.ui.modifiabletable.ModifiableTable;
 import org.fife.ui.modifiabletable.ModifiableTableChangeEvent;
 import org.fife.ui.modifiabletable.ModifiableTableListener;
 import org.fife.util.SubstanceUtil;
-import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
+import org.pushingpixels.substance.api.renderer.SubstanceDefaultTableCellRenderer;
 
 
 /**

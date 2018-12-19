@@ -14,7 +14,7 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 
-import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
+import org.pushingpixels.substance.api.renderer.SubstanceDefaultTableCellRenderer;
 
 
 /**

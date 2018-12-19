@@ -15,7 +15,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
 import org.fife.util.SubstanceUtil;
-import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
+import org.pushingpixels.substance.api.renderer.SubstanceDefaultTableCellRenderer;
 
 import java.io.File;
 

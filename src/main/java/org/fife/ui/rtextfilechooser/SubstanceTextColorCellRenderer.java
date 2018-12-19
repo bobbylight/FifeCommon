@@ -16,7 +16,7 @@ import javax.swing.JTable;
 
 import org.fife.ui.ColorCellRenderer;
 import org.pushingpixels.substance.api.ComponentState;
-import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
+import org.pushingpixels.substance.api.renderer.SubstanceDefaultTableCellRenderer;
 import org.pushingpixels.substance.internal.ui.SubstanceTableUI;
 import org.pushingpixels.substance.internal.ui.SubstanceTableUI.TableCellId;
 

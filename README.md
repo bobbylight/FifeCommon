@@ -21,13 +21,4 @@ all unit tests, and create the jar, run:
 
     ./gradlew build
 
-Note that FifeCommon only requires Java 6.  To that end, the boot classpath will be set to accommodate
-this if a variable `java6CompileBootClasspath` is set to the location of `rt.jar` in a Java 6 JDK.
-This can be added to `<maven-home>/gradle.properties` if desired, to avoid diffs in the project's
-`gradle.properties`.  For example:
-
-    On Windows:
-      java6CompileBootClasspath=c:/java/32/jdk1.6.0_45/jre/lib/rt.jar
-    On OS X:
-      java6CompileBootClasspath=/Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home/jre/lib/rt.jar
-
+Note that FifeCommon requires Java 11 or later to build.

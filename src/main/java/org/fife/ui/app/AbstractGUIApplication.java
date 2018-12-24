@@ -12,15 +12,18 @@ package org.fife.ui.app;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
+import java.time.Instant;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.SortedSet;
+import java.util.jar.JarInputStream;
+import java.util.jar.Manifest;
 
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -654,8 +657,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 		String path = AbstractGUIApplication.class.getProtectionDomain().
 				getCodeSource().getLocation().getPath();
-		String decodedPath = null;
-		decodedPath = URLDecoder.decode(path, StandardCharsets.UTF_8);
+		String decodedPath = URLDecoder.decode(path, StandardCharsets.UTF_8);
 
 		return new File(decodedPath).getParent();
 
@@ -677,6 +679,34 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 		return lafManager!=null ? lafManager.get3rdPartyLookAndFeelInfo() : null;
 	}
 
+
+	public Date getBuildDate() {
+
+		Date buildDate = null;
+
+		// Assumption here is the main class is in the "main" jar, with a Build-Date manifest entry
+		String path = getClass().getProtectionDomain().
+			getCodeSource().getLocation().getPath();
+		String decodedPath = URLDecoder.decode(path, StandardCharsets.UTF_8);
+
+		File file = new File(decodedPath);
+		if (file.isFile()) {
+
+			try (JarInputStream jin = new JarInputStream(new BufferedInputStream(
+				new FileInputStream(file)))) {
+
+				Manifest mf = jin.getManifest();
+				String temp = mf.getMainAttributes().getValue("Build-Date");
+				if (temp != null) {
+					buildDate = Date.from(Instant.parse(temp));
+				}
+			} catch (IOException | DateTimeParseException e) {
+				// Do nothing (comment for Sonar) - we just aren't in a built jar
+			}
+		}
+
+		return buildDate;
+	}
 
 	/**
 	 * Returns this application's Options dialog.
@@ -796,7 +826,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 */
 	@Override
 	public boolean getToolBarVisible() {
-		return toolBar!=null ? toolBar.isVisible() : false;
+		return toolBar != null && toolBar.isVisible();
 	}
 
 
@@ -812,7 +842,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	/**
 	 * Returns true if this application's main window is maximized.
 	 *
-	 * @return <code>true</code> if this applicaiton's window is maximized,
+	 * @return <code>true</code> if this application's window is maximized,
 	 *         or <code>false</code> if it isn't.
 	 */
 	@Override

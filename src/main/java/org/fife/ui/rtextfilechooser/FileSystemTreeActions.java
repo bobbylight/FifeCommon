@@ -42,8 +42,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreePath;
 
+import org.fife.ui.UIUtil;
 import org.fife.ui.rtextfilechooser.FileSystemTree.FileSystemTreeNode;
-import org.fife.ui.rtextfilechooser.extras.FileIOExtras;
 
 
 /**
@@ -108,27 +108,6 @@ class FileSystemTreeActions {
 				return;
 			}
 
-			FileIOExtras extras = FileIOExtras.getInstance();
-			if (!hard && extras!=null) {
-				handleDeleteNative(files, extras);
-			}
-			else {
-				handleDeleteViaJava(files);
-			}
-
-		}
-
-		private void handleDeleteNative(File[] files, FileIOExtras extras) {
-			if (extras.moveToRecycleBin(window, files, true, true)) {
-				refresh();
-			}
-			else {
-				UIManager.getLookAndFeel().provideErrorFeedback(window);
-			}
-		}
-
-		private void handleDeleteViaJava(File[] files) {
-
 			// Prompt to confirm the file deletion.
 			int count = files.length;
 			int choice;
@@ -147,7 +126,7 @@ class FileSystemTreeActions {
 			// If they chose "yes," delete the files.
 			if (choice==JOptionPane.YES_OPTION) {
 				for (File file : files) {
-					if (!file.delete()) {
+					if (!UIUtil.deleteFile(file)) {
 						Object[] arguments = {file.getName()};
 						String msg = MessageFormat.format(
 							RTextFileChooser.MSG.getString("DeleteFailText"),

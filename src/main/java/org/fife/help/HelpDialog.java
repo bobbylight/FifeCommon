@@ -13,7 +13,6 @@ import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -209,7 +208,8 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 		// Make a text area for the right-component of the split pane (the HTML help).
 		editorPane = new JEditorPane();
-		editorPane.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		editorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true);
+		editorPane.setFont(new JLabel().getFont());
 		editorPane.setPreferredSize(new Dimension(81*8,300));
 		editorPane.setEditable(false);
 		editorPane.addHyperlinkListener(listener);
@@ -1649,8 +1649,14 @@ public class HelpDialog extends JFrame implements ActionListener {
 				// correct base URL so links work.
 				Document document = editorPane.getDocument();
 				if (document instanceof HTMLDocument) {
+
 					HTMLDocument htmldoc = (HTMLDocument)document;
 					htmldoc.setBase(baseURL);
+
+					if (UIUtil.isLightForeground(new JLabel().getForeground())) {
+						String hyperlinkColor = UIUtil.getHTMLFormatForColor(UIUtil.getHyperlinkForeground());
+						htmldoc.getStyleSheet().addRule("a { color: " + hyperlinkColor + "; }");
+					}
 				}
 
 				editorPane.setText(allText);

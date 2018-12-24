@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -258,6 +259,33 @@ public final class UIUtil {
 
 		return panel;
 
+	}
+
+
+	/**
+	 * Deletes a file, moving it into the Trash/Recycle Bin if possible/available
+	 * on this system.
+	 *
+	 * @param file The file to delete.
+	 * @return Whether the file was successfully deleted.
+	 */
+	public static boolean deleteFile(File file) {
+
+		boolean success = false;
+
+		Desktop desktop = getDesktop();
+		if (desktop != null && desktop.isSupported(Desktop.Action.MOVE_TO_TRASH)) {
+			try {
+				success = desktop.moveToTrash(file);
+			} catch (Exception e) {
+				success = false; // We'll just do a hard delete
+			}
+		}
+
+		if (!success) {
+			success = file.delete();
+		}
+		return success;
 	}
 
 

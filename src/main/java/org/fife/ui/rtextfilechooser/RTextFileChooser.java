@@ -2690,7 +2690,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		} catch (Throwable t) {
 			JOptionPane.showMessageDialog(this,
 				"Exception occurred in RTextFileChooser:\n" + t +
-				"\nPlease report this at http://sourceforge.net/projects/rtext,\n" +
+				"\nPlease report this at https://github.com/bobbylight/RText,\n" +
 				"\nalso noting the number of files that were in the directory you were\n" +
 				"\nin/changing to.",
 				errorDialogTitle, JOptionPane.ERROR_MESSAGE);

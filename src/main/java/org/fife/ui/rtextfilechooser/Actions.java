@@ -196,40 +196,6 @@ public interface Actions {
 				return;
 			}
 
-			FileIOExtras extras = FileIOExtras.getInstance();
-			if (!hard && extras!=null) {
-				handleDeleteNative(files, extras);
-			}
-			else {
-				handleDeleteViaJava(files);
-			}
-
-		}
-
-		/**
-		 * Uses the native means for deleting a file.  This allows us to use
-		 * Windows' Recycle Bin, for example.
-		 *
-		 * @param files The files to delete.
-		 * @param extras The native class that actually does the deletion.
-		 */
-		private void handleDeleteNative(File[] files, FileIOExtras extras) {
-			Window parent = SwingUtilities.getWindowAncestor(chooser);
-			if (extras.moveToRecycleBin(parent, files, true, true)) {
-				refresh();
-			}
-			else {
-				UIManager.getLookAndFeel().provideErrorFeedback(chooser);
-			}
-		}
-
-		/**
-		 * Deletes files with pure Java.  Only does a hard delete.
-		 *
-		 * @param files The files to delete.
-		 */
-		private void handleDeleteViaJava(File[] files) {
-
 			// Prompt to confirm the file deletion.
 			int count = files.length;
 			int choice;
@@ -238,7 +204,7 @@ public interface Actions {
 				choice = JOptionPane.showConfirmDialog(chooser,
 					chooser.getString("DeleteConfirmPrompt") + fileName + "?");
 			}
-			else { // count>1
+			else { // count > 1
 				choice = JOptionPane.showConfirmDialog(chooser,
 					chooser.getString("DeleteMultipleConfirmPrompt"));
 			}
@@ -246,7 +212,7 @@ public interface Actions {
 			// If they chose "yes," delete the files.
 			if (choice==JOptionPane.YES_OPTION) {
 				for (File file : files) {
-					if (!file.delete()) {
+					if (!UIUtil.deleteFile(file)) {
 						Object[] arguments = {file.getName()};
 						String msg = MessageFormat.format(
 							chooser.getString("DeleteFailText"),

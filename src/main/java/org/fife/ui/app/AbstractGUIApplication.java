@@ -41,6 +41,7 @@ import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.fife.io.IOUtil;
 import org.fife.ui.AboutDialog;
 import org.fife.ui.CustomizableToolBar;
 import org.fife.ui.OS;
@@ -117,6 +118,12 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 */
 	public static final String HELP_ACTION_KEY			= "helpAction";
 
+	/**
+	 * If a resource with this name is found on the classpath, it is
+	 * assumed to contain the build date of this application, as an
+	 * ISO-8601 string.
+	 */
+	public static final String BUILD_DATE_RESOURCE = "build-date.txt";
 
 	/**
 	 * The About dialog.
@@ -680,9 +687,30 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	}
 
 
+	/**
+	 * Returns the build date of this application.  First checks for a resource
+	 * on the classpath named {@link BUILD_DATE_RESOURCE}.  If that isn't
+	 * found, an attempt is made to read a {@code Build-Date} attribute from
+	 * the application's {@code Manifest.mf} file.  Note that the latter
+	 * approach will fail when called in a jlink-generated executable.
+	 *
+	 * @return The build date, or {@code null} if it cannot be determined.
+	 */
 	public Date getBuildDate() {
 
 		Date buildDate = null;
+
+		// First check for a 'build-date.txt' file, since the backup code below
+		// doesn't work when an app is wrapped in a a jlink-generated executable
+		InputStream in = getClass().getResourceAsStream(BUILD_DATE_RESOURCE);
+		if (in != null) {
+			try {
+				buildDate = Date.from(Instant.parse(IOUtil.readFully(in).trim()));
+			} catch (IOException ioe) { // Should never happen
+				displayException(ioe);
+			}
+			return buildDate;
+		}
 
 		// Assumption here is the main class is in the "main" jar, with a Build-Date manifest entry
 		String path = getClass().getProtectionDomain().
@@ -720,9 +748,6 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public OS getOS() {
 		return OS.get();

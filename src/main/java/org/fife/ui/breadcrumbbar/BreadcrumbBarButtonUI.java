@@ -62,32 +62,36 @@ class BreadcrumbBarButtonUI extends BasicButtonUI {
 
 		AbstractButton b = (AbstractButton)c;
 		ButtonModel model = b.getModel();
+		int width = b.getWidth();
+		int height1 = b.getHeight() / 2;
+		int height2 = b.getHeight() - height1; // Might be different than height1 if odd height
+
 		if (Boolean.TRUE==b.getClientProperty(BreadcrumbBar.ARROW_SELECTED)) {
 			g.setColor(colors.pressedC1);
-			g.fillRect(0,0, b.getWidth(),b.getHeight()/2);
+			g.fillRect(0,0, width,height1);
 			g.setColor(colors.pressedC2);
-			g.fillRect(0,b.getHeight()/2, b.getWidth(),b.getHeight()/2);
+			g.fillRect(0,height1, width,height2);
 			c.setForeground(colors.pressedFG);
 		}
 		else if (Boolean.TRUE==b.getClientProperty(BreadcrumbBar.ARROW_ACTIVATED)) {
 			g.setColor(colors.nonArrowArrowArmedC1);
-			g.fillRect(0,0, b.getWidth(),b.getHeight()/2);
+			g.fillRect(0,0, width,height1);
 			g.setColor(colors.nonArrowArrowArmedC2);
-			g.fillRect(0,b.getHeight()/2, b.getWidth(),b.getHeight()/2);
+			g.fillRect(0,height1, width,height2);
 			c.setForeground(colors.pressedFG);
 		}
 		else if (model.isPressed()) {
 			g.setColor(colors.pressedC1);
-			g.fillRect(0,0, b.getWidth(),b.getHeight()/2);
+			g.fillRect(0,0, width,height1);
 			g.setColor(colors.pressedC2);
-			g.fillRect(0,b.getHeight()/2, b.getWidth(),b.getHeight()/2);
+			g.fillRect(0,height1, width,height2);
 			c.setForeground(colors.pressedFG);
 		}
 		else if (model.isRollover() || model.isArmed()) {
 			g.setColor(colors.rolloverC1);
-			g.fillRect(0,0, b.getWidth(),b.getHeight()/2);
+			g.fillRect(0,0, width,height1);
 			g.setColor(colors.rolloverC2);
-			g.fillRect(0,b.getHeight()/2, b.getWidth(),b.getHeight()/2);
+			g.fillRect(0,height1, width,height2);
 			c.setForeground(colors.rolloverFG);
 		}
 		else {

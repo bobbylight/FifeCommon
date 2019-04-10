@@ -359,7 +359,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 */
 	@Override
 	public String getToolTipText(MouseEvent e) {
-		String tip = null;
+		String tip;
 		int row = rowAtPoint(e.getPoint());
 		if (row==-1)
 			return null;
@@ -379,11 +379,11 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	private void initFileNameColumnSize() {
 
 		TableModel model = getModel();
-		TableColumn column = null;
-		Component comp = null;
-		int headerWidth = 0;
+		TableColumn column;
+		Component comp;
+		int headerWidth;
 		int maxWidth = 0;
-		int cellWidth = 0;
+		int cellWidth;
 
 		TableCellRenderer headerRenderer = getTableHeader().getDefaultRenderer();
 
@@ -607,12 +607,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 				}
 
 				i = max;
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						addFileAttributes(batch);
-					}
-				});
+				SwingUtilities.invokeLater(() -> addFileAttributes(batch));
 
 //				try {
 //					Thread.sleep(100);
@@ -646,12 +641,21 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		DetailsViewModel(String nameHeader, String typeHeader,
 							String statusHeader,
 							String sizeHeader, String lastModifiedHeader) {
+
 			String[] columnNames = new String[5];
 			columnNames[0] = nameHeader;
 			columnNames[1] = typeHeader;
 			columnNames[2] = statusHeader;
 			columnNames[3] = sizeHeader;
 			columnNames[4] = lastModifiedHeader;
+
+			// Cheap hack to let us reuse labels for tooltips as column headers
+			for (int i = 0; i < columnNames.length; i++) {
+				if (columnNames[i].endsWith(": ")) {
+					columnNames[i] = columnNames[i].substring(0, columnNames[i].length() - 2);
+				}
+			}
+
 			setColumnIdentifiers(columnNames);
 		}
 
@@ -663,7 +667,6 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		 * adds a lot of overhead (e.g., notifies listeners of each line
 		 * added instead of just all of them at once, etc.).
 		 */
-		@SuppressWarnings("unchecked")
 		public void setContents(Collection<File> data) {
 
 			// Calling setDataVector() call would be faster, but would require

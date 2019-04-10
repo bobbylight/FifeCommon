@@ -10,6 +10,8 @@
  */
 package org.fife.ui.rtextfilechooser;
 
+import org.fife.util.DarculaUtil;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,11 +73,11 @@ class FileChooserIconManager {
 		// returned null.
 		hardDriveIcon    = UIManager.getIcon("FileView.hardDriveIcon");
 		floppyDriveIcon  = UIManager.getIcon("FileView.floppyDriveIcon");
-		fileIcon		  = UIManager.getIcon("FileView.fileIcon");
+		fileIcon         = UIManager.getIcon("FileView.fileIcon");
 
 		// If UIManager returned null for any of the above, just get ones
 		// we drew ourselves.
-		String path = "org/fife/ui/rtextfilechooser/images/";
+		String path = "org/fife/ui/rtextfilechooser/images/light/";
 		ClassLoader cl = this.getClass().getClassLoader();
 		if (hardDriveIcon==null)
 			hardDriveIcon = loadIcon(cl, path + "harddrive.gif");

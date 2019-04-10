@@ -77,11 +77,6 @@ public final class UIUtil {
 	private static final int DEFAULT_BUTTON_SIZE = 85;
 
 	/**
-	 * The version of Java we are running in.
-	 */
-    private static final String JAVA_VERSION = System.getProperty("java.version");
-
-	/**
 	 * Private constructor so we cannot instantiate this class.
 	 */
 	private UIUtil() {
@@ -606,7 +601,7 @@ public final class UIUtil {
 
 		}
 
-		return nonOpaqueTabbedPaneComponents==1 ? true : false;
+		return nonOpaqueTabbedPaneComponents == 1;
 
 	}
 
@@ -634,27 +629,6 @@ public final class UIUtil {
 
 		}
 
-	}
-
-
-	/**
-	 * Returns whether this current JVM is Java 6 or earlier.
-	 *
-	 * @return Whether the current JVM is Java 6 or earlier.
-	 */
-	public static boolean isPreJava7() {
-		return JAVA_VERSION==null || JAVA_VERSION.startsWith("1.6");
-	}
-
-
-	/**
-	 * Returns whether this current JVM is Java 7 or earlier.
-	 *
-	 * @return Whether the current JVM is Java 7 or earlier.
-	 */
-	public static boolean isPreJava8() {
-		return JAVA_VERSION==null ||
-				JAVA_VERSION.startsWith("1.7") || isPreJava7();
 	}
 
 

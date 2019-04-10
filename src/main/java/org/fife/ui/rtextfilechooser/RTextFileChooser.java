@@ -30,12 +30,7 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileSystemView;
 
-import org.fife.ui.FSATextField;
-import org.fife.ui.MenuButton;
-import org.fife.ui.OS;
-import org.fife.ui.RScrollPane;
-import org.fife.ui.ResizableFrameContentPane;
-import org.fife.ui.UIUtil;
+import org.fife.ui.*;
 import org.fife.ui.breadcrumbbar.BreadcrumbBar;
 import org.fife.ui.rtextfilechooser.filters.AcceptAllFileFilter;
 
@@ -447,13 +442,14 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		topPanel.add(lookInLabel);
 		topPanel.add(lookInBreadcrumbBar);
 		topPanel.add(Box.createHorizontalStrut(horizStrutSize));
-		topPanel.add(upOneLevelButton);
-		topPanel.add(Box.createHorizontalStrut(horizStrutSize));
-		topPanel.add(newFolderButton);
-		topPanel.add(Box.createHorizontalStrut(horizStrutSize));
-		topPanel.add(viewButton);
-		topPanel.add(Box.createHorizontalStrut(horizStrutSize));
-		topPanel.add(favoritesButton);
+
+		JToolBar topButtons = new JToolBar();
+		topButtons.setFloatable(false);
+		topButtons.add(upOneLevelButton);
+		topButtons.add(newFolderButton);
+		topButtons.add(viewButton);
+		topButtons.add(favoritesButton);
+		topPanel.add(topButtons);
 
 		add(topPanel, BorderLayout.NORTH);
 
@@ -828,7 +824,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	private static boolean containsFilesAndDirectories(Object[] files) {
-		int num = files.length;
 		boolean containsFile = false;
 		boolean containsDirectory = false;
 		for (Object file : files) {
@@ -844,7 +839,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	private static boolean containsOnlyDirectories(Object[] files) {
-		int num = files.length;
 		for (Object file : files) {
 			if (!((File)file).isDirectory())
 				return false;
@@ -1226,7 +1220,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		try (FileInputStream in = new FileInputStream(file)) {
 			n = in.read(bom, 0, bom.length);
 		}
-		String encoding = null;
+		String encoding;
 
 		if ((bom[0]==(byte)0x00) && (bom[1]==(byte)0x00) &&
 				(bom[2]==(byte)0xFE) && (bom[3]==(byte)0xFF)) {
@@ -1472,6 +1466,45 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 */
 	public void getIcons() {
 
+		// Must fetch foreground of a new JLabel as ours may still be null (!)
+		if (UIUtil.isLightForeground(new JLabel().getForeground())) {
+			getIconsForDarkLookAndFeel();
+		}
+		else {
+			getIconsForLightLookAndFeel();
+		}
+	}
+
+
+	private void getIconsForDarkLookAndFeel() {
+
+		// Icons for buttons at the top.  For dark Look and Feels, we don't use
+		// the system icons, but rather use our own for style purposes
+		newFolderIcon    = createSvgIcon("dark/newFolder_dark.svg");
+		upFolderIcon     = createSvgIcon("dark/upFolder.svg");
+		//homeFolderIcon   = createSvgIcon("dark/home.svg");
+		detailsViewIcon  = createSvgIcon("dark/table.svg");
+		listViewIcon     = createSvgIcon("dark/list.svg");
+		iconsViewIcon = createSvgIcon("listview.gif");
+		favoritesIcon = createSvgIcon("dark/favorite.svg");
+	}
+
+
+	private ImageIcon createSvgIcon(String name) {
+
+		String path = "org/fife/ui/rtextfilechooser/images/" + name;
+		InputStream in = getClass().getClassLoader().getResourceAsStream(path);
+
+		try {
+			return new ImageIcon(ImageTranscodingUtil.rasterize(name, in, 16, 16));
+		} catch (IOException ioe) {
+			return null;
+		}
+	}
+
+
+	private void getIconsForLightLookAndFeel() {
+
 		// Icons for buttons at the top.  Use pretty, homemade defaults
 		// if any of these aren't found.
 		newFolderIcon    = UIManager.getIcon("FileChooser.newFolderIcon");
@@ -1481,22 +1514,19 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		listViewIcon     = UIManager.getIcon("FileChooser.listViewIcon");
 
 		if (newFolderIcon==null) {
-			newFolderIcon = new ImageIcon(getIconResource("createnewdirectory.gif"));
+			newFolderIcon = new ImageIcon(getIconResource("light/createnewdirectory.gif"));
 		}
 		if (upFolderIcon==null) {
-			upFolderIcon = new ImageIcon(getIconResource("uponelevel.gif"));
+			upFolderIcon = new ImageIcon(getIconResource("light/uponelevel.gif"));
 		}
 		if (detailsViewIcon==null) {
-			detailsViewIcon = new ImageIcon(getIconResource("detailsview.gif"));
+			detailsViewIcon = new ImageIcon(getIconResource("light/detailsview.gif"));
 		}
 		if (listViewIcon==null) {
-			listViewIcon = new ImageIcon(getIconResource("listview.gif"));
+			listViewIcon = new ImageIcon(getIconResource("light/listview.gif"));
 		}
-		iconsViewIcon = new ImageIcon(getIconResource("listview.gif"));
-		if (favoritesIcon==null) {
-			favoritesIcon = new ImageIcon(getIconResource("book.png"));
-		}
-
+		iconsViewIcon = new ImageIcon(getIconResource("light/listview.gif"));
+		favoritesIcon = new ImageIcon(getIconResource("light/book.png"));
 	}
 
 
@@ -1860,8 +1890,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 */
 	private void populateFilterComboBox() {
 		filterCombo.removeAllItems();
-		int max = fileFilters.size();
-		for (FileFilter fileFilter : fileFilters) filterCombo.addItem(fileFilter);
+		for (FileFilter fileFilter : fileFilters) {
+			filterCombo.addItem(fileFilter);
+		}
 	}
 
 
@@ -1895,7 +1926,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * If the GUI has been initialized, this sets the encoding combo box to
 	 * display the proper value.
 	 */
-	protected void refreshEncodingComboBox() {
+	private void refreshEncodingComboBox() {
 
 		if (!guiInitialized || encodingCombo==null) {
 			return;
@@ -1919,7 +1950,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		String defaultEncoding = getDefaultEncoding();
 		cs1 = Charset.forName(defaultEncoding);
 		for (int i=0; i<count; i++) {
-			String item = (String)encodingCombo.getItemAt(i);
+			String item = encodingCombo.getItemAt(i);
 			Charset cs2 = Charset.forName(item);
 			if (cs1.equals(cs2)) {
 				encodingCombo.setSelectedIndex(i);
@@ -1957,7 +1988,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		if (files!=null) {
 
-			int num = files.length;
 			Vector<File> dirList = new Vector<>();
 			Vector<File> fileList = new Vector<>();
 
@@ -2261,6 +2291,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	protected void setFileFilterImpl(FileFilter filter,
 							boolean cacheIfGUINotRealized) {
 
+		// Ensure the filter has a value
 		if (filter==null) {
 			if (acceptAllFilter==null) {
 				acceptAllFilter = new AcceptAllFileFilter();
@@ -2269,7 +2300,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		}
 
 		// Add the file filter to the filter combo if it isn't already there.
-		if (filter!=null && !fileFilters.contains(filter)) {
+		if (!fileFilters.contains(filter)) {
 			int size = fileFilters.size();
 			if (size==0)
 				fileFilters.add(filter);
@@ -2362,8 +2393,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 */
 	public void setHiddenFileColor(Color color) {
 		if (color==null)
-			throw new NullPointerException("Hidden file color cannot be " +
-									"null");
+			throw new NullPointerException("Hidden file color cannot be null");
 		hiddenFileColor = color;
 	}
 
@@ -2760,9 +2790,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		// If multiple items are selected, add all of them to the File field.
 		else if (numSelected>1) {
 
-			String temp = "";
+			StringBuilder temp = new StringBuilder();
 			for (File file : files) {
-				temp += "\"" + file.getName() + "\" ";
+				temp.append("\"").append(file.getName()).append("\" ");
 			}
 
 			// We'd like to clear the text from the "Look in" field
@@ -2773,7 +2803,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			// focus (i.e., this method wasn't called in response to a
 			// document change...).
 			if (!fileNameTextField.hasFocus()) {
-				fileNameTextField.setText(temp);
+				fileNameTextField.setText(temp.toString());
 			}
 
 		}

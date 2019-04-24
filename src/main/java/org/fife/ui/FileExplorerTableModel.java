@@ -10,10 +10,7 @@
  */
 package org.fife.ui;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.ComponentOrientation;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -77,26 +74,15 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	/**
 	 * Compares two comparable objects by their <code>compareTo</code> method.
 	 */
+	@SuppressWarnings("unchecked")
 	public static final Comparator<?> COMPARABLE_COMPARATOR =
-		new Comparator<>() {
-			@Override
-			@SuppressWarnings({"unchecked", "rawtypes"})
-			public int compare(Object o1, Object o2) {
-				return ((Comparable)o1).compareTo(o2);
-			}
-		};
+		(Comparator<Object>)(o1, o2) -> ((Comparable)o1).compareTo(o2);
 
 
 	/**
 	 * Compares two objects by their string (<code>toString</code>) values.
 	 */
-	public static final Comparator<?> LEXICAL_COMPARATOR =
-		new Comparator<>() {
-			@Override
-			public int compare(Object o1, Object o2) {
-				return o1.toString().compareTo(o2.toString());
-			}
-		};
+	public static final Comparator<?> LEXICAL_COMPARATOR = Comparator.comparing(Object::toString);
 
 
 	private Row[] viewToModel;
@@ -472,26 +458,18 @@ public class FileExplorerTableModel extends AbstractTableModel {
 
 			// Align icon (roughly) with font baseline.
 			y = y + 5*size/6 + (descending ? -dy : 0);
-			int shift = descending ? 1 : -1;
 			g.translate(x, y);
 
-			// Right diagonal.
-			g.setColor(color.darker());
-			g.drawLine(dx / 2, dy, 0, 0);
-			g.drawLine(dx / 2, dy + shift, 0, shift);
+			Graphics2D g2d = (Graphics2D)g;
+			Object old = g2d.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
 
-			// Left diagonal.
-			g.setColor(color.brighter());
-			g.drawLine(dx / 2, dy, dx, 0);
-			g.drawLine(dx / 2, dy + shift, dx, shift);
+			int[] xs = { 0, dx / 2, dx };
+			int[] ys = { dy, 0, dy };
+			g.fillPolygon(xs, ys, 3);
 
-			// Horizontal line.
-			if (descending)
-				g.setColor(color.darker().darker());
-			else
-				g.setColor(color.brighter().brighter());
-			g.drawLine(dx, 0, 0, 0);
-
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, old);
 			g.setColor(color);
 			g.translate(-x, -y);
 

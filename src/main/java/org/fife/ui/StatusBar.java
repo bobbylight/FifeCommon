@@ -10,11 +10,7 @@
  */
 package org.fife.ui;
 
-import java.awt.Component;
-import java.awt.ComponentOrientation;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.AbstractButton;
@@ -225,7 +221,7 @@ public class StatusBar extends StatusBarPanel implements MouseListener {
 
 			case WINDOWS_XP_STYLE:
 				return BorderFactory.createCompoundBorder(
-					new LineDividerBorder(LineDividerBorder.LEFT, 2),
+					new StatusBarLineDividerBorder(LineDividerBorder.LEFT, 2),
 					BorderFactory.createEmptyBorder(0,3,0,3));
 
 			default:
@@ -407,4 +403,20 @@ public class StatusBar extends StatusBarPanel implements MouseListener {
 	}
 
 
+	private static class StatusBarLineDividerBorder extends LineDividerBorder {
+
+		StatusBarLineDividerBorder(int location, int slack) {
+			super(location, slack);
+		}
+
+		@Override
+		public void paintBorder(Component c, Graphics g, int x, int y,
+								int width, int height) {
+
+			// The "first" component doesn't draw its left-hand border line
+			if (c.getParent().getComponent(1) != c) {
+				super.paintBorder(c, g, x, y, width, height);
+			}
+		}
+	}
 }

@@ -12,7 +12,7 @@ FifeCommon is a base library for building Java Swing applications.  It handles t
 For a working example of an application built with library, see
 [RText](https://github.com/bobbylight/RText).
 
-Available in the [Maven Central repository](http://search.maven.org/#artifactdetails%7Ccom.fifesoft.rtext%7Cfife.common%7C2.5.6%7Cjar) (`com.fifesoft.rtext:fife.common:XXX`).
+Available in the [Maven Central repository](http://search.maven.org/#artifactdetails%7Ccom.fifesoft.rtext%7Cfife.common%7C3.0.1%7Cjar) (`com.fifesoft.rtext:fife.common:XXX`).
 
 # Building
 

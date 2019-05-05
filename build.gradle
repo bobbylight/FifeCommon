@@ -12,7 +12,7 @@ dependencies {
 }
 
 wrapper {
-	gradleVersion '5.1.1'
+	gradleVersion '5.4.1'
 }
 
 //checkstyle {
@@ -53,7 +53,7 @@ task sourceJar (type: Jar) {
 	from sourceSets.main.allSource
 }
 artifacts {
-	archives jar, javadocJar, sourceJar
+	archives javadocJar, sourceJar
 }
 signing {
 	// Don't require signing for e.g. ./gradlew install

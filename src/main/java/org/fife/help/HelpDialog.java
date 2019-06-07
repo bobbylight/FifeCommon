@@ -9,11 +9,7 @@
  */
 package org.fife.help;
 
-import java.awt.BorderLayout;
-import java.awt.ComponentOrientation;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyListener;
@@ -44,6 +40,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.text.html.StyleSheet;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
@@ -1270,7 +1267,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 		// Anything on the "real" web should probably be displayed in a real
 		// browser.
-		if (("http".equals(url.getProtocol()) && webUrlsInRealBrowser) ||
+		if ((url.getProtocol().startsWith("http") && webUrlsInRealBrowser) ||
 				"ftp".equals(url.getProtocol())) {
 			if (!UIUtil.browse(url.toString())) {
 				UIManager.getLookAndFeel().provideErrorFeedback(this);
@@ -1434,8 +1431,8 @@ public class HelpDialog extends JFrame implements ActionListener {
 					try {
 						String protocol = url.getProtocol();
 						if (protocol==null || protocol.equals(""))
-							protocol = "file://";
-						String urlString = "file://" + url.getPath();
+							protocol = "file";
+						String urlString = protocol + "://" + url.getPath();
 						url = new URL(urlString); // No anchor.
 					} catch (MalformedURLException mue) {
 						mue.printStackTrace();
@@ -1652,10 +1649,30 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 					HTMLDocument htmldoc = (HTMLDocument)document;
 					htmldoc.setBase(baseURL);
+					StyleSheet sheet = htmldoc.getStyleSheet();
+					sheet.addRule("table { border-width: 0; }");
 
 					if (UIUtil.isLightForeground(new JLabel().getForeground())) {
+
 						String hyperlinkColor = UIUtil.getHTMLFormatForColor(UIUtil.getHyperlinkForeground());
-						htmldoc.getStyleSheet().addRule("a { color: " + hyperlinkColor + "; }");
+						sheet.addRule("a { color: " + hyperlinkColor + "; }");
+
+						Color bg = getBackground();
+						Color alternateBg = UIUtil.deriveColor(bg, -15);
+						String alternateBgHex = UIUtil.getHTMLFormatForColor(alternateBg);
+						Color headerBg = UIUtil.deriveColor(bg, -30);
+						String headerBgHex = UIUtil.getHTMLFormatForColor(headerBg);
+
+						sheet.addRule(".even { }");
+						sheet.addRule(".odd { background-color: " + alternateBgHex + "; }");
+						sheet.addRule(" th { background-color: " + headerBgHex +
+							"; font-weight: bold; text-align: left; }");
+					}
+					else {
+
+						sheet.addRule(".even { background-color: #EEEEEE; }");
+						sheet.addRule(".odd { background-color: #FFFFFF; }");
+						sheet.addRule(" th { background-color: #FFF0E6; font-weight: bold; text-align: left; }");
 					}
 				}
 

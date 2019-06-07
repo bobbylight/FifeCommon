@@ -10,6 +10,8 @@
  */
 package org.fife.ui.breadcrumbbar;
 
+import org.fife.util.DarculaUtil;
+
 import java.awt.Color;
 import javax.swing.AbstractButton;
 import javax.swing.JTextField;
@@ -40,7 +42,7 @@ class BreadcrumbBarButtonColorSet {
 	private static final float BRIGHTNESS_FACTOR = 0.15f;
 
 
-	public static Color brighter(Color c) {
+	private static Color brighter(Color c) {
 
 		int r = c.getRed();
 		int g = c.getGreen();
@@ -80,10 +82,21 @@ class BreadcrumbBarButtonColorSet {
 
 	public void initialize(AbstractButton b) {
 
-//		if (SubstanceUtil.isSubstanceInstalled()) {
+		JTextField textField = new JTextField();
+		Color highlight = textField.getSelectionColor();
+		defaultFG = textField.getForeground();
 
-			JTextField textField = new JTextField();
-			Color highlight = textField.getSelectionColor();
+		if (DarculaUtil.isDarculaInstalled()) {
+			rolloverC1 = rolloverC2 = highlight;
+			pressedC1 = pressedC2 = darker(highlight);
+			rolloverFG = pressedFG = textField.getSelectedTextColor();
+			nonArrowArrowArmedC1 = rolloverC1;
+			nonArrowArrowArmedC2 = rolloverC2;
+			borderColor = darker(pressedC2);
+		}
+
+		else {
+
 			rolloverC1 = brighter(highlight);
 			rolloverC2 = highlight;
 			pressedC1 = highlight;
@@ -92,7 +105,6 @@ class BreadcrumbBarButtonColorSet {
 			nonArrowArrowArmedC1 = rolloverC1;
 			nonArrowArrowArmedC2 = rolloverC2;
 			borderColor = darker(pressedC2);
-			defaultFG = textField.getForeground();
 
 			if (needsExtraBrightening(textField)) {
 				rolloverC1 = brighter(rolloverC1);
@@ -103,10 +115,7 @@ class BreadcrumbBarButtonColorSet {
 				nonArrowArrowArmedC2 = brighter(nonArrowArrowArmedC2);
 			}
 
-//		}
-//		else {
-//			setColorsMimickingWindows();
-//		}
+		}
 
 	}
 
@@ -126,17 +135,6 @@ class BreadcrumbBarButtonColorSet {
 					Color.white.equals(textField.getBackground()) ||
 				(laf.endsWith(".NimbusLookAndFeel"));
 	}
-
-
-//	private void setColorsMimickingWindows() {
-//		rolloverC1 = new Color(223, 242, 252);
-//		rolloverC2 = new Color(177, 223, 249);
-//		pressedC1 = new Color(194, 228, 246);
-//		pressedC2 = new Color(146, 204, 235);
-//		nonArrowArrowArmedC1 = new Color(240,240,240);
-//		nonArrowArrowArmedC2 = new Color(212,212,212);
-//		defaultFG = rolloverFG = pressedFG = Color.black;
-//	}
 
 
 }

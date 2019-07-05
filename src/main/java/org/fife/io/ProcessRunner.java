@@ -402,7 +402,7 @@ public class ProcessRunner implements Runnable {
 					}
 				}
 			} catch (IOException ioe) {
-				buffer.append("IOException occurred: " + ioe.getMessage());
+				buffer.append("IOException occurred: ").append(ioe.getMessage());
 			}
 		}
 

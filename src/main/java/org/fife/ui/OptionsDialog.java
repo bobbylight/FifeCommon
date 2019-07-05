@@ -234,11 +234,11 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 * @return The key.
 	 */
 	private static String createKeyForPanel(OptionsDialogPanel panel) {
-		String key = panel.getName();
+		StringBuilder key = new StringBuilder(panel.getName());
 		while ((panel=panel.getParentPanel())!=null) {
-			key = panel.getName() + "-" + key;
+			key.insert(0, panel.getName() + "-");
 		}
-		return key;
+		return key.toString();
 	}
 
 
@@ -381,8 +381,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 */
 	public OptionsDialogPanel getPanelById(String id) {
 
-		List<OptionsDialogPanel> panels = new ArrayList<>();
-		panels.addAll(Arrays.asList(optionsPanels));
+		List<OptionsDialogPanel> panels = new ArrayList<>(Arrays.asList(optionsPanels));
 
 		for (OptionsDialogPanel panel : optionsPanels) {
 			if (id.equals(panel.getId())) {

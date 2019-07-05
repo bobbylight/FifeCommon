@@ -98,7 +98,7 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 			detailsButton.toggleCollapsed();
 			detailsButton.repaint();
 			Container cp = getContentPane();
-			Dimension d = null;
+			Dimension d;
 			if (textPanel.getParent()==null) {
 				cp.add(textPanel);
 				d = new Dimension(cp.getSize().width, 350);
@@ -191,20 +191,20 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 		contentPane.add(topPanel, BorderLayout.NORTH);
 
 		JTextComponent textArea = createTextComponent();
-		String stackTraceText = getStackTraceText(t);
+		StringBuilder stackTraceText = new StringBuilder(getStackTraceText(t));
 		while (t.getCause()!=null) {
 			t = t.getCause();
-			stackTraceText += "Caused by: " + getStackTraceText(t);
+			stackTraceText.append("Caused by: ").append(getStackTraceText(t));
 		}
 		try {
-			textArea.setText(stackTraceText);
+			textArea.setText(stackTraceText.toString());
 		} catch (Throwable t2) {
 			// I'm paranoid about custom text areas (such as RSyntaxTextArea)
 			// trying to do stuff like syntax highlight the stack trace and
 			// failing during the attempt...
 			// Can't call createTextComponent as it was likely overridden.
 			textArea = new JTextArea(15, 50);
-			textArea.setText(stackTraceText);
+			textArea.setText(stackTraceText.toString());
 		}
 		textArea.setCaretPosition(0);
 		textArea.setEditable(false);

@@ -47,7 +47,7 @@ class TextColorCellRenderer extends DefaultTableCellRenderer {
 			setForeground(((Color)color).darker());
 		}
 
-		String text = null;
+		String text;
 		if (row==0) {
 			text = "filename.ext";
 		}

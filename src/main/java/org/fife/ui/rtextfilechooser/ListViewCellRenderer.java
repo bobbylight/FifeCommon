@@ -69,7 +69,7 @@ class ListViewCellRenderer extends DefaultListCellRenderer {
 				text = chooser.addOpenFileStyleHtml(fileName);
 			}
 			else {
-				Color fg = null;
+				Color fg;
 				if (isSelected) {
 					fg = list.getSelectionForeground();
 				}

@@ -158,7 +158,7 @@ public abstract class AbstractPluggableGUIApplication<T extends GUIApplicationPr
 	 * @see #setSplitPaneDividerLocation
 	 */
 	public int getSplitPaneDividerLocation(int splitPane) {
-		int dividerLocation = 0;
+		int dividerLocation;
 		switch (splitPane) {
 			case TOP:
 			case BOTTOM:

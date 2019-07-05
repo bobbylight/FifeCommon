@@ -116,7 +116,7 @@ public class FileListTransferable implements Transferable, ClipboardOwner {
 		}
 		flavors.add(DataFlavor.stringFlavor);
 
-		return flavors.toArray(new DataFlavor[flavors.size()]);
+		return flavors.toArray(new DataFlavor[0]);
 
 	}
 

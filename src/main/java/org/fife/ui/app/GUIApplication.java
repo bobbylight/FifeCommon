@@ -525,7 +525,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 				((Component)app).setCursor(Cursor.
 							getPredefinedCursor(Cursor.WAIT_CURSOR));
 			}
-			HelpDialog hd = null;
+			HelpDialog hd;
 			try {
 				hd = app.getHelpDialog();
 			} finally {

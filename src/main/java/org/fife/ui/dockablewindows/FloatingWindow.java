@@ -11,6 +11,7 @@ package org.fife.ui.dockablewindows;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Objects;
 import javax.swing.JFrame;
 
 
@@ -54,7 +55,7 @@ class FloatingWindow extends JFrame {
 	 */
 	public boolean refreshTitle() {
 		String newTitle = getDockableWindow().getDockableWindowTitle();
-		if (newTitle!=getTitle()) {
+		if (!Objects.equals(newTitle, getTitle())) {
 			setTitle(newTitle);
 			return true;
 		}

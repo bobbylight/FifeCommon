@@ -182,7 +182,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/*
 	 * Internal stuff.
 	 */
-	private int mode					= -1; // So that we don't get an NPE initially.
+	private int mode; // So that we don't get an NPE initially.
 	private boolean multiSelectionEnabled	= false;
 	private int fileSelectionMode			= FILES_ONLY;
 	private boolean fileSystemAware;
@@ -629,7 +629,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			File dir = new File(dirName);
 			if (!dir.isDirectory()) {
 				String text = MessageFormat.format(favoriteDNERemoveString,
-										new Object[] { dirName });
+						dirName);
 				int rc = JOptionPane.showConfirmDialog(this,
 						text, errorDialogTitle,JOptionPane.YES_NO_OPTION);
 				if (rc==JOptionPane.YES_OPTION) {
@@ -1307,7 +1307,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 */
 	private File[] getFilesFromFileNameTextField() {
 
-		File[] files = null;
+		File[] files;
 
 		String text = fileNameTextField.getText();
 		if (text==null)
@@ -1870,7 +1870,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 */
 	public int loadFavorites(File file) throws IOException {
 		int count = 0;
-		String line = null;
+		String line;
 		try (BufferedReader r = new BufferedReader(new InputStreamReader(
 			new FileInputStream(file), FAVORITES_ENCODING))) {
 			while ((line = r.readLine()) != null) {
@@ -1938,7 +1938,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		Charset cs1 = Charset.forName(encoding);
 		int count = encodingCombo.getItemCount();
 		for (int i=0; i<count; i++) {
-			String item = (String)encodingCombo.getItemAt(i);
+			String item = encodingCombo.getItemAt(i);
 			Charset cs2 = Charset.forName(item);
 			if (cs1.equals(cs2)) {
 				encodingCombo.setSelectedIndex(i);
@@ -2336,7 +2336,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 				}
 				if (failed)
 					setSelectedFiles((fList.size() == 0) ? null :
-						fList.toArray(new File[fList.size()]));
+						fList.toArray(new File[0]));
 			}
 			else if (selectedFiles!=null && selectedFiles.length>0 &&
 				selectedFiles[0]!=null && !filter.accept(selectedFiles[0]))

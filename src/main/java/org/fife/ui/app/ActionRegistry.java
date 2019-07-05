@@ -97,7 +97,7 @@ public class ActionRegistry {
 	 * @see #getAction(String)
 	 */
 	public Action[] getActions() {
-		return actionMap.values().toArray(new Action[actionMap.size()]);
+		return actionMap.values().toArray(new Action[0]);
 	}
 
 

@@ -205,7 +205,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 		if (entered!=null) { // popup must be visible
 			char ch = entered.charAt(entered.length()-1);
 			if (ch!='/' && ch!='\\') { // Don't auto-complete for dirs.
-				String value = (String)fileListModel.get(0);
+				String value = fileListModel.get(0);
 				int len = getDocument().getLength();
 				if (getCaretPosition()==len && len<value.length()) {
 					String remaining = value.substring(len);
@@ -366,7 +366,7 @@ System.out.println("DEBUG: *** parent is null");
 	private static int getCharCount(String str, char ch) {
 		int count = 0;
 		int prev = 0;
-		int offs = 0;
+		int offs;
 		while ((offs=str.indexOf(ch, prev))>-1) {
 			count++;
 			prev = offs + 1;
@@ -901,7 +901,7 @@ System.out.println("DEBUG: *** parent is null");
 		// directory (and they're typing the name of a file in that
 		// directory). If they have typed a separator char, check to see if
 		// it's a relative directory path or an absolute one.
-		File t2 = null;
+		File t2;
 		if (lastSeparator!=0) {
 			String pathPart = text.substring(0, lastSeparator);
 			t2 = new File(pathPart);
@@ -1091,7 +1091,7 @@ System.out.println("DEBUG: *** parent is null");
 		@Override
 		public void run() {
 			ignoreDocumentUpdates = true;
-			String selectedValue = (String)fileList.getSelectedValue();
+			String selectedValue = fileList.getSelectedValue();
 			if (selectedValue!=null) {
 				setText(selectedValue);
 			}

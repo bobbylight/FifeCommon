@@ -528,7 +528,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 				Object o1 = tableModel.getValueAt(row1, column);
 				Object o2 = tableModel.getValueAt(row2, column);
 
-				int comparison = 0;
+				int comparison;
 				// Define null less than everything, except null.
 				if (o1 == null && o2 == null)
 					comparison = 0;
@@ -699,7 +699,6 @@ public class FileExplorerTableModel extends AbstractTableModel {
 			// Something has happened to the data that may have invalidated the row order.
 			clearSortingState();
 			fireTableDataChanged();
-			return;
 
 		}
 

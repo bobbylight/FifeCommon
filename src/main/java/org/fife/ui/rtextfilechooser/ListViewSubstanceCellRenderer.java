@@ -41,7 +41,7 @@ class ListViewSubstanceCellRenderer extends SubstanceDefaultListCellRenderer {
 
 
 	private Color getForegroundColor(File file, FileTypeInfo fti) {
-		Color color = null;
+		Color color;
 		if (chooser.getShowHiddenFiles() && file.isHidden()) {
 			color = chooser.getHiddenFileColor();
 		}
@@ -74,7 +74,7 @@ class ListViewSubstanceCellRenderer extends SubstanceDefaultListCellRenderer {
 				text = chooser.addOpenFileStyleHtml(fileName);
 			}
 			else {
-				Color fg = null;
+				Color fg;
 				if (isSelected) {
 					fg = list.getSelectionForeground();
 				}

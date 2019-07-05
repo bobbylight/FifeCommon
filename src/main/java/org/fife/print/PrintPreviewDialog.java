@@ -266,8 +266,8 @@ public class PrintPreviewDialog extends EscapableDialog
 	private void createCursors() {
 
 		// Get the zoom in/zoom out cursor images.
-		BufferedImage zoomInCursor1 = null;
-		BufferedImage zoomOutCursor1 = null;
+		BufferedImage zoomInCursor1;
+		BufferedImage zoomOutCursor1;
 		ClassLoader cl = this.getClass().getClassLoader();
 		try {
 			zoomInCursor1 = ImageIO.read(cl.getResource("org/fife/print/zoomin.gif"));
@@ -307,7 +307,7 @@ public class PrintPreviewDialog extends EscapableDialog
 		// more pages to view), as we'd just be setting stuff to null.
 		// We'll reuse the last page preview to keep from having to
 		// create a new image, etc.
-		PagePreview pp = null;
+		PagePreview pp;
 		pp = pageImage[numVisiblePages-1];
 		previewPanel.remove(pp);
 		for (int i=numVisiblePages-1; i>0; i--)

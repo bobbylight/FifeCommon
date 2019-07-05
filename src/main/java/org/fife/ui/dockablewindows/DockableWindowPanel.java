@@ -563,7 +563,7 @@ public class DockableWindowPanel extends JPanel
 				windowPanel = new DockableWindowGroup(this);
 				windowPanel.addDockableWindow(window);
 				int split;
-				double resizeWeight = 0.0;
+				double resizeWeight;
 				Component comp1, comp2;
 				switch (dockableWindowsLocation) {
 					case TOP:

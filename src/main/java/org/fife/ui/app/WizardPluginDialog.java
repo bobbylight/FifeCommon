@@ -270,7 +270,7 @@ public class WizardPluginDialog extends JDialog {
 		if (currentPanel>0 && currentPanel<=stepCount) {
 			String temp = MSG.getString("Dialog.InStepTitle");
 			title = MessageFormat.format(temp,
-					new Object[] { title, ""+currentPanel, ""+stepCount });
+					title, ""+currentPanel, ""+stepCount);
 		}
 		setTitle(title);
 		panel.isDisplayed();

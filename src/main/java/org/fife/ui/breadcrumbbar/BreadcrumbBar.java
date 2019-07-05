@@ -172,7 +172,7 @@ public class BreadcrumbBar extends JComponent {
 
 
 	private AbstractButton createButton(File loc, boolean isArrow) {
-		AbstractButton b = null;
+		AbstractButton b;
 		if (isArrow) {
 			JToggleButton tb = new BreadcrumbBarToggleButton(horizArrowIcon);
 			tb.setSelectedIcon(downArrowIcon);
@@ -505,7 +505,7 @@ tb.addChangeListener(new ChangeListener() {
 
 	private void updateBorderAndBackground() {
 
-		JTextField tempField = null;
+		JTextField tempField;
 
 		// Reset background color on LaF changes, since it is LaF-dependent.
 		Color bg = UIManager.getColor("TextField.background");

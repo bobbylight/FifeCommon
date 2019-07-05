@@ -85,7 +85,7 @@ public interface Actions {
 
 			// Get the selected files.  If there are no selected files (i.e.,
 			// they pressed "Ctrl+C" when no files were selected), beep.
-			File[] files = null;
+			File[] files;
 			if (chooser instanceof RTextFileChooser) {
 				// Horrible hack!!!  File chooser shouldn't actually
 				// implement FileSelector!  But it's view does...
@@ -132,7 +132,7 @@ public interface Actions {
 
 			// Get the selected files.  If there are no selected files (i.e.,
 			// they pressed "Ctrl+Shift+C" when no files were selected), beep.
-			File[] files = null;
+			File[] files;
 			if (chooser instanceof RTextFileChooser) {
 				// Horrible hack!!!  File chooser shouldn't actually
 				// implement FileSelector!  But it's view does...

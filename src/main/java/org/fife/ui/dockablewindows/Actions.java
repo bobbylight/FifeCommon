@@ -108,7 +108,7 @@ public final class Actions {
 			JPopupMenu popup = (JPopupMenu)source.getParent();
 			JComponent invoker = (JComponent)popup.getInvoker();
 			while (invoker instanceof JMenu) { // Just a nested menu
-				popup = (JPopupMenu)((JMenu)invoker).getParent();
+				popup = (JPopupMenu) invoker.getParent();
 				invoker = (JComponent)popup.getInvoker();
 			}
 			return invoker;

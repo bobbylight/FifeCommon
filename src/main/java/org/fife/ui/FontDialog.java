@@ -639,14 +639,14 @@ public class FontDialog extends JDialog implements ActionListener,
 
 		// If they've chosen a new font, update the sample.
 		if (lsm == fontList.getSelectionModel()) {
-			FontInfo fi = (FontInfo)fontList.getSelectedValue();
+			FontInfo fi = fontList.getSelectedValue();
 			Font newFont = new Font(fi.fontFamily, properties, size);
 			sampleTextLabel.setFont(newFont);
 		}
 
 		// If they've chosen a new font size, also update the sample.
 		else if (lsm == fontSizeList.getSelectionModel()) {
-			size = (Integer)fontSizeList.getSelectedValue();
+			size = fontSizeList.getSelectedValue();
 			Font newFont = sampleTextLabel.getFont().deriveFont(properties, size);
 			sampleTextLabel.setFont(newFont);
 		}

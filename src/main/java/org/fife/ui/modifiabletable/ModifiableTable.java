@@ -262,8 +262,8 @@ public class ModifiableTable extends JPanel {
 			List<? extends Action> customButtons) {
 
 		// Get panel and spacing ready.
-		JPanel panel = null;
-		JPanel buttonPanel = null;
+		JPanel panel;
+		JPanel buttonPanel;
 
 		if (Boolean.getBoolean(PROPERTY_PANELS_NON_OPAQUE)) {
 			panel = UIUtil.newTabbedPanePanel();
@@ -327,7 +327,7 @@ public class ModifiableTable extends JPanel {
 		}
 
 		// Lay out the panel properly.
-		String buttonLoc2 = null;
+		String buttonLoc2;
 		if (RIGHT.equals(buttonLocation)) {
 			panel.setLayout(new GridLayout(buttonCount,1, 5,5));
 			buttonLoc2 = BorderLayout.PAGE_START;

@@ -210,7 +210,7 @@ class FilePasteThread extends GUIWorkerThread {
 				if (newDir.isFile()) {
 					String msg = getString("Error.DirectoryExistsAsFile",
 							newDir.getAbsolutePath());
-					CannotCopyDialog ccd = null;
+					CannotCopyDialog ccd;
 					if (parent instanceof Dialog) {
 						ccd = new CannotCopyDialog((Dialog)parent, msg);
 					}
@@ -226,7 +226,7 @@ class FilePasteThread extends GUIWorkerThread {
 
 				else if (newDir.isDirectory()) {
 					if (decisions.dirNameCollision==UserDecisions.PROMPT) {
-						DirExistsDialog ded = null;
+						DirExistsDialog ded;
 						if (parent instanceof Dialog) {
 							ded = new DirExistsDialog((Dialog)parent, newDir);
 						}
@@ -349,7 +349,7 @@ class FilePasteThread extends GUIWorkerThread {
 			}
 			String msg = getString("Error.FileExistsAsDirectory",
 									dest.getAbsolutePath());
-			CannotCopyDialog ccd = null;
+			CannotCopyDialog ccd;
 			if (parent instanceof Dialog) {
 				ccd = new CannotCopyDialog((Dialog)parent, msg);
 			}
@@ -495,7 +495,7 @@ class FilePasteThread extends GUIWorkerThread {
 
 	public static void paste(Window parent, List<File> files, File destDir,
 			FilePasteCallback callback) {
-		FilePasteThread thread = null;
+		FilePasteThread thread;
 		if (parent instanceof Frame) {
 			thread = new FilePasteThread((Frame)parent, files, destDir,
 					callback);
@@ -625,7 +625,7 @@ class FilePasteThread extends GUIWorkerThread {
 				topText.add(new SelectableLabel(message));
 			}
 			else {
-				int newline = 0;
+				int newline;
 				int lastNewline = 0;
 				while ((newline=message.indexOf('\n', lastNewline))>-1) {
 					String temp = message.substring(lastNewline, newline);
@@ -720,12 +720,10 @@ class FilePasteThread extends GUIWorkerThread {
 
 			try {
 				Class<?> sfClazz = Class.forName("sun.awt.shell.ShellFolder");
-				Method m = sfClazz.getMethod("getShellFolder",
-						new Class[] { File.class });
-				Object shellFolder = m.invoke(null, new Object[] { file });
+				Method m = sfClazz.getMethod("getShellFolder", File.class);
+				Object shellFolder = m.invoke(null, file);
 				if (shellFolder!=null) {
-					m = sfClazz.getMethod("getIcon",
-							new Class[] { boolean.class });
+					m = sfClazz.getMethod("getIcon", boolean.class);
 					Image image = (Image)m.invoke(shellFolder,
 							new Object[] { Boolean.TRUE });
 					if (image!=null) {
@@ -890,7 +888,7 @@ class FilePasteThread extends GUIWorkerThread {
 
 		@Override
 		public void run() {
-			NameCollisionDialog ncd = null;
+			NameCollisionDialog ncd;
 			if (parent instanceof Frame) {
 				ncd = new NameCollisionDialog((Frame)parent,
 						file, dest);

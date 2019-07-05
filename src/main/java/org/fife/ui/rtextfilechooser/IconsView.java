@@ -182,7 +182,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	@Override
 	public File[] getSelectedFiles() {
 		JInternalFrame[] frames = getSelectedFrames();
-		File[] files = null;
+		File[] files;
 		if (frames!=null) {
 			int num = frames.length;
 			files = new File[num];
@@ -475,13 +475,13 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 
 		public String getHTMLFileName(String fileName) {
 
-			int br = 0;
+			int br;
 			int count = 0;
 			Font font = getFont();
 			if (font==null) return ""; // Happens at the very beginning.
 			FontMetrics fm = getFontMetrics(font);
 
-			String result = "";
+			StringBuilder result = new StringBuilder();
 
 			do {
 				// Subtract 8 from the width for a little "cushion" on
@@ -490,17 +490,17 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 				Segment s = new Segment(fileName.toCharArray(), 0,fileName.length());
 				br = Utilities.getBreakLocation(s, fm, 0f, getWidth()-8,
 											null, 0);
-				result += fileName.substring(0,br);
+				result.append(fileName.substring(0, br));
 				fileName = fileName.substring(br);
 				if (fileName.length()>0)
-					result += "<br>";
+					result.append("<br>");
 				count++;
 			} while (fileName.length()>0);
 
 			// Make sure the icon is big enough to display all the text...
 			setSize(DEFAULT_ICON_WIDTH, defaultHeight+(count-1)*fm.getHeight());
 
-			return result;
+			return result.toString();
 
 		}
 
@@ -519,7 +519,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 
 				// Set text to display.
 				String text = file.getName();
-				String beginning = null, ending = null;
+				String beginning, ending;
 				if (chooser.isOpenedFile(file) && chooser.getStyleOpenFiles()) {
 					beginning = "<html><body><center><u>";
 					ending = "</u></center></body></html>";
@@ -536,7 +536,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 			else {
 				// Set colors and text to display.
 				label.setForeground(unselectedFG);
-				String beginning = null, ending = null;
+				String beginning, ending;
 				if (chooser.isOpenedFile(file)) {
 					beginning = "";//"<html><u>";
 					ending = "";//"</u></html>";

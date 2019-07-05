@@ -689,7 +689,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 	/**
 	 * Returns the build date of this application.  First checks for a resource
-	 * on the classpath named {@link BUILD_DATE_RESOURCE}.  If that isn't
+	 * on the classpath named {@link #BUILD_DATE_RESOURCE}.  If that isn't
 	 * found, an attempt is made to read a {@code Build-Date} attribute from
 	 * the application's {@code Manifest.mf} file.  Note that the latter
 	 * approach will fail when called in a jlink-generated executable.

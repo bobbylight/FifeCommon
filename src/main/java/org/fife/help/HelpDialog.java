@@ -160,6 +160,8 @@ public class HelpDialog extends JFrame implements ActionListener {
 	private static final String TREE_ROOT_NODE	= "RootNode";
 	private static final String VISIBLE		= "visible";
 
+	private static final int BUF_SIZE	= 16384;
+
 
 	/**
 	 * Creates a new help dialog.
@@ -486,8 +488,8 @@ public class HelpDialog extends JFrame implements ActionListener {
 	private void createRoot(String helpXMLFile) {
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = null;
-		org.w3c.dom.Document doc = null;
+		DocumentBuilder db;
+		org.w3c.dom.Document doc;
 		try {
 			db = dbf.newDocumentBuilder();
 			InputSource is = new InputSource(new FileReader(helpXMLFile));
@@ -603,7 +605,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 					int tempEnd = pos + searchStringLength;
 					contents = contents.substring(0, pos) + "<font bgcolor=\"#FFFF00\">" +
 							contents.substring(pos, tempEnd) + "</font>" +
-							contents.substring(tempEnd, contents.length());
+							contents.substring(tempEnd);
 					int startPos = pos + searchStringLength +
 								"<font bgcolor=\"#FFFF00\">".length() +
 								"</font>".length();
@@ -998,7 +1000,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 	 */
 	private void loadSelectedHelpPageIndex() {
 
-		String selected = (String)indexList.getSelectedValue();
+		String selected = indexList.getSelectedValue();
 
 		// Search through all of the help pages to see where this item is.
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)tocTree.getModel().getRoot();
@@ -1044,7 +1046,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 	private void loadSelectedHelpPageSearch() {
 
 		// Get the HelpTreeNode they chose.
-		HelpTreeNode chosenNode = (HelpTreeNode)searchList.getSelectedValue();
+		HelpTreeNode chosenNode = searchList.getSelectedValue();
 
 		// Now, set the html in the right-hand pane to be the page associated with this node.
 		if (chosenNode.getUrl() != null) {
@@ -1098,7 +1100,6 @@ public class HelpDialog extends JFrame implements ActionListener {
 	 * @return The text read from the reader.
 	 * @throws IOException If an error occurs while reading.
 	 */
-	private static final int BUF_SIZE	= 16384;
 	private static String read(Reader in) throws IOException {
 
 		char[] buff = new char[BUF_SIZE];

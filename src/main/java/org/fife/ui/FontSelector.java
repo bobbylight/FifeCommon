@@ -108,7 +108,7 @@ public class FontSelector extends JPanel implements ActionListener {
 		if (e.getSource()==browseButton) {
 
 			Window parent = SwingUtilities.getWindowAncestor(this);
-			FontDialog fd = null;
+			FontDialog fd;
 			if (parent instanceof Frame) {
 				fd = new FontDialog((Frame)parent, MSG.getString("Font"),
 									field.getDisplayedFont(),

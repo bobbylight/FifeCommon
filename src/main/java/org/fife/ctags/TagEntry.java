@@ -86,7 +86,7 @@ public class TagEntry {
 		StringBuilder sb = new StringBuilder();
 
 		int old = 0;
-		int pos = 0;
+		int pos;
 		int len = pattern.length();
 		while (old<len && (pos=pattern.indexOf('\\', old))>-1) {
 			sb.append(pattern, old, pos);
@@ -220,7 +220,7 @@ public class TagEntry {
 					/* parse pattern. */
 					lineNumber = 0;
 					//entry.pattern = temp;
-					int curPos = 0, foo=0;
+					int curPos = 0, foo;
 					do {
 						foo = temp.indexOf(tempChar, curPos+1);
 						if (foo>-1)

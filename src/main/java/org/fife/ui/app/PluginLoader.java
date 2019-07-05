@@ -257,7 +257,7 @@ class PluginLoader {
 		}
 
 		// Create the ClassLoader that does the actual dirty-work.
-		URL[] urls = urlList.toArray(new URL[urlList.size()]);
+		URL[] urls = urlList.toArray(new URL[0]);
 		ucl = new URLClassLoader(urls, app.getClass().getClassLoader());
 
 		loadPluginsImpl(plugins);

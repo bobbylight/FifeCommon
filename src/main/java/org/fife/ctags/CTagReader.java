@@ -85,7 +85,7 @@ public class CTagReader {
 	 */
 	private boolean find(TagEntry entry, String name, int options) throws IOException {
 
-		boolean result = false;
+		boolean result;
 		searchName = name;
 		searchPartial = (options & TAG_PARTIALMATCH) != 0;
 		searchIgnoreCase = (options & TAG_IGNORECASE) != 0;
@@ -187,7 +187,7 @@ public class CTagReader {
 
 	private boolean findNext(TagEntry entry) throws IOException {
 
-		boolean result = false;
+		boolean result;
 		if ((sortMethod == TAG_SORTED && !searchIgnoreCase) ||
 			(sortMethod == TAG_FOLDSORTED  &&  searchIgnoreCase))
 		{
@@ -273,7 +273,7 @@ public class CTagReader {
 
 	private boolean readNext(TagEntry entry) throws IOException {
 
-		boolean result = false;
+		boolean result;
 		if (!initialized)
 			result = false;
 		else if (!readTagLine())
@@ -580,178 +580,4 @@ public class CTagReader {
 	}
 
 
-/************************ CLASSES FOR THE DEMO (MAIN, ETC.) ******************/
-/*
-static String TagFileName = "tags";
-static boolean extensionFields;
-static boolean SortOverride;
-static int SortMethod;
-static int foo = 0;
-
-	private void printTag(TagEntry entry) {
-		int i;
-		int first = 1;
-		String separator = ";\"";
-		String empty = "";
-		/* "sep" returns a value only the first time it is evaluated */
-/*		String sep;// = (first ? (first = 0, separator) : empty);
-		if (foo++==1)
-			sep = separator;
-		else
-			sep = empty;
-		System.out.println(entry.name + "\t" + entry.file + "\t" + entry.pattern);
-		if (extensionFields) {
-			if (entry.kind!=null  &&  entry!=null)
-				System.out.println(sep + "\tkind:" + entry.kind);
-			if (entry.fileScope)
-				System.out.println(sep + "\tfile:");
-			for (i=0; i<entry.fieldList.size(); i++)
-				System.out.println(sep + "\t" + ((TagExtensionField)entry.fieldList.get(i)).key +
-								":" + ((TagExtensionField)entry.fieldList.get(i)).value);
-		}
-		System.out.println("\n"); // For 2 newlines.
-	}
-
-
-/*
-	private void findTag(String name, int options) throws IOException {
-
-		TagFileInfo info = new TagFileInfo();
-		TagEntry entry = new TagEntry();
-		TagFile file = tagsOpen(TagFileName, info);
-
-		if (file==null) {
-			System.out.println("Cannot open tag file: " + info.errornumber + ": " + name);
-			System.exit(1);
-		}
-		else {
-			if (SortOverride)
-				tagsSetSortType (file, SortMethod);
-			if (tagsFind(file, entry, name, options)==true) {
-				do {
-					printTag(entry);
-				} while (tagsFindNext(file, entry)==true);
-			}
-			tagsClose(file);
-		}
-
-	}
-
-
-	/**
-	 * Writes all tags found by this ctag reader to stdout.
-	 */
-/*	private void listTags() throws IOException {
-
-		TagFileInfo info = new TagFileInfo();
-		TagEntry entry = new TagEntry();
-		TagFile file = tagsOpen(TagFileName, info);
-
-		if (file==null) {
-			System.err.println("Cannot open tag file: " + info.errornumber + ": " + TagFileName);
-			System.exit(1);
-		}
-		else {
-			while (tagsNext (file, entry)==true)
-				printTag(entry);
-			tagsClose(file);
-		}
-
-	}
-
-
-/*
-	static final String Usage =
-		"Find tag file entries matching specified names.\n\n" +
-		"Usage: %s [-ilp] [-s[0|1]] [-t file] [name(s)]\n\n"  +
-		"Options:\n" +
-		"    -e           Include extension fields in output.\n" +
-		"    -i           Perform case-insensitive matching.\n" +
-		"    -l           List all tags.\n" +
-		"    -p           Perform partial matching.\n" +
-		"    -s[0|1|2]    Override sort detection of tag \n" +
-		"    -t file      Use specified tag file (default: \"tags\").\n" +
-		"Note that options are acted upon as encountered, so order is significant.\n";
-
-
-	public static void main(String[] argv) {
-
-		int argc = argv.length;
-		int options = 0;
-		boolean actionSupplied = false;
-
-		CTagReader tagReader = new CTagReader();
-
-		if (argc == 1) {
-			System.err.println(Usage);
-			System.exit(1);
-		}
-
-		for (int i=0;  i<argc; i++) {
-			String arg = argv[i];
-			if (arg.charAt(0)!='-') {
-				try {
-					tagReader.findTag(arg, options);
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-					System.exit(0);
-				}
-				actionSupplied = true;
-			}
-			else {
-				for (int j=1; j<arg.length(); j++) {
-					switch (arg.charAt(j)) {
-						case 'e': extensionFields = true;         break;
-						case 'i': options |= TAG_IGNORECASE;   break;
-						case 'p': options |= TAG_PARTIALMATCH; break;
-						case 'l':
-							try {
-								tagReader.listTags();
-								actionSupplied = true;
-							} catch (IOException ioe) {
-								ioe.printStackTrace();
-								System.exit(0);
-							}
-							break;
-						case 't':
-							if (arg.length()<arg.length()) {
-								TagFileName = arg.substring(j+1);
-								j += TagFileName.length();
-							}
-							else if (i + 1 < argc)
-								TagFileName = argv[++i];
-							else {
-								System.err.println(Usage);
-								System.exit(1);
-							}
-							break;
-						case 's':
-							SortOverride = true;
-							++j;
-							if (arg.charAt(j)=='\0')
-								SortMethod = TAG_SORTED;
-							else if ("012".indexOf(arg.charAt(j))>-1)
-								SortMethod = arg.charAt(j) - '0';
-							else {
-								System.err.println(Usage);
-								System.exit(1);
-							}
-							break;
-						default:
-							System.err.println("Unknown option: " + arg.charAt(j));
-							System.exit(1);
-							break;
-
-					} // End of switch (arg.charAt(j)).
-				} // End of for ...
-			} // End of else...
-		} // End of for...
-
-		if (!actionSupplied) {
-			System.err.println("Error:  No option specified; specify tag name(s) or -l option.");
-			System.exit(1);
-		}
-
-	}
-*/
 }

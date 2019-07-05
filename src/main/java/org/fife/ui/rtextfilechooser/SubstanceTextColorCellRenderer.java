@@ -58,7 +58,7 @@ class SubstanceTextColorCellRenderer extends SubstanceDefaultTableCellRenderer {
 			}
 		}
 
-		String text = null;
+		String text;
 		if (row==0) {
 			text = "filename.ext";
 		}

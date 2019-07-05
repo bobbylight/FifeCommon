@@ -74,7 +74,7 @@ public abstract class RecentFilesMenu extends JMenu {
 	 */
 	public RecentFilesMenu(String name, String[] initialContents) {
 		this(name, initialContents!=null ?
-				Arrays.asList(initialContents) : (List<String>)null);
+				Arrays.asList(initialContents) : null);
 	}
 
 

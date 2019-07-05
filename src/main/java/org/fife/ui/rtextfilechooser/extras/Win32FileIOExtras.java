@@ -70,8 +70,8 @@ class Win32FileIOExtras extends FileIOExtras {
 	 *
 	 * @param hwnd The handle to the parent window, or <code>0</code> if
 	 *        unknown.
-	 * @param fileName The name of the file to move.  This should
-	 *        be an absolute path.
+	 * @param files The names of the files to move.  These should
+	 *        be absolute paths.
 	 * @param confirmation Whether a "Are you sure you want to send XXX to
 	 *        the Trash?" should be displayed to the user.
 	 * @param silent If this is <code>true</code>, no progress dialog is

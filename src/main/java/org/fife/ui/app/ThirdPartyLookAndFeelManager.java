@@ -194,8 +194,8 @@ public class ThirdPartyLookAndFeelManager {
 		}
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = null;
-		Document doc = null;
+		DocumentBuilder db;
+		Document doc;
 		try {
 			db = dbf.newDocumentBuilder();
 			InputSource is = new InputSource(new BufferedReader(
@@ -226,7 +226,7 @@ public class ThirdPartyLookAndFeelManager {
 	/**
 	 * Used in parsing the XML file containing the 3rd party look and feels.
 	 *
-	 * @param node The root node of the parsed XML document.
+	 * @param root The root node of the parsed XML document.
 	 * @param lafInfo An array list of <code>ExtendedLookAndFeelInfo</code>s.
 	 * @throws IOException If an error occurs while parsing the XML.
 	 */

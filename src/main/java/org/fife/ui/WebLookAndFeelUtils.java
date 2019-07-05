@@ -195,7 +195,7 @@ public final class WebLookAndFeelUtils {
 			//WebLookandFeel.setDecorateFrames(true);
 			//WebLookAndFeel.setDecorateDialogs(true);
 			Class<?> clazz = Class.forName(LAF_CLASS_NAME, true, cl);
-			Method m = null;
+			Method m;
 			if (decorateFrames) {
 				m = clazz.getDeclaredMethod("setDecorateFrames", boolean.class);
 				m.invoke(null, Boolean.TRUE);

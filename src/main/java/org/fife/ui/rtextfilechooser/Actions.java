@@ -67,12 +67,11 @@ public interface Actions {
 	/**
 	 * Copies any files selected in the file chooser's view.
 	 */
-	class CopyAction extends FileChooserAction {
+	class CopyAction extends FileSelectorAction {
 
 		private FileSelector chooser;
 
 		CopyAction(FileSelector chooser) {
-			super(null);
 			this.chooser = chooser;
 			putValue(Action.NAME, getString("Copy"));
 			int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
@@ -83,19 +82,8 @@ public interface Actions {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			// Get the selected files.  If there are no selected files (i.e.,
-			// they pressed "Ctrl+C" when no files were selected), beep.
-			File[] files;
-			if (chooser instanceof RTextFileChooser) {
-				// Horrible hack!!!  File chooser shouldn't actually
-				// implement FileSelector!  But it's view does...
-				files = ((RTextFileChooser)chooser).getView().getSelectedFiles();
-			}
-			else { // FileSystemTree
-				files = chooser.getSelectedFiles();
-			}
-			if (files==null || files.length==0) {
-				UIManager.getLookAndFeel().provideErrorFeedback(null);
+			File[] files = getSelectedFiles(chooser);
+			if (files.length == 0) {
 				return;
 			}
 
@@ -113,12 +101,11 @@ public interface Actions {
 	/**
 	 * Copies the full path of any selected files to the clipboard.
 	 */
-	class CopyFullPathAction extends FileChooserAction {
+	class CopyFullPathAction extends FileSelectorAction {
 
 		private FileSelector chooser;
 
 		CopyFullPathAction(FileSelector chooser) {
-			super(null);
 			this.chooser = chooser;
 			putValue(Action.NAME, getString("CopyFullPath"));
 			int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
@@ -130,19 +117,8 @@ public interface Actions {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			// Get the selected files.  If there are no selected files (i.e.,
-			// they pressed "Ctrl+Shift+C" when no files were selected), beep.
-			File[] files;
-			if (chooser instanceof RTextFileChooser) {
-				// Horrible hack!!!  File chooser shouldn't actually
-				// implement FileSelector!  But it's view does...
-				files = ((RTextFileChooser)chooser).getView().getSelectedFiles();
-			}
-			else { // FileSystemTree
-				files = chooser.getSelectedFiles();
-			}
-			if (files==null || files.length==0) {
-				UIManager.getLookAndFeel().provideErrorFeedback(null);
+			File[] files = getSelectedFiles(chooser);
+			if (files.length == 0) {
 				return;
 			}
 
@@ -240,14 +216,47 @@ public interface Actions {
 	/**
 	 * Base class for all file chooser actions.
 	 */
-	abstract class FileChooserAction extends AbstractAction {
+	abstract class FileChooserAction extends FileSelectorAction {
 
 		protected RTextFileChooser chooser;
-		private static ResourceBundle msg = ResourceBundle.getBundle(
-							"org.fife.ui.rtextfilechooser.FileChooserPopup");
 
 		FileChooserAction(RTextFileChooser chooser) {
 			this.chooser = chooser;
+		}
+
+	}
+
+
+	/**
+	 * Base class for all actions that require just a {@code FileSelector}.
+	 */
+	abstract class FileSelectorAction extends AbstractAction {
+
+		private static ResourceBundle msg = ResourceBundle.getBundle(
+			"org.fife.ui.rtextfilechooser.FileChooserPopup");
+
+		/**
+		 * Get the selected files.  If there are no selected files (i.e.,
+		 * they pressed Ctrl+C when no files were selected), beep.
+		 */
+		static File[] getSelectedFiles(FileSelector chooser) {
+
+			File[] files;
+			if (chooser instanceof RTextFileChooser) {
+				// Horrible hack!!!  File chooser shouldn't actually
+				// implement FileSelector!  But it's view does...
+				files = ((RTextFileChooser)chooser).getView().getSelectedFiles();
+			}
+			else { // FileSystemTree
+				files = chooser.getSelectedFiles();
+			}
+
+			if (files==null || files.length==0) {
+				UIManager.getLookAndFeel().provideErrorFeedback(null);
+				return new File[0];
+			}
+
+			return files;
 		}
 
 		protected String getString(String key) {
@@ -319,7 +328,7 @@ public interface Actions {
 		 * Sets the enabled state of this action based on whether the system
 		 * clipboard contains a list of files to copy).
 		 */
-		public void checkEnabledState() {
+		void checkEnabledState() {
 			setEnabled(Utilities.getClipboardContainsFileList());
 		}
 
@@ -397,10 +406,12 @@ public interface Actions {
 
 
 	/**
-	 * Opens a file with the default system editor or viewer.  Only works when
-	 * using Java 6.
+	 * Opens a file with the default system editor or viewer.<p>
+	 *
+	 * NOTE: IntelliJ is wrong about "access can be package-private".  Must
+	 * be public for library consumers.
 	 */
-	class SystemOpenAction extends FileChooserAction {
+	public class SystemOpenAction extends FileSelectorAction {
 
 		/*
          * NOTE: This method is a FileChooserAction only so we can use its
@@ -435,7 +446,6 @@ public interface Actions {
 		// NOTE: IntelliJ is wrong about "access can be package-private".  Must
 		// be public for library consumers
 		public SystemOpenAction(FileSelector chooser, OpenMethod method) {
-			super(null);
 			this.chooser = chooser;
 			this.method = method;
 			putValue(Action.NAME, getString(method.localizationKey));
@@ -497,7 +507,7 @@ public interface Actions {
 	/**
 	 * Displays the "properties" dialog for any selected files.
 	 */
-	class PropertiesAction extends FileChooserAction {
+	class PropertiesAction extends FileSelectorAction {
 
 		/*
          * This is a File Chooser action only to get at its resource bundle, so
@@ -507,7 +517,6 @@ public interface Actions {
 		private FileSelector selector;
 
 		PropertiesAction(FileSelector selector) {
-			super(null);
 			putValue(NAME, "Properties");
 			final int alt = InputEvent.ALT_DOWN_MASK;
 			KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, alt);
@@ -524,14 +533,7 @@ public interface Actions {
 				return;
 			}
 
-			File[] selected;
-			if (selector instanceof RTextFileChooser) {
-				RTextFileChooser chooser = (RTextFileChooser)selector;
-				selected = chooser.getView().getSelectedFiles();
-			}
-			else {
-				selected = selector.getSelectedFiles();
-			}
+			File[] selected = getSelectedFiles(selector);
 
 			Window parent = SwingUtilities.
 					getWindowAncestor((Component)selector);

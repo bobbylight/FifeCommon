@@ -81,14 +81,14 @@ class FilePasteThread extends GUIWorkerThread {
 			"org.fife.ui.rtextfilechooser.FilePaste");
 
 
-	FilePasteThread(Frame parent, List<File> files, File destDir,
+	private FilePasteThread(Frame parent, List<File> files, File destDir,
 			FilePasteCallback callback) {
 		this.parent = parent;
 		init(files, destDir, callback);
 	}
 
 
-	FilePasteThread(Dialog parent, List<File> files, File destDir,
+	private FilePasteThread(Dialog parent, List<File> files, File destDir,
 			FilePasteCallback callback) {
 		this.parent = parent;
 		init(files, destDir, callback);
@@ -836,6 +836,7 @@ class FilePasteThread extends GUIWorkerThread {
 			list = new JList<>(choices);
 			list.setSelectionModel(new RListSelectionModel());
 			list.setSelectedIndex(0);
+			list.setVisibleRowCount(choices.length);
 			RScrollPane sp = new RScrollPane(list);
 			middle.add(sp);
 			middle.add(Box.createVerticalStrut(5));
@@ -857,7 +858,9 @@ class FilePasteThread extends GUIWorkerThread {
 			setContentPane(cp);
 			getRootPane().setDefaultButton(okButton);
 			setModal(true);
-			pack();
+			Dimension preferredSize = getPreferredSize();
+			preferredSize.width = Math.max(preferredSize.width, 640);
+			setSize(preferredSize);
 			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 			setLocationRelativeTo(getParent());
 

@@ -12,8 +12,6 @@ package org.fife.ui.app;
 
 import org.fife.ui.UIUtil;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javax.swing.*;
 
 

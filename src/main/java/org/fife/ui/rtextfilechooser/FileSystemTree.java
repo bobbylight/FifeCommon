@@ -24,8 +24,6 @@ import java.util.ResourceBundle;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 
 import org.fife.ui.ToolTipTree;
 import org.fife.util.SubstanceUtil;
@@ -560,12 +558,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		TreeSelectionModel tsm = getSelectionModel();
 		tsm.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
-		tsm.addTreeSelectionListener(new TreeSelectionListener() {
-			@Override
-			public void valueChanged(TreeSelectionEvent e) {
-				scrollPathToVisible(e.getPath());
-			}
-		});
+		tsm.addTreeSelectionListener(e -> scrollPathToVisible(e.getPath()));
 
 		// Set the root.  Note that this must come BEFORE we
 		// set the cell renderer (below), otherwise, each tree node's
@@ -773,12 +766,9 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 		// This is often called before the tree is displayed.
 		final TreePath path2 = path;
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				setSelectionPath(path2);
-				scrollPathToVisible(path2);
-			}
+		SwingUtilities.invokeLater(() -> {
+			setSelectionPath(path2);
+			scrollPathToVisible(path2);
 		});
 
 		return true;

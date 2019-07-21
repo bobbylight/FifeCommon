@@ -38,8 +38,6 @@ import javax.swing.MenuElement;
 import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.fife.io.IOUtil;
 import org.fife.ui.AboutDialog;
@@ -1016,35 +1014,32 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 		}
 
 		MenuSelectionManager.defaultManager().addChangeListener(
-			new ChangeListener() {
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					if (statusBar==null) {
-						return;
-					}
-					String msg = statusBar.getDefaultStatusMessage();
-					MenuElement[] path = MenuSelectionManager.
-									defaultManager().getSelectedPath();
-					if (path.length>0) {
-						Component c = path[path.length-1].getComponent();
-						if (c instanceof JMenuItem) {
-							JMenuItem item = (JMenuItem)c;
-							Action a = item.getAction();
-							if (a!=null) {
-								msg = (String)a.getValue(
-												Action.SHORT_DESCRIPTION);
-							}
-							else {
-								String text = item.getAccessibleContext().
-											getAccessibleDescription();
-								if (text!=null) {
-									msg = text;
-								}
+			e -> {
+				if (statusBar==null) {
+					return;
+				}
+				String msg = statusBar.getDefaultStatusMessage();
+				MenuElement[] path = MenuSelectionManager.
+								defaultManager().getSelectedPath();
+				if (path.length>0) {
+					Component c = path[path.length-1].getComponent();
+					if (c instanceof JMenuItem) {
+						JMenuItem item = (JMenuItem)c;
+						Action a = item.getAction();
+						if (a!=null) {
+							msg = (String)a.getValue(
+											Action.SHORT_DESCRIPTION);
+						}
+						else {
+							String text = item.getAccessibleContext().
+										getAccessibleDescription();
+							if (text!=null) {
+								msg = text;
 							}
 						}
 					}
-					statusBar.setStatusMessage(msg);
 				}
+				statusBar.setStatusMessage(msg);
 			}
 		);
 

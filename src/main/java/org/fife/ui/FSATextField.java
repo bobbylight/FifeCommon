@@ -53,7 +53,6 @@ public class FSATextField extends JTextField implements ComponentListener,
 	 * loop through multiple file names can be slow on some systems.
 	 */
 	private File directory;
-	private String dirName;
 
 	/**
 	 * Whether the next matching filename is auto-inserted when the drop-down
@@ -68,7 +67,6 @@ public class FSATextField extends JTextField implements ComponentListener,
 	 */
 	private JList<String> fileList;
 	private DefaultListModel<String> fileListModel;
-	private JScrollPane scrollPane;
 	private JWindow popupWindow;
 	private boolean directoriesOnly;
 	private long lastCount = -1;
@@ -149,7 +147,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 		fileList = new JList<>(fileListModel);
 		fileList.addListSelectionListener(this);
 		contentPane = new JPanel(new GridLayout(1,1));
-		scrollPane = new JScrollPane(fileList);
+		JScrollPane scrollPane = new JScrollPane(fileList);
 		contentPane.add(scrollPane);
 
 		setCurrentDirectory(currentDirectory);
@@ -928,10 +926,6 @@ System.out.println("DEBUG: *** parent is null");
 				return null;
 			}
 
-			dirName = directory.getAbsolutePath();
-			if (dirName.charAt(dirName.length()-1)!=File.separatorChar)
-				dirName += File.separatorChar; // Only need to add slash if not == "C:\" on Windows.
-
 			// Take special care if this is a UNC path, to work around
 			// performance problems listing files in them if the file
 			// list is long.
@@ -1015,7 +1009,6 @@ System.out.println("DEBUG: *** parent is null");
 		}
 
 		lastCount = -1;
-		lastSeparator = 0;
 		setPopupVisible(false);
 		return null;
 

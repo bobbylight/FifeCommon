@@ -182,18 +182,21 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 
 		String actionCommand = e.getActionCommand();
 
-		if (actionCommand.equals("Cancel")) {
-			this.setVisible(false);
-		}
+		switch (actionCommand) {
 
-		else if (actionCommand.equals("OK")) {
-			boolean result = doApply((Frame)getParent());
-			if (result)
+			case "Cancel":
 				this.setVisible(false);
-		}
+				break;
 
-		else if (actionCommand.equals("Apply")) {
-			doApply((Frame)getParent());
+			case "OK":
+				boolean result = doApply((Frame)getParent());
+				if (result)
+					this.setVisible(false);
+				break;
+
+			case "Apply":
+				doApply((Frame)getParent());
+				break;
 		}
 
 	}

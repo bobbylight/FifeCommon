@@ -43,7 +43,7 @@ public class ImageFileFilter extends FileFilter {
 
 
 	/**
-	 * Accepts all gif, jpg, and png image files.
+	 * Accepts all gif, jpg, png and bmp image files.
 	 *
 	 * @param f The file to check.
 	 * @return Whether the file is an image file.
@@ -86,9 +86,8 @@ public class ImageFileFilter extends FileFilter {
 	 * @return Whether the extension is for a supported image file type.
 	 */
 	private static boolean isValidExtension(String ext) {
-		return ext!=null &&
-			("gif".equals(ext) || "jpg".equals(ext) || "png".equals(ext) ||
-					"bmp".equals(ext));
+		return "gif".equals(ext) || "jpg".equals(ext) || "png".equals(ext) ||
+					"bmp".equals(ext);
 	}
 
 

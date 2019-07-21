@@ -159,7 +159,8 @@ InputSource is = new InputSource(new FileReader(file));
 			destFile.createNewFile();
 		}
 
-		try (FileChannel source = new FileInputStream(sourceFile).getChannel(); FileChannel destination = new FileOutputStream(destFile).getChannel()) {
+		try (FileChannel source = new FileInputStream(sourceFile).getChannel();
+			 	FileChannel destination = new FileOutputStream(destFile).getChannel()) {
 			destination.transferFrom(source, 0, source.size());
 		}
 

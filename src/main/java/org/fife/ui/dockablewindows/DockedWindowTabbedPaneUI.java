@@ -366,7 +366,7 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 		title = croppedTitlesList.get(tabIndex);
 		g.setFont(font);
 
-		Color fg = tabPane.getForegroundAt(tabIndex);
+		Color fg;
 		if (isSelected) {
 			fg = UIManager.getColor("Label.foreground");
 			if (fg==null) {

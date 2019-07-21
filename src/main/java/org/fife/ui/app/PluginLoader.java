@@ -10,7 +10,6 @@
 package org.fife.ui.app;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -222,12 +221,7 @@ class PluginLoader {
 		}
 
 		// Get all jars in the plugin directory.
-		File[] jars = pluginDir.listFiles(new FileFilter() {
-			@Override
-			public boolean accept(File f) {
-				return f.getName().endsWith(".jar");
-			}
-		});
+		File[] jars = pluginDir.listFiles(f -> f.getName().endsWith(".jar"));
 		int jarCount = jars.length;
 
 		List<List<String>> plugins = new ArrayList<>(
@@ -283,12 +277,7 @@ class PluginLoader {
 						loadPluginImpl(className);
 					} catch (final Exception e) {
 						e.printStackTrace();
-						SwingUtilities.invokeLater(new Runnable() {
-							@Override
-							public void run() {
-								app.displayException(e);
-							}
-						});
+						SwingUtilities.invokeLater(() -> app.displayException(e));
 					}
 				}
 			}

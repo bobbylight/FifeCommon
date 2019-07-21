@@ -179,7 +179,7 @@ final class FileChooserPreferences {
 	 */
 	public static void save(RTextFileChooser chooser) {
 
-		// Create an object containing all proeprties of the file chooser.
+		// Create an object containing all properties of the file chooser.
 		FileChooserPreferences fcp = FileChooserPreferences.generate(chooser);
 
 		// prefs is the Java interface to native preferences saving.

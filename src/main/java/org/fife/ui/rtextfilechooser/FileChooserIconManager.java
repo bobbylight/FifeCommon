@@ -10,8 +10,6 @@
  */
 package org.fife.ui.rtextfilechooser;
 
-import org.fife.util.DarculaUtil;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;

@@ -11,8 +11,6 @@
 package org.fife.ui.dockablewindows;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
@@ -816,12 +814,9 @@ public class DockableWindowPanel extends JPanel
 					b.setOpaque(false);
 					b.putClientProperty("DockableWindow", dwind);
 					final int index = i;
-					b.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							windowPanel.setActiveDockableWindow(index);
-							setCollapsed(false);
-						}
+					b.addActionListener(e -> {
+						windowPanel.setActiveDockableWindow(index);
+						setCollapsed(false);
 					});
 					b.addMouseListener(this);
 					toolbar.add(b);

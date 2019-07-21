@@ -350,12 +350,7 @@ public class TabbedPaneTransferHandler extends TransferHandler
 	 * @param index The index of the tab to select.
 	 */
 	protected void selectTab(final JTabbedPane tabbedPane, final int index) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				tabbedPane.setSelectedIndex(index);
-			}
-		});
+		SwingUtilities.invokeLater(() -> tabbedPane.setSelectedIndex(index));
 	}
 
 

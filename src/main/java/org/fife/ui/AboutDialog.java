@@ -43,8 +43,6 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
-	private JButton okButton;
-	private JButton licenseButton;
 	private JTabbedPane tabbedPane;
 	private Component appPanel;
 
@@ -104,11 +102,11 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 		}
 
 		// Add the OK and license buttons.
-		okButton = UIUtil.newButton(MSG, "OK", "OKButtonMnemonic");
+		JButton okButton = UIUtil.newButton(MSG, "OK", "OKButtonMnemonic");
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
-		licenseButton = UIUtil.newButton(MSG, "License",
-										"LicenseButtonMnemonic");
+		JButton licenseButton = UIUtil.newButton(MSG, "License",
+			"LicenseButtonMnemonic");
 		licenseButton.setActionCommand("License");
 		licenseButton.addActionListener(this);
 		Container buttons = UIUtil.createButtonFooter(okButton, licenseButton);
@@ -124,12 +122,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 		// Ensure that the first tab is the one initially shown
 		// (starting in J2SE 5.0, this isn't the default behavior;
 		// the last tab added is initially shown).
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				tabbedPane.setSelectedIndex(0);
-			}
-		});
+		SwingUtilities.invokeLater(() -> tabbedPane.setSelectedIndex(0));
 
 	}
 

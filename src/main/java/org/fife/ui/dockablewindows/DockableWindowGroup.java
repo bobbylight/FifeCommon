@@ -292,7 +292,6 @@ class DockableWindowGroup extends JPanel {
 
 		private JLabel label;
 		private JToolBar tb;
-		private JButton minimizeButton;
 		private Color gradient1;
 		private Color gradient2;
 		private MinimizeAction minimizeAction;
@@ -306,7 +305,7 @@ class DockableWindowGroup extends JPanel {
 			add(label);
 			minimizeAction = new MinimizeAction();
 			refreshMinimizeIcon();
-			minimizeButton = new JButton(minimizeAction);
+			JButton minimizeButton = new JButton(minimizeAction);
 			minimizeButton.setOpaque(false);
 			minimizeButton.setContentAreaFilled(false);
 			tb = new JToolBar();

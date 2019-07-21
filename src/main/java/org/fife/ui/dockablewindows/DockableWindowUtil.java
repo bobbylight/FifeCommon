@@ -26,8 +26,7 @@ final class DockableWindowUtil {
 
 	public static Color getDockableWindowBorderColor() {
 		// TODO: Check for null and return sensible default
-		Color c = UIManager.getColor("TabbedPane.shadow");
-		return c;
+		return UIManager.getColor("TabbedPane.shadow");
 	}
 
 

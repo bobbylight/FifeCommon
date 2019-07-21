@@ -157,12 +157,9 @@ public class GetKeyStrokeDialog extends JDialog {
 	public void setVisible(boolean visible) {
 		if (visible) {
 			canceled = true; // Default to canceled.
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					textField.requestFocusInWindow();
-					textField.selectAll();
-				}
+			SwingUtilities.invokeLater(() -> {
+				textField.requestFocusInWindow();
+				textField.selectAll();
 			});
 		}
 		super.setVisible(visible);

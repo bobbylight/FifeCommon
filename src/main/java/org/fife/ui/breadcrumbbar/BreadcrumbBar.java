@@ -78,9 +78,8 @@ public class BreadcrumbBar extends JComponent {
 	private HorizArrowIcon horizArrowIcon;
 	private DownArrowIcon downArrowIcon;
 	private Icon backIcon;
-	private BufferedImage backImage;
 
-	static final String ARROW_ACTIVATED		= "arrowActivatedPropety";
+	static final String ARROW_ACTIVATED		= "arrowActivatedProperty";
 	static final String ARROW_SELECTED		= "arrowSelected";
 
 	private static final String PKG = "org/fife/ui/breadcrumbbar/";
@@ -167,7 +166,7 @@ public class BreadcrumbBar extends JComponent {
 		if (UIUtil.isLightForeground(new JLabel().getForeground())) {
 			img = "dark/" + img;
 		}
-		backImage = loadImage(img);
+		BufferedImage backImage = loadImage(img);
 		return new ImageIcon(backImage);
 	}
 

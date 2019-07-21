@@ -327,18 +327,26 @@ public class CTagReader {
 			entry.parseTagLine(line);	// Fills in entry.
 			key = entry.name.substring(prefixLength);
 			value = entry.file;
-			if (key.equals("TAG_FILE_SORTED"))
-				sortMethod = Integer.parseInt(value);
-			else if (key.equals("TAG_FILE_FORMAT"))
-				format = Integer.parseInt(value);
-			else if (key.equals("TAG_PROGRAM_AUTHOR"))
-				programAuthor = value;
-			else if (key.equals("TAG_PROGRAM_NAME"))
-				programName = value;
-			else if (key.equals("TAG_PROGRAM_URL"))
-				programUrl = value;
-			else if (key.equals("TAG_PROGRAM_VERSION"))
-				programVersion = value;
+			switch (key) {
+				case "TAG_FILE_SORTED":
+					sortMethod = Integer.parseInt(value);
+					break;
+				case "TAG_FILE_FORMAT":
+					format = Integer.parseInt(value);
+					break;
+				case "TAG_PROGRAM_AUTHOR":
+					programAuthor = value;
+					break;
+				case "TAG_PROGRAM_NAME":
+					programName = value;
+					break;
+				case "TAG_PROGRAM_URL":
+					programUrl = value;
+					break;
+				case "TAG_PROGRAM_VERSION":
+					programVersion = value;
+					break;
+			}
 
 			info.format = format;
 			info.sort = sortMethod;
@@ -513,10 +521,10 @@ public class CTagReader {
 	 *   <li>TAG_FULLMATCH - Only tags whose full lengths match `name' will
 	 *       qualify.</li>
 	 *
-	 *   <li>TAG_IGNORECASE - Matching will be performed in a case-insenstive
+	 *   <li>TAG_IGNORECASE - Matching will be performed in a case-insensitive
 	 *       manner. Note that this disables binary searches of the tag file.</li>
 	 *
-	 *   <li>TAG_OBSERVECASE - Matching will be performed in a case-senstive
+	 *   <li>TAG_OBSERVECASE - Matching will be performed in a case-sensitive
 	 *       manner. Note that this enables binary searches of the tag file.</li>
 	 * </ul>
 	 *

@@ -411,7 +411,7 @@ public interface Actions {
 	 * NOTE: IntelliJ is wrong about "access can be package-private".  Must
 	 * be public for library consumers.
 	 */
-	public class SystemOpenAction extends FileSelectorAction {
+	class SystemOpenAction extends FileSelectorAction {
 
 		/*
          * NOTE: This method is a FileChooserAction only so we can use its

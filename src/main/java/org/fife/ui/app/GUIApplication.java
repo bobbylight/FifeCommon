@@ -280,7 +280,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	/**
 	 * Returns true if this application's main window is maximized.
 	 *
-	 * @return <code>true</code> if this applicaiton's window is maximized, or
+	 * @return <code>true</code> if this application's window is maximized, or
 	 *         <code>false</code> if it isn't.
 	 */
 	boolean isMaximized();

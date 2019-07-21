@@ -33,7 +33,6 @@ public abstract class WizardPlugin extends AbstractPlugin implements GUIApplicat
 	public static final int SUCCESSFUL	= 1;
 
 	private GUIApplication app;
-	private WizardPluginDialog dialog;
 	private List<WizardDialogInfoPanel> infoPanels;
 
 
@@ -222,6 +221,7 @@ public abstract class WizardPlugin extends AbstractPlugin implements GUIApplicat
 		infoPanels.clear();
 		createPanels();
 
+		WizardPluginDialog dialog;
 		if (app instanceof AbstractGUIApplication)
 			dialog = new WizardPluginDialog(
 							(AbstractGUIApplication<?>)app, this);

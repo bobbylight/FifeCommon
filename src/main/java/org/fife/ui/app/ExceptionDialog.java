@@ -49,7 +49,6 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 	private SelectableLabel descArea;
 	private DetailsButton detailsButton;
 	private JPanel textPanel;
-	private String desc;
 
 	private static final int MIN_HEIGHT				= 150;
 	private static final int MAX_WIDTH				= 600;
@@ -174,8 +173,8 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 		}
 		descArea = new SelectableLabel();
 		String descFormat = msg.getString("DescriptionFormat");
-		desc = t.getMessage();
-		if (desc==null) {
+		String desc = t.getMessage();
+		if (desc ==null) {
 			desc = t.toString();
 		}
 		desc = MessageFormat.format(descFormat, desc);
@@ -215,12 +214,7 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 
 		JButton okButton = new JButton(msg.getString("Close"));
 		okButton.setMnemonic(msg.getString("CloseMnemonic").charAt(0));
-		okButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-			}
-		});
+		okButton.addActionListener(e -> setVisible(false));
 		Container buttons = UIUtil.createButtonFooter(okButton, detailsButton);
 		contentPane.add(buttons, BorderLayout.SOUTH);
 

@@ -215,12 +215,7 @@ public abstract class AbstractPluggableGUIApplication<T extends GUIApplicationPr
 							AbstractPluggableGUIApplication.this);
 				pluginLoader.loadPlugins();
 			} catch (final IOException ioe) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						displayException(ioe);
-					}
-				});
+				SwingUtilities.invokeLater(() -> displayException(ioe));
 			}
 		}).start();
 	}

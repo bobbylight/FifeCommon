@@ -361,12 +361,9 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 
 		public int showEditFavoriteDialog() {
 			rc = CANCEL; // Set here in case they "X" the dialog out.
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					dirField.requestFocusInWindow();
-					dirField.selectAll();
-				}
+			SwingUtilities.invokeLater(() -> {
+				dirField.requestFocusInWindow();
+				dirField.selectAll();
 			});
 			setLocationRelativeTo(getOwner());
 			okButton.setEnabled(false);

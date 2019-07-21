@@ -506,8 +506,6 @@ public abstract class OptionsDialogPanel extends JPanel {
 
 		private String title;
 		private Insets insets;
-		//private static final Font font = new Font("dialog", Font.PLAIN, 8);
-		private Font font;
 		private static final int HEIGHT	= 25;
 
 		/**
@@ -561,8 +559,9 @@ public abstract class OptionsDialogPanel extends JPanel {
 			RenderingHints old = UIUtil.setNativeRenderingHints(g2d);
 
 			g.setColor(UIUtil.getHyperlinkForeground());
-			font = UIManager.getFont("Label.font");
-			if (font==null) {
+			//private static final Font font = new Font("dialog", Font.PLAIN, 8);
+			Font font = UIManager.getFont("Label.font");
+			if (font ==null) {
 				// This is quite expensive for a repaint, but not sure of any
 				// other way to do this.  All Swing's "standard" LAFs define
 				// the Label.font property, as do all Substance looks, so

@@ -47,7 +47,6 @@ public class WizardPluginDialog extends JDialog {
 	private CardLayout infoPanelLayout;
 	private JPanel infoPanel;
 
-	private JButton cancelButton;
 	private JButton backButton;
 	private JButton nextButton;
 	private JButton finishedButton;
@@ -56,7 +55,6 @@ public class WizardPluginDialog extends JDialog {
 	private WizardDialogInfoPanel[] panels;
 	private int currentPanel;
 	private Map<String, Object> wizardProperties;
-	private Listener listener;
 
 	private int retVal;
 
@@ -100,7 +98,7 @@ public class WizardPluginDialog extends JDialog {
 	protected void initialize(WizardPlugin plugin) {
 
 		this.plugin = plugin;
-		listener = new Listener();
+		Listener listener = new Listener();
 		wizardProperties = new HashMap<>();
 
 		JPanel contentPane = new JPanel(new BorderLayout());
@@ -112,7 +110,7 @@ public class WizardPluginDialog extends JDialog {
 							new LineDividerBorder(SwingConstants.TOP),
 							UIUtil.getEmpty5Border()));
 		JPanel temp = new JPanel(new GridLayout(1,4, 5,5));
-		cancelButton = new JButton(MSG.getString("Button.Cancel"));
+		JButton cancelButton = new JButton(MSG.getString("Button.Cancel"));
 		cancelButton.setActionCommand("Cancel");
 		cancelButton.addActionListener(listener);
 		temp.add(cancelButton);
@@ -319,44 +317,47 @@ public class WizardPluginDialog extends JDialog {
 
 			String actionCommand = e.getActionCommand();
 
-			if (actionCommand.equals("Cancel")) {
-				if (plugin.promptBeforeCancel()) {
-					int rc = JOptionPane.showConfirmDialog(
+			switch (actionCommand) {
+
+				case "Cancel":
+					if (plugin.promptBeforeCancel()) {
+						int rc = JOptionPane.showConfirmDialog(
 							WizardPluginDialog.this,
 							MSG.getString("MessageBox.ExitPrompt.Text"),
 							MSG.getString("MessageBox.ExitPrompt.Title"),
 							JOptionPane.YES_NO_OPTION,
 							JOptionPane.QUESTION_MESSAGE);
-					if (rc!=JOptionPane.YES_OPTION)
-						return;
-				}
-				retVal = WizardPlugin.CANCEL;
-				setVisible(false);
-			}
+						if (rc != JOptionPane.YES_OPTION)
+							return;
+					}
+					retVal = WizardPlugin.CANCEL;
+					setVisible(false);
+					break;
 
-			else if (actionCommand.equals("Back")) {
-				currentPanel--;
-				updateVisiblePanel();
-			}
+				case "Back":
+					currentPanel--;
+					updateVisiblePanel();
+					break;
 
-			else if (actionCommand.equals("Next")) {
-				String errorMessage = panels[currentPanel].validateInput();
-				if (errorMessage!=null) {
-					JOptionPane.showMessageDialog(WizardPluginDialog.this,
+				case "Next":
+					String errorMessage = panels[currentPanel].validateInput();
+					if (errorMessage != null) {
+						JOptionPane.showMessageDialog(WizardPluginDialog.this,
 							errorMessage, "Error",
 							JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				panels[currentPanel].saveUserInput(WizardPluginDialog.this);
-				panels[currentPanel].isAccepted();
-				currentPanel++;
-				updateVisiblePanel();
-			}
+						return;
+					}
+					panels[currentPanel].saveUserInput(WizardPluginDialog.this);
+					panels[currentPanel].isAccepted();
+					currentPanel++;
+					updateVisiblePanel();
+					break;
 
-			else if (actionCommand.equals("Finished")) {
-				panels[currentPanel].isAccepted();
-				setVisible(false);
-				retVal = WizardPlugin.SUCCESSFUL;
+				case "Finished":
+					panels[currentPanel].isAccepted();
+					setVisible(false);
+					retVal = WizardPlugin.SUCCESSFUL;
+					break;
 			}
 
 		}

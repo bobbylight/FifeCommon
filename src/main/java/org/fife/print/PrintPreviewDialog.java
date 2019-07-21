@@ -201,60 +201,64 @@ public class PrintPreviewDialog extends EscapableDialog
 
 		String actionCommand = e.getActionCommand();
 
-		if (actionCommand.equals("Close")) {
-			setVisible(false);
-		}
+		switch (actionCommand) {
 
-		else if (actionCommand.equals("NextPage")) {
-			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			try {
-				incrementPreviewPage();
-			} finally { // To ensure GUI stays correct.
-				updateButtons();
-				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			}
-		}
+			case "Close":
+				setVisible(false);
+				break;
 
-		else if (actionCommand.equals("PrevPage")) {
-			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			try {
-				decrementPreviewPage();
-			} finally { // To ensure GUI stays correct.
-				updateButtons();
-				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			}
-		}
-
-		// If the user elects to print the document, close the Print Preview dialog.
-		// (The printing is done by the other listener).
-		else if (actionCommand.equals("Print")) {
-
-			// Try to print!
-			DocFlavor flavor = DocFlavor.SERVICE_FORMATTED.PRINTABLE;
-			PrintRequestAttributeSet attributeSet = new HashPrintRequestAttributeSet();
-			attributeSet.add(new Copies(1));
-			attributeSet.add(Sides.ONE_SIDED);
-			attributeSet.add(OrientationRequested.PORTRAIT);
-			PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, null);//attributeSet);
-			PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();
-			//DocFlavor[] flavors = defaultService.getSupportedDocFlavors();
-			PrintService chosenService = ServiceUI.printDialog(null, 200, 200, services, defaultService,
-										flavor, attributeSet);
-			if (chosenService != null) {
-				DocPrintJob job = chosenService.createPrintJob();
-				Doc myDoc = new SimpleDoc(masterImage, flavor, null);//attributeSet);
+			case "NextPage":
+				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				try {
-					job.print(myDoc, attributeSet);
-				} catch (PrintException pe) {
-					JOptionPane.showMessageDialog(this,
-							"Error attempting to print: "+pe+".",
-							"Printing Error", JOptionPane.ERROR_MESSAGE);
+					incrementPreviewPage();
+				} finally { // To ensure GUI stays correct.
+					updateButtons();
+					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 				}
-			}
+				break;
 
-			// After we've printed (or not), hide the Print Preview dialog.
-			setVisible(false);
+			case "PrevPage":
+				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				try {
+					decrementPreviewPage();
+				} finally { // To ensure GUI stays correct.
+					updateButtons();
+					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				}
+				break;
 
+			// If the user elects to print the document, close the Print Preview dialog.
+			// (The printing is done by the other listener).
+			case "Print":
+
+				// Try to print!
+				DocFlavor flavor = DocFlavor.SERVICE_FORMATTED.PRINTABLE;
+				PrintRequestAttributeSet attributeSet = new HashPrintRequestAttributeSet();
+				attributeSet.add(new Copies(1));
+				attributeSet.add(Sides.ONE_SIDED);
+				attributeSet.add(OrientationRequested.PORTRAIT);
+				PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, null);//attributeSet);
+
+				PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();
+				//DocFlavor[] flavors = defaultService.getSupportedDocFlavors();
+				PrintService chosenService = ServiceUI.printDialog(null, 200, 200, services, defaultService,
+					flavor, attributeSet);
+				if (chosenService != null) {
+					DocPrintJob job = chosenService.createPrintJob();
+					Doc myDoc = new SimpleDoc(masterImage, flavor, null);//attributeSet);
+					try {
+						job.print(myDoc, attributeSet);
+					} catch (PrintException pe) {
+						JOptionPane.showMessageDialog(this,
+							"Error attempting to print: " + pe + ".",
+							"Printing Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+
+				// After we've printed (or not), hide the Print Preview dialog.
+				setVisible(false);
+
+				break;
 		}
 
 	}

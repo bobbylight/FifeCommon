@@ -331,7 +331,7 @@ public class CustomizableToolBar extends JToolBar {
 		public void actionPerformed(ActionEvent e) {
 
 			/* 8.5.2004/pwy: the assumption that getUI returns a BasicToolBarUI
-			is not coorect on all platforms. The method used below is more portable.
+			is not correct on all platforms. The method used below is more portable.
 				CustomizableToolBar cbt = CustomizableToolBar.this;
 				cbt.setFloatable(!cbt.isFloatable());
 			05/13/2004 - ref:  The proposed fix actually doesn't work quite right on

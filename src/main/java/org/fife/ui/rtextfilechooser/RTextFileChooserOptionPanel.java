@@ -437,7 +437,6 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		private JTextField extensionField;
 		private JColorChooser colorChooser;
 		private JButton okButton;
-		private JButton cancelButton;
 		private int rc;
 
 		ExtensionColorMappingDialog(JDialog owner) {
@@ -478,8 +477,8 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 			// Panel containing buttons for the bottom.
 			okButton = UIUtil.newButton(msg, "OK.Text", "OK.Mnemonic");
 			okButton.addActionListener(this);
-			cancelButton = UIUtil.newButton(msg,
-								"Cancel.Text", "Cancel.Mnemonic");
+			JButton cancelButton = UIUtil.newButton(msg,
+				"Cancel.Text", "Cancel.Mnemonic");
 			cancelButton.addActionListener(this);
 			Container buttons=UIUtil.createButtonFooter(okButton, cancelButton);
 			contentPane.add(buttons, BorderLayout.SOUTH);
@@ -541,12 +540,9 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 
 		public int showMappingDialog() {
 			rc = CANCEL; // Set here in case they "X" the dialog out.
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					extensionField.requestFocusInWindow();
-					extensionField.selectAll();
-				}
+			SwingUtilities.invokeLater(() -> {
+				extensionField.requestFocusInWindow();
+				extensionField.selectAll();
 			});
 			setLocationRelativeTo(getOwner());
 			okButton.setEnabled(false);

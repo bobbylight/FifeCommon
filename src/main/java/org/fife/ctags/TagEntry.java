@@ -168,14 +168,23 @@ public class TagEntry {
 			else {
 				String key = keyValuePair.substring(0, colonIndex);
 				String value = keyValuePair.substring(colonIndex + 1);
-				if (key.equals("kind"))
-					kind = value;
-				else if (key.equals("file"))
-					fileScope = true;
-				else if (key.equals("line"))
-					lineNumber = Integer.parseInt(value);
-				else {
-					fieldList.add(new TagExtensionField(key, value));
+				switch (key) {
+
+					case "kind":
+						kind = value;
+						break;
+
+					case "file":
+						fileScope = true;
+						break;
+
+					case "line":
+						lineNumber = Integer.parseInt(value);
+						break;
+
+					default:
+						fieldList.add(new TagExtensionField(key, value));
+						break;
 				}
 			}
 

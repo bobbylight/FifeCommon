@@ -96,11 +96,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private JComboBox<String> encodingCombo;
 
 	/*
-	 * Any renderers/listeners.
-	 */
-	private TextFieldListener textFieldListener;
-
-	/*
 	 * The buttons at the top of the dialog.
 	 */
 	private JButton upOneLevelButton;
@@ -454,7 +449,10 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		add(topPanel, BorderLayout.NORTH);
 
 		// Initialize listeners.
-		textFieldListener = new TextFieldListener();
+		/*
+		 * Any renderers/listeners.
+		 */
+		TextFieldListener textFieldListener = new TextFieldListener();
 
 		// Initialize either the list view or the details (table) view.
 		installDetailsViewStrings();

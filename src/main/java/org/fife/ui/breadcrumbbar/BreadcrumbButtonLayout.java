@@ -135,9 +135,9 @@ class BreadcrumbButtonLayout implements LayoutManager {
 		synchronized (parent.getTreeLock()) {
 
 			Dimension dim = new Dimension(0, parent.getHeight());
-			int nmembers = parent.getComponentCount();
+			int memberCount = parent.getComponentCount();
 
-			for (int i = 0 ; i < nmembers ; i++) {
+			for (int i = 0; i < memberCount; i++) {
 				Component m = parent.getComponent(i);
 				if (m.isVisible()) {
 					Dimension d = m.getPreferredSize();

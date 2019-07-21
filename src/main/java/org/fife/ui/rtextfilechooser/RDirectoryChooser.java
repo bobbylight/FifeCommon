@@ -56,7 +56,6 @@ import org.fife.ui.UIUtil;
 public class RDirectoryChooser extends EscapableDialog {
 
 	private JButton okButton;
-	private JButton cancelButton;
 	private DirectoryTree directoryTree;
 
 	private String chosenDirectory;
@@ -177,7 +176,7 @@ public class RDirectoryChooser extends EscapableDialog {
 		okButton.setEnabled(false);
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(listener);
-		cancelButton = UIUtil.newButton(msg, "Cancel", "CancelMnemonic");
+		JButton cancelButton = UIUtil.newButton(msg, "Cancel", "CancelMnemonic");
 		cancelButton.setActionCommand("Cancel");
 		cancelButton.addActionListener(listener);
 		Container buttons = UIUtil.createButtonFooter(okButton, cancelButton);

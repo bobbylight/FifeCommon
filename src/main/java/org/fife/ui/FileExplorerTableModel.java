@@ -346,7 +346,6 @@ public class FileExplorerTableModel extends AbstractTableModel {
 			if (defaultRenderer instanceof SortableHeaderRenderer) {
 				SortableHeaderRenderer shr = (SortableHeaderRenderer)defaultRenderer;
 				this.tableHeader.setDefaultRenderer(shr.delegate);
-				shr = null;
 			}
 		}
 

@@ -59,8 +59,6 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 	private List<Component> children;
 	private JMenuItem previousItem;
 	private JMenuItem nextItem;
-	private Timer previousTimer = new Timer(DELAY, new MenuScrollAction(-1));
-	private Timer nextTimer = new Timer(DELAY, new MenuScrollAction(1));
 	private int firstItemIndex;
 
 	private static final int DEFAULT_ROW_COUNT	= 15;
@@ -100,9 +98,11 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 		children = new ArrayList<>(rowCount);
 		MenuMouseAdapter adapter = new MenuMouseAdapter();
 		previousItem = new ArrowMenuItem(upIcon);
+		Timer previousTimer = new Timer(DELAY, new MenuScrollAction(-1));
 		previousItem.putClientProperty(PROPERTY_TIMER, previousTimer);
 		previousItem.addMouseListener(adapter);
 		nextItem = new ArrowMenuItem(downIcon);
+		Timer nextTimer = new Timer(DELAY, new MenuScrollAction(1));
 		nextItem.putClientProperty(PROPERTY_TIMER, nextTimer);
 		nextItem.addMouseListener(adapter);
 		refresh();

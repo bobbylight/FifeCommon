@@ -19,7 +19,7 @@ import org.fife.ui.dockablewindows.DockableWindow;
 
 
 /**
- * A plugin thats includes one or more dockable windows.
+ * A plugin that includes one or more dockable windows.
  *
  * @author Robert Futrell
  * @version 0.8

@@ -31,7 +31,7 @@ public abstract class AbstractRowHandler implements RowHandler {
 
 
 	/**
-	 * Overriden to call {@link #canModifyRow(int)}.  This means by default,
+	 * Overridden to call {@link #canModifyRow(int)}.  This means by default,
 	 * any row that can be modified can also be removed.  Subclasses can
 	 * override.
 	 */

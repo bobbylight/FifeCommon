@@ -12,7 +12,6 @@ package org.fife.ui.app;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -156,12 +155,7 @@ public class ThirdPartyLookAndFeelManager {
 		if (!dir.isAbsolute()) {
 			dir = new File(appRoot, dirName);
 		}
-		File[] files = dir.listFiles(new FileFilter() {
-			@Override
-			public boolean accept(File pathname) {
-				return pathname.getName().endsWith(".jar");
-			}
-		});
+		File[] files = dir.listFiles(pathname -> pathname.getName().endsWith(".jar"));
 		int count = files==null ? 0 : files.length;
 		for (int i=0; i<count; i++) {
 			if (i>0) {

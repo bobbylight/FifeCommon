@@ -25,13 +25,11 @@ import javax.swing.KeyStroke;
 public class KeyStrokeField extends JTextField {
 
 	private KeyStroke stroke;
-	private FocusAdapter listener;
 
 
 	public KeyStrokeField() {
 		super(20);
-		listener = new FocusHandler();
-		addFocusListener(listener);
+		addFocusListener(new FocusHandler());
 	}
 
 

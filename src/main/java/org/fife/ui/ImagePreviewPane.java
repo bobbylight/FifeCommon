@@ -42,7 +42,7 @@ public class ImagePreviewPane extends JComponent
 	private JLabel imageLabel;
 
 	private static final int WIDTH			= 120;
-	private static final int HEIGHT			= WIDTH;
+	private static final int HEIGHT			= 120;
 
 
 	/**

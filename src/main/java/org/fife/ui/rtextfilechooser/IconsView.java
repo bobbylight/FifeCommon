@@ -490,7 +490,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 				Segment s = new Segment(fileName.toCharArray(), 0,fileName.length());
 				br = Utilities.getBreakLocation(s, fm, 0f, getWidth()-8,
 											null, 0);
-				result.append(fileName.substring(0, br));
+				result.append(fileName, 0, br);
 				fileName = fileName.substring(br);
 				if (fileName.length()>0)
 					result.append("<br>");
@@ -732,7 +732,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 
 		// This is only called for the internal frame itself, not its JLabel,
 		// so we never really see it called.  But it's still safe to have it,
-		// and it prevents other listeners from hearin' stuff.
+		// and it prevents other listeners from hearing stuff.
 		@Override
 		public void processMouseEvent(MouseEvent e) {
 			switch (e.getID()) {

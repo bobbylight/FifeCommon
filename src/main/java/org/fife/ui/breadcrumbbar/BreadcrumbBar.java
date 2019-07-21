@@ -26,7 +26,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -34,13 +33,12 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileSystemView;
 
 import org.fife.ui.FSATextField;
+import org.fife.ui.UIUtil;
 import org.fife.ui.rtextfilechooser.FileDisplayNames;
 
 
@@ -166,6 +164,9 @@ public class BreadcrumbBar extends JComponent {
 	private Icon createBackIcon() {
 		String img = getComponentOrientation().isLeftToRight() ?
 					"back.png" : "forward.png";
+		if (UIUtil.isLightForeground(new JLabel().getForeground())) {
+			img = "dark/" + img;
+		}
 		backImage = loadImage(img);
 		return new ImageIcon(backImage);
 	}
@@ -176,30 +177,25 @@ public class BreadcrumbBar extends JComponent {
 		if (isArrow) {
 			JToggleButton tb = new BreadcrumbBarToggleButton(horizArrowIcon);
 			tb.setSelectedIcon(downArrowIcon);
-tb.addChangeListener(new ChangeListener() {
-
-	@Override
-	public void stateChanged(ChangeEvent e) {
-		JToggleButton tb = (JToggleButton)e.getSource();
-		Container parent = tb.getParent();
-		if (parent==null) {
-			return;
-		}
-		Boolean activate = tb.getModel().isRollover() ||
-				tb.getModel().isArmed();
-		Boolean selected = tb.isSelected() || tb.getModel().isPressed();
-		for (int i=1; i<parent.getComponentCount(); i++) {
-			if (parent.getComponent(i)==tb) {
-				AbstractButton b = (AbstractButton)parent.getComponent(i-1);
-				b.putClientProperty(ARROW_ACTIVATED, activate);
-				b.putClientProperty(ARROW_SELECTED, selected);
-				b.repaint();
-				break;
-			}
-		}
-	}
-
-});
+			tb.addChangeListener(e -> {
+				JToggleButton tb1 = (JToggleButton)e.getSource();
+				Container parent = tb1.getParent();
+				if (parent==null) {
+					return;
+				}
+				Boolean activate = tb1.getModel().isRollover() ||
+						tb1.getModel().isArmed();
+				Boolean selected = tb1.isSelected() || tb1.getModel().isPressed();
+				for (int i=1; i<parent.getComponentCount(); i++) {
+					if (parent.getComponent(i)== tb1) {
+						AbstractButton b1 = (AbstractButton)parent.getComponent(i-1);
+						b1.putClientProperty(ARROW_ACTIVATED, activate);
+						b1.putClientProperty(ARROW_SELECTED, selected);
+						b1.repaint();
+						break;
+					}
+				}
+			});
 			b = tb;
 		}
 		else {
@@ -365,9 +361,6 @@ tb.addChangeListener(new ChangeListener() {
 
 		try {
 			InputStream in = cl.getResourceAsStream(name);
-//			if (in==null) { // Possibly debugging in Eclipse
-//				in = new FileInputStream("src/" + name);
-//			}
 			BufferedInputStream bin = new BufferedInputStream(in);
 			image = ImageIO.read(bin);
 			bin.close();

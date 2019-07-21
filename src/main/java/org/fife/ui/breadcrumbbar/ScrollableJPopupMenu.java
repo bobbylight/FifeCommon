@@ -10,6 +10,8 @@
  */
 package org.fife.ui.breadcrumbbar;
 
+import org.fife.ui.UIUtil;
+
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
@@ -18,7 +20,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,10 +57,8 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 
 	private int visibleRowCount;
 	private List<Component> children;
-	JMenuItem previousItem;
-	JMenuItem nextItem;
-	private static Icon upIcon;
-	private static Icon downIcon;
+	private JMenuItem previousItem;
+	private JMenuItem nextItem;
 	private Timer previousTimer = new Timer(DELAY, new MenuScrollAction(-1));
 	private Timer nextTimer = new Timer(DELAY, new MenuScrollAction(1));
 	private int firstItemIndex;
@@ -84,6 +83,18 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 	 *        scrolling arrows are drawn.
 	 */
 	public ScrollableJPopupMenu(int rowCount) {
+
+		String root = "org/fife/ui/breadcrumbbar/";
+		if (UIUtil.isLightForeground(getForeground())) {
+			root += "dark/";
+		}
+
+		ClassLoader cl = ScrollableJPopupMenu.class.getClassLoader();
+		URL url = cl.getResource(root + "up.png");
+		Icon upIcon = new ImageIcon(url);
+		url = cl.getResource(root + "down.png");
+		Icon downIcon = new ImageIcon(url);
+
 		enableEvents(java.awt.AWTEvent.MOUSE_WHEEL_EVENT_MASK);
 		visibleRowCount = rowCount;
 		children = new ArrayList<>(rowCount);
@@ -133,9 +144,6 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Dimension getPreferredSize() {
 		refresh();
@@ -200,9 +208,6 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setVisible(boolean visible) {
 		if (visible) {
@@ -280,32 +285,6 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 			refresh();
 		}
 
-	}
-
-
-	/*
-	 * Load the icons shared among all scrollable popup menus.
-	 */
-	static {
-		ClassLoader cl = ScrollableJPopupMenu.class.getClassLoader();
-		URL url = cl.getResource("org/fife/ui/breadcrumbbar/up.png");
-		if (url==null) { // In Eclipse
-			try {
-				url = new URL("file:///src/org/fife/ui/breadcrumbbar/up.png");
-			} catch (MalformedURLException mue) { // Never happens
-				mue.printStackTrace();
-			}
-		}
-		upIcon = new ImageIcon(url);
-		url = cl.getResource("org/fife/ui/breadcrumbbar/down.png");
-		if (url==null) { // In Eclipse
-			try {
-				url = new URL("file:///src/org/fife/ui/breadcrumbbar/down.png");
-			} catch (MalformedURLException mue) { // Never happens
-				mue.printStackTrace();
-			}
-		}
-		downIcon = new ImageIcon(url);
 	}
 
 

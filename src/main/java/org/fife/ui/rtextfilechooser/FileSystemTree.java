@@ -15,16 +15,14 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.*;
 
+import org.fife.ui.OS;
 import org.fife.ui.ToolTipTree;
 import org.fife.util.SubstanceUtil;
 
@@ -60,6 +58,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	private FileSystemTreeNode root;
 	private FileSystemView fileSystemView;
 	protected FileChooserIconManager iconManager;
+	protected Comparator<File> fileComparator;
 
 	protected JPopupMenu popup;
 	private JMenu openInMenu;
@@ -96,6 +95,9 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			// via isDirectory()?  This is a nice performance boost.
 			root.add(createTreeNodeForImpl(aRoot, true));
 		}
+
+		// Java on OS X doesn't sort files case insensitively, as of Java 11
+		fileComparator = OS.get() == OS.MAC_OS_X ? new CaseInsensitiveFileComparator() : null;
 
 		init();
 
@@ -335,7 +337,6 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 */
 	protected File[] filterAndSort(File[] files) {
 
-		int num = files.length;
 		List<File> dirList = new ArrayList<>();
 		List<File> fileList = new ArrayList<>();
 
@@ -349,8 +350,8 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 				fileList.add(file);
 		}
 
-		Collections.sort(fileList);
-		Collections.sort(dirList);
+		fileList.sort(fileComparator);
+		dirList.sort(fileComparator);
 		dirList.addAll(fileList);
 
 		File[] fileArray = new File[dirList.size()];

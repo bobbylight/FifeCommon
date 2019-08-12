@@ -12,7 +12,6 @@ package org.fife.ui.rtextfilechooser;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 
 
 /**
@@ -70,7 +69,7 @@ public class DirectoryTree extends FileSystemTree {
 				dirList.add(file);
 		}
 
-		Collections.sort(dirList);
+		dirList.sort(fileComparator);
 
 		File[] fileArray = new File[dirList.size()];
 		return dirList.toArray(fileArray);

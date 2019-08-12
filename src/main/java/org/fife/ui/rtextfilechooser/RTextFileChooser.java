@@ -212,6 +212,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 	private boolean showEncodingCombo;
 
+	private Comparator<File> fileComparator;
+
 	/**
 	 * Sorted list of "favorite" directories.
 	 */
@@ -317,8 +319,10 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		// Do NOT call setViewMode() yet, as we can do without its overhead.
 		this.mode = prefs.viewMode;
 
-		guiInitialized = false;
+		// Java on OS X doesn't sort files case insensitively, as of Java 11
+		fileComparator = OS.get() == OS.MAC_OS_X ? new CaseInsensitiveFileComparator() : null;
 
+		guiInitialized = false;
 
 	}
 
@@ -2012,8 +2016,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			// Details mode automagically sorts its data via the table's model;
 			// however, list mode doesn't, so we'll go ahead and sort for it.
 			if (mode!=DETAILS_MODE) {
-				Collections.sort(fileList);
-				Collections.sort(dirList);
+				fileList.sort(fileComparator);
+				dirList.sort(fileComparator);
 			}
 
 			if (fileSelectionMode!=DIRECTORIES_ONLY)

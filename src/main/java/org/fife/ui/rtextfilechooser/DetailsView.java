@@ -28,6 +28,7 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import org.fife.ui.FileExplorerTableModel;
+import org.fife.ui.OS;
 
 
 /**
@@ -72,6 +73,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 */
 	private static final Object ATTRIBUTES_LOCK = new Object();
 
+	private static final boolean IS_OSX = OS.get() == OS.MAC_OS_X;
 
 	/**
 	 * Creates a details view.
@@ -770,8 +772,9 @@ class DetailsView extends JTable implements RTextFileChooserView {
 			// f1 isn't a directory.
 			if (f2IsDir)
 				return 1;
-			// Both are regular files.
-			return f1.compareTo(f2);
+			// Both are regular files.  Note OS X needs special logic since File.compareTo()
+			// isn't implemented correctly there
+			return IS_OSX ? f1.getName().compareToIgnoreCase(f2.getName()) : f1.compareTo(f2);
 		}
 
 	}

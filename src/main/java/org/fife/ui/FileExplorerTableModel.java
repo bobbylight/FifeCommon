@@ -197,7 +197,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 		Directive directive = getDirective(column);
 		if (directive == EMPTY_DIRECTIVE)
 			return null;
-		return new Arrow(directive.direction == DESCENDING, size,
+		return new Arrow(directive.direction == ASCENDING, size,
 					sortingColumns.indexOf(directive));
 	}
 
@@ -435,12 +435,12 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	 */
 	private static class Arrow implements Icon {
 
-		private boolean descending;
+		private boolean ascending;
 		private int size;
 		private int priority;
 
-		Arrow(boolean descending, int size, int priority) {
-			this.descending = descending;
+		Arrow(boolean ascending, int size, int priority) {
+			this.ascending = ascending;
 			this.size = size;
 			this.priority = priority;
 		}
@@ -453,10 +453,10 @@ public class FileExplorerTableModel extends AbstractTableModel {
 			// In a compound sort, make each successive triangle 20%
 			// smaller than the previous one.
 			int dx = (int)(size/2.0*Math.pow(0.8, priority));
-			int dy = descending ? dx : -dx;
+			int dy = ascending ? dx : -dx;
 
 			// Align icon (roughly) with font baseline.
-			y = y + 5*size/6 + (descending ? -dy : 0);
+			y = y + 5*size/6 + (ascending ? -dy : 0);
 			g.translate(x, y);
 
 			Graphics2D g2d = (Graphics2D)g;

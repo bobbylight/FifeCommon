@@ -6,8 +6,8 @@ archivesBaseName = 'fife.common'
 assert JavaVersion.current().isJava11Compatible()
 
 dependencies {
-	compile 'org.pushing-pixels:radiance-substance:1.0.2'
-	compile 'org.apache.xmlgraphics:batik-rasterizer:1.10'
+	compile 'org.pushing-pixels:radiance-substance:2.0.1'
+	compile 'org.apache.xmlgraphics:batik-rasterizer:1.11'
 	testCompile 'junit:junit:4.12'
 }
 
@@ -88,14 +88,14 @@ uploadArchives {
 						version '7'
 						relativePath ''
 					}
-					
+
 					groupId 'com.fifesoft.rtext'
 					artifactId archivesBaseName
 					packaging 'jar'
-					
+
 					name archivesBaseName
 					description 'Common UI components and utilities for Swing applications.'
-					
+
 					inceptionYear '2003'
 					url 'http://www.fifesoft.com/rtext/'
 					licenses {
@@ -105,7 +105,7 @@ uploadArchives {
 							distribution 'repo'
 						}
 					}
-					
+
 					scm {
 						url 'https://github.com/bobbylight/FifeCommon'
 						connection 'https://github.com/bobbylight/FifeCommon.git'
@@ -114,7 +114,7 @@ uploadArchives {
 							tag project.version
 						}
 					}
-					
+
 					developers {
 						developer {
 							name 'Robert Futrell'
@@ -128,7 +128,7 @@ uploadArchives {
 							timezone '0'
 						}
 					}
-					
+
 					// Ugh, have to do this for the "build" section
 					// http://stackoverflow.com/questions/27975786/trouble-injecting-the-build-block-while-exporting-a-maven-pom-xml-file-from-grad
 					withXml {

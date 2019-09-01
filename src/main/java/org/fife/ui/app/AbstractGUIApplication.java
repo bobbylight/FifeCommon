@@ -121,7 +121,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 * assumed to contain the build date of this application, as an
 	 * ISO-8601 string.
 	 */
-	public static final String BUILD_DATE_RESOURCE = "build-date.txt";
+	public static final String BUILD_DATE_RESOURCE = "/build-date.txt";
 
 	/**
 	 * The About dialog.

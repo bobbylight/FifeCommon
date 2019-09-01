@@ -19,6 +19,7 @@ import java.util.*;
 import java.util.List;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.*;
 
@@ -890,6 +891,8 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 */
 	private class FileSystemTreeRenderer extends DefaultTreeCellRenderer {
 
+		private final Border TREE_CELL_BORDER = BorderFactory.createEmptyBorder(1, 0, 1, 0);
+
 		private static final long serialVersionUID = 1L;
 
 		@Override
@@ -900,6 +903,8 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 			super.getTreeCellRendererComponent(tree, value, sel, expanded,
 										leaf, row, hasFocus);
+
+			setBorder(TREE_CELL_BORDER);
 
 			// Make the node have the proper icon and only display the
 			// file name.

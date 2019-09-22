@@ -18,10 +18,8 @@ import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.SortedSet;
+import java.util.*;
+import java.util.List;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 
@@ -40,13 +38,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.fife.io.IOUtil;
-import org.fife.ui.AboutDialog;
-import org.fife.ui.CustomizableToolBar;
-import org.fife.ui.OS;
-import org.fife.ui.OptionsDialog;
-import org.fife.ui.SplashScreen;
-import org.fife.ui.StatusBar;
+import org.fife.ui.*;
 import org.fife.help.HelpDialog;
+import org.fife.ui.SplashScreen;
 
 
 /**
@@ -1126,6 +1120,29 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 		lafManager = manager;
 	}
 
+
+	/**
+	 * Makes the menu bar and tool bar (if defined) drag the entire window around then the user clicks and
+	 * drags them.
+	 *
+	 * @see ComponentMover
+	 */
+	public void setWindowDraggableByMenuBarAndToolBar() {
+
+		List<JComponent> components = new ArrayList<>();
+
+		if (getJMenuBar() != null) {
+			components.add(getJMenuBar());
+		}
+		if (getToolBar() != null) {
+			components.add(getToolBar());
+		}
+
+		if (!components.isEmpty()) {
+			ComponentMover mover = new ComponentMover(this, components.toArray(new JComponent[0]));
+			mover.setChangeCursor(false);
+		}
+	}
 
 	/**
 	 * Sets the status bar to use in this application.  This method fires a

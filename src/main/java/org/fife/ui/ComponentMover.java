@@ -7,8 +7,7 @@ package org.fife.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 /**
  * This class allows you to move a Component by using a mouse. The Component
@@ -36,6 +35,7 @@ import javax.swing.SwingUtilities;
  * https://tips4java.wordpress.com/2009/06/14/moving-windows/
  *
  * @author Rob Camick
+ * @author Robert Futrell
  */
 public class ComponentMover extends MouseAdapter {
 
@@ -192,6 +192,19 @@ public class ComponentMover extends MouseAdapter {
 		}
 	}
 
+	@Override
+	public void mouseClicked(MouseEvent e) {
+
+		if (e.getClickCount() == 2) {
+			Window window = SwingUtilities.getWindowAncestor(e.getComponent());
+			if (window instanceof Frame) {
+				Frame frame = (Frame)window;
+				boolean extended = frame.getExtendedState() == Frame.MAXIMIZED_BOTH;
+				frame.setExtendedState(extended ? Frame.NORMAL : Frame.MAXIMIZED_BOTH);
+			}
+		}
+	}
+
 	/**
 	 * Setup the variables used to control the moving of the component:
 	 * <p>
@@ -202,6 +215,7 @@ public class ComponentMover extends MouseAdapter {
 	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
+
 		source = e.getComponent();
 		int width = source.getSize().width - dragInsets.left - dragInsets.right;
 		int height = source.getSize().height - dragInsets.top - dragInsets.bottom;

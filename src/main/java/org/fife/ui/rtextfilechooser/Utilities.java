@@ -341,10 +341,10 @@ InputSource is = new InputSource(new FileReader(file));
 				name = nodeValue;
 			}
 			else if (IGNORE_CASE.equals(nodeName)) {
-				ignoreCase = Boolean.valueOf(nodeValue);
+				ignoreCase = Boolean.parseBoolean(nodeValue);
 			}
 			else if (SHOW_EXTENSIONS.equals(nodeName)) {
-				showExtensions = Boolean.valueOf(nodeValue);
+				showExtensions = Boolean.parseBoolean(nodeValue);
 			}
 			else {
 				throw new IOException("XML error: unknown attribute: '" +

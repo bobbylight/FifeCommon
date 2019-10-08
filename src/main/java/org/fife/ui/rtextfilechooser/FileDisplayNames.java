@@ -91,7 +91,7 @@ public final class FileDisplayNames {
 			return name;
 		}
 		name = file.getAbsolutePath();
-		if (name.length()==0) { // Root directory "/", on OS X at least...
+		if (name.isEmpty()) { // Root directory "/", on OS X at least...
 			name = "/";
 		}
 		return name;

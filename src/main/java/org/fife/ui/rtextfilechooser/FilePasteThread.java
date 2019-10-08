@@ -629,7 +629,7 @@ class FilePasteThread extends GUIWorkerThread {
 				int lastNewline = 0;
 				while ((newline=message.indexOf('\n', lastNewline))>-1) {
 					String temp = message.substring(lastNewline, newline);
-					if (temp.length()==0) {
+					if (temp.isEmpty()) {
 						temp  = " ";
 					}
 					topText.add(new JLabel(temp));

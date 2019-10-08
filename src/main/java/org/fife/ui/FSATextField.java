@@ -424,7 +424,7 @@ System.out.println("DEBUG: *** parent is null");
 	 */
 	public File getSelectedFile() {
 		String text = getText().trim();
-		if (text.length()==0) {
+		if (text.isEmpty()) {
 			return null;
 		}
 		return new File(text);
@@ -883,7 +883,7 @@ System.out.println("DEBUG: *** parent is null");
 		// Get the path information typed in.
 		String text = getText();
 
-		if (text.length()==0) {
+		if (text.isEmpty()) {
 			setPopupVisible(false);
 			lastCount = 0;
 			return null;

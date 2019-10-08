@@ -258,51 +258,54 @@ public class FontDialog extends JDialog implements ActionListener,
 
 		String command = e.getActionCommand();
 
-		if (command.equals("Bold")) {
-			properties ^= Font.BOLD;
-			Font newFont = sampleTextLabel.getFont().deriveFont(properties, size);
-			sampleTextLabel.setFont(newFont);
-		}
+		switch (command) {
 
-		else if (command.equals("Italic")) {
-			properties ^= Font.ITALIC;
-			Font newFont = sampleTextLabel.getFont().deriveFont(properties, size);
-			sampleTextLabel.setFont(newFont);
-		}
+			case "Bold":
+				properties ^= Font.BOLD;
+				Font newFont = sampleTextLabel.getFont().deriveFont(properties, size);
+				sampleTextLabel.setFont(newFont);
+				break;
 
-		else if (command.equals("Underline")) {
-			//properties ^= Font.CENTER_BASELINE;
-			//Font newFont = sampleLabel.getFont().deriveFont(properties, size);
-			//sampleTextLabel.setFont(newFont);
-			if (getUnderlineSelected()) {
-				sampleTextLabel.setText("<html><u>" +
-								sampleTextLabel.getText() + "</u>");
-			}
-			else {
-				String old = sampleTextLabel.getText();
-				sampleTextLabel.setText(old.substring(9, old.length()-4));
-			}
-		}
+			case "Italic":
+				properties ^= Font.ITALIC;
+				newFont = sampleTextLabel.getFont().deriveFont(properties, size);
+				sampleTextLabel.setFont(newFont);
+				break;
 
-		else if (command.equals("Color")) {
-			Color tempColor = JColorChooser.showDialog(this, "Font Color",
-									sampleTextLabel.getForeground());
-			if (tempColor != null) {
-				sampleTextLabel.setForeground(tempColor);
-				this.repaint();
-			}
-		}
+			case "Underline":
+				//properties ^= Font.CENTER_BASELINE;
+				//Font newFont = sampleLabel.getFont().deriveFont(properties, size);
+				//sampleTextLabel.setFont(newFont);
+				if (getUnderlineSelected()) {
+					sampleTextLabel.setText("<html><u>" +
+						sampleTextLabel.getText() + "</u>");
+				}
+				else {
+					String old = sampleTextLabel.getText();
+					sampleTextLabel.setText(old.substring(9, old.length() - 4));
+				}
+				break;
 
-		else if (command.equals("OK")) {
-			selectedFont = sampleTextLabel.getFont();
-			selectedColor = sampleTextLabel.getForeground();
-			this.setVisible(false);
-		}
+			case "Color":
+				Color tempColor = JColorChooser.showDialog(this, "Font Color",
+					sampleTextLabel.getForeground());
+				if (tempColor != null) {
+					sampleTextLabel.setForeground(tempColor);
+					this.repaint();
+				}
+				break;
 
-		else if (command.equals("Cancel")) {
-			selectedFont = null;
-			selectedColor = null;
-			this.setVisible(false);
+			case "OK":
+				selectedFont = sampleTextLabel.getFont();
+				selectedColor = sampleTextLabel.getForeground();
+				this.setVisible(false);
+				break;
+
+			case "Cancel":
+				selectedFont = null;
+				selectedColor = null;
+				this.setVisible(false);
+				break;
 		}
 
 	}

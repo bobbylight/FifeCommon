@@ -199,10 +199,10 @@ public class BreadcrumbBar extends JComponent {
 		}
 		else {
 			String name = loc.getName();
-			if (name.length()==0 && FSV.isDrive(loc)) {
+			if (name.isEmpty() && FSV.isDrive(loc)) {
 				name = loc.getAbsolutePath(); // Was "", on Windows at least
 			}
-			if (name.length()==0) { // Root directory "/", on OS X at least...
+			if (name.isEmpty()) { // Root directory "/", on OS X at least...
 				if (File.separatorChar=='\\') {
 					name = "\\\\"; // Windows => must be a UNC path
 				}

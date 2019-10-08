@@ -113,7 +113,7 @@ public class CTagReader {
 		long last_pos = 0;
 		long pos = upper_limit / 2;
 
-		while (result != true) {
+		while (!result) {
 
 			if (!readTagLineSeek(pos)) {
 				/* in case we fell off end of file */
@@ -159,7 +159,7 @@ public class CTagReader {
 			more_lines = readTagLine();
 			if (nameComparison() == 0)
 				result = true;
-		} while (more_lines && result!=true && pos<start);
+		} while (more_lines && !result && pos<start);
 
 		return result;
 
@@ -192,12 +192,12 @@ public class CTagReader {
 			(sortMethod == TAG_FOLDSORTED  &&  searchIgnoreCase))
 		{
 			result = tagsNext(entry);
-			if (result == true  && nameComparison() != 0)
+			if (result && nameComparison() != 0)
 				result = false;
 		}
 		else {
 			result = findSequential();
-			if (result == true  &&  entry != null)
+			if (result &&  entry != null)
 				entry.parseTagLine(line);
 		}
 
@@ -209,7 +209,7 @@ public class CTagReader {
 
 		boolean result = false;
 		if (initialized) {
-			while (result == false  &&  readTagLine()) {
+			while (!result &&  readTagLine()) {
 				if (nameComparison() == 0)
 					result = true;
 			}

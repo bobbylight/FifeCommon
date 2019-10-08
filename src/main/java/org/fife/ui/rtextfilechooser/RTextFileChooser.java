@@ -1315,7 +1315,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		if (text==null)
 			return null;
 		text = text.trim();
-		if (text.length()==0)
+		if (text.isEmpty())
 			return null;
 
 		// Just a single file...

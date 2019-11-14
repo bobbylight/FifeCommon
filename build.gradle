@@ -6,7 +6,7 @@ archivesBaseName = 'fife.common'
 assert JavaVersion.current().isJava11Compatible()
 
 dependencies {
-	compile 'org.pushing-pixels:radiance-substance:2.0.1'
+	compile 'org.pushing-pixels:radiance-substance:2.5.1'
 	compile 'org.apache.xmlgraphics:batik-rasterizer:1.11'
 	testCompile 'junit:junit:4.12'
 }

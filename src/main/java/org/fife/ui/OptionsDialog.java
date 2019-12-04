@@ -574,6 +574,8 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 					Object obj = node.getUserObject();
 					if (obj==panel) {
 						optionTree.setSelectionPath(path);
+						SwingUtilities.invokeLater(() ->
+							optionTree.scrollPathToVisible(path));
 						break;
 					}
 				}

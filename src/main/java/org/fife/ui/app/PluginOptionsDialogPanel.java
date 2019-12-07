@@ -20,11 +20,11 @@ import javax.swing.*;
  * plugin it represents, and can update it with its values.
  *
  * @author Robert Futrell
- * @version 0.5
+ * @version 0.6
  */
-public abstract class PluginOptionsDialogPanel extends OptionsDialogPanel {
+public abstract class PluginOptionsDialogPanel<T extends Plugin> extends OptionsDialogPanel {
 
-	private Plugin plugin;
+	private T plugin;
 
 
 	/**
@@ -32,7 +32,7 @@ public abstract class PluginOptionsDialogPanel extends OptionsDialogPanel {
 	 *
 	 * @param plugin The plugin whose options we're displaying.
 	 */
-	public PluginOptionsDialogPanel(Plugin plugin) {
+	public PluginOptionsDialogPanel(T plugin) {
 		this(null, plugin);
 	}
 
@@ -43,7 +43,7 @@ public abstract class PluginOptionsDialogPanel extends OptionsDialogPanel {
 	 * @param name The name of the panel.
 	 * @param plugin The plugin whose options we're displaying.
 	 */
-	public PluginOptionsDialogPanel(String name, Plugin plugin) {
+	public PluginOptionsDialogPanel(String name, T plugin) {
 
 		super(name);
 		this.plugin = plugin;
@@ -58,7 +58,7 @@ public abstract class PluginOptionsDialogPanel extends OptionsDialogPanel {
 	 *
 	 * @return The plugin.
 	 */
-	public Plugin getPlugin() {
+	public T getPlugin() {
 		return plugin;
 	}
 

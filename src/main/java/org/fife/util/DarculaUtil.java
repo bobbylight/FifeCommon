@@ -50,7 +50,8 @@ public final class DarculaUtil {
 	/**
 	 * Returns whether a LookAndFeel is Darcula.
 	 *
-	 * @param laf The LookAndFeel.
+	 * @param laf The LookAndFeel.  If this is {@code null}, {@code false} is
+	 *        returned.
 	 * @return Whether the LaF is Darcula.
 	 * @see #isDarculaInstalled()
 	 */
@@ -62,7 +63,8 @@ public final class DarculaUtil {
 	/**
 	 * Returns whether a LookAndFeel is Darcula.
 	 *
-	 * @param laf The class name of the LookAndFeel.
+	 * @param laf The class name of the LookAndFeel.  If this is {@code null},
+	 *        {@code null} is returned.
 	 * @return Whether the LaF is Darcula.
 	 * @see #isDarculaInstalled()
 	 */

@@ -76,25 +76,27 @@ public final class SubstanceUtil {
 	/**
 	 * Returns whether a given LookAndFeel is a Substance LookAndFeel.
 	 *
-	 * @param laf The LookAndFeel.
+	 * @param laf The LookAndFeel.  If this is {@code null}, {@code false} is
+	 *        returned.
 	 * @return Whether it is a Substance LookAndFeel.
 	 * @see #isASubstanceLookAndFeel(LookAndFeel)
 	 * @see #isSubstanceInstalled()
 	 */
 	public static boolean isASubstanceLookAndFeel(LookAndFeel laf) {
-		return isASubstanceLookAndFeel(laf.getClass().getName());
+		return laf != null && isASubstanceLookAndFeel(laf.getClass().getName());
 	}
 
 	/**
 	 * Returns whether a given LookAndFeel is a Substance LookAndFeel.
 	 *
-	 * @param lafName The LookAndFeel's class name.
+	 * @param laf The class name of the LookAndFeel.  If this is {@code null},
+	 *        {@code null} is returned.
 	 * @return Whether it is a Substance LookAndFeel.
 	 * @see #isASubstanceLookAndFeel(String)
 	 * @see #isSubstanceInstalled()
 	 */
-	public static boolean isASubstanceLookAndFeel(String lafName) {
-		return lafName.contains(".Substance");
+	public static boolean isASubstanceLookAndFeel(String laf) {
+		return laf != null && laf.contains(".Substance");
 	}
 
 	/**

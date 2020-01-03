@@ -31,7 +31,7 @@ import java.awt.Window;
  * @author Robert Futrell
  * @version 1.0
  */
-public class TranslucencyUtil {
+public final class TranslucencyUtil {
 
 	private static TranslucencyUtil instance;
 
@@ -39,7 +39,7 @@ public class TranslucencyUtil {
 	 * Private constructor to prevent instantiation.
 	 */
 	private TranslucencyUtil() {
-		// Do nothing (comment for Sonar
+		// Do nothing (comment for Sonar)
 	}
 
 	/**

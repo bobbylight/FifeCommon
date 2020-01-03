@@ -119,7 +119,7 @@ public class ComponentMover extends MouseAdapter {
 	}
 
 	/**
-	 * Set the change cursor property
+	 * Set the change cursor property.
 	 *
 	 * @param changeCursor when {@code true} the cursor will be changed to the {@code Cursor.MOVE_CURSOR}
 	 *        while the mouse is pressed

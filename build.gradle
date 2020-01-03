@@ -1,7 +1,7 @@
 plugins {
 	id 'java-library'
 }
-['java', /*'checkstyle',*/ 'maven-publish', 'signing' ].each { apply plugin: it }
+['java', 'checkstyle', 'maven-publish', 'signing' ].each { apply plugin: it }
 
 group = 'com.fifesoft.rtext'
 archivesBaseName = 'fife.common'
@@ -24,10 +24,9 @@ wrapper {
 	gradleVersion '6.0.1'
 }
 
-//checkstyle {
-//	toolVersion = '8.14'
-//	configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
-//}
+checkstyle {
+	toolVersion = '8.28'
+}
 
 compileJava {
 	sourceCompatibility javaVersion

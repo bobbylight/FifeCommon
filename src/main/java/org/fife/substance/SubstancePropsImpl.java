@@ -1,3 +1,8 @@
+/*
+ * http://fifesoft.com/rtext
+ * Licensed under a modified BSD license.
+ * See the included license file for details.
+ */
 package org.fife.substance;
 
 import org.pushingpixels.substance.api.SubstanceCortex;

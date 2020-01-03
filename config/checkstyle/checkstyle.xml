@@ -64,7 +64,11 @@
     <module name="FileLength">
 		<property name="max" value="3100"/>
 	</module>
-    
+
+    <module name="LineLength">
+        <property name="max" value="150"/>
+    </module>
+
     <!-- Checks for whitespace                               -->
     <!-- See http://checkstyle.sf.net/config_whitespace.html -->
     <!--<module name="FileTabCharacter"/>-->
@@ -81,7 +85,7 @@
     <!-- Checks for Headers                                -->
     <!-- See http://checkstyle.sf.net/config_header.html   -->
      <module name="Header">
-       <property name="headerFile" value="config/checkstyle/javaHeader.txt"/>
+       <property name="headerFile" value="${config_loc}/javaHeader.txt"/>
        <property name="fileExtensions" value="java"/>
      </module>
 
@@ -127,9 +131,6 @@
 
         <!-- Checks for Size Violations.                    -->
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
-        <module name="LineLength">
-            <property name="max" value="150"/>
-        </module>
         <module name="MethodLength">
             <property name="max" value="300"/>
         </module>
@@ -213,7 +214,7 @@
     </module>
 
     <module name="SuppressionFilter">
-		<property name="file" value="config/checkstyle/suppressions.xml"/>
+		<property name="file" value="${config_loc}/suppressions.xml"/>
     </module>
 
 </module>

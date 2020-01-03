@@ -90,7 +90,8 @@ public class TabbedPaneTransferHandler extends TransferHandler
 
 
 	@Override
-	public void dragEnter(DropTargetDragEvent e) {}
+	public void dragEnter(DropTargetDragEvent e) {
+	}
 
 
 	@Override
@@ -169,7 +170,8 @@ public class TabbedPaneTransferHandler extends TransferHandler
 
 
 	@Override
-	public void dropActionChanged(DropTargetDragEvent e) {}
+	public void dropActionChanged(DropTargetDragEvent e) {
+	}
 
 
 	/**

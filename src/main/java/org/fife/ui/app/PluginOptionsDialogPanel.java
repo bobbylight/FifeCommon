@@ -19,6 +19,7 @@ import javax.swing.*;
  * Options panel specifically for a plugin.  This subclass is aware of the
  * plugin it represents, and can update it with its values.
  *
+ * @param <T> The type of plugin this option panel is configuring.
  * @author Robert Futrell
  * @version 0.6
  */

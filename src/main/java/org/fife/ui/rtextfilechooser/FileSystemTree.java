@@ -891,7 +891,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 */
 	private class FileSystemTreeRenderer extends DefaultTreeCellRenderer {
 
-		private final Border TREE_CELL_BORDER = BorderFactory.createEmptyBorder(1, 0, 1, 0);
+		private final Border treeCellBorder = BorderFactory.createEmptyBorder(1, 0, 1, 0);
 
 		private static final long serialVersionUID = 1L;
 
@@ -904,7 +904,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			super.getTreeCellRendererComponent(tree, value, sel, expanded,
 										leaf, row, hasFocus);
 
-			setBorder(TREE_CELL_BORDER);
+			setBorder(treeCellBorder);
 
 			// Make the node have the proper icon and only display the
 			// file name.

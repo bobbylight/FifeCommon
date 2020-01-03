@@ -871,7 +871,8 @@ public class HelpDialog extends JFrame implements ActionListener {
 			// IndexList element, a PropertiesFile element and a
 			// RootNode element).
 			switch (nodeName) {
-				case ROOT_ELEMENT: {
+
+				case ROOT_ELEMENT:
 					NodeList childNodes = node.getChildNodes();
 					if (childNodes != null) {
 						int length = childNodes.getLength();
@@ -882,7 +883,6 @@ public class HelpDialog extends JFrame implements ActionListener {
 					treeBundle = null; // To help GC.
 
 					return root;
-				}
 
 				// The first element in the XML file should tell where the
 				// properties file is that maps tree node keys to their
@@ -893,7 +893,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 				// This is the "RootNode" element in the XML file; that is,
 				// the node that details the tree structure for the help.
-				case TREE_ROOT_NODE: {
+				case TREE_ROOT_NODE:
 
 					NamedNodeMap attributes = node.getAttributes();
 					if (attributes == null || attributes.getLength() < 2)
@@ -925,7 +925,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 					// Set our global root.
 					root = new DefaultMutableTreeNode(helpRoot);
 
-					NodeList childNodes = node.getChildNodes();
+					childNodes = node.getChildNodes();
 					if (childNodes != null) {
 						int length = childNodes.getLength();
 						for (int i = 0; i < length; i++) {
@@ -937,17 +937,16 @@ public class HelpDialog extends JFrame implements ActionListener {
 						}
 					}
 					return root;
-				}
 
 				// This represents a "Node" structure; that is, a node in
 				// the tree help structure that contains child nodes.
-				case TREE_NODE: {
-					NamedNodeMap attributes = node.getAttributes();
+				case TREE_NODE:
+					attributes = node.getAttributes();
 					if (attributes == null || attributes.getLength() < 1)
 						return null;
-					String name = null;
-					String file = null;
-					int count = attributes.getLength();
+					name = null;
+					file = null;
+					count = attributes.getLength();
 					for (int i = 0; i < count; i++) {
 						Node node2 = attributes.item(i);
 						String v = node2.getNodeValue();
@@ -961,7 +960,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 						new HelpTreeNode(name, file);
 					DefaultMutableTreeNode dmtn = new
 						DefaultMutableTreeNode(tempNode);
-					NodeList childNodes = node.getChildNodes();
+					childNodes = node.getChildNodes();
 					if (childNodes != null) {
 						int length = childNodes.getLength();
 						for (int i = 0; i < length; i++) {
@@ -972,7 +971,6 @@ public class HelpDialog extends JFrame implements ActionListener {
 						}
 					}
 					return dmtn;
-				}
 
 				// This is a "leaf" in the tree node structure; that is,
 				// an actual help HTML page.

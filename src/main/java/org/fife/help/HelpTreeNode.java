@@ -10,6 +10,7 @@
  */
 package org.fife.help;
 
+import java.awt.*;
 import java.io.File;
 import java.net.URL;
 
@@ -34,6 +35,15 @@ public class HelpTreeNode {
 	 * The text of the node.
 	 */
 	private String title;
+
+	/**
+	 * The font of the node.  If this is {@code null} then the default font
+	 * for the look and feel will be used.  This is really meant to allow
+	 * certain pages to explicitly state their desire to render in a monospaced
+	 * font; typical pages will be HTML and can control their font through
+	 * markup.
+	 */
+	private Font font;
 
 
 	/**
@@ -70,10 +80,40 @@ public class HelpTreeNode {
 	 *        the user clicks on this node.
 	 */
 	public HelpTreeNode(String title, String urlString) {
+		this(title, urlString, null);
+	}
+
+
+	/**
+	 * Creates a <code>HelpTreeNode</code>.
+	 *
+	 * @param title The text displayed beside this Contents tree node.
+	 * @param urlString The URL path to the help page that will be loaded when
+	 *        the user clicks on this node.
+	 * @param font The font to use, or {@code null} for the default.
+	 */
+	public HelpTreeNode(String title, String urlString, Font font) {
+
 		this.title = title;
+
 		try {
 			url = new File(urlString).toURI().toURL();
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			// Swallow
+		}
+
+		this.font = font;
+	}
+
+
+	/**
+	 * Returns the font for this tree node.
+	 *
+	 * @return The font.  A value of {@code null} indicates
+	 *         to use the default font.
+	 */
+	public Font getFont() {
+		return font;
 	}
 
 

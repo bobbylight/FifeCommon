@@ -150,6 +150,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 	// tags used in nodes.
 	private static final String INDEXITEMS		= "IndexItems";
+	private static final String MONOSPACED		= "monospaced";
 	private static final String NAME			= "name";
 	private static final String PAGE			= "Page";
 	private static final String PAGE_VALUE		= "page";
@@ -756,24 +757,41 @@ public class HelpDialog extends JFrame implements ActionListener {
 	private DefaultMutableTreeNode handleNodePage(Node node) {
 
 		NamedNodeMap attributes = node.getAttributes();
-		if (attributes==null || attributes.getLength()!=2)
+		if (attributes==null || attributes.getLength() < 2)
 			return null;
 
 		String name = null;
 		String file = null;
-		for (int i=0; i<2; i++) {
+		Font font = null;
+
+		for (int i = 0; i < attributes.getLength(); i++) {
+
 			Node node2 = attributes.item(i);
 			String v = node2.getNodeValue();
-			if (node2.getNodeName().equals(NAME))
-				name = treeBundle.getString(v);
-			else if (node2.getNodeName().equals(PAGE_VALUE))
-				file = baseDir + v;
+
+			switch (node2.getNodeName()) {
+
+				case NAME:
+					name = treeBundle.getString(v);
+					break;
+
+				case PAGE_VALUE:
+					file = baseDir + v;
+					break;
+
+				case MONOSPACED:
+					if (Boolean.parseBoolean(v)) {
+						Font baseFont = new JEditorPane().getFont();
+						font = new Font(Font.MONOSPACED, baseFont.getStyle(), baseFont.getSize());
+					}
+					break;
+			}
 		}
 
 		if (name==null || file==null)
 			return null;
 
-		HelpTreeNode tempNode = new HelpTreeNode(name, file);
+		HelpTreeNode tempNode = new HelpTreeNode(name, file, font);
 
 		return new DefaultMutableTreeNode(tempNode);
 
@@ -1674,6 +1692,13 @@ public class HelpDialog extends JFrame implements ActionListener {
 						sheet.addRule(".odd { background-color: #FFFFFF; }");
 						sheet.addRule(" th { background-color: #FFF0E6; font-weight: bold; text-align: left; }");
 					}
+				}
+
+				if (htn.getFont() != null) {
+					editorPane.setFont(htn.getFont());
+				}
+				else {
+					editorPane.setFont(new JEditorPane().getFont());
 				}
 
 				editorPane.setText(allText);

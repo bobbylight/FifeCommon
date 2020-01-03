@@ -12,8 +12,7 @@ jdk:
   - oraclejdk11
 
 script:
-  - ./gradlew assemble -x signArchives -x uploadArchives
-  - ./gradlew check
+  - ./gradlew clean build -xsign -xpublish
 
 # Update coverage info on coveralls.io
 #after_success:

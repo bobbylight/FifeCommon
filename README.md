@@ -19,6 +19,6 @@ Available in the [Maven Central repository](http://search.maven.org/#artifactdet
 FifeCommon uses [Gradle](http://gradle.org/) to build.  To compile, run
 all unit tests, and create the jar, run:
 
-    ./gradlew build
+    ./gradlew build --warning-mode all
 
 Note that FifeCommon requires Java 11 or later to build.

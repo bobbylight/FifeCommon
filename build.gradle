@@ -1,18 +1,27 @@
-['java', /*'checkstyle',*/ 'maven', 'signing'].each { apply plugin: it }
+plugins {
+	id 'java-library'
+}
+['java', /*'checkstyle',*/ 'maven-publish', 'signing' ].each { apply plugin: it }
 
 group = 'com.fifesoft.rtext'
 archivesBaseName = 'fife.common'
 
+ext.isReleaseVersion = !project.version.endsWith('SNAPSHOT')
+
 assert JavaVersion.current().isJava11Compatible()
 
+repositories {
+	mavenCentral()
+}
+
 dependencies {
-	compile 'org.pushing-pixels:radiance-substance:2.5.1'
-	compile 'org.apache.xmlgraphics:batik-rasterizer:1.11'
-	testCompile 'junit:junit:4.12'
+	api 'org.pushing-pixels:radiance-substance:2.5.1'
+	api 'org.apache.xmlgraphics:batik-rasterizer:1.11'
+	testImplementation 'junit:junit:4.12'
 }
 
 wrapper {
-	gradleVersion '5.5'
+	gradleVersion '6.0.1'
 }
 
 //checkstyle {
@@ -23,7 +32,6 @@ wrapper {
 compileJava {
 	sourceCompatibility javaVersion
 	targetCompatibility javaVersion
-	classpath += files("${projectDir.absolutePath}/extra")
 	options.debug = true
 	options.debugOptions.debugLevel = 'source,vars,lines'
 	options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
@@ -37,111 +45,74 @@ ext.sharedManifest = manifest {
 		'Implementation-Version': version)
 
 }
+
+java {
+	withSourcesJar()
+	withJavadocJar()
+}
 jar {
 	manifest { from sharedManifest }
 }
 
-// Stuff to generate and upload Maven artifacts
-task javadocJar (type: Jar, dependsOn: javadoc) {
-	manifest { from sharedManifest }
-	classifier = 'javadoc'
-	from javadoc.destinationDir
-}
-task sourceJar (type: Jar) {
-	manifest { from sharedManifest }
-	classifier = 'sources'
-	from sourceSets.main.allSource
-}
-artifacts {
-	archives javadocJar, sourceJar
-}
-signing {
-	// Don't require signing for e.g. ./gradlew install
-	required { gradle.taskGraph.hasTask("uploadArchives") }
-	sign configurations.archives
-}
-repositories {
-	mavenCentral()
-}
-uploadArchives {
+
+
+publishing {
 	repositories {
-		mavenDeployer {
-			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-			if (project.hasProperty('upload') && Boolean.parseBoolean(upload)) { // gradlew uploadArchives -Pupload=true
-				repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-					authentication(userName: ossrhUsername, password: ossrhPassword)
-				}
-				snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
-					authentication(userName: ossrhUsername, password: ossrhPassword)
-				}
+		maven {
+			def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+			def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+			url = isReleaseVersion ? releasesRepoUrl : snapshotsRepoUrl
+			credentials { // Credentials usually kept in user's .gradle/gradle.properties
+				// We must defensively check for these properties so Travis CI build works
+				username = project.hasProperty('ossrhUsername') ? ossrhUsername : 'unknown'
+				password = project.hasProperty('ossrhPassword') ? ossrhPassword : 'unknown'
 			}
-			else {
-				repository(url: 'file:///' + projectDir + '/../localMavenRepo')
-			}
+		}
+	}
+	publications {
+		maven(MavenPublication) {
+
+			groupId = 'com.fifesoft.rtext'
+			artifactId = archivesBaseName
+			version = version
+
+			from components.java
+
 			pom {
-				groupId = 'com.fifesoft.rtext'
 				name = archivesBaseName
-				project {
-					parent {
-						groupId 'org.sonatype.oss'
-						artifactId 'oss-parent'
-						version '7'
-						relativePath ''
+				description = 'Common UI components and utilities for Swing applications.'
+				url = 'http://www.fifesoft.com/rtext/'
+				inceptionYear = '2003'
+				packaging = 'jar'
+				licenses {
+					license {
+						name = 'BSD-3-Clause'
+						url = 'https://github.com/bobbylight/FifeCommon'
 					}
-
-					groupId 'com.fifesoft.rtext'
-					artifactId archivesBaseName
-					packaging 'jar'
-
-					name archivesBaseName
-					description 'Common UI components and utilities for Swing applications.'
-
-					inceptionYear '2003'
-					url 'http://www.fifesoft.com/rtext/'
-					licenses {
-						license {
-							name 'Modified BSD License'
-							url 'https://github.com/bobbylight/FifeCommon'
-							distribution 'repo'
-						}
+				}
+				developers {
+					developer {
+						name = 'Robert Futrell'
 					}
-
-					scm {
-						url 'https://github.com/bobbylight/FifeCommon'
-						connection 'https://github.com/bobbylight/FifeCommon.git'
-						developerConnection 'https://github.com/bobbylight/FifeCommon.git'
-						if (!project.version.endsWith('-SNAPSHOT')) {
-							tag project.version
-						}
-					}
-
-					developers {
-						developer {
-							name 'Robert Futrell'
-							url 'http://www.fifesoft.com'
-							organization = 'Fifesoft' /* https://issues.gradle.org/browse/GRADLE-1200 */
-							organizationUrl 'http://www.fifesoft.com/'
-							roles {
-								role 'architect'
-								role 'developer'
-							}
-							timezone '0'
-						}
-					}
-
-					// Ugh, have to do this for the "build" section
-					// http://stackoverflow.com/questions/27975786/trouble-injecting-the-build-block-while-exporting-a-maven-pom-xml-file-from-grad
-					withXml {
-						def pluginNode = asNode().appendNode('build').appendNode('plugins').appendNode('plugin')
-						pluginNode.appendNode('artifactId', 'maven-compiler-plugin')
-						pluginNode.appendNode('version', '3.5.1')
-						def executionNode = pluginNode.appendNode('executions').appendNode('execution')
-						executionNode.appendNode('id', 'default-compile')
-						executionNode.appendNode('configuration').appendNode('source', javaVersion).
-						      parent().appendNode('target', javaVersion)
+				}
+				scm {
+					url = 'https://github.com/bobbylight/FifeCommon'
+					connection = 'scm:git:git://github.com/bobbylight/FifeCommon'
+					developerConnection = 'scm:git:git@github.com:bobbylight/FifeCommon'
+					if (isReleaseVersion) {
+						tag = project.version
 					}
 				}
 			}
 		}
 	}
+}
+
+signing {
+	// Don't require signing for e.g. ./gradlew install
+	required { gradle.taskGraph.hasTask('publish') && isReleaseVersion }
+	sign publishing.publications.maven
+}
+tasks.withType(Sign) {
+	onlyIf { isReleaseVersion }
 }

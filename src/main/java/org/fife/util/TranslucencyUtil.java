@@ -9,10 +9,7 @@
  */
 package org.fife.util;
 
-import java.awt.Color;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Window;
+import java.awt.*;
 
 
 /**
@@ -25,8 +22,8 @@ import java.awt.Window;
  * windows can not have their opacity values changed while displayable, and
  * they also cannot be non-opaque if they are decorated.  The Java 6 API did
  * not impose these restrictions.  This makes this API virtually useless unless
- * you want a window to stay a certain degree of translucency the entire time
- * it is visible.  Sorry.
+ * your Look and Feel implements its own window decorations, such as Darcula or
+ * Substance.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -67,6 +64,21 @@ public final class TranslucencyUtil {
 	}
 
 
+	private boolean isDecorated(Window w) {
+
+		if (w instanceof Dialog) {
+			return !((Dialog)w).isUndecorated();
+		}
+
+		if (w instanceof Frame) {
+			return !((Frame)w).isUndecorated();
+		}
+
+		// Direct subclasses of Window can't have decorations
+		return true;
+	}
+
+
 	public boolean isTranslucencySupported(boolean perPixel) {
 
 		GraphicsDevice.WindowTranslucency kind = perPixel ?
@@ -79,7 +91,7 @@ public final class TranslucencyUtil {
 
 	public boolean setOpacity(Window w, float value) {
 
-		if (!isTranslucencySupported(false)) {
+		if (isDecorated(w) || !isTranslucencySupported(false)) {
 			return false;
 		}
 
@@ -89,7 +101,7 @@ public final class TranslucencyUtil {
 
 
 	public boolean setOpaque(Window w, boolean opaque) {
-		if (!opaque && !isTranslucencySupported(true)) {
+		if (isDecorated(w) || (!opaque && !isTranslucencySupported(true))) {
 			return false;
 		}
 		if (opaque) {

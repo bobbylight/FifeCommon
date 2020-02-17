@@ -196,7 +196,7 @@ public abstract class AbstractPluggableGUIApplication<T extends GUIApplicationPr
 	 *        {@link org.fife.ui.dockablewindows.DockableWindowConstants}.
 	 * @return Whether it is expanded.
 	 * @see #setDockableWindowGroupExpanded(int, boolean)
-	 * @see #setSplitPaneDividerLocation(int, int, boolean) 
+	 * @see #setSplitPaneDividerLocation(int, int, boolean)
 	 */
 	public boolean isDockableWindowGroupExpanded(int group) {
 		return ((MainContentPanel)mainContentPanel).isDockableWindowGroupExpanded(group);
@@ -309,7 +309,7 @@ public abstract class AbstractPluggableGUIApplication<T extends GUIApplicationPr
 	 * @param pos The new position for the divider.
 	 * @param expanded Whether the split pane should be initially expanded.
 	 * @see #getSplitPaneDividerLocation
-	 * @see #isDockableWindowGroupExpanded(int) 
+	 * @see #isDockableWindowGroupExpanded(int)
 	 */
 	public void setSplitPaneDividerLocation(int splitPane, int pos, boolean expanded) {
 		MainContentPanel mcp = (MainContentPanel)mainContentPanel;

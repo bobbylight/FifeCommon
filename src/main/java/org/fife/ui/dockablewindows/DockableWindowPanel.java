@@ -340,6 +340,25 @@ public class DockableWindowPanel extends JPanel
 
 
 	/**
+	 * Returns whether a dockable window group is expanded or collapsed.
+	 *
+	 * @param group The group.  Should be a value from
+	 *        {@link org.fife.ui.dockablewindows.DockableWindowConstants}.
+	 * @return Whether it is expanded.
+	 * @see #setDockableWindowGroupExpanded(int, boolean)
+	 */
+	public boolean isDockableWindowGroupExpanded(int group) {
+
+		if (group<0 || group>=4) {
+			throw new IllegalArgumentException("group must be a valid value " +
+				"from DockableWindowConstants.");
+		}
+
+		return panels[panelToLocationMap[group]].collapsed;
+	}
+
+
+	/**
 	 * The only property we care about is a dockable window becoming
 	 * active or inactive (i.e., visible or not visible).
 	 *
@@ -517,6 +536,26 @@ public class DockableWindowPanel extends JPanel
 	 */
 	public void setDividerLocation(int splitPane, int pos) {
 		panels[panelToLocationMap[splitPane]].setDividerLocation(pos);
+	}
+
+
+	/**
+	 * Toggles whether a dockable window group is expanded or collapsed.  Does nothing if
+	 * there are no dockable windows at that position.
+	 *
+	 * @param group The group.  Should be a value from
+	 *        {@link org.fife.ui.dockablewindows.DockableWindowConstants}.
+	 * @param expanded Whether it should be expanded or collapsed.
+	 * @see #isDockableWindowGroupExpanded(int)
+	 */
+	public void setDockableWindowGroupExpanded(int group, boolean expanded) {
+
+		if (group<0 || group>=4) {
+			throw new IllegalArgumentException("group must be a valid value " +
+				"from DockableWindowConstants.");
+		}
+
+		panels[panelToLocationMap[group]].setCollapsed(!expanded);
 	}
 
 

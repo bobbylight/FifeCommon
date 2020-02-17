@@ -190,6 +190,20 @@ public abstract class AbstractPluggableGUIApplication<T extends GUIApplicationPr
 
 
 	/**
+	 * Returns whether a dockable window group is expanded or collapsed.
+	 *
+	 * @param group The group.  Should be a value from
+	 *        {@link org.fife.ui.dockablewindows.DockableWindowConstants}.
+	 * @return Whether it is expanded.
+	 * @see #setDockableWindowGroupExpanded(int, boolean)
+	 * @see #setSplitPaneDividerLocation(int, int, boolean) 
+	 */
+	public boolean isDockableWindowGroupExpanded(int group) {
+		return ((MainContentPanel)mainContentPanel).isDockableWindowGroupExpanded(group);
+	}
+
+
+	/**
 	 * Returns whether all plug-ins have been loaded for this application.
 	 * This does not count plug-ins added programmatically via
 	 * {@link #addPlugin(Plugin)}, although that isn't usually done (plug-ins
@@ -293,11 +307,27 @@ public abstract class AbstractPluggableGUIApplication<T extends GUIApplicationPr
 	 *        <code>LEFT</code>, <code>BOTTOM</code> or
 	 *        <code>RIGHT</code>.
 	 * @param pos The new position for the divider.
+	 * @param expanded Whether the split pane should be initially expanded.
 	 * @see #getSplitPaneDividerLocation
+	 * @see #isDockableWindowGroupExpanded(int) 
 	 */
-	public void setSplitPaneDividerLocation(int splitPane, int pos) {
+	public void setSplitPaneDividerLocation(int splitPane, int pos, boolean expanded) {
 		MainContentPanel mcp = (MainContentPanel)mainContentPanel;
 		mcp.setDividerLocation(splitPane, pos);
+		mcp.setDockableWindowGroupExpanded(splitPane, expanded);
+	}
+
+
+	/**
+	 * Toggles whether a dockable window group is expanded or collapsed.  Does nothing if
+	 * there are no dockable windows at that position.
+	 *
+	 * @param group The group.  Should be a value from {@link org.fife.ui.dockablewindows.DockableWindowConstants}.
+	 * @param expanded Whether it should be expanded or collapsed.
+	 * @see #isDockableWindowGroupExpanded(int)
+	 */
+	public void setDockableWindowGroupExpanded(int group, boolean expanded) {
+		((MainContentPanel)mainContentPanel).setDockableWindowGroupExpanded(group, expanded);
 	}
 
 

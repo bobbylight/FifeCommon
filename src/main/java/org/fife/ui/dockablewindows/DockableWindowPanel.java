@@ -354,7 +354,7 @@ public class DockableWindowPanel extends JPanel
 				"from DockableWindowConstants.");
 		}
 
-		return panels[panelToLocationMap[group]].collapsed;
+		return !panels[panelToLocationMap[group]].collapsed;
 	}
 
 

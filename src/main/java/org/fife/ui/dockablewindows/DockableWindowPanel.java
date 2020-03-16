@@ -591,57 +591,11 @@ public class DockableWindowPanel extends JPanel
 
 		ContentPanel() {
 			super(new BorderLayout());
+			collapsed = true;
 		}
 
 		public boolean addDockableWindow(DockableWindow window) {
-			// If this is our first dockable window...
-			if (splitPane==null) {
-				mainContent = getComponent(0);
-				windowPanel = new DockableWindowGroup(this);
-				windowPanel.addDockableWindow(window);
-				int split;
-				double resizeWeight;
-				Component comp1, comp2;
-				switch (dockableWindowsLocation) {
-					case TOP:
-						split = JSplitPane.VERTICAL_SPLIT;
-						resizeWeight = 0.0;
-						comp1 = windowPanel;
-						comp2 = mainContent;
-						break;
-					case LEFT:
-						split = JSplitPane.HORIZONTAL_SPLIT;
-						resizeWeight = 0.0;
-						comp1 = windowPanel;
-						comp2 = mainContent;
-						break;
-					case BOTTOM:
-						split = JSplitPane.VERTICAL_SPLIT;
-						resizeWeight = 1.0;
-						comp1 = mainContent;
-						comp2 = windowPanel;
-						break;
-					default: // RIGHT:
-						split = JSplitPane.HORIZONTAL_SPLIT;
-						resizeWeight = 1.0;
-						comp1 = mainContent;
-						comp2 = windowPanel;
-						break;
-				}
-				remove(0); // Remove the original contents.
-				splitPane = new JSplitPane(split, true, comp1, comp2) {
-					@Override
-					public void setUI(SplitPaneUI ui) {
-						super.setUI(new CleanSplitPaneUI());
-					}
-				};
-				splitPane.setResizeWeight(resizeWeight);
-				splitPane.setDividerLocation(dividerLocation);
-				splitPane.applyComponentOrientation(getComponentOrientation());
-				add(splitPane);
-				/*re*/validate();
-				return true;
-			}
+			ensureComponentsCreated();
 			// We already have some dockable windows...
 			boolean added = windowPanel.addDockableWindow(window);
 			if (added && collapsed) {
@@ -653,6 +607,60 @@ public class DockableWindowPanel extends JPanel
 		public int containsDockableWindow(DockableWindow window) {
 			return windowPanel==null ? -1 :
 					windowPanel.containsDockableWindow(window);
+		}
+
+		private void ensureComponentsCreated() {
+
+			if (splitPane == null) {
+
+				mainContent = getComponent(0);
+				windowPanel = new DockableWindowGroup(this);
+				collapsedPanel = new CollapsedPanel(dockableWindowsLocation);
+
+				int split;
+				double resizeWeight;
+				Component comp1, comp2;
+				switch (dockableWindowsLocation) {
+					case TOP:
+						split = JSplitPane.VERTICAL_SPLIT;
+						resizeWeight = 0.0;
+						comp1 = collapsed ? collapsedPanel : windowPanel;
+						comp2 = mainContent;
+						break;
+					case LEFT:
+						split = JSplitPane.HORIZONTAL_SPLIT;
+						resizeWeight = 0.0;
+						comp1 = collapsed ? collapsedPanel : windowPanel;
+						comp2 = mainContent;
+						break;
+					case BOTTOM:
+						split = JSplitPane.VERTICAL_SPLIT;
+						resizeWeight = 1.0;
+						comp1 = mainContent;
+						comp2 = collapsed ? collapsedPanel : windowPanel;
+						break;
+					default: // RIGHT:
+						split = JSplitPane.HORIZONTAL_SPLIT;
+						resizeWeight = 1.0;
+						comp1 = mainContent;
+						comp2 = collapsed ? collapsedPanel : windowPanel;
+						break;
+				}
+
+				remove(0); // Remove the original contents.
+				splitPane = new JSplitPane(split, true, comp1, comp2) {
+					@Override
+					public void setUI(SplitPaneUI ui) {
+						super.setUI(new CleanSplitPaneUI());
+					}
+				};
+				splitPane.setResizeWeight(resizeWeight);
+				splitPane.setDividerLocation(dividerLocation);
+				splitPane.applyComponentOrientation(getComponentOrientation());
+
+				add(splitPane);
+				/*re*/validate();
+			}
 		}
 
 		public int getDividerLocation() {
@@ -700,6 +708,9 @@ public class DockableWindowPanel extends JPanel
 		}
 
 		public void setCollapsed(boolean collapsed) {
+
+			ensureComponentsCreated();
+
 			if (collapsed!=this.collapsed) {
 				this.collapsed = collapsed;
 				if (collapsed) {

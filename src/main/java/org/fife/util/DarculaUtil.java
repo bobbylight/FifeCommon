@@ -22,6 +22,10 @@ import javax.swing.plaf.ComponentUI;
  */
 public final class DarculaUtil {
 
+	/**
+	 * The class name used by Darcula.
+	 */
+	public static final String CLASS_NAME = "com.bulenkov.darcula.DarculaLaf";
 
 	public static boolean isDarculaUI(ComponentUI ui) {
 		return ui.getClass().getSimpleName().contains("Darcula");

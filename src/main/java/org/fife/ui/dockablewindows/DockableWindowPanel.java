@@ -658,7 +658,12 @@ public class DockableWindowPanel extends JPanel
 				splitPane.setDividerLocation(dividerLocation);
 				splitPane.applyComponentOrientation(getComponentOrientation());
 
-				add(splitPane);
+				if (collapsed) { // Force the collapsing code to run the first time through
+					setCollapsedImpl(true);
+				}
+				else {
+					add(splitPane);
+				}
 				/*re*/validate();
 			}
 		}
@@ -712,55 +717,62 @@ public class DockableWindowPanel extends JPanel
 			ensureComponentsCreated();
 
 			if (collapsed!=this.collapsed) {
-				this.collapsed = collapsed;
-				if (collapsed) {
-					this.dividerLocation = splitPane.getDividerLocation();
-					remove(splitPane);
-					if (collapsedPanel==null) {
-						collapsedPanel = new CollapsedPanel(dockableWindowsLocation);
-					}
-					switch (dockableWindowsLocation) {
-						case TOP:
-							add(collapsedPanel, BorderLayout.NORTH);
-							add(splitPane.getBottomComponent());
-							break;
-						case LEFT:
-							add(collapsedPanel, BorderLayout.WEST);
-							add(splitPane.getRightComponent());
-							break;
-						case BOTTOM:
-							add(collapsedPanel, BorderLayout.SOUTH);
-							add(splitPane.getTopComponent());
-							break;
-						default: // RIGHT:
-							add(collapsedPanel, BorderLayout.EAST);
-							add(splitPane.getLeftComponent());
-							break;
-					}
-				}
-				else {
-					while (getComponentCount()>0) { // Should be 2
-						remove(0);
-					}
-					// Add main component back to split pane
-					switch (dockableWindowsLocation) {
-						case TOP:
-						case LEFT:
-							splitPane.setBottomComponent(mainContent);
-							break;
-						case BOTTOM:
-						default: // RIGHT:
-							splitPane.setTopComponent(mainContent);
-							break;
-					}
-					add(splitPane);
-					if (splitPane!=null) { // Always true?
-						splitPane.setDividerLocation(dividerLocation);
-					}
-				}
-				revalidate();
-				repaint();
+				setCollapsedImpl(collapsed);
 			}
+		}
+
+		private void setCollapsedImpl(boolean collapsed) {
+
+			this.collapsed = collapsed;
+
+			if (collapsed) {
+				this.dividerLocation = splitPane.getDividerLocation();
+				remove(splitPane);
+				if (collapsedPanel==null) {
+					collapsedPanel = new CollapsedPanel(dockableWindowsLocation);
+				}
+				switch (dockableWindowsLocation) {
+					case TOP:
+						add(collapsedPanel, BorderLayout.NORTH);
+						add(splitPane.getBottomComponent());
+						break;
+					case LEFT:
+						add(collapsedPanel, BorderLayout.WEST);
+						add(splitPane.getRightComponent());
+						break;
+					case BOTTOM:
+						add(collapsedPanel, BorderLayout.SOUTH);
+						add(splitPane.getTopComponent());
+						break;
+					default: // RIGHT:
+						add(collapsedPanel, BorderLayout.EAST);
+						add(splitPane.getLeftComponent());
+						break;
+				}
+			}
+			else {
+				while (getComponentCount()>0) { // Should be 2
+					remove(0);
+				}
+				// Add main component back to split pane
+				switch (dockableWindowsLocation) {
+					case TOP:
+					case LEFT:
+						splitPane.setBottomComponent(mainContent);
+						break;
+					case BOTTOM:
+					default: // RIGHT:
+						splitPane.setTopComponent(mainContent);
+						break;
+				}
+				add(splitPane);
+				if (splitPane!=null) { // Always true?
+					splitPane.setDividerLocation(dividerLocation);
+				}
+			}
+
+			revalidate();
+			repaint();
 		}
 
 		public void setDividerLocation(int location) {

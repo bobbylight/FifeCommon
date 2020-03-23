@@ -598,7 +598,7 @@ public class DockableWindowPanel extends JPanel
 			ensureComponentsCreated();
 			// We already have some dockable windows...
 			boolean added = windowPanel.addDockableWindow(window);
-			if (added && collapsed) {
+			if (added) {
 				collapsedPanel.refreshDockableWindowButtons();
 			}
 			return added;
@@ -624,26 +624,26 @@ public class DockableWindowPanel extends JPanel
 					case TOP:
 						split = JSplitPane.VERTICAL_SPLIT;
 						resizeWeight = 0.0;
-						comp1 = collapsed ? collapsedPanel : windowPanel;
+						comp1 = windowPanel;
 						comp2 = mainContent;
 						break;
 					case LEFT:
 						split = JSplitPane.HORIZONTAL_SPLIT;
 						resizeWeight = 0.0;
-						comp1 = collapsed ? collapsedPanel : windowPanel;
+						comp1 = windowPanel;
 						comp2 = mainContent;
 						break;
 					case BOTTOM:
 						split = JSplitPane.VERTICAL_SPLIT;
 						resizeWeight = 1.0;
 						comp1 = mainContent;
-						comp2 = collapsed ? collapsedPanel : windowPanel;
+						comp2 = windowPanel;
 						break;
 					default: // RIGHT:
 						split = JSplitPane.HORIZONTAL_SPLIT;
 						resizeWeight = 1.0;
 						comp1 = mainContent;
-						comp2 = collapsed ? collapsedPanel : windowPanel;
+						comp2 = windowPanel;
 						break;
 				}
 
@@ -688,9 +688,7 @@ public class DockableWindowPanel extends JPanel
 		public boolean removeDockableWindowImpl(DockableWindow window) {
 			if (windowPanel!=null) {
 				boolean rc = windowPanel.removeDockableWindow(window);
-				if (collapsed) {
-					collapsedPanel.refreshDockableWindowButtons();
-				}
+				collapsedPanel.refreshDockableWindowButtons();
 				// NASTY!  removeDockableWindow() above may have caused a
 				// recursive call into here and set windowPanel to null already.
 				// TODO: fix me.
@@ -716,7 +714,7 @@ public class DockableWindowPanel extends JPanel
 
 			ensureComponentsCreated();
 
-			if (collapsed!=this.collapsed) {
+			if (collapsed != this.collapsed) {
 				setCollapsedImpl(collapsed);
 			}
 		}
@@ -766,9 +764,7 @@ public class DockableWindowPanel extends JPanel
 						break;
 				}
 				add(splitPane);
-				if (splitPane!=null) { // Always true?
-					splitPane.setDividerLocation(dividerLocation);
-				}
+				splitPane.setDividerLocation(dividerLocation);
 			}
 
 			revalidate();

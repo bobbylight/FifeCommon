@@ -416,7 +416,7 @@ public class CTagReader {
 	}
 
 
-/************************ EXTERNAL INTERFACE *********************************/
+/* *********************** EXTERNAL INTERFACE *********************************/
 	/**
 	 * Sets the ctag file to be read by this reader.
 	 *

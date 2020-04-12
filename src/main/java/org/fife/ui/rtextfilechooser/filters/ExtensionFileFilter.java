@@ -149,7 +149,7 @@ public class ExtensionFileFilter extends FileFilter {
 		this.extensions = new String[extCount];
 
 		this.caseCheck = ExtensionFileFilter.doCaseCheck(caseCheck);
-		if (this.caseCheck) {
+		if (this.caseCheck && extensions != null) {
 			System.arraycopy(extensions,0, this.extensions,0, extCount);
 		}
 		else {

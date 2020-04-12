@@ -1055,7 +1055,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		}
 
 		// If there are no matches (shouldn't happen if set up right), say so.
-		else if (size==0) {
+		else { //if (size==0) {
 			editorPane.setText(noMatchHTML);
 		}
 

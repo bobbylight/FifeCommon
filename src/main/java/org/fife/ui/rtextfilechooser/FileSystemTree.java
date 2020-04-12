@@ -544,7 +544,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			Object comp = path.getLastPathComponent();
 			if (comp instanceof FileSystemTreeNode) {
 				FileSystemTreeNode node = (FileSystemTreeNode)comp;
-				return getName((File)node.getUserObject());
+				tip = getName((File)node.getUserObject());
 			}
 		}
 		return tip;

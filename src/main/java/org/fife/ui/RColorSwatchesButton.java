@@ -158,7 +158,7 @@ public class RColorSwatchesButton extends RColorButton {
 				popup.applyComponentOrientation(getComponentOrientation());
 			}
 			popup.show(RColorSwatchesButton.this,
-				0, 0+RColorSwatchesButton.this.getHeight());
+				0, RColorSwatchesButton.this.getHeight());
 		}
 
 	}

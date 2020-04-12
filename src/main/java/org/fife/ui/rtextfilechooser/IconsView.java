@@ -204,7 +204,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		// Remember there's spacing at the front too.
 		Dimension size = getVisibleRect().getSize();
 		int defaultWidth = (SPACING+DEFAULT_ICON_WIDTH)*DEFAULT_ROW_SIZE;
-		int width = size.width<defaultWidth ? defaultWidth : size.width;
+		int width = Math.max(size.width, defaultWidth);
 
 		int x = SPACING;
 		int y = SPACING;
@@ -304,7 +304,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		// More foolproof to use actual components, as not all LAFs will
 		// set "List.foreground", etc.
 		setForeground(new JLabel().getForeground());
-		JList list = new JList();
+		JList<Object> list = new JList<>();
 		setBackground(list.getBackground());
 		selectionForeground = list.getSelectionForeground();
 		selectionBackground = list.getSelectionBackground();

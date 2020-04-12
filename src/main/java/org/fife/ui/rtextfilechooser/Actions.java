@@ -188,7 +188,7 @@ public interface Actions {
 			// If they chose "yes," delete the files.
 			if (choice==JOptionPane.YES_OPTION) {
 				for (File file : files) {
-					if (!UIUtil.deleteFile(file)) {
+					if (!UIUtil.deleteFile(file, hard)) {
 						Object[] arguments = {file.getName()};
 						String msg = MessageFormat.format(
 							chooser.getString("DeleteFailText"),

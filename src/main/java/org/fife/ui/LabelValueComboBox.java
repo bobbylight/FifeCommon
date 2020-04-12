@@ -95,7 +95,7 @@ public class LabelValueComboBox<L, V> extends JComboBox<L> {
 	 * @return Whether it is a known value.
 	 */
 	public boolean isValue(V possibleValue) {
-		return values.indexOf(possibleValue)>-1;
+		return values.contains(possibleValue);
 	}
 
 

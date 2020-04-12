@@ -263,17 +263,35 @@ public final class UIUtil {
 	 *
 	 * @param file The file to delete.
 	 * @return Whether the file was successfully deleted.
+	 * @see #deleteFile(File, boolean)
 	 */
 	public static boolean deleteFile(File file) {
+		return deleteFile(file, false);
+	}
+
+
+	/**
+	 * Deletes a file, possibly moving it into the Trash/Recycle Bin.
+	 *
+	 * @param file The file to delete.
+	 * @param hard If {@code true}, don't try to move to the recycle bin, just
+	 *        perform a hard delete (equivalent to {@code File.delete()}).
+	 * @return Whether the file was successfully deleted.
+	 * @see #deleteFile(File)
+	 */
+	public static boolean deleteFile(File file, boolean hard) {
 
 		boolean success = false;
 
-		Desktop desktop = getDesktop();
-		if (desktop != null && desktop.isSupported(Desktop.Action.MOVE_TO_TRASH)) {
-			try {
-				success = desktop.moveToTrash(file);
-			} catch (Exception e) {
-				success = false; // We'll just do a hard delete
+		if (!hard) {
+			Desktop desktop = getDesktop();
+			if (desktop != null && desktop.isSupported(
+					Desktop.Action.MOVE_TO_TRASH)) {
+				try {
+					success = desktop.moveToTrash(file);
+				} catch (Exception e) {
+					success = false; // We'll just do a hard delete
+				}
 			}
 		}
 
@@ -364,8 +382,8 @@ public final class UIUtil {
 	 *
 	 * @param combo The combo box.
 	 */
-	public static void fixComboOrientation(JComboBox combo) {
-		ListCellRenderer r = combo.getRenderer();
+	public static void fixComboOrientation(JComboBox<?> combo) {
+		ListCellRenderer<?> r = combo.getRenderer();
 		if (r instanceof Component) {
 			ComponentOrientation o = ComponentOrientation.
 							getOrientation(Locale.getDefault());
@@ -430,7 +448,7 @@ public final class UIUtil {
 	 * @param combo The combo box.
 	 * @return The values, or an empty array for none.
 	 */
-	public static String[] getCommaSeparatedValues(JComboBox combo) {
+	public static String[] getCommaSeparatedValues(JComboBox<?> combo) {
 		String value = (String)combo.getSelectedItem();
 		return value.trim().split("\\s*,?\\s+");
 	}

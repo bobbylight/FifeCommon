@@ -363,8 +363,8 @@ public class BreadcrumbBar extends JComponent {
 			BufferedInputStream bin = new BufferedInputStream(in);
 			image = ImageIO.read(bin);
 			bin.close();
-		} catch (IOException ioe) { // Never happens
-			ioe.printStackTrace();
+		} catch (IOException | NullPointerException e) { // Never happens
+			e.printStackTrace();
 		}
 
 		return image;
@@ -590,7 +590,7 @@ public class BreadcrumbBar extends JComponent {
 	/**
 	 * A down arrow icon.
 	 */
-	private class DownArrowIcon implements Icon {
+	private static class DownArrowIcon implements Icon {
 
 		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {

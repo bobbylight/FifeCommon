@@ -289,7 +289,7 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 				}
 				if (unselectedTabPaint==null) {
 					unselectedTabPaint = new GradientPaint(0,0, Color.LIGHT_GRAY,
-							0,h/2, UIManager.getColor("TabbedPane.highlight"));
+							0,h/2f, UIManager.getColor("TabbedPane.highlight"));
 				}
 			}
 			g2d.setPaint(unselectedTabPaint);

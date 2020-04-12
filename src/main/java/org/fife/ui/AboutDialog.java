@@ -275,9 +275,9 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 	 * @author Robert Futrell
 	 * @version 1.0
 	 */
-	private static class PropertiesTableModel extends DefaultTableModel {
+	private static final class PropertiesTableModel extends DefaultTableModel {
 
-		PropertiesTableModel(ResourceBundle msg) {
+		private PropertiesTableModel(ResourceBundle msg) {
 			super(9, 2);
 			setValueAt(msg.getString("Environment.Label.JavaVendor"), 0,0);
 			setValueAt(System.getProperty("java.vendor"), 0,1);

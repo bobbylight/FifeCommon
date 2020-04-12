@@ -112,16 +112,6 @@ public abstract class WizardPlugin extends AbstractPlugin implements GUIApplicat
 
 
 	/**
-	 * Returns an options panel for use in an Options dialog.  This panel
-	 * should contain all options pertaining to this plugin.
-	 *
-	 * @return The options panel.
-	 */
-	@Override
-	public abstract PluginOptionsDialogPanel getOptionsDialogPanel();
-
-
-	/**
 	 * Returns the image to use on the side of the dialog.  This image should
 	 * be taller than it is wide (perhaps around three time taller) to match
 	 * the appearance of Microsoft Windows-style wizards.  If this method is

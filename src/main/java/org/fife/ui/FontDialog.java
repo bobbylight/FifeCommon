@@ -41,7 +41,7 @@ public class FontDialog extends JDialog implements ActionListener,
 	private JCheckBox italicCheckBox;
 	private JCheckBox underlineCheckBox;
 
-	private int properties = 0;		// Bit flag for bold/italics.
+	private int properties = Font.PLAIN;		// Bit flag for bold/italics.
 	private int size = 12;			// Point size of font.
 
 	private Font selectedFont;		// The font they end up selecting (null if canceled).
@@ -605,7 +605,7 @@ public class FontDialog extends JDialog implements ActionListener,
 		}
 		else {
 			// TODO: Use a binary search since items are ordered.
-			ListModel model = fontList.getModel();
+			ListModel<FontInfo> model = fontList.getModel();
 			for (int i=0; i<model.getSize(); i++) {
 				if (model.getElementAt(i).equals(fontFamily)) {
 					fontList.setSelectedIndex(i);

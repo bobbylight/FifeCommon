@@ -100,7 +100,7 @@ class ListView extends JList<File> implements RTextFileChooserView {
 
 		// This will always be true because we explicitly set the
 		// model below.
-		DefaultListModel model = (DefaultListModel)getModel();
+		DefaultListModel<File> model = (DefaultListModel<File>)getModel();
 
 		int index = model.indexOf(file);
 		if (index!=-1)
@@ -281,7 +281,7 @@ class ListView extends JList<File> implements RTextFileChooserView {
 		int num = files.length;
 		if(num>0) {
 
-			ListModel model = getModel();
+			ListModel<File> model = getModel();
 			int modelSize = model.getSize();
 
             for (File f1 : files) {
@@ -293,7 +293,7 @@ class ListView extends JList<File> implements RTextFileChooserView {
                     continue;
 
                 for (int j = 0; j < modelSize; j++) {
-                    File f2 = (File)model.getElementAt(j);
+                    File f2 = model.getElementAt(j);
                     if (f1.equals(f2)) {
                         addSelectionInterval(j, j);
                         break;
@@ -319,13 +319,12 @@ class ListView extends JList<File> implements RTextFileChooserView {
 		private int getNextMatch(String text, int fromCell) {
 
 			text = text.toUpperCase();
-			ListModel model = getModel();
+			ListModel<File> model = getModel();
 
 			// First, try everything after the selected row
 			for (int row=fromCell; row<model.getSize(); row++) {
-				Object value = model.getElementAt(row);
-				String fileName = (value instanceof File) ?
-						((File)value).getName() : value.toString();
+				File value = model.getElementAt(row);
+				String fileName = value.getName();
 				fileName = fileName.toUpperCase();
 				if (fileName.startsWith(text)) {
 					return row;
@@ -334,9 +333,8 @@ class ListView extends JList<File> implements RTextFileChooserView {
 
 			// Then, wrap around to before the selected row
 			for (int row=0; row<fromCell; row++) {
-				Object value = model.getElementAt(row);
-				String fileName = (value instanceof File) ?
-						((File)value).getName() : value.toString();
+				File value = model.getElementAt(row);
+				String fileName = value.getName();
 				fileName = fileName.toUpperCase();
 				if (fileName.startsWith(text)) {
 					return row;

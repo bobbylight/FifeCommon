@@ -314,8 +314,9 @@ public class PrintPreviewDialog extends EscapableDialog
 		PagePreview pp;
 		pp = pageImage[numVisiblePages-1];
 		previewPanel.remove(pp);
-		for (int i=numVisiblePages-1; i>0; i--)
-			pageImage[i] = pageImage[i-1];
+		if (numVisiblePages - 1 >= 0) {
+			System.arraycopy(pageImage, 0, pageImage, 1, numVisiblePages - 1);
+		}
 		pageImage[0] = null; // May help GC.
 
 		pageWidth = (int)(pageFormat.getWidth());
@@ -473,8 +474,9 @@ public class PrintPreviewDialog extends EscapableDialog
 		// Move 'forward' one page in all visible pages.  This should work
 		// even if some of the pages are null (i.e., no more pages to view),
 		// as we'd just be setting stuff to null.
-		for (int i=0; i<numVisiblePages-1; i++)
-			pageImage[i] = pageImage[i+1];
+		if (numVisiblePages - 1 >= 0) {
+			System.arraycopy(pageImage, 1, pageImage, 0, numVisiblePages - 1);
+		}
 
 		pageWidth = (int)(pageFormat.getWidth());
 		pageHeight = (int)(pageFormat.getHeight());

@@ -450,7 +450,7 @@ public final class UIUtil {
 	 */
 	public static String[] getCommaSeparatedValues(JComboBox<?> combo) {
 		String value = (String)combo.getSelectedItem();
-		return value.trim().split("\\s*,?\\s+");
+		return value ==  null ? new String[0] : value.trim().split("\\s*,?\\s+");
 	}
 
 

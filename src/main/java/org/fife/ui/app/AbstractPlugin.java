@@ -47,12 +47,7 @@ public abstract class AbstractPlugin implements Plugin {
 
 	@Override
 	public Icon getPluginIcon() {
-		return getPluginIcon(isDarkLookAndFeel());
-	}
-
-
-	protected boolean isDarkLookAndFeel() {
-		return UIUtil.isLightForeground(new JLabel().getForeground());
+		return getPluginIcon(UIUtil.isDarkLookAndFeel());
 	}
 
 

@@ -43,7 +43,7 @@ public interface Plugin {
 	 *
 	 * @return The options panel.
 	 */
-	PluginOptionsDialogPanel getOptionsDialogPanel();
+	PluginOptionsDialogPanel<? extends Plugin> getOptionsDialogPanel();
 
 
 	/**

@@ -149,7 +149,6 @@ final class FileChooserPreferences {
 			// All of the preferences that are extension => color mappings
 			// share a common prefix that we check for.
 
-			int count = keys.length;
 			int prefixLength = FTI_PREFIX.length();
 			for (String key : keys) {
 				if (key.startsWith(FTI_PREFIX)) {

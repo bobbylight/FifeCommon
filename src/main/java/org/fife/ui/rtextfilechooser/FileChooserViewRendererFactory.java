@@ -63,7 +63,7 @@ final class FileChooserViewRendererFactory {
 	public static ListCellRenderer<File> createListViewRenderer(
 			RTextFileChooser chooser) {
 
-		ListCellRenderer renderer;
+		ListCellRenderer<?> renderer;
 
 		if (SubstanceUtil.isSubstanceInstalled()) {
 			renderer = new ListViewSubstanceCellRenderer(chooser);
@@ -72,7 +72,7 @@ final class FileChooserViewRendererFactory {
 			renderer = new ListViewCellRenderer(chooser);
 		}
 
-		return renderer;
+		return (ListCellRenderer<File>)renderer;
 
 	}
 

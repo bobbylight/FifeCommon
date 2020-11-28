@@ -2328,7 +2328,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 					selectedFiles.length>0) {
 				List<File> fList = new ArrayList<>();
 				boolean failed = false;
-				int num = selectedFiles.length;
 				for (File selectedFile : selectedFiles) {
 					if (filter.accept(selectedFile)) {
 						fList.add(selectedFile);
@@ -3027,7 +3026,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		public void changedUpdate(DocumentEvent e) {
 		}
 
-		private void handleDocumentChange(DocumentEvent e) {
+		private void handleDocumentChange() {
 			if (!isChangingDirectories) {
 				view.clearSelection();
 			}
@@ -3037,12 +3036,12 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		@Override
 		public void insertUpdate(DocumentEvent e) {
-			handleDocumentChange(e);
+			handleDocumentChange();
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent e) {
-			handleDocumentChange(e);
+			handleDocumentChange();
 		}
 
 		@Override

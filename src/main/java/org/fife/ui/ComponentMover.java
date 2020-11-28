@@ -44,7 +44,7 @@ public class ComponentMover extends MouseAdapter {
 	private boolean changeCursor = true;
 	private boolean autoLayout = false;
 
-	private Class destinationClass;
+	private Class<?> destinationClass;
 	private Component destinationComponent;
 	private Component destination;
 	private Component source;
@@ -53,7 +53,7 @@ public class ComponentMover extends MouseAdapter {
 	private Point location;
 
 	private Cursor originalCursor;
-	private boolean autoscrolls;
+	private boolean autoScrolls;
 	private boolean potentialDrag;
 
 
@@ -73,7 +73,7 @@ public class ComponentMover extends MouseAdapter {
 	 * @param components       The Components to be registered for forwarding
 	 *                         drag events to the ancestor Component.
 	 */
-	public ComponentMover(Class destinationClass, Component... components) {
+	public ComponentMover(Class<?> destinationClass, Component... components) {
 		this.destinationClass = destinationClass;
 		registerComponent(components);
 	}
@@ -251,12 +251,12 @@ public class ComponentMover extends MouseAdapter {
 			source.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 		}
 
-		//  Making sure autoscrolls is false will allow for smoother dragging of
-		//  individual components
+		// Making sure autoScrolls is false will allow for smoother dragging of
+		// individual components
 
 		if (destination instanceof JComponent) {
 			JComponent jc = (JComponent)destination;
-			autoscrolls = jc.getAutoscrolls();
+			autoScrolls = jc.getAutoscrolls();
 			jc.setAutoscrolls(false);
 		}
 	}
@@ -303,7 +303,7 @@ public class ComponentMover extends MouseAdapter {
 			source.setCursor(originalCursor);
 
 		if (destination instanceof JComponent) {
-			((JComponent)destination).setAutoscrolls(autoscrolls);
+			((JComponent)destination).setAutoscrolls(autoScrolls);
 		}
 
 		//  Layout the components on the parent container

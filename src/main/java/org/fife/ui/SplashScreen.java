@@ -88,8 +88,7 @@ public class SplashScreen extends JWindow {
 
 		// Create the "progress bar" at the bottom.
 		progressBar = new ProgressBar(image.getIconWidth(),
-								statusText, statusBackground,
-								foreground1, foreground2, textColor);
+								statusBackground, foreground1, foreground2, textColor);
 		contentPane.add(progressBar, BorderLayout.SOUTH);
 
 		// Combine everything and get ready to go.
@@ -144,7 +143,7 @@ public class SplashScreen extends JWindow {
 		private String text;
 		private int textX, textY;
 
-		ProgressBar(int width, String initialText, Color background,
+		ProgressBar(int width, Color background,
 					Color foreground1, Color foreground2,
 					Color textColor) {
 			setBackground(background);

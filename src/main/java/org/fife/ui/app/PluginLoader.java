@@ -222,7 +222,6 @@ class PluginLoader {
 
 		// Get all jars in the plugin directory.
 		File[] jars = pluginDir.listFiles(f -> f.getName().endsWith(".jar"));
-		int jarCount = jars.length;
 
 		List<List<String>> plugins = new ArrayList<>(
 			LOAD_PRIORITIES.length);

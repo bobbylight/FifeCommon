@@ -8,7 +8,7 @@ archivesBaseName = 'fife.common'
 
 ext.isReleaseVersion = !project.version.endsWith('SNAPSHOT')
 
-assert JavaVersion.current().isJava11Compatible()
+assert JavaVersion.current().isJava12Compatible()
 
 repositories {
 	mavenCentral()
@@ -16,16 +16,16 @@ repositories {
 
 dependencies {
 	api 'org.pushing-pixels:radiance-substance:2.5.1'
-	api 'org.apache.xmlgraphics:batik-rasterizer:1.12'
-	testImplementation 'junit:junit:4.13'
+	api 'org.apache.xmlgraphics:batik-rasterizer:1.13'
+	testImplementation 'junit:junit:4.13.1'
 }
 
 wrapper {
-	gradleVersion '6.3'
+	gradleVersion '6.7.1'
 }
 
 checkstyle {
-	toolVersion = '8.31'
+	toolVersion = '8.37'
 }
 
 compileJava {

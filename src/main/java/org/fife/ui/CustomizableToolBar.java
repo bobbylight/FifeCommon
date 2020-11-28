@@ -240,7 +240,6 @@ public class CustomizableToolBar extends JToolBar {
 		JCheckBoxMenuItem cbMenuItem;
 
 		Component[] components = getComponents();
-		int num = components.length;
 		for (Component component : components) {
 			if (component instanceof JButton) {
 				final JButton button = (JButton)component;
@@ -377,7 +376,6 @@ public class CustomizableToolBar extends JToolBar {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Component[] c = getComponents();
-			int num = c.length;
 			for (Component component : c)
 				if (component instanceof JButton)
 					component.setVisible(true);

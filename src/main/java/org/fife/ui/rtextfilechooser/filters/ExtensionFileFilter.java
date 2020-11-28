@@ -194,7 +194,6 @@ public class ExtensionFileFilter extends FileFilter {
 		}
 
 		// Now, accept the file ONLY if it matches one of our filters.
-		int extensionCount = extensions.length;
 		for (String extension1 : extensions) {
 			if (extension1.equals(extension))
 				return true;

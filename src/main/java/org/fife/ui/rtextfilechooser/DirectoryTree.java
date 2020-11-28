@@ -58,7 +58,6 @@ public class DirectoryTree extends FileSystemTree {
 	@Override
 	protected File[] filterAndSort(File[] files) {
 
-		int num = files.length;
 		ArrayList<File> dirList = new ArrayList<>();
 
 		// First, separate the directories from regular files so we can

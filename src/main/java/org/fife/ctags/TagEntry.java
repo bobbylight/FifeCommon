@@ -152,7 +152,6 @@ public class TagEntry {
 		string = string.trim();	// Cut off leading/trailing whitespace.
 
 		String[] keyValuePairs = string.split("\t");
-		int numKeyValuePairs = keyValuePairs.length;
 
 		for (String keyValuePair : keyValuePairs) {
 

@@ -510,7 +510,7 @@ public class PrintPreviewDialog extends EscapableDialog
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 
-		JComboBox source = (JComboBox)e.getSource();
+		JComboBox<?> source = (JComboBox<?>)e.getSource();
 
 		if (e.getStateChange()==ItemEvent.SELECTED) {
 

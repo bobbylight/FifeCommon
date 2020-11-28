@@ -76,7 +76,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	 */
 	@SuppressWarnings("unchecked")
 	public static final Comparator<?> COMPARABLE_COMPARATOR =
-		(Comparator<Object>)(o1, o2) -> ((Comparable)o1).compareTo(o2);
+		(Comparator<Object>)(o1, o2) -> ((Comparable<Object>)o1).compareTo(o2);
 
 
 	/**

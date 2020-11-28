@@ -101,7 +101,6 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		JInternalFrame[] frames = getSelectedFrames();
 		if (frames==null)
 			return;
-		int count = frames.length;
 		for (JInternalFrame frame : frames) {
 			try {
 				frame.setSelected(false);
@@ -338,7 +337,6 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		clearSelection();
 
 		int componentCount = getComponentCount();
-		int numToSelect = files.length;
 
 		for (File file : files) {
 			for (int j = 0; j < componentCount; j++) {

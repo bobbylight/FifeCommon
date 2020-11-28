@@ -287,7 +287,6 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 
 		// Ensure that all of the changes specified are valid.  If one isn't,
 		// scold the user, shift focus to it and bail out.
-		int numPanels = optionsPanels.length;
 		for (OptionsDialogPanel optionsPanel1 : optionsPanels) {
 			OptionsDialogPanel.OptionsPanelCheckResult result =
 				optionsPanel1.ensureValidInputs();

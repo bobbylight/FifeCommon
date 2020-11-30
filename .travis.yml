@@ -9,7 +9,7 @@ before_install:
   - "/bin/sh -e /etc/init.d/xvfb start"
 
 jdk:
-  - oraclejdk11
+  - oraclejdk14
 
 script:
   - ./gradlew clean build -xsign -xpublish

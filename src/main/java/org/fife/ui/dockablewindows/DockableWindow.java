@@ -42,6 +42,11 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	public static final String NAME_PROPERTY	= "DockableWindowName";
 
 	/**
+	 * Property fired when a dockable window's icon changes.
+	 */
+	public static final String ICON_PROPERTY	= "DockableWindowIcon";
+
+	/**
 	 * Property fired when a dockable window's title changes.
 	 */
 	public static final String TITLE_PROPERTY	= "DockableWindowTitle";
@@ -363,14 +368,19 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 
 
 	/**
-	 * Sets the icon for this dockable window.
+	 * Sets the icon for this dockable window.<p>
+	 *
+	 * This method fires a property change event of type {@link #ICON_PROPERTY}.
 	 *
 	 * @param icon The icon.
 	 * @see #getIcon()
 	 */
 	public void setIcon(Icon icon) {
-		this.icon = icon;
-		// TODO: Update parent UI
+		if (icon != this.icon) {
+			Icon old = this.icon;
+			this.icon = icon;
+			firePropertyChange(ICON_PROPERTY, old, icon);
+		}
 	}
 
 

@@ -145,11 +145,30 @@ class DockableWindowGroup extends JPanel {
 
 
 	/**
+	 * Refreshes the icon of the specified dockable window tab so it matches
+	 * that of the contained dockable window.  This is called whenever the
+	 * dockable window's icon changes so the UI stays in sync.
+	 *
+	 * @param index The index of the dockable window to refresh.
+	 * @see #refreshTabName(int)
+	 * @see #refreshTabTitle(int)
+	 */
+	void refreshTabIcon(int index) {
+		if (index>=0 && index<tabbedPane.getTabCount()) {
+			DockableWindow w = (DockableWindow)tabbedPane.getComponentAt(index);
+			Icon icon = w.getIcon();
+			tabbedPane.setIconAt(index, icon);
+		}
+	}
+
+
+	/**
 	 * Refreshes the name of the specified dockable window tab.  This will
 	 * also refresh the text in the title bar (since a dockable window's title
 	 * defaults to its name if none is specified) if necessary.
 	 *
 	 * @param index The index of the dockable window to refresh.
+	 * @see #refreshTabIcon(int)
 	 * @see #refreshTabTitle(int)
 	 */
 	void refreshTabName(int index) {
@@ -169,6 +188,7 @@ class DockableWindowGroup extends JPanel {
 	 * title.
 	 *
 	 * @param index The index of the dockable window to refresh.
+	 * @see #refreshTabIcon(int)
 	 * @see #refreshTabName(int)
 	 */
 	void refreshTabTitle(int index) {

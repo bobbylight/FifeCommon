@@ -409,6 +409,16 @@ public class DockableWindowPanel extends JPanel
 			}
 		}
 
+		else if (DockableWindow.ICON_PROPERTY.equals(name)) {
+			for (ContentPanel panel : panels) {
+				int index = panel.containsDockableWindow(w);
+				if (index > -1) {
+					panel.windowPanel.refreshTabIcon(index);
+					break;
+				}
+			}
+		}
+
 		else if (DockableWindow.TITLE_PROPERTY.equals(name)) {
 			boolean found = false;
 			for (ContentPanel panel : panels) {

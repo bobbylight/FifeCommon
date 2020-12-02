@@ -20,15 +20,16 @@ import javax.swing.SwingUtilities;
  *
  * This class is a direct ripoff of SwingWorker 3.
  *
+ * @param <T> The type of object returned.
  */
-public abstract class GUIWorkerThread {
+public abstract class GUIWorkerThread<T> {
 
 	/**
 	 * The value we are creating; for example, if you set up this thread to
 	 * load a large image to keep the GUI responsive, this value could be
 	 * the image loaded.  You may not use this parameter in your subclass.
 	 */
-	private Object value;
+	private T value;
 
 	/**
 	 * Keeps track internally of the thread that's doing our dirty work.
@@ -53,7 +54,7 @@ public abstract class GUIWorkerThread {
 	 *
 	 * @return The value computed by this worker thread.
 	 */
-	public abstract Object construct();
+	public abstract T construct();
 
 
 	/**
@@ -77,7 +78,7 @@ public abstract class GUIWorkerThread {
 	 *
 	 * @return The value created by the <code>construct</code> method.
 	 */
-	public Object get() {
+	public T get() {
 		while (true) {
 			Thread t = threadVar.get();
 			if (t == null)
@@ -98,7 +99,7 @@ public abstract class GUIWorkerThread {
 	 *
 	 * @return The produced value.
 	 */
-	protected synchronized Object getValue() {
+	protected synchronized T getValue() {
 		return value;
 	}
 
@@ -146,7 +147,7 @@ public abstract class GUIWorkerThread {
 	/**
 	 * Set the value produced by worker thread.
 	 */
-	private synchronized void setValue(Object x) {
+	private synchronized void setValue(T x) {
 		value = x;
 	}
 

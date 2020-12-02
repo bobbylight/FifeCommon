@@ -64,7 +64,7 @@ import org.fife.ui.UIUtil;
  * @author Robert Futrell
  * @version 1.0
  */
-final class FilePasteThread extends GUIWorkerThread {
+final class FilePasteThread extends GUIWorkerThread<Object> {
 
 	private Window parent;
 	private List<File> files;

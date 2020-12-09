@@ -17,6 +17,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.Serial;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
@@ -58,6 +59,7 @@ import org.pushingpixels.substance.api.renderer.SubstanceDefaultTableCellRendere
 public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 						implements ModifiableTableListener {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private static final String FAVORITES_PROPERTY	= "Favorites";
@@ -413,6 +415,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 	 */
 	private static class FavoritesTableModel extends DefaultTableModel {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		private String[] columnNames;

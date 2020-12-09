@@ -10,6 +10,7 @@
  */
 package org.fife.ui.modifiabletable;
 
+import java.io.Serial;
 import java.util.EventObject;
 
 
@@ -22,6 +23,7 @@ import java.util.EventObject;
  */
 public class ModifiableTableChangeEvent extends EventObject {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private static final int MIN_CHANGE	= 0;

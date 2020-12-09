@@ -18,6 +18,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.Serial;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -44,6 +45,7 @@ import org.fife.ui.UIUtil;
  */
 class TopicsFoundDialog extends JDialog {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private JList<HelpTreeNode> choicesList;

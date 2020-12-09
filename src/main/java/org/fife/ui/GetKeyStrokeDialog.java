@@ -16,6 +16,7 @@ import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -35,6 +36,7 @@ import javax.swing.SwingUtilities;
  */
 public class GetKeyStrokeDialog extends JDialog {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private KeyStroke stroke;

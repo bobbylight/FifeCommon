@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.Serial;
 import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -32,6 +33,7 @@ import javax.swing.text.*;
 public class FSATextField extends JTextField implements ComponentListener,
 						DocumentListener, ListSelectionListener {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

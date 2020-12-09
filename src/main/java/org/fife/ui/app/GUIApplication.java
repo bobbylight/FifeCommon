@@ -17,6 +17,7 @@ import java.awt.Frame;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.io.Serial;
 import java.util.ResourceBundle;
 import java.util.SortedSet;
 
@@ -367,6 +368,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 */
 	class AboutAction<T extends GUIApplication> extends AppAction<T> {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		/**
@@ -417,6 +419,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 */
 	class ExitAction<T extends GUIApplication> extends AppAction<T> {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		/**
@@ -476,6 +479,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 */
 	class HelpAction<T extends GUIApplication> extends AppAction<T> {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		/**
@@ -553,6 +557,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 */
 	class ToggleStatusBarAction<T extends GUIApplication> extends AppAction<T> {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		/**
@@ -611,6 +616,7 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 */
 	class ToggleToolBarAction<T extends GUIApplication> extends AppAction<T> {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		/**

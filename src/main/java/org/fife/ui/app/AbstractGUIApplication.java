@@ -978,17 +978,11 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	protected void processWindowEvent(WindowEvent e) {
 
 		switch (e.getID()) {
-
-			case WindowEvent.WINDOW_CLOSING:
-				doExit(); // Closes the application cleanly.
-				break;
-
-			case WindowEvent.WINDOW_DEACTIVATED:
-				// Make popup menus not stay up when the frame loses focus.
-				// This "bug" is fixed in 1.5 JRE's.
-				MenuSelectionManager.defaultManager().clearSelectedPath();
-				break;
-
+			// Closes the application cleanly.
+			case WindowEvent.WINDOW_CLOSING -> doExit();
+			// Make popup menus not stay up when the frame loses focus.
+			// This "bug" is fixed in 1.5 JRE's.
+			case WindowEvent.WINDOW_DEACTIVATED -> MenuSelectionManager.defaultManager().clearSelectedPath();
 		}
 
 		super.processWindowEvent(e);

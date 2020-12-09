@@ -12,6 +12,7 @@ package org.fife.ui.rtextfilechooser;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.io.Serial;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -26,6 +27,7 @@ import org.fife.ui.ColorCellRenderer;
  */
 class TextColorCellRenderer extends DefaultTableCellRenderer {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 

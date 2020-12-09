@@ -9,6 +9,7 @@
  */
 package org.fife.ui;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComboBox;
@@ -25,6 +26,7 @@ import javax.swing.JComboBox;
  */
 public class LabelValueComboBox<L, V> extends JComboBox<L> {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private List<V> values;

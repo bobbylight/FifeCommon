@@ -13,6 +13,7 @@ package org.fife.ui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.util.ResourceBundle;
 import javax.swing.*;
 
@@ -26,6 +27,7 @@ import javax.swing.*;
  */
 public class FontSelector extends JPanel implements ActionListener {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	public static final int LABELED     = 0;
@@ -317,6 +319,7 @@ public class FontSelector extends JPanel implements ActionListener {
 	 */
 	private static class FontTextField extends JTextField {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		private Font displayedFont;

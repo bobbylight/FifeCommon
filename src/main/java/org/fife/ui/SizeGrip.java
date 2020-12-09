@@ -19,6 +19,7 @@ import java.awt.Window;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.SwingUtilities;
 
@@ -32,6 +33,7 @@ import javax.swing.SwingUtilities;
  */
 class SizeGrip extends StatusBarPanel {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private Window window;

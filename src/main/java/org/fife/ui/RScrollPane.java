@@ -12,6 +12,7 @@ package org.fife.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.Serial;
 import java.util.ResourceBundle;
 import javax.swing.*;
 
@@ -25,6 +26,7 @@ import javax.swing.*;
  */
 public class RScrollPane extends JScrollPane implements ActionListener {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private JPopupMenu vertSBMenu;

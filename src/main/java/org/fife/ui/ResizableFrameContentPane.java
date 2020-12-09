@@ -11,6 +11,7 @@
 package org.fife.ui;
 
 import java.awt.*;
+import java.io.Serial;
 import javax.swing.*;
 
 
@@ -25,6 +26,7 @@ import javax.swing.*;
  */
 public class ResizableFrameContentPane extends JPanel {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private SizeGripIcon gripIcon;

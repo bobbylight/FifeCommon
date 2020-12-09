@@ -13,6 +13,7 @@ package org.fife.ui.rtextfilechooser;
 
 import java.awt.*;
 import java.beans.PropertyVetoException;
+import java.io.Serial;
 import javax.swing.*;
 
 
@@ -28,6 +29,7 @@ import javax.swing.*;
  */
 class IconDesktopManager extends DefaultDesktopManager {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 

@@ -16,6 +16,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -44,6 +45,7 @@ import javax.swing.plaf.basic.BasicToolBarUI;
  */
 public class CustomizableToolBar extends JToolBar {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -250,6 +252,7 @@ public class CustomizableToolBar extends JToolBar {
 					title = msg.getString("PopupMenu.Unknown.txt");
 				cbMenuItem = new JCheckBoxMenuItem(
 					new AbstractAction(title) {
+						@Serial
 						private static final long serialVersionUID = 1L;
 
 						@Override
@@ -320,6 +323,7 @@ public class CustomizableToolBar extends JToolBar {
 	 */
 	private class LockAction extends AbstractAction {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		LockAction(String name) {
@@ -367,6 +371,7 @@ public class CustomizableToolBar extends JToolBar {
 	 */
 	private class ResetAction extends AbstractAction {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		ResetAction(String name) {

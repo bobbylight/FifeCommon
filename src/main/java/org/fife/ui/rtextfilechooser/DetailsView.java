@@ -687,16 +687,15 @@ class DetailsView extends JTable implements RTextFileChooserView {
 
 		@Override
 		public Class<?> getColumnClass(int column) {
-			switch (column) {
-				case 0:	// File name
-					return File.class;
-				case 3: // Size
-					return FileSizeWrapper.class;
-				case 4: // Last modified
-					return FileModifiedWrapper.class;
-				default:
-					return Object.class;
-			}
+			return switch (column) {
+				// File name
+				case 0 -> File.class;
+				// Size
+				case 3 -> FileSizeWrapper.class;
+				// Last modified
+				case 4 -> FileModifiedWrapper.class;
+				default -> Object.class;
+			};
 		}
 
 		private Vector<?> getTableObjectVectorForFile(File file) {

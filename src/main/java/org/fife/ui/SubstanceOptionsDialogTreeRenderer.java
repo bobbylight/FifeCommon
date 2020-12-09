@@ -11,6 +11,7 @@
 package org.fife.ui;
 
 import java.awt.Component;
+import java.io.Serial;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -25,6 +26,7 @@ import org.pushingpixels.substance.api.renderer.SubstanceDefaultTreeCellRenderer
  */
 class SubstanceOptionsDialogTreeRenderer extends SubstanceDefaultTreeCellRenderer {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 

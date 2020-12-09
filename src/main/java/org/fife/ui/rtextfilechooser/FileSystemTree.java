@@ -15,6 +15,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
 import java.io.File;
+import java.io.Serial;
 import java.util.*;
 import java.util.List;
 
@@ -893,6 +894,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 		private final Border treeCellBorder = BorderFactory.createEmptyBorder(1, 0, 1, 0);
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		@Override

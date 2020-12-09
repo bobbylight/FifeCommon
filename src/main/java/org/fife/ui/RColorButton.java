@@ -15,6 +15,7 @@ import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serial;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -33,6 +34,7 @@ import javax.swing.JColorChooser;
  */
 public class RColorButton extends JButton {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

@@ -13,6 +13,7 @@ package org.fife.ui;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -58,6 +59,7 @@ import javax.swing.table.TableModel;
  */
 public class FileExplorerTableModel extends AbstractTableModel {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	protected TableModel tableModel;

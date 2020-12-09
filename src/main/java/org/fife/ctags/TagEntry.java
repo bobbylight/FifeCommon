@@ -93,21 +93,12 @@ public class TagEntry {
 			if (pos<len-1) { // Should always be true
 				char ch = pattern.charAt(++pos);
 				switch (ch) {
-					case '\\':
-						sb.append('\\');
-						break;
-					case 'r':
-						sb.append('\r');
-						break;
-					case 'n':
-						sb.append('\n');
-						break;
-					case 't':
-						sb.append('\t');
-						break;
-					default: // Should never happen
-						sb.append(ch);
-						break;
+					case '\\' -> sb.append('\\');
+					case 'r' -> sb.append('\r');
+					case 'n' -> sb.append('\n');
+					case 't' -> sb.append('\t');
+					// Should never happen
+					default -> sb.append(ch);
 				}
 			}
 			else {
@@ -168,22 +159,10 @@ public class TagEntry {
 				String key = keyValuePair.substring(0, colonIndex);
 				String value = keyValuePair.substring(colonIndex + 1);
 				switch (key) {
-
-					case "kind":
-						kind = value;
-						break;
-
-					case "file":
-						fileScope = true;
-						break;
-
-					case "line":
-						lineNumber = Integer.parseInt(value);
-						break;
-
-					default:
-						fieldList.add(new TagExtensionField(key, value));
-						break;
+					case "kind" -> kind = value;
+					case "file" -> fileScope = true;
+					case "line" -> lineNumber = Integer.parseInt(value);
+					default -> fieldList.add(new TagExtensionField(key, value));
 				}
 			}
 

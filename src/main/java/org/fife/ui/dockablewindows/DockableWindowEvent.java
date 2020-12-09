@@ -9,6 +9,7 @@
  */
 package org.fife.ui.dockablewindows;
 
+import java.io.Serial;
 import java.util.EventObject;
 
 
@@ -26,6 +27,7 @@ import java.util.EventObject;
  */
 public class DockableWindowEvent extends EventObject {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private int oldPosition;

@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyVetoException;
 import java.io.File;
+import java.io.Serial;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.DesktopPaneUI;
@@ -363,6 +364,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	 */
 	class IconLabel extends JLabel {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		IconLabel(String name, Icon icon, int format) {
@@ -430,6 +432,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	class IconInternalFrame extends JInternalFrame implements
 					java.awt.event.MouseListener, MouseMotionListener {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		private JLabel label;

@@ -18,6 +18,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -64,6 +65,7 @@ import org.fife.util.SubstanceUtil;
 public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 					implements ActionListener, ModifiableTableListener {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private static final String AUTO_COMPLETE_PROPERTY		= "AutoComplete";
@@ -396,6 +398,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	 */
 	private static class ColorTableModel extends DefaultTableModel {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		ColorTableModel(String extensionHeader, String colorHeader) {

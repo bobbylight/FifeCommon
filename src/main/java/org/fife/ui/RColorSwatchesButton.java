@@ -18,6 +18,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.util.ResourceBundle;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicMenuItemUI;
@@ -34,6 +35,7 @@ import javax.swing.plaf.basic.BasicMenuItemUI;
  */
 public class RColorSwatchesButton extends RColorButton {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private static final Dimension SWATCH_MENUITEM_SIZE = new Dimension(24,24);
@@ -171,6 +173,7 @@ public class RColorSwatchesButton extends RColorButton {
 	 */
 	private class ColorPopupMenu extends JPopupMenu {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		ColorPopupMenu() {

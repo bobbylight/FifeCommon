@@ -11,6 +11,7 @@ package org.fife.ui;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.Serial;
 import javax.swing.*;
 import javax.swing.event.PopupMenuListener;
 
@@ -23,6 +24,7 @@ import javax.swing.event.PopupMenuListener;
  */
 public class MenuButton extends JButton {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private JPopupMenu popupMenu;
@@ -212,6 +214,7 @@ public class MenuButton extends JButton {
 	 */
 	private class ButtonPressedAction extends AbstractAction {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		@Override

@@ -21,6 +21,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.RenderingHints;
+import java.io.Serial;
 import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -37,6 +38,7 @@ import javax.swing.JWindow;
  */
 public class SplashScreen extends JWindow {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private JLabel imageLabel; // Forced repaint needed on OS X
@@ -134,6 +136,7 @@ public class SplashScreen extends JWindow {
 	 */
 	private static class ProgressBar extends JPanel {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		private Dimension preferredSize;

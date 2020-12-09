@@ -245,14 +245,14 @@ InputSource is = new InputSource(new FileReader(file));
 				count++;
 			}
 
-			String suffix = null;
-			switch (count) {
-				case 0 : suffix = "bytes"; break;
-				case 1 : suffix = "KB"; break;
-				case 2 : suffix = "MB"; break;
-				case 3 : suffix = "GB"; break;
-				case 4 : suffix = "TB"; break;
-			}
+			String suffix = switch (count) {
+				case 0 -> "bytes";
+				case 1 -> "KB";
+				case 2 -> "MB";
+				case 3 -> "GB";
+				case 4 -> "TB";
+				default -> null;
+			};
 
 			str = fileSizeFormat.format(prevSize) + " " + suffix;
 

@@ -13,6 +13,7 @@ package org.fife.ui;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.Serial;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -38,6 +39,7 @@ import javax.swing.border.BevelBorder;
  */
 public class StatusBar extends StatusBarPanel implements MouseListener {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	public static final String STYLE_PROPERTY		= "StatusBar.style";
@@ -212,22 +214,15 @@ public class StatusBar extends StatusBarPanel implements MouseListener {
 	 */
 	private Border getStatusBarComponentBorder() {
 
-		switch (getStyle()) {
-
-			case WINDOWS_98_STYLE:
-				return BorderFactory.createCompoundBorder(
-					BorderFactory.createBevelBorder(BevelBorder.LOWERED),
-					BorderFactory.createEmptyBorder(0,3,0,3));
-
-			case WINDOWS_XP_STYLE:
-				return BorderFactory.createCompoundBorder(
-					new StatusBarLineDividerBorder(LineDividerBorder.LEFT, 2),
-					BorderFactory.createEmptyBorder(0,3,0,3));
-
-			default:
-				return null;
-
-		}
+		return switch (getStyle()) {
+			case WINDOWS_98_STYLE -> BorderFactory.createCompoundBorder(
+				BorderFactory.createBevelBorder(BevelBorder.LOWERED),
+				BorderFactory.createEmptyBorder(0, 3, 0, 3));
+			case WINDOWS_XP_STYLE -> BorderFactory.createCompoundBorder(
+				new StatusBarLineDividerBorder(LineDividerBorder.LEFT, 2),
+				BorderFactory.createEmptyBorder(0, 3, 0, 3));
+			default -> null;
+		};
 
 	}
 

@@ -34,6 +34,7 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.io.Serial;
 import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 import javax.print.*;
@@ -65,6 +66,7 @@ import org.fife.ui.StatusBar;
 public class PrintPreviewDialog extends EscapableDialog
 						implements ActionListener, ItemListener {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private JPanel previewPanel;		// The panel that actually shows the preview.
@@ -686,6 +688,7 @@ public class PrintPreviewDialog extends EscapableDialog
 	 */
 	class PagePreview extends JPanel {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		protected int width;

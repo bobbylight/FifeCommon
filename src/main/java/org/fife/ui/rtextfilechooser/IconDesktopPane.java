@@ -10,6 +10,7 @@
  */
 package org.fife.ui.rtextfilechooser;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import javax.swing.*;
  */
 class IconDesktopPane extends JDesktopPane {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private List<JInternalFrame> selectedFrames;

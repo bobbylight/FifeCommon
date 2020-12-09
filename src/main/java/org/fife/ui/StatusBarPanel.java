@@ -13,6 +13,7 @@ package org.fife.ui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.LayoutManager;
+import java.io.Serial;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -28,6 +29,7 @@ import javax.swing.JPanel;
  */
 public class StatusBarPanel extends JPanel {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

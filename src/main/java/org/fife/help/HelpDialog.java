@@ -16,13 +16,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -98,6 +92,7 @@ import org.fife.ui.app.GUIApplication;
  */
 public class HelpDialog extends JFrame implements ActionListener {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private GUIApplication app;
@@ -492,9 +487,6 @@ public class HelpDialog extends JFrame implements ActionListener {
 		try {
 			db = dbf.newDocumentBuilder();
 			InputSource is = new InputSource(new FileReader(helpXMLFile));
-		//	InputSource is = new InputSource(new UnicodeReader(
-		//						new FileInputStream(file), "UTF-8"));
-		//	is.setEncoding("UTF-8");
 			doc = db.parse(is);//db.parse(file);
 		} catch (Exception ex) {
 			app.displayException(this, ex);
@@ -923,15 +915,9 @@ public class HelpDialog extends JFrame implements ActionListener {
 						Node node2 = attributes.item(i);
 						String v = node2.getNodeValue();
 						switch (node2.getNodeName()) {
-							case NAME:
-								name = treeBundle.getString(v);
-								break;
-							case VISIBLE:
-								rootVisible = Boolean.parseBoolean(v);
-								break;
-							case PAGE_VALUE:
-								file = baseDir + v;
-								break;
+							case NAME -> name = treeBundle.getString(v);
+							case VISIBLE -> rootVisible = Boolean.parseBoolean(v);
+							case PAGE_VALUE -> file = baseDir + v;
 						}
 					}
 					if (name == null)

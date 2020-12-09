@@ -11,6 +11,8 @@
 package org.fife.ui.app;
 
 
+import java.io.Serial;
+
 /**
  * The exception that is thrown if a plugin JAR contains some kind of
  * error.
@@ -20,6 +22,7 @@ package org.fife.ui.app;
  */
 public class InvalidPluginException extends Exception {
 
+	@Serial
 	private static final long serialVersionUID = 182575532328519085L;
 
 

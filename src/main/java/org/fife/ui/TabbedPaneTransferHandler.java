@@ -13,6 +13,7 @@ package org.fife.ui;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.dnd.*;
+import java.io.Serial;
 import javax.swing.*;
 
 
@@ -32,6 +33,7 @@ import javax.swing.*;
 public class TabbedPaneTransferHandler extends TransferHandler
 									implements DropTargetListener {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

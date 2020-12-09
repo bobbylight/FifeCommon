@@ -13,6 +13,7 @@ package org.fife.ui;
 
 import java.io.File;
 import java.awt.Component;
+import java.io.Serial;
 import javax.swing.JFileChooser;
 
 
@@ -26,6 +27,7 @@ import javax.swing.JFileChooser;
  */
 public class RFileChooser extends JFileChooser {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 

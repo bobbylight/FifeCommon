@@ -81,17 +81,10 @@ public class LineDividerBorder implements Border, SwingConstants {
 
 		insets = new Insets(0,0,0,0);
 		switch (location) {
-			case TOP:
-				insets.top = 2;
-				break;
-			case LEFT:
-				insets.left = 2;
-				break;
-			case BOTTOM:
-				insets.bottom = 2;
-				break;
-			case RIGHT:
-				insets.right = 2;
+			case TOP -> insets.top = 2;
+			case LEFT -> insets.left = 2;
+			case BOTTOM -> insets.bottom = 2;
+			case RIGHT -> insets.right = 2;
 		}
 
 	}

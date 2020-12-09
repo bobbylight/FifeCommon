@@ -13,6 +13,7 @@ package org.fife.ui;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import javax.swing.tree.DefaultTreeSelectionModel;
+import java.io.Serial;
 
 
 /**
@@ -26,6 +27,7 @@ import javax.swing.tree.DefaultTreeSelectionModel;
  */
 public class RTreeSelectionModel extends DefaultTreeSelectionModel {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 

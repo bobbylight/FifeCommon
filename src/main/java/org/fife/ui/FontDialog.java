@@ -12,6 +12,7 @@ package org.fife.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.Serial;
 import java.util.ResourceBundle;
 import java.util.HashSet;
 import javax.swing.*;
@@ -30,6 +31,7 @@ import javax.swing.border.*;
 public class FontDialog extends JDialog implements ActionListener,
 								ListSelectionListener {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private JList<FontInfo> fontList;

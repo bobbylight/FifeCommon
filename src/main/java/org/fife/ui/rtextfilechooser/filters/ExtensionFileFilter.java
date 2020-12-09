@@ -209,18 +209,15 @@ public class ExtensionFileFilter extends FileFilter {
 	 * Returns the final yay or nay as to whether to do case checking.
 	 *
 	 * @param requestedCheck The requested case checking.  If this value is
-	 *        <code>SYSTEM_CASE_CHECK</code>, we'll figure it out ourselves.
+	 *        {@code SYSTEM_CASE_CHECK} or {@code null} we'll figure it out
+	 *        ourselves.
 	 */
 	private static boolean doCaseCheck(CaseCheck requestedCheck) {
-		switch (requestedCheck) {
-			case CASE_CHECK:
-				return true;
-			case NO_CASE_CHECK:
-				return false;
-			case SYSTEM_CASE_CHECK:
-			default:
-				return OS.get().isCaseSensitive();
-		}
+		return switch (requestedCheck) {
+			case CASE_CHECK -> true;
+			case NO_CASE_CHECK -> false;
+			default -> OS.get().isCaseSensitive();
+		};
 	}
 
 

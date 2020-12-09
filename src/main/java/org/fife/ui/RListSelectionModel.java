@@ -12,6 +12,7 @@ package org.fife.ui;
 
 import javax.swing.ListSelectionModel;
 import javax.swing.DefaultListSelectionModel;
+import java.io.Serial;
 
 
 /**
@@ -24,6 +25,7 @@ import javax.swing.DefaultListSelectionModel;
  */
 public class RListSelectionModel extends DefaultListSelectionModel {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 

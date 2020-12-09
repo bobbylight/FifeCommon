@@ -17,6 +17,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serial;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -37,6 +38,7 @@ import javax.swing.JLabel;
 public class ImagePreviewPane extends JComponent
 								implements PropertyChangeListener {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private JLabel imageLabel;

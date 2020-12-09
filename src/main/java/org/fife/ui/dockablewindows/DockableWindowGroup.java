@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serial;
 import java.lang.reflect.Field;
 
 import javax.swing.*;
@@ -42,6 +43,7 @@ import org.fife.util.SubstanceUtil;
  */
 class DockableWindowGroup extends JPanel {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private ContentPanel parent;

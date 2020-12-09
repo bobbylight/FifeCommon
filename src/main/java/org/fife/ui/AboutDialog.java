@@ -19,6 +19,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.Serial;
 import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -41,6 +42,7 @@ import org.fife.io.IOUtil;
  */
 public class AboutDialog extends EscapableDialog implements ActionListener {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private JTabbedPane tabbedPane;
@@ -226,6 +228,7 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 	protected class LicenseDialog extends EscapableDialog
 			implements ActionListener {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		public LicenseDialog(Dialog parent, String licenseText) {

@@ -158,19 +158,11 @@ public abstract class AbstractPluggableGUIApplication<T extends GUIApplicationPr
 	 * @see #setSplitPaneDividerLocation
 	 */
 	public int getSplitPaneDividerLocation(int splitPane) {
-		int dividerLocation;
-		switch (splitPane) {
-			case TOP:
-			case BOTTOM:
-			case LEFT:
-			case RIGHT:
-				dividerLocation = ((MainContentPanel)mainContentPanel).
-										getDividerLocation(splitPane);
-				break;
-			default:
-				throw new IllegalArgumentException("Bad splitPane value");
-		}
-		return dividerLocation;
+		return switch (splitPane) {
+			case TOP, BOTTOM, LEFT, RIGHT -> ((MainContentPanel)mainContentPanel).
+				getDividerLocation(splitPane);
+			default -> throw new IllegalArgumentException("Bad splitPane value");
+		};
 	}
 
 

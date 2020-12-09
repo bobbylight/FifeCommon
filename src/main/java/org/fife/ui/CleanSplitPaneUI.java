@@ -5,6 +5,7 @@
 package org.fife.ui;
 
 import java.awt.Graphics;
+import java.io.Serial;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
@@ -38,6 +39,7 @@ public class CleanSplitPaneUI extends BasicSplitPaneUI {
 	 */
 	static class EmptySplitPaneDivider extends BasicSplitPaneDivider {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		EmptySplitPaneDivider(BasicSplitPaneUI ui) {

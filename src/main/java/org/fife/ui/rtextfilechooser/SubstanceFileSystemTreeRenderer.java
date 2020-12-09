@@ -12,6 +12,7 @@ package org.fife.ui.rtextfilechooser;
 
 import java.awt.Component;
 import java.io.File;
+import java.io.Serial;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -27,6 +28,7 @@ import org.pushingpixels.substance.api.renderer.SubstanceDefaultTreeCellRenderer
  */
 class SubstanceFileSystemTreeRenderer extends SubstanceDefaultTreeCellRenderer {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private FileSystemTree tree;

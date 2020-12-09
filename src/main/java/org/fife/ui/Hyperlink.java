@@ -11,6 +11,7 @@ package org.fife.ui;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 import javax.swing.*;
 import javax.swing.plaf.LabelUI;
 
@@ -23,6 +24,7 @@ import javax.swing.plaf.LabelUI;
  */
 public class Hyperlink extends JLabel {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private String text;

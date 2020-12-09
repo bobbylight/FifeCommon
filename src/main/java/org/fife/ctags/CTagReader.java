@@ -328,24 +328,12 @@ public class CTagReader {
 			key = entry.name.substring(prefixLength);
 			value = entry.file;
 			switch (key) {
-				case "TAG_FILE_SORTED":
-					sortMethod = Integer.parseInt(value);
-					break;
-				case "TAG_FILE_FORMAT":
-					format = Integer.parseInt(value);
-					break;
-				case "TAG_PROGRAM_AUTHOR":
-					programAuthor = value;
-					break;
-				case "TAG_PROGRAM_NAME":
-					programName = value;
-					break;
-				case "TAG_PROGRAM_URL":
-					programUrl = value;
-					break;
-				case "TAG_PROGRAM_VERSION":
-					programVersion = value;
-					break;
+				case "TAG_FILE_SORTED" -> sortMethod = Integer.parseInt(value);
+				case "TAG_FILE_FORMAT" -> format = Integer.parseInt(value);
+				case "TAG_PROGRAM_AUTHOR" -> programAuthor = value;
+				case "TAG_PROGRAM_NAME" -> programName = value;
+				case "TAG_PROGRAM_URL" -> programUrl = value;
+				case "TAG_PROGRAM_VERSION" -> programVersion = value;
 			}
 
 			info.format = format;

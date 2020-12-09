@@ -14,6 +14,7 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 import java.util.Hashtable;
 import java.util.Vector;
 import javax.swing.Icon;
@@ -47,6 +48,7 @@ import javax.swing.tree.TreePath;
  */
 public class ToolTipTree extends JTree {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private boolean toolTipsEnabled;

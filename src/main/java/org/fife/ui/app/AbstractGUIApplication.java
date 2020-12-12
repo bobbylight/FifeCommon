@@ -23,24 +23,16 @@ import java.util.List;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 
-import javax.swing.Action;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JToolBar;
-import javax.swing.LookAndFeel;
-import javax.swing.MenuElement;
-import javax.swing.MenuSelectionManager;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
 
 import org.fife.io.IOUtil;
+import org.fife.jgoodies.looks.common.ShadowPopupFactory;
 import org.fife.ui.*;
 import org.fife.help.HelpDialog;
 import org.fife.ui.SplashScreen;
+import org.fife.ui.app.prefs.AppPrefs;
+import org.fife.util.DarculaUtil;
+import org.fife.util.SubstanceUtil;
 
 
 /**
@@ -69,7 +61,7 @@ import org.fife.ui.SplashScreen;
  * @version 0.6
  * @see AbstractPluggableGUIApplication
  */
-public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> extends JFrame
+public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFrame
 							implements GUIApplication {
 
 	/**
@@ -234,6 +226,8 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	 */
 	private void initialize(String title, T prefs) {
 
+		initializeAndConfigureLookAndFeel(prefs.lookAndFeel);
+
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 
 		// Set up the localization stuff.
@@ -271,6 +265,104 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 		SwingUtilities.invokeLater(new StartupRunnable(title, splashScreen,
 				prefs));
 
+	}
+
+
+	private void initializeAndConfigureLookAndFeel(String lafName) {
+
+		// Allow Substance to paint window titles, etc.  We don't allow
+		// Metal (for example) to do this, because setting these
+		// properties to "true", then toggling to a LAF that doesn't
+		// support this property, such as Windows, causes the
+		// OS-supplied frame to not appear (as of 6u20).
+		if (SubstanceUtil.isASubstanceLookAndFeel(lafName) ||
+			DarculaUtil.isDarculaLookAndFeel(lafName)) {
+			JFrame.setDefaultLookAndFeelDecorated(true);
+			JDialog.setDefaultLookAndFeelDecorated(true);
+		}
+
+		String rootDir = AbstractGUIApplication.getLocationOfJar();
+		ThirdPartyLookAndFeelManager lafManager =
+			new ThirdPartyLookAndFeelManager(rootDir);
+
+		try {
+			initializeLookAndFeelImpl(lafManager, lafName);
+		} catch (RuntimeException re) { // FindBugs
+			throw re;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// The default speed of Substance animations is too slow
+		// (200ms), looks bad moving through JMenuItems quickly.
+		if (SubstanceUtil.isSubstanceInstalled()) {
+			try {
+				SubstanceUtil.setAnimationSpeed(100);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (lafName.contains(".Darcula")) {
+			UIManager.getLookAndFeelDefaults().put("Tree.rendererFillBackground", Boolean.FALSE);
+		}
+		else {
+			UIManager.getLookAndFeelDefaults().put("Tree.rendererFillBackground", null);
+		}
+
+		setLookAndFeelManager(lafManager);
+	}
+
+
+	/**
+	 * Sets the look and feel the first time, before the application starts.
+	 *
+	 * @param lafManager The 3rd-party LAF manager that will be installed.
+	 * @param lafName The Look and Feel to install.
+	 * @throws ReflectiveOperationException If an unexpected error occurs.
+	 * @throws UnsupportedLookAndFeelException If an unexpected error occurs.
+	 */
+	private static void initializeLookAndFeelImpl(
+		ThirdPartyLookAndFeelManager lafManager,
+		String lafName) throws ReflectiveOperationException,
+		UnsupportedLookAndFeelException {
+
+		ClassLoader cl = lafManager.getLAFClassLoader();
+
+		// Set these properties before instantiating WebLookAndFeel
+		if (WebLookAndFeelUtils.isWebLookAndFeel(lafName)) {
+			WebLookAndFeelUtils.installWebLookAndFeelProperties(cl);
+		}
+		else {
+			ShadowPopupFactory.install();
+		}
+
+		// Must set UIManager's ClassLoader before instantiating
+		// the LAF.  Substance is so high-maintenance!
+		UIManager.getLookAndFeelDefaults().put("ClassLoader", cl);
+
+		// Java 11+ won't let us reflectively access system LookAndFeel
+		// classes, so we need a little extra logic here
+		if (UIManager.getSystemLookAndFeelClassName().equals(lafName)) {
+			UIManager.setLookAndFeel(lafName);
+		}
+		else {
+			Class<?> clazz;
+			try {
+				clazz = cl.loadClass(lafName);
+			} catch (UnsupportedClassVersionError ucve) {
+				// A LookAndFeel requiring Java X or later, but we're
+				// now restarting with a Java version earlier than X
+				lafName = UIManager.getSystemLookAndFeelClassName();
+				clazz = cl.loadClass(lafName);
+			}
+			LookAndFeel laf = (LookAndFeel)clazz.getDeclaredConstructor().
+				newInstance();
+			UIManager.setLookAndFeel(laf);
+		}
+
+		UIManager.getLookAndFeelDefaults().put("ClassLoader", cl);
+		UIUtil.installOsSpecificLafTweaks();
 	}
 
 
@@ -748,12 +840,23 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 
 	/**
 	 * Returns the name of the preferences class for this application.  This
-	 * class must be a subclass of <code>GUIApplicationPrefs</code>.
+	 * class must be a subclass of {@link AppPrefs}.
 	 *
 	 * @return The class name, or <code>null</code> if this GUI application
 	 *         does not save preferences.
+	 * @see #getPreferencesFile()
 	 */
 	protected abstract String getPreferencesClassName();
+
+
+	/**
+	 * Returns the file in which to store application preferences.
+	 *
+	 * @return The file.  If this is {@code null}, no preferences
+	 *          will be loaded or saved.
+	 * @see #getPreferencesClassName()
+	 */
+	protected abstract File getPreferencesFile();
 
 
 	/**
@@ -871,7 +974,7 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	/**
 	 * Loads saved (customized) shortcuts for this application's actions from
 	 * a file.  Implementations are expected to call this method after creating
-	 * their actions via {@link #createActions(GUIApplicationPrefs)} to
+	 * their actions via {@link #createActions(AppPrefs)} to
 	 * restore any user customizations to shortcuts (assuming the application
 	 * allows them).<p>
 	 *
@@ -892,13 +995,21 @@ public abstract class AbstractGUIApplication<T extends GUIApplicationPrefs<?>> e
 	@Override
 	@SuppressWarnings("unchecked")
 	public T loadPreferences() {
+
+		File preferencesFile = getPreferencesFile();
+		if (preferencesFile == null) {
+			return null;
+		}
+
 		T prefs = null;
 		String prefsClassName = getPreferencesClassName();
 		if (prefsClassName!=null) {
 			try {
 				Class<?> prefsClass = Class.forName(prefsClassName);
 				prefs = (T)prefsClass.getDeclaredConstructor().newInstance();
-				prefs.load();
+				if (preferencesFile.isFile()) { // Doesn't exist first time through
+					prefs.load(preferencesFile);
+				}
 			} catch (Exception e) {
 				displayException(e);
 			}

@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import org.fife.ui.SplashScreen;
+import org.fife.ui.app.prefs.AppPrefs;
 import org.fife.ui.dockablewindows.DockableWindow;
 import org.fife.ui.dockablewindows.DockableWindowPanel;
 
@@ -33,7 +34,7 @@ import org.fife.ui.dockablewindows.DockableWindowPanel;
  * @author Robert Futrell
  * @version 0.5
  */
-public abstract class AbstractPluggableGUIApplication<T extends GUIApplicationPrefs<?>>
+public abstract class AbstractPluggableGUIApplication<T extends AppPrefs<?>>
 									extends AbstractGUIApplication<T> {
 
 	/**

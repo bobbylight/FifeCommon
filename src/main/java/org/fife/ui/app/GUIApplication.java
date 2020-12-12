@@ -29,6 +29,7 @@ import org.fife.help.HelpDialog;
 import org.fife.ui.CustomizableToolBar;
 import org.fife.ui.OS;
 import org.fife.ui.StatusBar;
+import org.fife.ui.app.prefs.AppPrefs;
 
 
 /**
@@ -292,9 +293,9 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 * does not use preferences or something goes wrong, <code>null</code>
 	 * is returned.
 	 *
-	 * @return This application's preferences.
+	 * @return This application's preferences, as saved in the file system.
 	 */
-	GUIApplicationPrefs<?> loadPreferences();
+	AppPrefs loadPreferences();
 
 
 	/**

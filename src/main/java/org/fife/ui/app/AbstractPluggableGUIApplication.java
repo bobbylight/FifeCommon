@@ -30,12 +30,12 @@ import org.fife.ui.dockablewindows.DockableWindowPanel;
  * An extension of <code>AbstractGUIApplication</code> adding the ability to
  * add/remove plug-ins.
  *
- * @param <T> The preferences class for this application.
+ * @param <P> The preferences class for this application.
  * @author Robert Futrell
  * @version 0.5
  */
-public abstract class AbstractPluggableGUIApplication<T extends AppPrefs<?>>
-									extends AbstractGUIApplication<T> {
+public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
+									extends AbstractGUIApplication<P> {
 
 	/**
 	 * List of installed plug-ins.
@@ -49,25 +49,17 @@ public abstract class AbstractPluggableGUIApplication<T extends AppPrefs<?>>
 
 
 	/**
-	 * Constructor.
-	 *
-	 * @param title The title for this frame.
-	 */
-	public AbstractPluggableGUIApplication(String title) {
-		super(title);
-	}
-
-
-	/**
 	 * Constructor.  This constructor is useful when you are making a clone of
 	 * the current application (e.g., "Open in New Window...") and you want
 	 * the two instances to have the same properties.
 	 *
+	 * @param context The application context.
 	 * @param title The title for this frame.
 	 * @param prefs The preferences with which to initialize this application.
 	 */
-	public AbstractPluggableGUIApplication(String title, T prefs) {
-		super(title, prefs);
+	public AbstractPluggableGUIApplication(AppContext<? extends AbstractGUIApplication<P>, P> context,
+			String title, P prefs) {
+		super(context, title, prefs);
 	}
 
 
@@ -243,7 +235,7 @@ public abstract class AbstractPluggableGUIApplication<T extends AppPrefs<?>>
 	 *        value may be <code>null</code>.
 	 */
 	@Override
-	protected void preDisplayInit(T prefs, SplashScreen splashScreen) {
+	protected void preDisplayInit(P prefs, SplashScreen splashScreen) {
 		loadPlugins();
 	}
 

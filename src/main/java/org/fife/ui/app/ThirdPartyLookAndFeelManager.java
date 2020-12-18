@@ -314,8 +314,8 @@ public class ThirdPartyLookAndFeelManager {
 
 				// Anything else is an error.
 				else {
-					throw new IOException("XML error:  Unknown element " +
-						"node: " + elemName);
+					throw new IOException("XML error: Unknown element node: " +
+						elemName);
 				}
 
 			}

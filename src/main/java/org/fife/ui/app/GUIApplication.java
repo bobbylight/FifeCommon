@@ -29,7 +29,6 @@ import org.fife.help.HelpDialog;
 import org.fife.ui.CustomizableToolBar;
 import org.fife.ui.OS;
 import org.fife.ui.StatusBar;
-import org.fife.ui.app.prefs.AppPrefs;
 
 
 /**
@@ -286,16 +285,6 @@ public interface GUIApplication extends GUIApplicationConstants {
 	 *         <code>false</code> if it isn't.
 	 */
 	boolean isMaximized();
-
-
-	/**
-	 * Loads the preferences for this GUI application.  If this application
-	 * does not use preferences or something goes wrong, <code>null</code>
-	 * is returned.
-	 *
-	 * @return This application's preferences, as saved in the file system.
-	 */
-	AppPrefs loadPreferences();
 
 
 	/**

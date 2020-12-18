@@ -26,13 +26,10 @@ import java.util.jar.Manifest;
 import javax.swing.*;
 
 import org.fife.io.IOUtil;
-import org.fife.jgoodies.looks.common.ShadowPopupFactory;
 import org.fife.ui.*;
 import org.fife.help.HelpDialog;
 import org.fife.ui.SplashScreen;
 import org.fife.ui.app.prefs.AppPrefs;
-import org.fife.util.DarculaUtil;
-import org.fife.util.SubstanceUtil;
 
 
 /**
@@ -56,12 +53,12 @@ import org.fife.util.SubstanceUtil;
  *       items, Options/Preferences menu items, etc.).
  * </ul>
  *
- * @param <T> The preferences class for this application.
+ * @param <P> The type of preferences for this application.
  * @author Robert Futrell
  * @version 0.6
  * @see AbstractPluggableGUIApplication
  */
-public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFrame
+public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 							implements GUIApplication {
 
 	/**
@@ -108,6 +105,8 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 	 * ISO-8601 string.
 	 */
 	public static final String BUILD_DATE_RESOURCE = "/build-date.txt";
+
+	private AppContext<? extends AbstractGUIApplication<P>, P> context;
 
 	/**
 	 * The About dialog.
@@ -186,32 +185,13 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 
 	/**
 	 * Constructor.
-	 */
-	public AbstractGUIApplication() {
-		this(null);
-	}
-
-
-	/**
-	 * Constructor.
 	 *
-	 * @param title The title for this frame.
-	 */
-	public AbstractGUIApplication(String title) {
-		initialize(title, loadPreferences());
-	}
-
-
-	/**
-	 * Constructor.  This constructor is useful when you are making a clone of
-	 * the current application (e.g., "Open in New Window...") and you want
-	 * the two instances to have the same properties.
-	 *
+	 * @param context The application context.
 	 * @param title The title for this frame.
 	 * @param prefs The preferences with which to initialize this application.
 	 */
-	public AbstractGUIApplication(String title, T prefs) {
-		initialize(title, prefs);
+	public AbstractGUIApplication(AppContext<? extends AbstractGUIApplication<P>, P> context, String title, P prefs) {
+		initialize(context, title, prefs);
 	}
 
 
@@ -224,10 +204,9 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 	 * @param title The title for this frame.
 	 * @param prefs The preferences with which to initialize this application.
 	 */
-	private void initialize(String title, T prefs) {
+	private void initialize(AppContext<? extends AbstractGUIApplication<P>, P> context, String title, P prefs) {
 
-		initializeAndConfigureLookAndFeel(prefs.lookAndFeel);
-
+		this.context = context;
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 
 		// Set up the localization stuff.
@@ -265,104 +244,6 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 		SwingUtilities.invokeLater(new StartupRunnable(title, splashScreen,
 				prefs));
 
-	}
-
-
-	private void initializeAndConfigureLookAndFeel(String lafName) {
-
-		// Allow Substance to paint window titles, etc.  We don't allow
-		// Metal (for example) to do this, because setting these
-		// properties to "true", then toggling to a LAF that doesn't
-		// support this property, such as Windows, causes the
-		// OS-supplied frame to not appear (as of 6u20).
-		if (SubstanceUtil.isASubstanceLookAndFeel(lafName) ||
-			DarculaUtil.isDarculaLookAndFeel(lafName)) {
-			JFrame.setDefaultLookAndFeelDecorated(true);
-			JDialog.setDefaultLookAndFeelDecorated(true);
-		}
-
-		String rootDir = AbstractGUIApplication.getLocationOfJar();
-		ThirdPartyLookAndFeelManager lafManager =
-			new ThirdPartyLookAndFeelManager(rootDir);
-
-		try {
-			initializeLookAndFeelImpl(lafManager, lafName);
-		} catch (RuntimeException re) { // FindBugs
-			throw re;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// The default speed of Substance animations is too slow
-		// (200ms), looks bad moving through JMenuItems quickly.
-		if (SubstanceUtil.isSubstanceInstalled()) {
-			try {
-				SubstanceUtil.setAnimationSpeed(100);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		if (lafName.contains(".Darcula")) {
-			UIManager.getLookAndFeelDefaults().put("Tree.rendererFillBackground", Boolean.FALSE);
-		}
-		else {
-			UIManager.getLookAndFeelDefaults().put("Tree.rendererFillBackground", null);
-		}
-
-		setLookAndFeelManager(lafManager);
-	}
-
-
-	/**
-	 * Sets the look and feel the first time, before the application starts.
-	 *
-	 * @param lafManager The 3rd-party LAF manager that will be installed.
-	 * @param lafName The Look and Feel to install.
-	 * @throws ReflectiveOperationException If an unexpected error occurs.
-	 * @throws UnsupportedLookAndFeelException If an unexpected error occurs.
-	 */
-	private static void initializeLookAndFeelImpl(
-		ThirdPartyLookAndFeelManager lafManager,
-		String lafName) throws ReflectiveOperationException,
-		UnsupportedLookAndFeelException {
-
-		ClassLoader cl = lafManager.getLAFClassLoader();
-
-		// Set these properties before instantiating WebLookAndFeel
-		if (WebLookAndFeelUtils.isWebLookAndFeel(lafName)) {
-			WebLookAndFeelUtils.installWebLookAndFeelProperties(cl);
-		}
-		else {
-			ShadowPopupFactory.install();
-		}
-
-		// Must set UIManager's ClassLoader before instantiating
-		// the LAF.  Substance is so high-maintenance!
-		UIManager.getLookAndFeelDefaults().put("ClassLoader", cl);
-
-		// Java 11+ won't let us reflectively access system LookAndFeel
-		// classes, so we need a little extra logic here
-		if (UIManager.getSystemLookAndFeelClassName().equals(lafName)) {
-			UIManager.setLookAndFeel(lafName);
-		}
-		else {
-			Class<?> clazz;
-			try {
-				clazz = cl.loadClass(lafName);
-			} catch (UnsupportedClassVersionError ucve) {
-				// A LookAndFeel requiring Java X or later, but we're
-				// now restarting with a Java version earlier than X
-				lafName = UIManager.getSystemLookAndFeelClassName();
-				clazz = cl.loadClass(lafName);
-			}
-			LookAndFeel laf = (LookAndFeel)clazz.getDeclaredConstructor().
-				newInstance();
-			UIManager.setLookAndFeel(laf);
-		}
-
-		UIManager.getLookAndFeelDefaults().put("ClassLoader", cl);
-		UIUtil.installOsSpecificLafTweaks();
 	}
 
 
@@ -454,7 +335,7 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 	 * @see #addAction(String, Action)
 	 * @see #getAction(String)
 	 */
-	protected void createActions(T prefs) {
+	protected void createActions(P prefs) {
 	}
 
 
@@ -481,7 +362,7 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 	 * @param prefs This GUI application's preferences.
 	 * @return The menu bar.
 	 */
-	protected abstract JMenuBar createMenuBar(T prefs);
+	protected abstract JMenuBar createMenuBar(P prefs);
 
 
 	/**
@@ -501,7 +382,7 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 	 * @param prefs This GUI application's preferences.
 	 * @return The status bar.
 	 */
-	protected abstract StatusBar createStatusBar(T prefs);
+	protected abstract StatusBar createStatusBar(P prefs);
 
 
 	/**
@@ -511,7 +392,7 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 	 * @param prefs This GUI application's preferences.
 	 * @return The toolbar.
 	 */
-	protected abstract CustomizableToolBar createToolBar(T prefs);
+	protected abstract CustomizableToolBar createToolBar(P prefs);
 
 
 	/**
@@ -668,6 +549,39 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 	@Override
 	public Action[] getActions() {
 		return actions.getActions();
+	}
+
+
+	/**
+	 * Returns the active, unsaved state of preferences of this application.
+	 *
+	 * @return This application's unsaved preferences state, or {@code null}
+	 *          if this application does not store preferences.
+	 * @see #savePreferences()
+	 */
+	@SuppressWarnings("unchecked")
+	public P getActivePreferencesState() {
+
+		P prefs = null;
+
+		try {
+			prefs = ((AppContext<AbstractGUIApplication<P>, P>)context).
+				getActivePreferencesState(this);
+		} catch (IOException ioe) { // Never happens
+			displayException(ioe);
+		}
+
+		return prefs;
+	}
+
+
+	/**
+	 * Returns the context for this application.  Typically doesn't have to be called.
+	 *
+	 * @return The application context.
+	 */
+	protected AppContext<? extends AbstractGUIApplication<P>, P> getAppContext() {
+		return context;
 	}
 
 
@@ -839,27 +753,6 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 
 
 	/**
-	 * Returns the name of the preferences class for this application.  This
-	 * class must be a subclass of {@link AppPrefs}.
-	 *
-	 * @return The class name, or <code>null</code> if this GUI application
-	 *         does not save preferences.
-	 * @see #getPreferencesFile()
-	 */
-	protected abstract String getPreferencesClassName();
-
-
-	/**
-	 * Returns the file in which to store application preferences.
-	 *
-	 * @return The file.  If this is {@code null}, no preferences
-	 *          will be loaded or saved.
-	 * @see #getPreferencesClassName()
-	 */
-	protected abstract File getPreferencesFile();
-
-
-	/**
 	 * Returns the resource bundle associated with this application.
 	 *
 	 * @return The resource bundle.
@@ -992,32 +885,6 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 	}
 
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public T loadPreferences() {
-
-		File preferencesFile = getPreferencesFile();
-		if (preferencesFile == null) {
-			return null;
-		}
-
-		T prefs = null;
-		String prefsClassName = getPreferencesClassName();
-		if (prefsClassName!=null) {
-			try {
-				Class<?> prefsClass = Class.forName(prefsClassName);
-				prefs = (T)prefsClass.getDeclaredConstructor().newInstance();
-				if (preferencesFile.isFile()) { // Doesn't exist first time through
-					prefs.load(preferencesFile);
-				}
-			} catch (Exception e) {
-				displayException(e);
-			}
-		}
-		return prefs;
-	}
-
-
 	/**
 	 * Opens a file.  Called on OS X when system hooks are enabled.
 	 *
@@ -1041,7 +908,7 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 	 * @param splashScreen The "splash screen" for this application.  This
 	 *        value may be <code>null</code>.
 	 */
-	protected abstract void preDisplayInit(T prefs, SplashScreen splashScreen);
+	protected abstract void preDisplayInit(P prefs, SplashScreen splashScreen);
 
 
 	/**
@@ -1053,7 +920,7 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 	 * @param splashScreen The "splash screen" for this application.  This
 	 *        value may be <code>null</code>.
 	 */
-	protected abstract void preMenuBarInit(T prefs, SplashScreen splashScreen);
+	protected abstract void preMenuBarInit(P prefs, SplashScreen splashScreen);
 
 
 	/**
@@ -1065,7 +932,7 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 	 * @param splashScreen The "splash screen" for this application.  This
 	 *        value may be <code>null</code>.
 	 */
-	protected abstract void preStatusBarInit(T prefs,SplashScreen splashScreen);
+	protected abstract void preStatusBarInit(P prefs,SplashScreen splashScreen);
 
 
 	/**
@@ -1077,7 +944,7 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 	 * @param splashScreen The "splash screen" for this application.  This
 	 *        value may be <code>null</code>.
 	 */
-	protected abstract void preToolBarInit(T prefs, SplashScreen splashScreen);
+	protected abstract void preToolBarInit(P prefs, SplashScreen splashScreen);
 
 
 	/**
@@ -1162,6 +1029,22 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 	protected void saveActionShortcuts(File file) {
 		try {
 			actions.saveShortcuts(file);
+		} catch (IOException ioe) {
+			displayException(ioe);
+		}
+	}
+
+
+	/**
+	 * Saves this application's preferences.
+	 *
+	 * @see #getActivePreferencesState()
+	 */
+	@SuppressWarnings("unchecked")
+	public void savePreferences() {
+
+		try {
+			((AppContext<AbstractGUIApplication<P>, P>)context).savePreferences(this);
 		} catch (IOException ioe) {
 			displayException(ioe);
 		}
@@ -1418,9 +1301,9 @@ public abstract class AbstractGUIApplication<T extends AppPrefs<?>> extends JFra
 
 		private String title;
 		private SplashScreen splashScreen;
-		private T prefs;
+		private P prefs;
 
-		StartupRunnable(String title, SplashScreen splashScreen, T prefs) {
+		StartupRunnable(String title, SplashScreen splashScreen, P prefs) {
 			this.splashScreen = splashScreen;
 			this.prefs = prefs;
 			this.title = title;

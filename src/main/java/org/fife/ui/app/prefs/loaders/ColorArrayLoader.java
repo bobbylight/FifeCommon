@@ -35,7 +35,10 @@ public class ColorArrayLoader implements TypeLoader<Color[]> {
 			for (int j = 0; j < length; j++) {
 				// Property will not be defined if the color
 				// should be null, so everything works out
-				temp[j] = ColorLoader.stringToColor(props.getProperty(name + "." + j));
+				String prop = props.getProperty(name + "." + j);
+				if (prop != null) {
+					temp[j] = ColorLoader.stringToColor(prop);
+				}
 			}
 		}
 

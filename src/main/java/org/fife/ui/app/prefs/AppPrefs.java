@@ -5,22 +5,21 @@
  */
 package org.fife.ui.app.prefs;
 
-import org.fife.ui.app.GUIApplication;
-
-import javax.swing.*;
 import java.awt.*;
 
 
 /**
  * Preferences for an application.  Has some built-in properties that all
- * applications would want to keep track of.
+ * applications would want to keep track of.  Concrete {@code GUIApplication}
+ * implementations are expected to have sister implementations of this
+ * class that add public fields representing app-specific preferences
+ * to load and save.
  *
- * @param <T> The type of application whose preferences are stored.
  * @author Robert Futrell
  * @version 1.0
  */
 @SuppressWarnings("checkstyle:VisibilityModifier")
-public abstract class AppPrefs<T extends GUIApplication> extends Prefs {
+public abstract class AppPrefs extends Prefs {
 
 	/**
 	 * The location on-screen of this GUI application.
@@ -51,22 +50,4 @@ public abstract class AppPrefs<T extends GUIApplication> extends Prefs {
 	 * The language for this application, in a Locale-friendly string.
 	 */
 	public String language;
-
-
-	/**
-	 * Initializes the preferences in this class (those shared across
-	 * all applications) to the values of the specified application.
-	 * Subclasses should override but call the super implementation so
-	 * that the fields defined in this class are set.
-	 *
-	 * @param app The application from which to load the preferences.
-	 */
-	public void loadFromApplication(T app) {
-		location = app.getLocation();
-		size = app.getSize();
-		toolbarVisible = app.getToolBarVisible();
-		statusBarVisible = app.getStatusBarVisible();
-		lookAndFeel = UIManager.getSystemLookAndFeelClassName();
-		language = app.getLanguage();
-	}
 }

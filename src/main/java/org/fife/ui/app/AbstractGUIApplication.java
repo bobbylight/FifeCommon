@@ -955,12 +955,9 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 	@Override
 	protected void processWindowEvent(WindowEvent e) {
 
-		switch (e.getID()) {
-			// Closes the application cleanly.
-			case WindowEvent.WINDOW_CLOSING -> doExit();
-			// Make popup menus not stay up when the frame loses focus.
-			// This "bug" is fixed in 1.5 JRE's.
-			case WindowEvent.WINDOW_DEACTIVATED -> MenuSelectionManager.defaultManager().clearSelectedPath();
+		// Closes the application cleanly.
+		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+			doExit();
 		}
 
 		super.processWindowEvent(e);

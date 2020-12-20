@@ -20,8 +20,7 @@ import java.util.List;
 
 
 /**
- * A transferable object for a list of files.  This class could be greatly
- * improved if we didn't require 1.4 compatibility.
+ * A transferable object for a list of files.
  *
  * @author Robert Futrell
  * @version 1.0

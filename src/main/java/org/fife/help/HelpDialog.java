@@ -82,9 +82,8 @@ import org.fife.ui.app.GUIApplication;
  *    that the anchor is in the current file (i.e.,
  *    <code>a href="file2.html#anchor"</code>) for this class to parse it
  *    correctly.</li>
- *    <li>If the specified URL starts with <code>http://</code> and we're
- *    running in a Java 6 or newer JVM, the link is opened in the system
- *    default web browser.</li>
+ *    <li>If the specified URL starts with {@code http://} or {@code https://},
+ *    the link is opened in the system default web browser.</li>
  * </ul>
  *
  * @author Robert Futrell
@@ -683,15 +682,15 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 
 	/**
-	 * Returns whether URLs starting with "<code>http://</code>" should be
-	 * opened in a real web browser (assuming Java 6), instead of this Help
+	 * Returns whether URLs starting with {@code http://} or {@code https://}
+	 * should be opened in a real web browser, instead of this Help
 	 * dialog.  The default value of this property is <code>true</code>, since
 	 * it's assumed this is usually done to go to project home pages or more
 	 * extensive online documentation, and JEditorPane can't really handle
 	 * "real" HTML.
 	 *
-	 * @return Whether URL's starting with "<code>http://</code>" are opened in
-	 *         a real browser.
+	 * @return Whether URL's to external locations are opened in a real
+	 *         browser.
 	 * @see #setOpenWebUrlsInRealBrowser(boolean)
 	 */
 	public boolean getOpenWebUrlsInRealBrowser() {
@@ -1346,15 +1345,14 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 
 	/**
-	 * Toggles whether URLs starting with "<code>http://</code>" should be
-	 * opened in a real web browser (assuming Java 6), instead of this Help
-	 * dialog.  The default value of this property is <code>true</code>, since
-	 * it's assumed this is usually done to go to project home pages or more
+	 * Toggles whether URLs starting with {@code http://} or {@code https://}
+	 * are opened in a real web browser instead of this Help dialog.  The
+	 * default value of this property is <code>true</code>, since it's
+	 * assumed this is usually done to go to project home pages or more
 	 * extensive online documentation, and JEditorPane can't really handle
 	 * "real" HTML.
 	 *
-	 * @param inRealBrowser Whether to open URL's starting with
-	 *        "<code>http://</code>" in a real browser.
+	 * @param inRealBrowser Whether to open external URL's in a real browser.
 	 * @see #getOpenWebUrlsInRealBrowser()
 	 */
 	public void setOpenWebUrlsInRealBrowser(boolean inRealBrowser) {

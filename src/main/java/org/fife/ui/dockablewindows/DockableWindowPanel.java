@@ -388,6 +388,15 @@ public class DockableWindowPanel extends JPanel
 			// that the window becomes active/inactive as appropriate.
 			removeDockableWindow(w);
 			addDockableWindow(w);
+			if (w.isActive()) {
+				w.focusInDockableWindowGroup();
+				for (ContentPanel panel : panels) {
+					int index = panel.containsDockableWindow(w);
+					if (index > -1) {
+						panel.setCollapsed(false);
+						break;
+					}
+				}			}
 		}
 
 		else if (DockableWindow.NAME_PROPERTY.equals(name)) {
@@ -710,7 +719,7 @@ public class DockableWindowPanel extends JPanel
 					splitPane = null;
 					windowPanel = null;
 					collapsedPanel = null;
-					collapsed = false;
+					collapsed = true; // Since this is called on startup with empty panels
 					add(mainContent);
 					revalidate();
 				}

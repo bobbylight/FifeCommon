@@ -56,7 +56,7 @@ import org.fife.ui.StatusBar;
  * @see AbstractGUIApplication
  * @see AbstractPluggableGUIApplication
  */
-public interface GUIApplication extends GUIApplicationConstants {
+public interface GUIApplication {
 
 
 	/**

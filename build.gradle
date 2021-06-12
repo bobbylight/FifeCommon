@@ -16,21 +16,21 @@ repositories {
 
 dependencies {
 	api 'org.pushing-pixels:radiance-substance:2.5.1'
-	api 'org.apache.xmlgraphics:batik-rasterizer:1.13'
-	testImplementation 'junit:junit:4.13.1'
+	api 'org.apache.xmlgraphics:batik-rasterizer:1.14'
+	testImplementation 'junit:junit:4.13.2'
 }
 
 wrapper {
-	gradleVersion '6.7.1'
+	gradleVersion = '7.0.2'
 }
 
 checkstyle {
-	toolVersion = '8.37'
+	toolVersion = '8.43'
 }
 
 compileJava {
-	sourceCompatibility javaVersion
-	targetCompatibility javaVersion
+	sourceCompatibility javaVersion.toString()
+	targetCompatibility javaVersion.toString()
 	options.debug = true
 	options.debugOptions.debugLevel = 'source,vars,lines'
 	options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'

@@ -262,7 +262,7 @@ public class DockableWindowPanel extends JPanel
 	/**
 	 * @param splitPane The position of the split pane for which to get
 	 *        its divider location; one of
-	 *        <code>GUIApplicationConstants.TOP</code>,
+	 *        <code>DockableWindowConstants.TOP</code>,
 	 *        <code>LEFT</code>, <code>BOTTOM</code> or
 	 *        <code>RIGHT</code>.
 	 * @return The divider location.
@@ -826,8 +826,8 @@ public class DockableWindowPanel extends JPanel
 
 			CollapsedPanel(int dockableWindowLocation) {
 				setLayout(new BorderLayout());
-				int orientation = (dockableWindowLocation==DockableWindow.TOP ||
-						dockableWindowLocation==DockableWindow.BOTTOM) ?
+				int orientation = (dockableWindowLocation==DockableWindowConstants.TOP ||
+						dockableWindowLocation==DockableWindowConstants.BOTTOM) ?
 								JToolBar.HORIZONTAL : JToolBar.VERTICAL;
 				toolbar = new JToolBar(orientation);
 				toolbar.setOpaque(false);

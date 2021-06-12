@@ -23,6 +23,7 @@ import javax.swing.SwingUtilities;
 import org.fife.ui.SplashScreen;
 import org.fife.ui.app.prefs.AppPrefs;
 import org.fife.ui.dockablewindows.DockableWindow;
+import org.fife.ui.dockablewindows.DockableWindowConstants;
 import org.fife.ui.dockablewindows.DockableWindowPanel;
 
 
@@ -143,7 +144,7 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 	/**
 	 * Returns the location of the divider of the specified split pane.
 	 *
-	 * @param splitPane One of <code>GUIApplicationConstants.TOP</code>,
+	 * @param splitPane One of <code>DockableWindowConstants.TOP</code>,
 	 *        <code>LEFT</code>, <code>BOTTOM</code>, or <code>RIGHT</code>.
 	 * @return The divider location.
 	 * @throws IllegalArgumentException If <code>splitPane</code> is
@@ -152,7 +153,10 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 	 */
 	public int getSplitPaneDividerLocation(int splitPane) {
 		return switch (splitPane) {
-			case TOP, BOTTOM, LEFT, RIGHT -> ((MainContentPanel)mainContentPanel).
+			case DockableWindowConstants.TOP,
+				DockableWindowConstants.BOTTOM,
+				DockableWindowConstants.LEFT,
+				DockableWindowConstants.RIGHT -> ((MainContentPanel)mainContentPanel).
 				getDividerLocation(splitPane);
 			default -> throw new IllegalArgumentException("Bad splitPane value");
 		};
@@ -288,7 +292,7 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 	 * split pane is there), this method does nothing.
 	 *
 	 * @param splitPane The split pane for which to set the divider
-	 *        location; one of <code>GUIApplicationConstants.TOP</code>,
+	 *        location; one of <code>DockableWindowConstants.TOP</code>,
 	 *        <code>LEFT</code>, <code>BOTTOM</code> or
 	 *        <code>RIGHT</code>.
 	 * @param pos The new position for the divider.

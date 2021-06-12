@@ -41,15 +41,15 @@ public final class Actions {
 		JPopupMenu popup = new JPopupMenu();
 		JMenu dockedLocMenu = new JMenu(DockableWindow.getString("Dock.Location"));
 		dockedLocMenu.add(new JMenuItem(new Actions.RedockAction(
-				dwindPanel, DockableWindow.LEFT, "Dock.Left")));
+				dwindPanel, DockableWindowConstants.LEFT, "Dock.Left")));
 		dockedLocMenu.add(new JMenuItem(new Actions.RedockAction(
-				dwindPanel, DockableWindow.RIGHT, "Dock.Right")));
+				dwindPanel, DockableWindowConstants.RIGHT, "Dock.Right")));
 		dockedLocMenu.add(new JMenuItem(new Actions.RedockAction(
-				dwindPanel, DockableWindow.BOTTOM, "Dock.Bottom")));
+				dwindPanel, DockableWindowConstants.BOTTOM, "Dock.Bottom")));
 		dockedLocMenu.add(new JMenuItem(new Actions.RedockAction(
-				dwindPanel, DockableWindow.TOP, "Dock.Top")));
+				dwindPanel, DockableWindowConstants.TOP, "Dock.Top")));
 		dockedLocMenu.add(new JMenuItem(new Actions.RedockAction(
-				dwindPanel, DockableWindow.FLOATING, "Dock.Floating")));
+				dwindPanel, DockableWindowConstants.FLOATING, "Dock.Floating")));
 		popup.add(dockedLocMenu);
 		popup.addSeparator();
 		popup.add(new JMenuItem(new Actions.CloseAction(dwindPanel)));

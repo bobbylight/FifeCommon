@@ -27,8 +27,7 @@ import org.fife.ui.dockablewindows.DockableWindow;
  * @see org.fife.ui.app.AbstractPluggableGUIApplication
  * @see org.fife.ui.dockablewindows.DockableWindow
  */
-public abstract class GUIPlugin extends AbstractPlugin
-		implements GUIApplicationConstants {
+public abstract class GUIPlugin extends AbstractPlugin {
 
 	/**
 	 * Map of window ID's to dockable windows.

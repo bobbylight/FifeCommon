@@ -28,7 +28,7 @@ import javax.swing.JTabbedPane;
  * @version 0.5
  * @see org.fife.ui.dockablewindows.DockableWindowPanel
  */
-public class DockableWindow extends JPanel implements DockableWindowConstants {
+public class DockableWindow extends JPanel {
 
 	/**
 	 * Property meaning the dockable window has changed its "active" state;
@@ -56,7 +56,7 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	 * application window.  One of <code>TOP</code>, <code>LEFT</code>,
 	 * <code>BOTTOM</code>, <code>RIGHT</code>, or <code>FLOATING</code>.
 	 */
-	private int position = LEFT;
+	private int position = DockableWindowConstants.LEFT;
 
 	/**
 	 * Whether this dockable window is active.
@@ -294,8 +294,11 @@ public class DockableWindow extends JPanel implements DockableWindowConstants {
 	 * @return Whether the specified position is valid.
 	 */
 	public static boolean isValidPosition(int pos) {
-		return pos==TOP || pos==LEFT || pos==BOTTOM ||
-				pos==RIGHT || pos==FLOATING;
+		return pos == DockableWindowConstants.TOP ||
+			pos == DockableWindowConstants.LEFT ||
+			pos == DockableWindowConstants.BOTTOM ||
+			pos == DockableWindowConstants.RIGHT ||
+			pos == DockableWindowConstants.FLOATING;
 	}
 
 

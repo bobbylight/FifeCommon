@@ -191,8 +191,11 @@ public class DockableWindow extends JPanel {
 
 	/**
 	 * Focuses this dockable window in its tabbed pane.
+	 *
+	 * @param ensureExpanded Ensure the parent dockable window panel
+	 *        is expanded.
 	 */
-	public void focusInDockableWindowGroup() {
+	public void focusInDockableWindowGroup(boolean ensureExpanded) {
 		Container parent = getParent();
 		if (parent instanceof JTabbedPane) {
 			parent = parent.getParent();
@@ -200,7 +203,7 @@ public class DockableWindow extends JPanel {
 				DockableWindowGroup dwg = (DockableWindowGroup)parent;
 				for (int i = 0; i < dwg.getDockableWindowCount(); i++) {
 					if (this == dwg.getDockableWindowAt(i)) {
-						dwg.setActiveDockableWindow(i);
+						dwg.setActiveDockableWindow(i, ensureExpanded);
 						//dwg.focusActiveDockableWindow();
 						return;
 					}

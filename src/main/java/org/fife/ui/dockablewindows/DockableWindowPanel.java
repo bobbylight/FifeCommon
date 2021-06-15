@@ -389,14 +389,15 @@ public class DockableWindowPanel extends JPanel
 			removeDockableWindow(w);
 			addDockableWindow(w);
 			if (w.isActive()) {
-				w.focusInDockableWindowGroup();
+				w.focusInDockableWindowGroup(false);
 				for (ContentPanel panel : panels) {
 					int index = panel.containsDockableWindow(w);
 					if (index > -1) {
 						panel.setCollapsed(false);
 						break;
 					}
-				}			}
+				}
+			}
 		}
 
 		else if (DockableWindow.NAME_PROPERTY.equals(name)) {
@@ -892,8 +893,7 @@ public class DockableWindowPanel extends JPanel
 					b.putClientProperty("DockableWindow", dwind);
 					final int index = i;
 					b.addActionListener(e -> {
-						windowPanel.setActiveDockableWindow(index);
-						setCollapsed(false);
+						windowPanel.setActiveDockableWindow(index, true);
 					});
 					b.addMouseListener(this);
 					toolbar.add(b);

@@ -226,9 +226,14 @@ class DockableWindowGroup extends JPanel {
 	 * Sets the selected dockable window.  Does nothing if the index is invalid.
 	 *
 	 * @param index The dockable window to select.
+	 * @param ensureExpanded Ensure the parent dockable window panel
+	 *        is expanded.
 	 */
-	void setActiveDockableWindow(int index) {
+	void setActiveDockableWindow(int index, boolean ensureExpanded) {
 		if (index>=0 && index<tabbedPane.getTabCount()) {
+			if (ensureExpanded) {
+				parent.setCollapsed(false);
+			}
 			tabbedPane.setSelectedIndex(index);
 		}
 	}

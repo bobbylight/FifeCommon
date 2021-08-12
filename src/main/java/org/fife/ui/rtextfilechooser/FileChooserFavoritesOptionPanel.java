@@ -62,8 +62,6 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	private static final String FAVORITES_PROPERTY	= "Favorites";
-
 	private FavoritesTableModel model;
 	private ModifiableTable modifiableTable;
 
@@ -153,9 +151,6 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected OptionsPanelCheckResult ensureValidInputsImpl() {
 		return null;
@@ -194,8 +189,7 @@ public class FileChooserFavoritesOptionPanel extends OptionsDialogPanel
 	 */
 	@Override
 	public void modifiableTableChanged(ModifiableTableChangeEvent e) {
-		hasUnsavedChanges = true;
-		firePropertyChange(FAVORITES_PROPERTY, null, e.getRow());
+		setDirty(true);
 	}
 
 

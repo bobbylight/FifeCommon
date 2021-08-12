@@ -208,7 +208,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 * @param panel The options panel to add.
 	 */
 	private void addOptionPanel(OptionsDialogPanel panel) {
-		panel.addPropertyChangeListener(this);
+		panel.addPropertyChangeListener(OptionsDialogPanel.PROPERTY_DIRTY, this);
 		currentOptionPanel.add(panel, createKeyForPanel(panel));
 		for (OptionsDialogPanel childPanel : panel.getChildPanels()) {
 			addOptionPanel(childPanel);
@@ -225,6 +225,14 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	public void broadcast(String event) {
 		for (OptionsDialogPanel panel : optionsPanels) {
 			panel.optionsEvent(event);
+		}
+	}
+
+
+	private void clearDirtyFlag(OptionsDialogPanel panel) {
+		panel.setDirty(false);
+		for (OptionsDialogPanel childPanel : panel.getChildPanels()) {
+			clearDirtyFlag(childPanel);
 		}
 	}
 
@@ -305,14 +313,13 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 			}
 		}
 
-		// Actually apply the changes, disable the "Apply" button, clear
-		// the "Unsaved changes" flags of all options panels, and
-		// we're done!
+		// Actually apply the changes, clear the "Unsaved changes" flags of
+		// all options panels, disable the "Apply" button, and we're done!
 		doApplyImpl(owner);
-		setApplyButtonEnabled(false);
 		for (OptionsDialogPanel optionsPanel : optionsPanels) {
-			optionsPanel.setUnsavedChanges(false);
+			clearDirtyFlag(optionsPanel);
 		}
+		setApplyButtonEnabled(false);
 		return true;
 
 	}
@@ -431,7 +438,6 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		}
 	}
 
-
 	/**
 	 * Listens for a property change in one of the option panels.  This
 	 * basically just listens for the user to change a value, so it can
@@ -439,9 +445,11 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
-		if (!applyButton.isEnabled())
+		if (OptionsDialogPanel.PROPERTY_DIRTY.equals(e.getPropertyName()) && !applyButton.isEnabled()) {
 			applyButton.setEnabled(true);
+		}
 	}
+
 
 
 	/**

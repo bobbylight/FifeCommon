@@ -68,13 +68,6 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	private static final String AUTO_COMPLETE_PROPERTY		= "AutoComplete";
-	private static final String COLOR_CHANGED_PROPERTY		= "ColorChanged";
-	private static final String HIDDEN_FILES_PROPERTY		= "HiddenFiles";
-	private static final String OFFER_SUGGESTIONS_PROPERTY	= "OfferSuggestions";
-	private static final String OPEN_FILES_STYLE_PROPERTY	= "OpenFilesStyle";
-	private static final String STYLE_OPEN_FILES_PROPERTY	= "StyleOpenFiles";
-
 	private JCheckBox hiddenFilesCheckBox;
 	private JCheckBox offerSuggestionsCB;
 	private JCheckBox autoCompleteCheckBox;
@@ -156,29 +149,27 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		if ("HiddenFiles".equals(actionCommand)) {
 			boolean checked = hiddenFilesCheckBox.isSelected();
 			hiddenColorButton.setEnabled(checked);
-			firePropertyChange(HIDDEN_FILES_PROPERTY, !checked, checked);
+			setDirty(true);
 		}
 
 		else if ("OfferSuggestions".equals(actionCommand)) {
 			boolean checked = offerSuggestionsCB.isSelected();
 			autoCompleteCheckBox.setEnabled(checked);
-			firePropertyChange(OFFER_SUGGESTIONS_PROPERTY, !checked,checked);
+			setDirty(true);
 		}
 
 		else if ("AutoComplete".equals(actionCommand)) {
-			boolean checked = autoCompleteCheckBox.isSelected();
-			firePropertyChange(AUTO_COMPLETE_PROPERTY, !checked, checked);
+			setDirty(true);
 		}
 
 		else if ("StyleOpenFiles".equals(actionCommand)) {
 			boolean checked = styleOpenFilesCheckBox.isSelected();
 			openFilesStyleCombo.setEnabled(checked);
-			firePropertyChange(STYLE_OPEN_FILES_PROPERTY, !checked, checked);
+			setDirty(true);
 		}
 
 		else if ("OpenFilesStyle".equals(actionCommand)) {
-			String style = openFilesStyleCombo.getSelectedValue();
-			firePropertyChange(OPEN_FILES_STYLE_PROPERTY, null, style);
+			setDirty(true);
 		}
 
 	}
@@ -303,9 +294,6 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected OptionsPanelCheckResult ensureValidInputsImpl() {
 		// They can't input invalid stuff on this options panel.
@@ -356,8 +344,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	 */
 	@Override
 	public void modifiableTableChanged(ModifiableTableChangeEvent e) {
-		hasUnsavedChanges = true;
-		firePropertyChange(COLOR_CHANGED_PROPERTY, null, e.getRow());
+		setDirty(true);
 	}
 
 

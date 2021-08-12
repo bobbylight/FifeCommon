@@ -32,6 +32,13 @@ import javax.swing.border.Border;
 public abstract class OptionsDialogPanel extends JPanel {
 
 	/**
+	 * The event fired when an option panel marks itself dirty via
+	 * {@link #setDirty(boolean)}. The parent options dialog
+	 * listens to this property to know where there are unsaved changes.
+	 */
+	static final String PROPERTY_DIRTY = "optionPanel.dirty";
+
+	/**
 	 * The name of this options panel to be used in the the options dialog's
 	 * selection tree.
 	 */
@@ -54,7 +61,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 * it doesn't have to clear it (this is done by the parent
 	 * <code>OptionsDialog</code>).
 	 */
-	protected boolean hasUnsavedChanges;
+	private boolean dirty;
 
 	/**
 	 * A collection of "child" option panels in the options dialog tree.
@@ -83,7 +90,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 */
 	public OptionsDialogPanel(String name) {
 		this.name = name;
-		this.hasUnsavedChanges = false;
+		this.dirty = false;
 		childPanels = new ArrayList<>(0);
 	}
 
@@ -367,10 +374,10 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 * that these changes may or may not be invalid.
 	 *
 	 * @return Whether this panel has any unsaved changes.
-	 * @see #setUnsavedChanges(boolean)
+	 * @see #setDirty(boolean)
 	 */
-	public boolean hasUnsavedChanges() {
-		return hasUnsavedChanges;
+	public boolean isDirty() {
+		return dirty;
 	}
 
 
@@ -428,11 +435,14 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 * is set.  You should call this method with a parameter set to
 	 * <code>false</code> before displaying an Options dialog.
 	 *
-	 * @param hasUnsavedChanges Whether or not the flag should be set.
-	 * @see #hasUnsavedChanges
+	 * @param dirty Whether or not the flag should be set.
+	 * @see #isDirty()
 	 */
-	public void setUnsavedChanges(boolean hasUnsavedChanges) {
-		this.hasUnsavedChanges = hasUnsavedChanges;
+	public void setDirty(boolean dirty) {
+		if (dirty != this.dirty) {
+			this.dirty = dirty;
+			firePropertyChange(PROPERTY_DIRTY, !dirty, dirty);
+		}
 	}
 
 
@@ -449,7 +459,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 			getChildPanel(i).setValues(owner);
 		}
 		// Clear the "unsaved changes" flag for the panel.
-		setUnsavedChanges(false);
+		setDirty(false);
 	}
 
 

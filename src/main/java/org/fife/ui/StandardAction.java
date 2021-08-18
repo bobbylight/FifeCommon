@@ -195,7 +195,7 @@ public abstract class StandardAction extends AbstractAction {
 	 * @return The key stroke, or <code>null</code> if the property is not
 	 *         found or the value is not a valid key stroke.
 	 */
-	private static KeyStroke getKeyStroke(ResourceBundle msg,String key) {
+	private static KeyStroke getKeyStroke(ResourceBundle msg, String key) {
 		KeyStroke ks = null;
 		if (msg.containsKey(key)) {
 			String temp = msg.getString(key);
@@ -350,7 +350,7 @@ public abstract class StandardAction extends AbstractAction {
 	/**
 	 * Sets the mnemonic for this action.
 	 *
-	 * @param mnemonic The new mnemonic.  A value of <code>-1</code> means
+	 * @param mnemonic The new mnemonic.  A value of <code>&lt;= 0</code> means
 	 *        "no mnemonic."
 	 * @see #getMnemonic()
 	 */

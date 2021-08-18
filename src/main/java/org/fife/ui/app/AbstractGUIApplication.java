@@ -1010,6 +1010,22 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
 
 	/**
+	 * Makes all actions use default accelerators, if possible.  This is useful
+	 * for applications that let users set shortcuts for actions (menu items,
+	 * etc.).
+	 *
+	 * @see StandardAction
+	 */
+	public void restoreDefaultAccelerators() {
+		for (Action a : getActions()) {
+			if (a instanceof StandardAction) {
+				((StandardAction)a).restoreDefaultAccelerator();
+			}
+		}
+	}
+
+
+	/**
 	 * <p>
 	 * Saves the (customized) shortcuts for this application's actions from a
 	 * file.  Implementations are expected to call this method when shutting

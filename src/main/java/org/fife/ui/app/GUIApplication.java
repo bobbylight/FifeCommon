@@ -149,6 +149,7 @@ public interface GUIApplication {
 	 *
 	 * @return The actions.
 	 * @see #getAction(String)
+	 * @see org.fife.ui.StandardAction
 	 */
 	Action[] getActions();
 

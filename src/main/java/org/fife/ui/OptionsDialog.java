@@ -439,9 +439,11 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	}
 
 	/**
-	 * Listens for a property change in one of the option panels.  This
-	 * basically just listens for the user to change a value, so it can
-	 * activate the "Apply" button.
+	 * Listens for a {@code PROPERTY_DIRTY} change in one of the option panels.
+	 * When an option panel fires that proerty, this method enables the "Apply"
+	 * button.
+	 *
+	 * @see OptionsDialogPanel#setDirty(boolean)
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {

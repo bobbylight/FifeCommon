@@ -33,7 +33,7 @@ import java.util.ResourceBundle;
  * @author Robert Futrell
  * @version 0.2
  */
-class ShortcutOptionPanel extends OptionsDialogPanel
+public class ShortcutOptionPanel extends OptionsDialogPanel
 					implements ActionListener, ModifiableTableListener {
 
 	private final ModifiableTable shortcutTable;
@@ -49,7 +49,7 @@ class ShortcutOptionPanel extends OptionsDialogPanel
 	 *        appears.
 	 * @param msg The resource bundle to use.
 	 */
-	ShortcutOptionPanel(final AbstractGUIApplication<?> app, final ResourceBundle msg) {
+	public ShortcutOptionPanel(final AbstractGUIApplication<?> app, final ResourceBundle msg) {
 
 		super(msg.getString("OptSCName"));
 		this.app = app;

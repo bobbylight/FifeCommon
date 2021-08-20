@@ -41,8 +41,8 @@ public class ShortcutOptionPanel extends OptionsDialogPanel
 	private final AbstractGUIApplication<?> app;
 	private Action[] masterActionList;
 
-	private static final String MSG = "org.fife.ui.app.options.ShortcutOptionPanel";
-	private static final ResourceBundle msg = ResourceBundle.getBundle(MSG);
+	private static final String MSG_BUNDLE = "org.fife.ui.app.options.ShortcutOptionPanel";
+	private static final ResourceBundle MSG = ResourceBundle.getBundle(MSG_BUNDLE);
 
 	/**
 	 * Constructor.
@@ -52,7 +52,7 @@ public class ShortcutOptionPanel extends OptionsDialogPanel
 	 */
 	public ShortcutOptionPanel(final AbstractGUIApplication<?> app) {
 
-		super(msg.getString("Options.Shortcut.Name"));
+		super(MSG.getString("Options.Shortcut.Name"));
 		this.app = app;
 
 		ComponentOrientation orientation = ComponentOrientation.
@@ -62,22 +62,22 @@ public class ShortcutOptionPanel extends OptionsDialogPanel
 		setBorder(UIUtil.getEmpty5Border());
 		JPanel contentPane = new JPanel(new BorderLayout());
 		contentPane.setBorder(
-					new OptionPanelBorder(msg.getString("Options.Shortcut.Label")));
+					new OptionPanelBorder(MSG.getString("Options.Shortcut.Label")));
 		add(contentPane);
 
 		model = new DefaultTableModel(new Object[] {
-				msg.getString("Options.Shortcut.Col1"), msg.getString("Options.Shortcut.Col2")}, 0);
+				MSG.getString("Options.Shortcut.Col1"), MSG.getString("Options.Shortcut.Col2")}, 0);
 		shortcutTable = new ModifiableTable(model, ModifiableTable.BOTTOM,
 										ModifiableTable.MODIFY);
 		shortcutTable.addModifiableTableListener(this);
 		shortcutTable.setRowHandler(new ShortcutTableRowHandler());
 		JTable table = shortcutTable.getTable();
-		table.getColumn(msg.getString("Options.Shortcut.Col2")).setCellRenderer(
+		table.getColumn(MSG.getString("Options.Shortcut.Col2")).setCellRenderer(
 									KeyStrokeCellRenderer.create());
 		table.setPreferredScrollableViewportSize(new Dimension(300,300));
 		contentPane.add(shortcutTable);
 
-		JButton defButton = new JButton(msg.getString("RestoreDefaults"));
+		JButton defButton = new JButton(MSG.getString("RestoreDefaults"));
 		defButton.setActionCommand("RestoreDefaults");
 		defButton.addActionListener(this);
 		JPanel temp = new JPanel(new BorderLayout());

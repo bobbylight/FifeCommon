@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/bobbylight/FifeCommon.svg?branch=master)](https://travis-ci.org/bobbylight/FifeCommon)
+![Java Build](https://github.com/bobbylight/FifeCommon/actions/workflows/gradle.yml/badge.svg)
+![Java Build](https://github.com/bobbylight/FifeCommon/actions/workflows/codeql-analysis.yml/badge.svg)
 
 FifeCommon is a base library for building Java Swing applications.  It handles the following tasks:
 

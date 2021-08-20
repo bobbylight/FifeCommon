@@ -41,17 +41,18 @@ public class ShortcutOptionPanel extends OptionsDialogPanel
 	private final AbstractGUIApplication<?> app;
 	private Action[] masterActionList;
 
+	private static final String MSG = "org.fife.ui.app.options.ShortcutOptionPanel";
+	private static final ResourceBundle msg = ResourceBundle.getBundle(MSG);
 
 	/**
 	 * Constructor.
 	 *
 	 * @param app The owner of the options dialog in which this panel
 	 *        appears.
-	 * @param msg The resource bundle to use.
 	 */
-	public ShortcutOptionPanel(final AbstractGUIApplication<?> app, final ResourceBundle msg) {
+	public ShortcutOptionPanel(final AbstractGUIApplication<?> app) {
 
-		super(msg.getString("OptSCName"));
+		super(msg.getString("Options.Shortcut.Name"));
 		this.app = app;
 
 		ComponentOrientation orientation = ComponentOrientation.
@@ -61,17 +62,17 @@ public class ShortcutOptionPanel extends OptionsDialogPanel
 		setBorder(UIUtil.getEmpty5Border());
 		JPanel contentPane = new JPanel(new BorderLayout());
 		contentPane.setBorder(
-					new OptionPanelBorder(msg.getString("OptSCLabel")));
+					new OptionPanelBorder(msg.getString("Options.Shortcut.Label")));
 		add(contentPane);
 
 		model = new DefaultTableModel(new Object[] {
-				msg.getString("OptSCCol1"), msg.getString("OptSCCol2")}, 0);
+				msg.getString("Options.Shortcut.Col1"), msg.getString("Options.Shortcut.Col2")}, 0);
 		shortcutTable = new ModifiableTable(model, ModifiableTable.BOTTOM,
 										ModifiableTable.MODIFY);
 		shortcutTable.addModifiableTableListener(this);
 		shortcutTable.setRowHandler(new ShortcutTableRowHandler());
 		JTable table = shortcutTable.getTable();
-		table.getColumn(msg.getString("OptSCCol2")).setCellRenderer(
+		table.getColumn(msg.getString("Options.Shortcut.Col2")).setCellRenderer(
 									KeyStrokeCellRenderer.create());
 		table.setPreferredScrollableViewportSize(new Dimension(300,300));
 		contentPane.add(shortcutTable);
@@ -128,8 +129,10 @@ public class ShortcutOptionPanel extends OptionsDialogPanel
 					break;
 				}
 			}
-			if (j == actionsLength)
-				System.err.println("err0r!!!!");
+			if (j == actionsLength) {
+				System.err.println("Internal error: could not find config for action: " +
+					name);
+			}
 		}
 
 	}

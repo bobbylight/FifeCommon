@@ -239,6 +239,8 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 			splashScreen.setVisible(true);
 		}
 
+		actions = new ActionRegistry();
+
 		// Do the rest of this stuff "later," so that the EDT has time to
 		// actually display the splash screen and update it.
 		SwingUtilities.invokeLater(new StartupRunnable(title, splashScreen,
@@ -1368,7 +1370,6 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 				UIManager.getLookAndFeelDefaults().put("ClassLoader", cl);
 			}
 
-			actions = new ActionRegistry();
 			createActions(prefs);
 
 			// Create the status bar.

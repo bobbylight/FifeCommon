@@ -516,7 +516,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 * @param optionsPanels The options panels to be available.
 	 * @see #setOptionsPanels(List)
 	 */
-	public void setOptionsPanels(OptionsDialogPanel[] optionsPanels) {
+	public void setOptionsPanels(OptionsDialogPanel... optionsPanels) {
 
 		this.optionsPanels = optionsPanels;
 		int numOptionPanels = optionsPanels.length;

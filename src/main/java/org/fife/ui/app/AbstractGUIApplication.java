@@ -596,7 +596,6 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 	 */
 	@Override
 	public Container getContentPane() {
-		//throw new UnsupportedOperationException("Use the add() methods!");
 		return actualContentPane;
 	}
 
@@ -902,49 +901,82 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
 
 	/**
-	 * This is called in the GUI application's constructor.  It is a chance
-	 * for subclasses to do initialization of stuff that will be needed
-	 * by the class before the application is displayed on-screen.
+	 * This is called early in the application's lifecycle, before
+	 * {@link #createActions(AppPrefs)} is called.  This gives the
+	 * application a chance to do any initialization necessary for
+	 * the actions to be properly instantiated.<p>
+	 *
+	 * The default implementation does nothing.  Subclasses can override.
 	 *
 	 * @param prefs The preferences of the application.
 	 * @param splashScreen The "splash screen" for this application.  This
-	 *        value may be <code>null</code>.
+	 *        value may be {@code null}.
+	 * @see #preDisplayInit(AppPrefs, SplashScreen)
+	 * @see #preMenuBarInit(AppPrefs, SplashScreen)
+	 * @see #preStatusBarInit(AppPrefs, SplashScreen)
+	 * @see #preToolBarInit(AppPrefs, SplashScreen)
+	 */
+	protected void preCreateActions(P prefs, SplashScreen splashScreen) {
+		 // Do nothing (comment for Sonar)
+	}
+
+	/**
+	 * A lifecycle hook for subclasses to do any initialization of stuff that
+	 * is needed before the application is displayed on-screen.  This lifecycle
+	 * hook is run after the menu bar, status bar, and toolbar are all created.
+	 *
+	 * @param prefs The preferences of the application.
+	 * @param splashScreen The "splash screen" for this application.  This
+	 *        value may be {@code null}.
+	 * @see #preCreateActions(AppPrefs, SplashScreen)
+	 * @see #preMenuBarInit(AppPrefs, SplashScreen)
+	 * @see #preStatusBarInit(AppPrefs, SplashScreen)
+	 * @see #preToolBarInit(AppPrefs, SplashScreen)
 	 */
 	protected abstract void preDisplayInit(P prefs, SplashScreen splashScreen);
 
 
 	/**
-	 * This is called in the GUI application's constructor.  It is a chance
-	 * for subclasses to do initialization of stuff that will be needed by
-	 * their menu bar before it gets created.
+	 * A lifecycle hook for subclasses to do any initialization of stuff that
+	 * will be needed by their menu bar before it gets created.
 	 *
 	 * @param prefs The preferences of the application.
 	 * @param splashScreen The "splash screen" for this application.  This
-	 *        value may be <code>null</code>.
+	 *        value may be {@code null}.
+	 * @see #preCreateActions(AppPrefs, SplashScreen)
+	 * @see #preDisplayInit(AppPrefs, SplashScreen)
+	 * @see #preStatusBarInit(AppPrefs, SplashScreen)
+	 * @see #preToolBarInit(AppPrefs, SplashScreen)
 	 */
 	protected abstract void preMenuBarInit(P prefs, SplashScreen splashScreen);
 
 
 	/**
-	 * This is called in the GUI application's constructor.  It is a chance
-	 * for subclasses to do initialization of stuff that will be needed by
-	 * their status bar before it gets created.
+	 * A lifecycle hook for subclasses to do any initialization of stuff that
+	 * is needed by their status bar before it gets created.
 	 *
 	 * @param prefs The preferences of the application.
 	 * @param splashScreen The "splash screen" for this application.  This
-	 *        value may be <code>null</code>.
+	 *        value may be {@code null}.
+	 * @see #preCreateActions(AppPrefs, SplashScreen)
+	 * @see #preDisplayInit(AppPrefs, SplashScreen)
+	 * @see #preMenuBarInit(AppPrefs, SplashScreen)
+	 * @see #preToolBarInit(AppPrefs, SplashScreen)
 	 */
 	protected abstract void preStatusBarInit(P prefs,SplashScreen splashScreen);
 
 
 	/**
-	 * This is called in the GUI application's constructor.  It is a chance
-	 * for subclasses to do initialization of stuff that will be needed by
-	 * their toolbar before it gets created.
+	 * A lifecycle hook for subclasses to do any initialization of stuff that
+	 * is needed by their toolbar before it gets created.
 	 *
 	 * @param prefs The preferences of the application.
 	 * @param splashScreen The "splash screen" for this application.  This
-	 *        value may be <code>null</code>.
+	 *        value may be {@code null}.
+	 * @see #preCreateActions(AppPrefs, SplashScreen)
+	 * @see #preDisplayInit(AppPrefs, SplashScreen)
+	 * @see #preMenuBarInit(AppPrefs, SplashScreen)
+	 * @see #preStatusBarInit(AppPrefs, SplashScreen)
 	 */
 	protected abstract void preToolBarInit(P prefs, SplashScreen splashScreen);
 
@@ -1370,6 +1402,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 				UIManager.getLookAndFeelDefaults().put("ClassLoader", cl);
 			}
 
+			preCreateActions(prefs, splashScreen);
 			createActions(prefs);
 
 			// Create the status bar.

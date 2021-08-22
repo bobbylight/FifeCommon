@@ -825,13 +825,13 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	}
 
 
-	private static boolean containsFilesAndDirectories(Object[] files) {
+	private static boolean containsFilesAndDirectories(File[] files) {
 		boolean containsFile = false;
 		boolean containsDirectory = false;
-		for (Object file : files) {
-			if (((File)file).isDirectory())
+		for (File file : files) {
+			if (file.isDirectory())
 				containsDirectory = true;
-			else if (((File)file).isFile())
+			else if (file.isFile())
 				containsFile = true;
 			if (containsDirectory && containsFile)
 				return true;
@@ -840,9 +840,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	}
 
 
-	private static boolean containsOnlyDirectories(Object[] files) {
-		for (Object file : files) {
-			if (!((File)file).isDirectory())
+	private static boolean containsOnlyDirectories(File[] files) {
+		for (File file : files) {
+			if (!file.isDirectory())
 				return false;
 		}
 		return true;

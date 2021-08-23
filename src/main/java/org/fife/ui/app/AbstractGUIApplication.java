@@ -241,10 +241,119 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
 		actions = new ActionRegistry();
 
-		// Do the rest of this stuff "later," so that the EDT has time to
-		// actually display the splash screen and update it.
-		SwingUtilities.invokeLater(new StartupRunnable(title, splashScreen,
-				prefs));
+		//long start = System.currentTimeMillis();
+		if (title != null) {
+			setTitle(title);
+		}
+		setInstallLocation(getLocationOfJar());
+		//System.err.println(("setInstallLocation: " + (System.currentTimeMillis() - start)));
+
+		// contentPane contains the status bar to the south and toolBarPane
+		// in the center (which contains everything else).
+		contentPane = new JPanel(new BorderLayout());
+		AbstractGUIApplication.super.setContentPane(contentPane);
+
+		// Toolbar panels each contain 1 toolbar, with the last one
+		// also containing the mainContentPanel in its center.  Each
+		// increasing index of a toolbar panel is contained in the
+		// lower-indexed one.
+		toolBarPanels = new JPanel[1];
+		toolBarPanels[0] = new JPanel(new BorderLayout());
+		contentPane.add(toolBarPanels[0]);
+
+		// actualContentPane contains the actual user content added via
+		// add().
+		actualContentPane = new JPanel(new BorderLayout());
+
+		// mainContentPanel contains both actualContentPane and possible
+		// GUIPlugins on any of the 4 sides if we're an instance of
+		// AbstractPluggableGUIApplication.
+		mainContentPanel = createMainContentPanel(actualContentPane);
+		toolBarPanels[0].add(mainContentPanel);
+		//System.err.println("toolbarPanels: " + (System.currentTimeMillis() - start));
+
+		if (lafManager!=null) {
+			// We MUST add our class loader capable of loading 3rd party
+			// LaF jars as this property as it is used internally by
+			// Swing when loading classes.  Any 3rd party jars aren't
+			// on our classpath, so Swing won't pick them up without it.
+			// It must be set AFTER any UIManager.setLookAndFeel() call as
+			// that call resets this property to null (for the new LnF).
+			// We don't actually change the LAF in accordance with user
+			// preferences here as we assume the application did that
+			// before instantiating us (required by some LAFs, such as
+			// Substance).
+			ClassLoader cl = lafManager.getLAFClassLoader();
+			UIManager.getLookAndFeelDefaults().put("ClassLoader", cl);
+		}
+		//System.err.println("set classloader: " + (System.currentTimeMillis() - start));
+
+		preCreateActions(prefs, splashScreen);
+		createActions(prefs);
+
+		// Create the status bar.
+		preStatusBarInit(prefs, splashScreen);
+		StatusBar statusBar = createStatusBar(prefs);
+		//System.err.println("createStatusBar: " + (System.currentTimeMillis()-start));
+		setStatusBar(statusBar);
+
+		// Create the toolbar.
+		preToolBarInit(prefs, splashScreen);
+		CustomizableToolBar toolBar = createToolBar(prefs);
+		//System.err.println("createToolBar: " + (System.currentTimeMillis()-start));
+		setToolBar(toolBar);
+
+		// Create the menu bar.
+		preMenuBarInit(prefs, splashScreen);
+		JMenuBar menuBar = createMenuBar(prefs);
+		// Must set orientation of menuBar separately as it's done later.
+		ComponentOrientation o = ComponentOrientation.
+			getOrientation(getLocale());
+		menuBar.applyComponentOrientation(o);
+		//System.err.println("createMenuBar: " + (System.currentTimeMillis()-start));
+		setJMenuBar(menuBar);
+
+		// Do the rest of the subclass's custom initialization.
+		preDisplayInit(prefs, splashScreen);
+		//System.err.println("preDisplayInit: " + (System.currentTimeMillis()-start));
+
+		// Register status bar to receive notice on menu item changes,
+		// in case we have descriptions of them to display.
+		registerMenuSelectionManagerListener();
+
+		addSystemHooks();
+
+		// Set location/appearance properties.
+		Toolkit.getDefaultToolkit().setDynamicLayout(true);
+		pack();
+		if (prefs!=null) {
+			if (prefs.location!=null) {
+				setLocation(prefs.location);
+			}
+			else {
+				setLocationRelativeTo(null);
+			}
+			if (prefs.size==null || prefs.size.equals(new Dimension(-1,-1)))
+				setExtendedState(MAXIMIZED_BOTH);
+			else
+				setSize(prefs.size);
+			setToolBarVisible(prefs.toolbarVisible);
+			setStatusBarVisible(prefs.statusBarVisible);
+		}
+		else {
+			setToolBarVisible(true);
+			setStatusBarVisible(true);
+			setLocationRelativeTo(null);
+		}
+
+		applyComponentOrientation(o);
+		//System.err.println("Everything else: " + (System.currentTimeMillis()-start));
+
+		// Clean up the splash screen if necessary.
+		if (splashScreen!=null) {
+			splashScreen.setVisible(false);
+			splashScreen.dispose();
+		}
 
 	}
 
@@ -1335,148 +1444,6 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
             dialog.setVisible(true);
         }
     }
-
-
-	/**
-	 * Actually creates the GUI.  This is called after the splash screen is
-	 * displayed via <code>SwingUtilities#invokeLater()</code>.
-	 *
-	 * @author Robert Futrell
-	 * @version 1.0
-	 */
-	private class StartupRunnable implements Runnable {
-
-		private String title;
-		private SplashScreen splashScreen;
-		private P prefs;
-
-		StartupRunnable(String title, SplashScreen splashScreen, P prefs) {
-			this.splashScreen = splashScreen;
-			this.prefs = prefs;
-			this.title = title;
-		}
-
-		@Override
-		public void run() {
-
-			if (title != null) {
-				setTitle(title);
-			}
-			setInstallLocation(getLocationOfJar());
-
-			// contentPane contains the status bar to the south and toolBarPane
-			// in the center (which contains everything else).
-			contentPane = new JPanel(new BorderLayout());
-			AbstractGUIApplication.super.setContentPane(contentPane);
-
-			// Toolbar panels each contain 1 toolbar, with the last one
-			// also containing the mainContentPanel in its center.  Each
-			// increasing index of a toolbar panel is contained in the
-			// lower-indexed one.
-			toolBarPanels = new JPanel[1];
-			toolBarPanels[0] = new JPanel(new BorderLayout());
-			contentPane.add(toolBarPanels[0]);
-
-			// actualContentPane contains the actual user content added via
-			// add().
-			actualContentPane = new JPanel(new BorderLayout());
-
-			// mainContentPanel contains both actualContentPane and possible
-			// GUIPlugins on any of the 4 sides if we're an instance of
-			// AbstractPluggableGUIApplication.
-			mainContentPanel = createMainContentPanel(actualContentPane);
-			toolBarPanels[0].add(mainContentPanel);
-
-			if (lafManager!=null) {
-				// We MUST add our class loader capable of loading 3rd party
-				// LaF jars as this property as it is used internally by
-				// Swing when loading classes.  Any 3rd party jars aren't
-				// on our classpath, so Swing won't pick them up without it.
-				// It must be set AFTER any UIManager.setLookAndFeel() call as
-				// that call resets this property to null (for the new LnF).
-				// We don't actually change the LAF in accordance with user
-				// preferences here as we assume the application did that
-				// before instantiating us (required by some LAFs, such as
-				// Substance).
-				ClassLoader cl = lafManager.getLAFClassLoader();
-				UIManager.getLookAndFeelDefaults().put("ClassLoader", cl);
-			}
-
-			preCreateActions(prefs, splashScreen);
-			createActions(prefs);
-
-			// Create the status bar.
-			preStatusBarInit(prefs, splashScreen);
-			//long start = System.currentTimeMillis();
-			StatusBar statusBar = createStatusBar(prefs);
-			//System.err.println("createStatusBar: " + (System.currentTimeMillis()-start));
-			setStatusBar(statusBar);
-
-			// Create the toolbar.
-			preToolBarInit(prefs, splashScreen);
-			//start = System.currentTimeMillis();
-			CustomizableToolBar toolBar = createToolBar(prefs);
-			//System.err.println("createToolBar: " + (System.currentTimeMillis()-start));
-			setToolBar(toolBar);
-
-			// Create the menu bar.
-			preMenuBarInit(prefs, splashScreen);
-			//long start = System.currentTimeMillis();
-			JMenuBar menuBar = createMenuBar(prefs);
-			// Must set orientation of menuBar separately as it's done later.
-			ComponentOrientation o = ComponentOrientation.
-										getOrientation(getLocale());
-			menuBar.applyComponentOrientation(o);
-			//System.err.println("createMenuBar: " + (System.currentTimeMillis()-start));
-			setJMenuBar(menuBar);
-
-			// Do the rest of the subclass's custom initialization.
-			preDisplayInit(prefs, splashScreen);
-
-			// Register status bar to receive notice on menu item changes,
-			// in case we have descriptions of them to display.
-			registerMenuSelectionManagerListener();
-
-			addSystemHooks();
-
-			// Set location/appearance properties.
-			Toolkit.getDefaultToolkit().setDynamicLayout(true);
-			pack();
-			if (prefs!=null) {
-				if (prefs.location!=null) {
-					setLocation(prefs.location);
-				}
-				else {
-					setLocationRelativeTo(null);
-				}
-				if (prefs.size==null || prefs.size.equals(new Dimension(-1,-1)))
-					setExtendedState(MAXIMIZED_BOTH);
-				else
-					setSize(prefs.size);
-				setToolBarVisible(prefs.toolbarVisible);
-				setStatusBarVisible(prefs.statusBarVisible);
-			}
-			else {
-				setToolBarVisible(true);
-				setStatusBarVisible(true);
-				setLocationRelativeTo(null);
-			}
-
-			ComponentOrientation orientation = ComponentOrientation.
-										getOrientation(getLocale());
-			applyComponentOrientation(orientation);
-
-			// Clean up the splash screen if necessary.
-			if (splashScreen!=null) {
-				splashScreen.setVisible(false);
-				splashScreen.dispose();
-			}
-
-			setVisible(true);
-
-		}
-
-	}
 
 
 }

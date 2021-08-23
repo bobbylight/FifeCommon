@@ -116,7 +116,7 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 	}
 
 
-	protected abstract T createApplication(String[] filesToOpen, P preferences);
+	protected abstract T createApplicationImpl(String[] filesToOpen, P preferences);
 
 
 	/**
@@ -353,16 +353,17 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 
 
 	/**
-	 * Starts the application.  Ensures the work is done on the EDT.
+	 * Starts the application.  This should be called on the EDT.
 	 *
 	 * @param args The command line arguments (typically files to open).
+	 * @return The application.
 	 */
-	public void startApplication(String[] args) {
+	public T createApplication(String[] args) {
 
 		// 1.5.2004/pwy: Setting this property makes the menu appear on top
 		// of the screen on Apple Mac OS X systems. It is ignored by all other
 		// other Java implementations.
-		System.setProperty("apple.laf.useScreenMenuBar","true");
+		System.setProperty("apple.laf.useScreenMenuBar", "true");
 
 		// 1.5.2004/pwy: Setting this property defines the standard
 		// Application menu name on Apple Mac OS X systems. It is ignored by
@@ -374,20 +375,18 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 
 		P prefs = loadPreferences();
 
-		// Swing stuff should always be done on the EDT...
-		SwingUtilities.invokeLater(() -> {
+		// Make Darcula and Metal not use bold fonts
+		UIManager.put("swing.boldMetal", Boolean.FALSE);
 
-			// Make Darcula and Metal not use bold fonts
-			UIManager.put("swing.boldMetal", Boolean.FALSE);
+		ThirdPartyLookAndFeelManager lafManager =
+			initializeAndConfigureLookAndFeel(prefs.lookAndFeel);
 
-			ThirdPartyLookAndFeelManager lafManager =
-				initializeAndConfigureLookAndFeel(prefs.lookAndFeel);
+		T app = createApplicationImpl(args, prefs);
 
-			T app = createApplication(args, prefs);
+		if (app instanceof AbstractGUIApplication) {
+			((AbstractGUIApplication<?>)app).setLookAndFeelManager(lafManager);
+		}
 
-			if (app instanceof AbstractGUIApplication) {
-				((AbstractGUIApplication<?>)app).setLookAndFeelManager(lafManager);
-			}
-		});
+		return app;
 	}
 }

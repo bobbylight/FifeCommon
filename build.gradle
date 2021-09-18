@@ -15,17 +15,17 @@ repositories {
 }
 
 dependencies {
-	api 'org.pushing-pixels:radiance-substance:2.5.1'
+	api 'org.pushing-pixels:radiance-substance:4.0.0'
 	api 'org.apache.xmlgraphics:batik-rasterizer:1.14'
 	testImplementation 'junit:junit:4.13.2'
 }
 
 wrapper {
-	gradleVersion = '7.0.2'
+	gradleVersion = '7.2'
 }
 
 checkstyle {
-	toolVersion = '8.43'
+	toolVersion = '9.0'
 }
 
 compileJava {

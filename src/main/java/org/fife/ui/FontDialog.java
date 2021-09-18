@@ -609,7 +609,7 @@ public class FontDialog extends JDialog implements ActionListener,
 			// TODO: Use a binary search since items are ordered.
 			ListModel<FontInfo> model = fontList.getModel();
 			for (int i=0; i<model.getSize(); i++) {
-				if (model.getElementAt(i).equals(fontFamily)) {
+				if (model.getElementAt(i).fontFamily.equals(fontFamily)) {
 					fontList.setSelectedIndex(i);
 					fontList.ensureIndexIsVisible(i);
 					break;

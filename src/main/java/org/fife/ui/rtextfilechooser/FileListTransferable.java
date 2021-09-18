@@ -91,7 +91,7 @@ public class FileListTransferable implements Transferable, ClipboardOwner {
 					sb.append(uri).append("\r\n");
 				}
 			}
-			System.out.println("Transferring:\n" + sb.toString());
+			//System.out.println("Transferring:\n" + sb);
 			return sb.toString(); // Trailing \r\n is required by RFC 2483
 		}
 

@@ -64,6 +64,14 @@ public final class UIUtil {
 	private static final int DEFAULT_BUTTON_SIZE = 85;
 
 	/**
+	 * Approximate maximum length, in pixels, of a File History entry.
+	 * Note that this is only  GUIDELINE, and some filenames
+	 * can (and will) exceed this limit.
+	 */
+	private static final int MAX_FILE_PATH_LENGTH = 250;
+
+
+	/**
 	 * Private constructor so we cannot instantiate this class.
 	 */
 	private UIUtil() {
@@ -518,6 +526,77 @@ public final class UIUtil {
 
 
 	/**
+	 * Attempts to return an "attractive" shortened version of
+	 * <code>fullPath</code>.  For example,
+	 * <code>/home/lobster/dir1/dir2/dir3/dir4/file.out</code> could be
+	 * abbreviated as <code>/home/lobster/dir1/.../file.out</code>.  Note that
+	 * this method is still in the works, and isn't fully cooked yet.
+	 *
+	 * @param parent The component that will render the file path, for example, a
+	 *        {@code JMenuItem}.
+	 * @param longPath The (possibly long) absolute path to a file.
+	 * @return The (possibly abbreviated) path to the file to use in displays.
+	 */
+	public static String getDisplayPathForFile(Component parent, String longPath) {
+
+		// Initialize some variables.
+		FontMetrics fontMetrics = parent.getFontMetrics(parent.getFont());
+		int textWidth = getTextWidth(longPath, fontMetrics);
+
+		// If the text width is already short enough to fit, don't do anything to it.
+		if (textWidth <= MAX_FILE_PATH_LENGTH) {
+			return longPath;
+		}
+
+		// If it's too long, we'll have to trim it down some...
+
+		// Will be '\' for Windows, '/' for Unix and derivatives.
+		String separator = System.getProperty("file.separator");
+
+		// What we will eventually return.
+		String displayString = longPath;
+
+		// If there is no directory separator, then the string is just a file name,
+		// and so we can't shorten it.  Just return the sucker.
+		int lastSeparatorPos = displayString.lastIndexOf(separator);
+		if (lastSeparatorPos==-1)
+			return displayString;
+
+		// Get the length of just the file name.
+		String justFileName = displayString.substring(
+			lastSeparatorPos+1);
+		int justFileNameLength = getTextWidth(justFileName, fontMetrics);
+
+		// If even just the file name is too long, return it.
+		if (justFileNameLength > MAX_FILE_PATH_LENGTH)
+			return "..." + separator + justFileName;
+
+		// Otherwise, just keep adding levels in the directory hierarchy
+		// until the name gets too long.
+		String endPiece = "..." + separator + justFileName;
+		int endPieceLength = getTextWidth(endPiece, fontMetrics);
+		int separatorPos = displayString.indexOf(separator);
+		String firstPart = displayString.substring(0, separatorPos+1);
+		int firstPartLength = getTextWidth(firstPart, fontMetrics);
+		String tempFirstPart = firstPart;
+		int tempFirstPartLength = firstPartLength;
+		while (tempFirstPartLength+endPieceLength < MAX_FILE_PATH_LENGTH) {
+			firstPart  = tempFirstPart;
+			separatorPos = displayString.indexOf(separator, separatorPos+1);
+			if (separatorPos==-1)
+				endPieceLength = 9999999;
+			else {
+				tempFirstPart = displayString.substring(0, separatorPos+1);
+				tempFirstPartLength = getTextWidth(tempFirstPart, fontMetrics);
+			}
+		}
+
+		return firstPart+endPiece;
+
+	}
+
+
+	/**
 	 * Returns an empty border of width 5 on all sides.  Since this is a
 	 * very common border in GUI's, the border returned is a singleton.
 	 *
@@ -646,6 +725,31 @@ public final class UIUtil {
 			string += KeyEvent.getKeyText(keyCode);
 		return  string;
 
+	}
+
+
+	/**
+	 * Determines the width of the given <code>String</code> containing no
+	 * tabs.  Note that this is simply a trimmed-down version of
+	 * <code>javax.swing.text.getTextWidth</code> that has been
+	 * optimized for our use.
+	 *
+	 * @param s  the source of the text
+	 * @param metrics the font metrics to use for the calculation
+	 * @return  the width of the text
+	 */
+	private static int getTextWidth(String s, FontMetrics metrics) {
+
+		int textWidth = 0;
+
+		char[] txt = s.toCharArray();
+		for (char c : txt) {
+			// Ignore newlines, they take up space and we shouldn't be
+			// counting them.
+			if (c != '\n')
+				textWidth += metrics.charWidth(c);
+		}
+		return textWidth;
 	}
 
 

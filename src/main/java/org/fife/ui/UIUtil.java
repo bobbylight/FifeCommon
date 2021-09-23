@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -66,6 +67,53 @@ public final class UIUtil {
 	 * Private constructor so we cannot instantiate this class.
 	 */
 	private UIUtil() {
+	}
+
+
+	/**
+	 * Adds pairs of components to a parent container using {@code SpringLayout}
+	 * in a label/value layout, honoring the component orientation.
+	 *
+	 * @param parent The parent container to add to.
+	 * @param o The component orientation.
+	 * @param pairs The pairs of strings to add.  This should be an even number
+	 *        of strings.
+	 * @see #addLabelValuePairs(Container, ComponentOrientation, Component...)
+	 * @see #makeSpringCompactGrid(Container, int, int, int, int, int, int)
+	 */
+	public static void addLabelValuePairs(Container parent, ComponentOrientation o, String... pairs) {
+
+		SelectableLabel[] labels = Arrays.stream(pairs)
+			.map(SelectableLabel::new)
+			.toArray(SelectableLabel[]::new);
+		addLabelValuePairs(parent, o, labels);
+	}
+
+
+	/**
+	 * Adds pairs of components to a parent container using {@code SpringLayout}
+	 * in a label/value layout, honoring the component orientation.
+	 *
+	 * @param parent The parent container to add to.
+	 * @param o The component orientation.
+	 * @param pairs The pairs of components to add.  This should be an even number
+	 *        of components.
+	 * @see #addLabelValuePairs(Container, ComponentOrientation, String...)
+	 * @see #makeSpringCompactGrid(Container, int, int, int, int, int, int)
+	 */
+	public static void addLabelValuePairs(Container parent, ComponentOrientation o, Component... pairs) {
+		if (o.isLeftToRight()) {
+			for (int i = 0; i < pairs.length; i += 2) {
+				parent.add(pairs[i]);
+				parent.add(pairs[i + 1]);
+			}
+		}
+		else {
+			for (int i = 0; i < pairs.length; i += 2) {
+				parent.add(pairs[i + 1]);
+				parent.add(pairs[i]);
+			}
+		}
 	}
 
 

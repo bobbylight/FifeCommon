@@ -331,6 +331,11 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 	@SuppressWarnings("unchecked")
 	public void savePreferences(T app) throws IOException {
 
+		File dir = getPreferencesDir();
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+
 		File preferencesFile = getPreferencesFile();
 		if (preferencesFile == null) {
 			return;

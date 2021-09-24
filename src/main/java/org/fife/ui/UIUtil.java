@@ -1356,4 +1356,19 @@ public final class UIUtil {
 	}
 
 
+	/**
+	 * Tweaks a component's font to be a smaller or larger size.
+	 *
+	 * @param component The component to modify.
+	 * @param amount The amount to change the font size by.  If this is
+	 *        negative, the font size is decreased.
+	 */
+	public static void tweakFontSize(Component component, int amount) {
+		Font font = component.getFont();
+		float newSize = Math.max(1, font.getSize() + amount);
+		newSize = Math.min(newSize, 1000);
+		component.setFont(font.deriveFont(newSize));
+	}
+
+
 }

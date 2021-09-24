@@ -30,6 +30,7 @@ import org.fife.ui.UIUtil;
 import org.fife.ui.WebLookAndFeelUtils;
 import org.fife.ui.dockablewindows.DockableWindowPanel.ContentPanel;
 import org.fife.util.DarculaUtil;
+import org.fife.util.FlatUtil;
 import org.fife.util.SubstanceUtil;
 
 
@@ -250,6 +251,15 @@ class DockableWindowGroup extends JPanel {
 			super(BOTTOM);
 			setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 			enableEvents(AWTEvent.MOUSE_EVENT_MASK);
+			customizeForFlatLaf();
+		}
+
+		/**
+		 * Client properties that are only honored by FlatLaf.
+		 */
+		private void customizeForFlatLaf() {
+			putClientProperty("JTabbedPane.showTabSeparators", true);
+			putClientProperty("JTabbedPane.minimumTabWidth", 32);
 		}
 
 		private JPopupMenu getPopupMenu() {
@@ -303,12 +313,11 @@ class DockableWindowGroup extends JPanel {
 		public void setUI(TabbedPaneUI ui) {
 			// Keep using tabbed pane ui so laf stays the same, but need to
 			// set a new one to pick up new tabbed pane colors, fonts, etc.
-			if (!DarculaUtil.isDarculaUI(ui)) {
+			if (!DarculaUtil.isDarculaUI(ui) && !FlatUtil.isFlatUI(ui)) {
 				ui = new DockedWindowTabbedPaneUI();
 			}
 			super.setUI(ui);
 		}
-
 	}
 
 

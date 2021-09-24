@@ -27,10 +27,6 @@ public final class DarculaUtil {
 	 */
 	public static final String CLASS_NAME = "com.bulenkov.darcula.DarculaLaf";
 
-	public static boolean isDarculaUI(ComponentUI ui) {
-		return ui.getClass().getSimpleName().contains("Darcula");
-	}
-
 
 	/**
 	 * Private constructor to prevent instantiation.
@@ -74,6 +70,11 @@ public final class DarculaUtil {
 	 */
 	public static boolean isDarculaLookAndFeel(String laf) {
 		return laf != null && laf.endsWith("DarculaLaf");
+	}
+
+
+	public static boolean isDarculaUI(ComponentUI ui) {
+		return ui.getClass().getSimpleName().contains("Darcula");
 	}
 
 

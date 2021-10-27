@@ -30,6 +30,7 @@ import org.fife.ui.*;
 import org.fife.help.HelpDialog;
 import org.fife.ui.SplashScreen;
 import org.fife.ui.app.prefs.AppPrefs;
+import org.fife.ui.app.themes.NativeTheme;
 
 
 /**
@@ -143,6 +144,10 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 	 */
 	private String language;
 
+	/**
+	 * The current application theme.
+	 */
+	private AppTheme theme;
 
 	/**
 	 * The content pane.
@@ -173,12 +178,6 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 	 */
 	protected Container actualContentPane;
 
-	/**
-	 * Used to dynamically load 3rd-party LookAndFeels.
-	 */
-	private ThirdPartyLookAndFeelManager lafManager;
-
-
 	private static final String STATUS_BAR_LOCATION	= BorderLayout.SOUTH;
 	private static final String TOOL_BAR_LOCATION	= BorderLayout.NORTH;
 
@@ -208,6 +207,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
 		this.context = context;
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
+		setTheme(prefs.appTheme != null ? prefs.appTheme : NativeTheme.NAME);
 
 		// Set up the localization stuff.
 		// NOTE: We default to English instead of using the JVM's default
@@ -271,22 +271,6 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 		mainContentPanel = createMainContentPanel(actualContentPane);
 		toolBarPanels[0].add(mainContentPanel);
 		//System.err.println("toolbarPanels: " + (System.currentTimeMillis() - start));
-
-		if (lafManager!=null) {
-			// We MUST add our class loader capable of loading 3rd party
-			// LaF jars as this property as it is used internally by
-			// Swing when loading classes.  Any 3rd party jars aren't
-			// on our classpath, so Swing won't pick them up without it.
-			// It must be set AFTER any UIManager.setLookAndFeel() call as
-			// that call resets this property to null (for the new LnF).
-			// We don't actually change the LAF in accordance with user
-			// preferences here as we assume the application did that
-			// before instantiating us (required by some LAFs, such as
-			// Substance).
-			ClassLoader cl = lafManager.getLAFClassLoader();
-			UIManager.getLookAndFeelDefaults().put("ClassLoader", cl);
-		}
-		//System.err.println("set classloader: " + (System.currentTimeMillis() - start));
 
 		preCreateActions(prefs, splashScreen);
 		createActions(prefs);
@@ -697,6 +681,16 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
 
 	/**
+	 * Returns the available application themes.
+	 *
+	 * @return The available application themes.
+	 */
+	public List<AppTheme> getAppThemes() {
+		return context.getAvailableAppThemes();
+	}
+
+
+	/**
 	 * Returns the main content pane of the application.  Applications should
 	 * add components to this panel.
 	 *
@@ -745,18 +739,6 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
 
 	/**
-	 * Returns the manager in charge of any 3rd-party LookAndFeels this
-	 * application is aware of.
-	 *
-	 * @return The manager, or <code>null</code> if there is none.
-	 * @see #setLookAndFeelManager(ThirdPartyLookAndFeelManager)
-	 */
-	public ThirdPartyLookAndFeelManager getLookAndFeelManager() {
-		return lafManager;
-	}
-
-
-	/**
 	 * Returns the location of the specified jar file in the currently-running
 	 * application's classpath.  This can be useful if you wish to know the
 	 * location of the installation of the currently-running application.<p>
@@ -776,22 +758,6 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
 		return new File(decodedPath).getParent();
 
-	}
-
-
-	/**
-	 * Returns an array of info. for JAR files containing 3rd party Look and
-	 * Feels.  These JAR files will be added to the <code>UIManager</code>'s
-	 * classpath so that these LnFs can be used in this GUI application.<p>
-	 *
-	 * For this method to return anything, you must install a
-	 * {@link ThirdPartyLookAndFeelManager}.
-	 *
-	 * @return An array of information on JAR files containing Look and Feels.
-	 * @see #setLookAndFeelManager(ThirdPartyLookAndFeelManager)
-	 */
-	public ExtendedLookAndFeelInfo[] get3rdPartyLookAndFeelInfo() {
-		return lafManager!=null ? lafManager.get3rdPartyLookAndFeelInfo() : null;
 	}
 
 
@@ -925,6 +891,12 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 	public String getString(String key, Object... params) {
 		String text = getResourceBundle().getString(key);
 		return MessageFormat.format(text, params);
+	}
+
+
+	@Override
+	public AppTheme getTheme() {
+		return theme;
 	}
 
 
@@ -1255,17 +1227,6 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
 
 	/**
-	 * Sets the utility used to dynamically load 3rd-party LookAndFeels.
-	 *
-	 * @param manager The utility, or <code>null</code> for none.
-	 * @see #getLookAndFeelManager()
-	 */
-	public void setLookAndFeelManager(ThirdPartyLookAndFeelManager manager) {
-		lafManager = manager;
-	}
-
-
-	/**
 	 * Makes the menu bar and tool bar (if defined) drag the entire window around then the user clicks and
 	 * drags them.
 	 *
@@ -1326,6 +1287,69 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
 
 	/**
+	 * Installs a theme by name.  Does nothing if no such theme is known.
+	 *
+	 * @param newTheme The theme to install.
+	 * @see #setTheme(AppTheme)
+	 */
+	public void setTheme(String newTheme) {
+		setTheme(getAppThemes().stream()
+			.filter(t -> newTheme.equals(t.getName()))
+			.findFirst()
+			.orElse(null));
+	}
+
+
+	/**
+	 * Sets the theme used by this application.
+	 *
+	 * @param newTheme The theme to install.  This cannot be {@code null}.
+	 * @see #setThemeAdditionalProperties(AppTheme)
+	 * @see #getTheme()
+	 * @see #setTheme(String)
+	 */
+	@Override
+	public void setTheme(AppTheme newTheme) {
+
+		if (theme == null || !newTheme.getName().equals(theme.getName())) {
+
+			theme = newTheme;
+			String currentLookAndFeel = UIManager.getLookAndFeel().getClass().getName();
+
+			// LookAndFeel always refreshes the app, so we defensively check here.
+			if (!newTheme.getLookAndFeel().equals(currentLookAndFeel)) {
+				try {
+
+					UIManager.setLookAndFeel(newTheme.getLookAndFeel());
+				} catch (ClassNotFoundException | InstantiationException |
+					IllegalAccessException | UnsupportedLookAndFeelException e) {
+					displayException(e);
+					return;
+				}
+			}
+
+			SwingUtilities.updateComponentTreeUI(this); // Sometimes needed, e.g. FlatLaF => Windows
+			updateLookAndFeel(UIManager.getLookAndFeel());
+			setThemeAdditionalProperties(newTheme);
+		}
+	}
+
+
+	/**
+	 * Installs any application-specific properties.  The {@code LookAndFeel}
+	 * has already been updated when this method is called.<p>
+	 *
+	 * The default implementation does nothing.  Subclasses can override.
+	 *
+	 * @param theme The theme being installed.
+	 * @see #setTheme(AppTheme)
+	 */
+	protected void setThemeAdditionalProperties(AppTheme theme) {
+		// Do nothing - subclasses can override
+	}
+
+
+	/**
 	 * Sets the toolbar used by this GUI application.  This method fires a
 	 * property change of type <code>TOOL_BAR_PROPERTY</code>.
 	 *
@@ -1365,8 +1389,9 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
 	/**
 	 * Updates the look and feel for all components and windows in
-	 * this <code>RText</code> instance.  This method assumes that
-	 * <code>UIManager.setLookAndFeel(lnf)</code> has already been called.<p>
+	 * this application instance.  This method is called by
+	 * {@code setTheme(AppTheme)}, after
+	 * {@code UIManager.setLookAndFeel(lnf)} has been called.<p>
 	 *
 	 * Subclasses should override this method to update any child
 	 * dialogs or windows, and be sure to call the super implementation
@@ -1374,6 +1399,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 	 *
 	 * @param lnf The new look and feel.  You can usually ignore this
 	 *        parameter, as the LookAndFeel has already been installed.
+	 * @see #setTheme(AppTheme)
 	 */
 	public void updateLookAndFeel(LookAndFeel lnf) {
 		if (aboutDialog!=null) {

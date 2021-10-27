@@ -42,9 +42,9 @@ public abstract class AppPrefs extends Prefs {
 	public boolean statusBarVisible;
 
 	/**
-	 * The user's preferred look and feel for the application.
+	 * The current application theme name.
 	 */
-	public String lookAndFeel;
+	public String appTheme;
 
 	/**
 	 * The language for this application, in a Locale-friendly string.

@@ -177,10 +177,8 @@ public final class WebLookAndFeelUtils {
 
 	/**
 	 * Installs system properties specific to this Look and Feel.
-	 *
-	 * @param cl the class loader.
 	 */
-	public static void installWebLookAndFeelProperties(ClassLoader cl) {
+	public static void installWebLookAndFeelProperties() {
 
 		// Don't override non-UIResource borders!
 		//String honorBorders = WebLookAndFeel.PROPERTY_HONOR_USER_BORDERS;
@@ -194,7 +192,7 @@ public final class WebLookAndFeelUtils {
 			// Perhaps it has to do with the frame "fading in"?
 			//WebLookandFeel.setDecorateFrames(true);
 			//WebLookAndFeel.setDecorateDialogs(true);
-			Class<?> clazz = Class.forName(LAF_CLASS_NAME, true, cl);
+			Class<?> clazz = Class.forName(LAF_CLASS_NAME, true, null);
 			Method m;
 			if (decorateFrames) {
 				m = clazz.getDeclaredMethod("setDecorateFrames", boolean.class);
@@ -208,7 +206,7 @@ public final class WebLookAndFeelUtils {
 //			rolloverDecoratedOnly.set(null, Boolean.TRUE);
 
 			if (decorateFrames) {
-				clazz = Class.forName(MENU_BAR_STYLE_CLASS, true, cl);
+				clazz = Class.forName(MENU_BAR_STYLE_CLASS, true, null);
 				Field f = clazz.getDeclaredField("undecorated");
 				f.set(null, Boolean.TRUE);
 			}

@@ -254,6 +254,15 @@ public interface GUIApplication {
 
 
 	/**
+	 * Returns the currently installed theme.
+	 *
+	 * @return The currently installed theme.
+	 * @see #setTheme(AppTheme)
+	 */
+	AppTheme getTheme();
+
+
+	/**
 	 * Returns the toolbar this application is using.
 	 *
 	 * @return The toolbar.
@@ -330,6 +339,15 @@ public interface GUIApplication {
 	 * @see #getStatusBarVisible
 	 */
 	void setStatusBarVisible(boolean visible);
+
+
+	/**
+	 * Sets the application theme.
+	 *
+	 * @param theme The new theme.  This cannot be {@code null}.
+	 * @see #getTheme()
+	 */
+	void setTheme(AppTheme theme);
 
 
 	/**

@@ -8,12 +8,15 @@ import org.fife.jgoodies.looks.common.ShadowPopupFactory;
 import org.fife.ui.UIUtil;
 import org.fife.ui.WebLookAndFeelUtils;
 import org.fife.ui.app.prefs.AppPrefs;
+import org.fife.ui.app.themes.NativeTheme;
 import org.fife.util.DarculaUtil;
 import org.fife.util.SubstanceUtil;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -153,16 +156,30 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 	}
 
 
+	public List<AppTheme> getAvailableAppThemes() {
+		List<AppTheme> result = new ArrayList<>();
+		result.add(new NativeTheme());
+		return result;
+	}
+
+
 	/**
-	 * Does any initialization and configuration of the Look and Feel that must
+	 * Does any initialization and configuration of the theme that must
 	 * be done before any windows are instantiated, for example, configuring
 	 * look-and-feel-decorated.
 	 *
-	 * @param lafName The name of the look and feel to instantiate.
-	 * @return A Look and Feel manager for the application to use when
-	 *          loading 3rd-party Look and Feels.
+	 * @param themeName The application theme to load.
 	 */
-	private ThirdPartyLookAndFeelManager initializeAndConfigureLookAndFeel(String lafName) {
+	private void initializeAndConfigureTheme(String themeName) {
+
+		// Load the previously-saved theme, defaulting to the first installed
+		// theme if it isn't fo9und for some reason.
+		List<AppTheme> availableThemes = getAvailableAppThemes();
+		AppTheme theme = availableThemes.stream()
+			.filter(t -> t.getName().equals(themeName))
+			.findFirst()
+			.orElse(availableThemes.get(0));
+		String lafName = theme.getLookAndFeel();
 
 		// Allow Substance to paint window titles, etc.  We don't allow
 		// Metal (for example) to do this, because setting these
@@ -175,12 +192,8 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 			JDialog.setDefaultLookAndFeelDecorated(true);
 		}
 
-		String rootDir = AbstractGUIApplication.getLocationOfJar();
-		ThirdPartyLookAndFeelManager lafManager =
-			new ThirdPartyLookAndFeelManager(rootDir);
-
 		try {
-			initializeLookAndFeelImpl(lafManager, lafName);
+			initializeLookAndFeelImpl(lafName);
 		} catch (RuntimeException re) { // FindBugs
 			throw re;
 		} catch (Exception e) {
@@ -204,36 +217,26 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 			UIManager.getLookAndFeelDefaults().put("Tree.rendererFillBackground", null);
 		}
 
-		return lafManager;
 	}
 
 
 	/**
 	 * Sets the look and feel the first time, before the application starts.
 	 *
-	 * @param lafManager The 3rd-party LAF manager that will be installed.
 	 * @param lafName The Look and Feel to install.
 	 * @throws ReflectiveOperationException If an unexpected error occurs.
 	 * @throws UnsupportedLookAndFeelException If an unexpected error occurs.
 	 */
-	private static void initializeLookAndFeelImpl(
-		ThirdPartyLookAndFeelManager lafManager,
-		String lafName) throws ReflectiveOperationException,
-		UnsupportedLookAndFeelException {
-
-		ClassLoader cl = lafManager.getLAFClassLoader();
+	private static void initializeLookAndFeelImpl(String lafName)
+		throws ReflectiveOperationException, UnsupportedLookAndFeelException {
 
 		// Set these properties before instantiating WebLookAndFeel
 		if (WebLookAndFeelUtils.isWebLookAndFeel(lafName)) {
-			WebLookAndFeelUtils.installWebLookAndFeelProperties(cl);
+			WebLookAndFeelUtils.installWebLookAndFeelProperties();
 		}
 		else {
 			ShadowPopupFactory.install();
 		}
-
-		// Must set UIManager's ClassLoader before instantiating
-		// the LAF.  Substance is so high-maintenance!
-		UIManager.getLookAndFeelDefaults().put("ClassLoader", cl);
 
 		// Java 11+ won't let us reflectively access system LookAndFeel
 		// classes, so we need a little extra logic here
@@ -245,7 +248,7 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 			try {
 
 				Class<?> clazz;
-				clazz = cl.loadClass(lafName);
+				clazz = AppContext.class.getClassLoader().loadClass(lafName);
 
 				LookAndFeel laf = (LookAndFeel)clazz.getDeclaredConstructor().
 					newInstance();
@@ -263,7 +266,6 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 			}
 		}
 
-		UIManager.getLookAndFeelDefaults().put("ClassLoader", cl);
 		UIUtil.installOsSpecificLafTweaks();
 	}
 
@@ -315,7 +317,7 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 		prefs.size = app.getSize();
 		prefs.toolbarVisible = app.getToolBarVisible();
 		prefs.statusBarVisible = app.getStatusBarVisible();
-		prefs.lookAndFeel = UIManager.getSystemLookAndFeelClassName();
+		prefs.appTheme = app.getTheme().getName();
 		prefs.language = app.getLanguage();
 	}
 
@@ -383,15 +385,8 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 		// Make Darcula and Metal not use bold fonts
 		UIManager.put("swing.boldMetal", Boolean.FALSE);
 
-		ThirdPartyLookAndFeelManager lafManager =
-			initializeAndConfigureLookAndFeel(prefs.lookAndFeel);
+		initializeAndConfigureTheme(prefs.appTheme);
 
-		T app = createApplicationImpl(args, prefs);
-
-		if (app instanceof AbstractGUIApplication) {
-			((AbstractGUIApplication<?>)app).setLookAndFeelManager(lafManager);
-		}
-
-		return app;
+		return createApplicationImpl(args, prefs);
 	}
 }

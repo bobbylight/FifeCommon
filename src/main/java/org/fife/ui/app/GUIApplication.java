@@ -29,6 +29,7 @@ import org.fife.help.HelpDialog;
 import org.fife.ui.CustomizableToolBar;
 import org.fife.ui.OS;
 import org.fife.ui.StatusBar;
+import org.fife.ui.app.icons.IconGroup;
 
 
 /**
@@ -161,6 +162,14 @@ public interface GUIApplication {
 	 * @return The Help dialog.
 	 */
 	HelpDialog getHelpDialog();
+
+
+	/**
+	 * Returns the icon group currently being used by this application.
+	 *
+	 * @return The icon group.
+	 */
+	IconGroup getIconGroup();
 
 
 	/**

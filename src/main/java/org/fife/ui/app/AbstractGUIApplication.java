@@ -29,6 +29,7 @@ import org.fife.io.IOUtil;
 import org.fife.ui.*;
 import org.fife.help.HelpDialog;
 import org.fife.ui.SplashScreen;
+import org.fife.ui.app.icons.IconGroup;
 import org.fife.ui.app.prefs.AppPrefs;
 import org.fife.ui.app.themes.NativeTheme;
 
@@ -63,6 +64,11 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 							implements GUIApplication {
 
 	/**
+	 * This property is fired whenever the icon style changes.
+	 */
+	public static final String ICON_STYLE_PROPERTY		= "iconStyle";
+
+	/**
 	 * This property is fired whenever the status bar changes.
 	 */
 	public static final String STATUS_BAR_PROPERTY		= "statusBar";
@@ -83,7 +89,6 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 	 * invisible.
 	 */
 	public static final String TOOL_BAR_VISIBLE_PROPERTY	= "toolBarVisible";
-
 
 	/**
 	 * The key for getting the About action from <code>getAction</code>.
@@ -177,6 +182,11 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 	 * stuff, this is the panel they get).
 	 */
 	protected Container actualContentPane;
+
+	/**
+	 * The current icon group the application is using.
+	 */
+	private IconGroup iconGroup;
 
 	private static final String STATUS_BAR_LOCATION	= BorderLayout.SOUTH;
 	private static final String TOOL_BAR_LOCATION	= BorderLayout.NORTH;
@@ -714,6 +724,18 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
 
 	/**
+	 * Returns the icon group being used by the application.
+	 *
+	 * @return The icon group.
+	 * @see #setIconGroup(IconGroup)
+	 */
+	@Override
+	public IconGroup getIconGroup() {
+		return iconGroup;
+	}
+
+
+	/**
 	 * Returns the directory in which this GUI application is installed (i.e.,
 	 * the location if the JAR file containing the main method).
 	 *
@@ -1199,6 +1221,25 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
 
 	/**
+	 * Sets the icon group for the application.<p>
+	 *
+	 * This method fires a property change event of type
+	 * {@code ICON_STYLE_PROPERTY}.
+	 *
+	 * @param iconGroup The icon group.
+	 * @see #getIconGroup()
+	 */
+	public void setIconGroup(IconGroup iconGroup) {
+		if (iconGroup != this.iconGroup) {
+			IconGroup old = this.iconGroup;
+			this.iconGroup = iconGroup;
+			updateIconsForNewIconGroup(iconGroup);
+			firePropertyChange(ICON_STYLE_PROPERTY, old, iconGroup);
+		}
+	}
+
+
+	/**
 	 * Sets the "install location" of this application.
 	 *
 	 * @param location The directory in which this application is installed.
@@ -1384,6 +1425,19 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 			firePropertyChange(TOOL_BAR_VISIBLE_PROPERTY, !visible,
 												visible);
 		}
+	}
+
+
+	/**
+	 * Updates the application's icons due to an icon group change.
+	 * The default implementation does nothing.  Subclasses can
+	 * override.
+	 *
+	 * @param iconGroup The new icon group.
+	 * @see #setIconGroup(IconGroup)
+	 */
+	protected void updateIconsForNewIconGroup(IconGroup iconGroup) {
+		// Do nothing - subclasses can override
 	}
 
 

@@ -113,6 +113,31 @@ class PluginLoader {
 
 
 	/**
+	 * Returns the single-argument constructor for a plugin that accepts
+	 * our application.  Note this checks for both constructors that take
+	 * the specific application class type, as well as superclasses,
+	 * for plugins that are not app-specific.
+	 *
+	 * @param pluginClazz The plugin class.
+	 * @return The constructor that takes an application.
+	 */
+	private Constructor<?> getApplicationConstructor(Class<?> pluginClazz) {
+
+		Constructor<?>[] constructors = pluginClazz.getConstructors();
+		Class<?> appClazz = app.getClass();
+
+		for (Constructor<?> constructor : constructors) {
+			Class<?>[] paramTypes = constructor.getParameterTypes();
+			if (paramTypes.length == 1 && (paramTypes[0].isAssignableFrom(appClazz))) {
+				return constructor;
+			}
+		}
+		throw new IllegalArgumentException(
+			"Plugin class has no single-arg app constructor: " + pluginClazz.getName());
+	}
+
+
+	/**
 	 * Returns the priority with which the plugin should be loaded.
 	 *
 	 * @param attrs The main manifest attributes.
@@ -168,7 +193,6 @@ class PluginLoader {
 	private void loadPluginImpl(String className) throws Exception {
 
 		final Object[] objs = { app };
-		Class<?>[] params = { AbstractPluggableGUIApplication.class };
 		Class<?> c = ucl.loadClass(className);
 
 		// This should be true unless there was an error in the manifest
@@ -176,24 +200,21 @@ class PluginLoader {
 			synchronized (this) {
 				loadingPluginCount++;
 			}
-			final Constructor<?> cnst = c.getConstructor(params);
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						Plugin p = (Plugin)cnst.newInstance(objs);
-						app.addPlugin(p);
-					} catch (InvocationTargetException ite) {
-						Throwable e = ite.getTargetException();
-						e.printStackTrace();
-						app.displayException(e);
-					} catch (Exception e) {
-						e.printStackTrace();
-						app.displayException(e);
-					} finally {
-						synchronized (this) {
-							loadingPluginCount--;
-						}
+			final Constructor<?> cnst = getApplicationConstructor(c);
+			SwingUtilities.invokeLater(() -> {
+				try {
+					Plugin<?> p = (Plugin<?>)cnst.newInstance(objs);
+					app.addPlugin(p);
+				} catch (InvocationTargetException ite) {
+					Throwable e = ite.getTargetException();
+					e.printStackTrace();
+					app.displayException(e);
+				} catch (Exception e) {
+					e.printStackTrace();
+					app.displayException(e);
+				} finally {
+					synchronized (this) {
+						loadingPluginCount--;
 					}
 				}
 			});

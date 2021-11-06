@@ -21,13 +21,14 @@ import org.fife.ui.dockablewindows.DockableWindow;
 /**
  * A plugin that includes one or more dockable windows.
  *
+ * @param <T> The type of application.
  * @author Robert Futrell
  * @version 0.8
  * @see org.fife.ui.app.Plugin
  * @see org.fife.ui.app.AbstractPluggableGUIApplication
  * @see org.fife.ui.dockablewindows.DockableWindow
  */
-public abstract class GUIPlugin extends AbstractPlugin {
+public abstract class GUIPlugin<T extends GUIApplication> extends AbstractPlugin<T> {
 
 	/**
 	 * Map of window ID's to dockable windows.
@@ -37,8 +38,11 @@ public abstract class GUIPlugin extends AbstractPlugin {
 
 	/**
 	 * Constructor.
+	 *
+	 * @param app The parent application.
 	 */
-	public GUIPlugin() {
+	public GUIPlugin(T app) {
+		super(app);
 		windowMap = new HashMap<>();
 	}
 

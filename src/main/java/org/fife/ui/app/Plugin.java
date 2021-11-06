@@ -9,6 +9,8 @@
  */
 package org.fife.ui.app;
 
+import org.fife.ui.app.icons.IconGroup;
+
 import javax.swing.Icon;
 
 
@@ -23,18 +25,24 @@ import javax.swing.Icon;
  *       window or in its own floating window.
  *   <li><code>StatusBarPlugin</code> is a widget added to the application's
  *       status bar.
- *   <li><code>WizardPlugin</code> is a series of dialogs that guides the
- *       user through some process.
  * </ul>
  *
+ * @param <T> The type of parent application.
  * @author Robert Futrell
  * @version 0.1
  * @see org.fife.ui.app.GUIApplication
  * @see org.fife.ui.app.GUIPlugin
  * @see org.fife.ui.app.StatusBarPlugin
- * @see org.fife.ui.app.WizardPlugin
  */
-public interface Plugin {
+public interface Plugin<T extends GUIApplication> {
+
+
+	/**
+	 * Returns the parent application this plugin is installed in.
+	 *
+	 * @return The parent application.
+	 */
+	T getApplication();
 
 
 	/**
@@ -43,7 +51,7 @@ public interface Plugin {
 	 *
 	 * @return The options panel.
 	 */
-	PluginOptionsDialogPanel<? extends Plugin> getOptionsDialogPanel();
+	PluginOptionsDialogPanel<? extends Plugin<T>> getOptionsDialogPanel();
 
 
 	/**
@@ -77,19 +85,6 @@ public interface Plugin {
 
 
 	/**
-	 * Returns the icon to display beside the name of this plugin in the
-	 * application's interface.
-	 *
-	 * @param darkLookAndFeel Whether the current Look and Feel is a light-on-dark theme.
-	 *        Plugins can use this to change their icon to better match the theme,
-	 *        or simply ignore it.
-	 * @return The icon for this plugin.  This value may be <code>null</code>
-	 *         to represent no icon.
-	 */
-	Icon getPluginIcon(boolean darkLookAndFeel);
-
-
-	/**
 	 * Returns the name of the plugin.
 	 *
 	 * @return The plugin name.
@@ -111,10 +106,9 @@ public interface Plugin {
 	 * should use this method to register any listeners to the GUI application
 	 * and do any other necessary setup.
 	 *
-	 * @param app The application to which this plugin was just added.
-	 * @see #uninstall
+	 * @see #uninstall()
 	 */
-	void install(AbstractPluggableGUIApplication<?> app);
+	void install();
 
 
 	/**
@@ -125,15 +119,22 @@ public interface Plugin {
 
 
 	/**
-	 * Called just before this <code>Plugin</code> is removed from an
+	 * Called just before this <code>Plugin</code> is removed from a
 	 * <code>GUIApplication</code>.  This gives the plugin a chance to clean
 	 * up any loose ends (kill any threads, close any files, remove listeners,
 	 * etc.).
 	 *
 	 * @return Whether the uninstall went cleanly.
-	 * @see #install
+	 * @see #install()
 	 */
 	boolean uninstall();
 
 
+	/**
+	 * Updates any icons used by this plugin for a new icon group.  This is
+	 * called whenever an application's icon group changes.
+	 *
+	 * @param iconGroup The new icon group.
+	 */
+	void updateIconsForNewIconGroup(IconGroup iconGroup);
 }

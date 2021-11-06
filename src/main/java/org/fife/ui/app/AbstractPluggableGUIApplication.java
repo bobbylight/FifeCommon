@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import org.fife.ui.SplashScreen;
+import org.fife.ui.app.icons.IconGroup;
 import org.fife.ui.app.prefs.AppPrefs;
 import org.fife.ui.dockablewindows.DockableWindow;
 import org.fife.ui.dockablewindows.DockableWindowConstants;
@@ -41,7 +42,7 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 	/**
 	 * List of installed plug-ins.
 	 */
-	private List<Plugin> pluginList;
+	private List<Plugin<?>> pluginList;
 
 	/**
 	 * The class loader used for plugin stuff.
@@ -73,7 +74,7 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 	 * @see #removePlugin
 	 * @see #isPluginLoadingComplete()
 	 */
-	public final void addPlugin(Plugin plugin) {
+	public final void addPlugin(Plugin<?> plugin) {
 
 		if (pluginList==null) {
 			pluginList = new ArrayList<>(1);
@@ -83,7 +84,7 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 		// If it's a GUI plugin, we'll physically add it to
 		// the GUI for you...
 		if (plugin instanceof GUIPlugin) {
-			GUIPlugin gp = (GUIPlugin)plugin;
+			GUIPlugin<?> gp = (GUIPlugin<?>)plugin;
 			((MainContentPanel)mainContentPanel).addPlugin(gp);
 		}
 		else if (plugin instanceof StatusBarPlugin) {
@@ -96,7 +97,7 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 		}
 
 		// And we let the plugin register any listeners, etc...
-		plugin.install(this);
+		plugin.install();
 
 		// But your subclass must do everything else.
 		handleInstallPlugin(plugin);
@@ -132,9 +133,9 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 	 * @see #removePlugin(Plugin)
 	 * @see #isPluginLoadingComplete()
 	 */
-	public Plugin[] getPlugins() {
+	public Plugin<?>[] getPlugins() {
 		int count = pluginList==null ? 0 : pluginList.size();
-		Plugin[] plugins = new Plugin[count];
+		Plugin<?>[] plugins = new Plugin[count];
 		if (count>0)
 			plugins = pluginList.toArray(plugins);
 		return plugins;
@@ -174,7 +175,7 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 	 *
 	 * @param plugin The plugin to install.
 	 */
-	protected void handleInstallPlugin(Plugin plugin) {
+	protected void handleInstallPlugin(Plugin<?> plugin) {
 	}
 
 
@@ -252,13 +253,13 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 	 * @return Whether the uninstall was successful.
 	 * @see #addPlugin(Plugin)
 	 */
-	public boolean removePlugin(Plugin plugin) {
+	public boolean removePlugin(Plugin<?> plugin) {
 
 		pluginList.remove(plugin);
 
 		// If it's a GUI plugin...
 		if (plugin instanceof GUIPlugin) {
-			GUIPlugin gp = (GUIPlugin)plugin;
+			GUIPlugin<?> gp = (GUIPlugin<?>)plugin;
 			return ((MainContentPanel)mainContentPanel).removePlugin(gp);
 		}
 
@@ -321,12 +322,24 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 
 
 	/**
+	 * Overridden to update the icons used by any plugins.
+	 *
+	 * @param iconGroup The new icon group.
+	 */
+	@Override
+	protected void updateIconsForNewIconGroup(IconGroup iconGroup) {
+		if (pluginList != null) {
+			pluginList.forEach(p -> p.updateIconsForNewIconGroup(iconGroup));
+		}
+	}
+
+	/**
 	 * A panel capable of using split panes to add "GUI plug-ins" to the
 	 * top, left, bottom, and right of some main content.
 	 */
 	private static final class MainContentPanel extends DockableWindowPanel {
 
-		public boolean addPlugin(GUIPlugin plugin) {
+		public boolean addPlugin(GUIPlugin<?> plugin) {
 			boolean success = true;
 			Iterator<DockableWindow> i = plugin.dockableWindowIterator();
 			while (i.hasNext()) {
@@ -338,7 +351,7 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 			return success;
 		}
 
-		public boolean removePlugin(GUIPlugin plugin) {
+		public boolean removePlugin(GUIPlugin<?> plugin) {
 			boolean success = true;
 			Iterator<DockableWindow> i = plugin.dockableWindowIterator();
 			while (i.hasNext()) {

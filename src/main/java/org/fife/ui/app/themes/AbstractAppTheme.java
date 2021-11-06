@@ -7,7 +7,6 @@ package org.fife.ui.app.themes;
 
 import org.fife.ui.app.AppTheme;
 
-import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,12 +16,14 @@ import java.util.Map;
  */
 public abstract class AbstractAppTheme implements AppTheme {
 
+	private final String id;
 	private final String name;
 	private final String lookAndFeel;
 	private final Map<String, Object> extraUiDefaults;
 
 
-	public AbstractAppTheme(String name, String laf) {
+	public AbstractAppTheme(String id, String name, String laf) {
+		this.id = id;
 		this.name = name;
 		this.lookAndFeel = laf;
 		this.extraUiDefaults = new HashMap<>();
@@ -37,6 +38,12 @@ public abstract class AbstractAppTheme implements AppTheme {
 	@Override
 	public Map<String, Object> getExtraUiDefaults() {
 		return new HashMap<>(extraUiDefaults);
+	}
+
+
+	@Override
+	public String getId() {
+		return id;
 	}
 
 

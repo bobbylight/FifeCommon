@@ -10,22 +10,19 @@
 package org.fife.ui.app;
 
 import org.fife.ui.OptionsDialogPanel;
-import org.fife.ui.UIUtil;
-
-import javax.swing.*;
 
 
 /**
  * Options panel specifically for a plugin.  This subclass is aware of the
  * plugin it represents, and can update it with its values.
  *
- * @param <T> The type of plugin this option panel is configuring.
+ * @param <P> The type of plugin this option panel is configuring.
  * @author Robert Futrell
  * @version 0.6
  */
-public abstract class PluginOptionsDialogPanel<T extends Plugin> extends OptionsDialogPanel {
+public abstract class PluginOptionsDialogPanel<P extends Plugin<?>> extends OptionsDialogPanel {
 
-	private T plugin;
+	private P plugin;
 
 
 	/**
@@ -33,7 +30,7 @@ public abstract class PluginOptionsDialogPanel<T extends Plugin> extends Options
 	 *
 	 * @param plugin The plugin whose options we're displaying.
 	 */
-	public PluginOptionsDialogPanel(T plugin) {
+	public PluginOptionsDialogPanel(P plugin) {
 		this(null, plugin);
 	}
 
@@ -44,13 +41,10 @@ public abstract class PluginOptionsDialogPanel<T extends Plugin> extends Options
 	 * @param name The name of the panel.
 	 * @param plugin The plugin whose options we're displaying.
 	 */
-	public PluginOptionsDialogPanel(String name, T plugin) {
-
+	public PluginOptionsDialogPanel(String name, P plugin) {
 		super(name);
 		this.plugin = plugin;
-
-		boolean isDarkLookAndFeel = UIUtil.isLightForeground(new JLabel().getForeground());
-		setIcon(plugin.getPluginIcon(isDarkLookAndFeel));
+		setIcon(plugin.getPluginIcon());
 	}
 
 
@@ -59,7 +53,7 @@ public abstract class PluginOptionsDialogPanel<T extends Plugin> extends Options
 	 *
 	 * @return The plugin.
 	 */
-	public T getPlugin() {
+	public P getPlugin() {
 		return plugin;
 	}
 

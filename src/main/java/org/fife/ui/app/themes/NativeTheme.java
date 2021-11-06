@@ -17,6 +17,11 @@ import javax.swing.*;
 public class NativeTheme extends AbstractAppTheme {
 
 	/**
+	 * The ID for this theme.
+	 */
+	public static final String ID = "native";
+
+	/**
 	 * The display name for this theme.
 	 */
 	public static final String NAME;
@@ -39,6 +44,6 @@ public class NativeTheme extends AbstractAppTheme {
 
 
 	public NativeTheme() {
-		super(NAME, UIManager.getSystemLookAndFeelClassName());
+		super(ID, NAME, UIManager.getSystemLookAndFeelClassName());
 	}
 }

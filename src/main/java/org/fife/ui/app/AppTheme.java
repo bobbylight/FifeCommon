@@ -26,6 +26,14 @@ public interface AppTheme {
 	Map<String, Object> getExtraUiDefaults();
 
 	/**
+	 * Returns a unique ID for this theme.  This is used for internal purposes.
+	 *
+	 * @return The unique ID for this theme.
+	 * @see #getName()
+	 */
+	String getId();
+
+	/**
 	 * Returns the class name for the {@code LookAndFeel} to install.
 	 *
 	 * @return The look and feel.
@@ -36,6 +44,7 @@ public interface AppTheme {
 	 * Returns a display name for this theme.
 	 *
 	 * @return A display name for this theme.
+	 * @see #getId()
 	 */
 	String getName();
 }

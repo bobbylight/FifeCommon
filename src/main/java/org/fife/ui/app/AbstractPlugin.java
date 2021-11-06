@@ -10,8 +10,6 @@
  */
 package org.fife.ui.app;
 
-import org.fife.ui.UIUtil;
-
 import javax.swing.*;
 
 
@@ -19,17 +17,20 @@ import javax.swing.*;
  * Base class for <code>Plugin</code> implementations that don't need to
  * extend a specific class.
  *
+ * @param <T> The type of parent application.
  * @author Robert Futrell
  * @version 1.0
  * @see StatusBarPlugin
  * @see GUIPlugin
  */
-public abstract class AbstractPlugin implements Plugin {
+public abstract class AbstractPlugin<T extends GUIApplication> implements Plugin<T> {
 
+	private T application;
 	private String parentOptionPanelID;
 
 
-	protected AbstractPlugin() {
+	protected AbstractPlugin(T app) {
+		this.application = app;
 		UIManager.addPropertyChangeListener(e -> {
 			String property = e.getPropertyName();
 			if ("lookAndFeel".equals(property)) {
@@ -40,14 +41,14 @@ public abstract class AbstractPlugin implements Plugin {
 
 
 	@Override
-	public String getOptionsDialogPanelParentPanelID() {
-		return parentOptionPanelID;
+	public T getApplication() {
+		return application;
 	}
 
 
 	@Override
-	public Icon getPluginIcon() {
-		return getPluginIcon(UIUtil.isDarkLookAndFeel());
+	public String getOptionsDialogPanelParentPanelID() {
+		return parentOptionPanelID;
 	}
 
 

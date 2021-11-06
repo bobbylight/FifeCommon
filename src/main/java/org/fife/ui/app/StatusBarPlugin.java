@@ -10,31 +10,35 @@
 package org.fife.ui.app;
 
 import org.fife.ui.StatusBarPanel;
-import org.fife.ui.UIUtil;
-
-import javax.swing.*;
 
 
 /**
  * A plugin representing a component in a status bar.
  *
+ * @param <T> The type of parent application.
  * @author Robert Futrell
  * @version 1.0
  */
-public abstract class StatusBarPlugin extends StatusBarPanel implements Plugin {
+public abstract class StatusBarPlugin<T extends GUIApplication> extends StatusBarPanel implements Plugin<T> {
 
+	private T app;
 	private String parentOptionPanelID;
+
+
+	public StatusBarPlugin(T app) {
+		this.app = app;
+	}
+
+
+	@Override
+	public T getApplication() {
+		return app;
+	}
 
 
 	@Override
 	public String getOptionsDialogPanelParentPanelID() {
 		return parentOptionPanelID;
-	}
-
-
-	@Override
-	public Icon getPluginIcon() {
-		return getPluginIcon(UIUtil.isDarkLookAndFeel());
 	}
 
 

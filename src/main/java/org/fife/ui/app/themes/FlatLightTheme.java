@@ -11,10 +11,18 @@ package org.fife.ui.app.themes;
  */
 public class FlatLightTheme extends AbstractAppTheme {
 
+	/**
+	 * The ID for this theme.
+	 */
+	public static final String ID = "flatlaf-light";
+
+	/**
+	 * The display name for this theme.
+	 */
 	public static final String NAME = "Flat Light";
 
 	public FlatLightTheme() {
-		super(NAME, "com.formdev.flatlaf.FlatLightLaf");
+		super(ID, NAME, "com.formdev.flatlaf.FlatLightLaf");
 	}
 
 }

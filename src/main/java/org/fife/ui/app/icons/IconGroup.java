@@ -6,6 +6,7 @@
 package org.fife.ui.app.icons;
 
 import javax.swing.*;
+import java.awt.*;
 
 
 /**
@@ -40,6 +41,20 @@ public interface IconGroup {
 
 
 	/**
+	 * Returns the image for an icon from this icon group with the specified name.
+	 *
+	 * @param name The name of the icon.  For example, if you want the image
+	 * specified in <code>new.gif</code>, this value should be
+	 * <code>new</code>.
+	 * @return The image, or <code>null</code> if it could not be found or
+	 *         loaded.
+	 * @see #getIcon(String)
+	 * @see #getLargeIcon(String)
+	 */
+	Image getImage(String name);
+
+
+	/**
 	 * Returns the large icon from this icon group with the specified name.
 	 * If this icon group does not have large icons, <code>null</code> is
 	 * returned.
@@ -52,6 +67,22 @@ public interface IconGroup {
 	 * @see #getIcon(String)
 	 */
 	Icon getLargeIcon(String name);
+
+
+	/**
+	 * Returns the large image from this icon group with the specified name.
+	 * If this icon group does not have large images, <code>null</code> is
+	 * returned.
+	 *
+	 * @param name The name of the icon.  For example, if you want the image
+	 *        specified in <code>new.gif</code>, this value should be
+	 *        <code>new</code>.
+	 * @return The image, or <code>null</code> if it could not be found or
+	 *         loaded.
+	 * @see #getImage(String)
+	 * @see #getLargeIcon(String)
+	 */
+	Image getLargeImage(String name);
 
 
 	/**

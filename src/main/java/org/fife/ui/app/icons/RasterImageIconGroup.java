@@ -89,7 +89,7 @@ public class RasterImageIconGroup extends AbstractIconGroup {
 
 
 	@Override
-	protected Icon getIconImpl(String iconFullPath) {
+	protected ImageIcon getIconImpl(String iconFullPath) {
 		try {
 			if (jarFile==null) {
 				// First see if it's on our classpath (e.g. an icon in
@@ -106,7 +106,7 @@ public class RasterImageIconGroup extends AbstractIconGroup {
 			else { // If it's in a Jar, create a URL and grab it.
 				URL url = new URL("jar:file:///" +
 									jarFile + "!/" + iconFullPath);
-				Icon icon = new ImageIcon(url);
+				ImageIcon icon = new ImageIcon(url);
 				// URLs that are valid but simply don't exist can create -1x-1 ImageIcons
 				return icon.getIconWidth() == -1 ? null : icon;
 			}

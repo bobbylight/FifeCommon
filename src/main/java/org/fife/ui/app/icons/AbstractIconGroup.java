@@ -6,6 +6,9 @@
 package org.fife.ui.app.icons;
 
 import javax.swing.*;
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -22,6 +25,8 @@ abstract class AbstractIconGroup implements IconGroup {
 	protected String extension;
 	protected String name;
 	protected String jarFile;
+
+	private Map<String, ImageIcon> cache;
 
 	private static final String DEFAULT_EXTENSION	= "gif";
 
@@ -89,10 +94,11 @@ abstract class AbstractIconGroup implements IconGroup {
 		if (path!=null && path.length()>0 && !path.endsWith("/")) {
 			this.path += "/";
 		}
-		this.separateLargeIcons = (largeIconSubDir!=null);
+		this.separateLargeIcons = largeIconSubDir != null;
 		this.largeIconSubDir = largeIconSubDir;
 		this.extension = extension!=null ? extension : DEFAULT_EXTENSION;
 		this.jarFile = jar;
+		cache = new HashMap<>();
 	}
 
 
@@ -125,7 +131,7 @@ abstract class AbstractIconGroup implements IconGroup {
 	@Override
 	public Icon getIcon(String name) {
 
-		Icon icon = getIconImpl(path + name + "." + extension);
+		Icon icon = getIconAndCache(path + name + "." + extension);
 
 		// JDK 6.0 b74 returns icons with width/height==-1 in certain error
 		// cases (new ImageIcon(url) where url is not resolved?).  We'll
@@ -136,6 +142,35 @@ abstract class AbstractIconGroup implements IconGroup {
 			icon = null;
 		}
 		return icon;
+	}
+
+
+	/**
+	 * Fetches an icon from the cache, loading it if necessary.
+	 *
+	 * @param iconFullPath The icon to fetch, loading it into the cache
+	 *        if necessary.
+	 * @return The icon, or {@code null} if it does not exist.
+	 */
+	private ImageIcon getIconAndCache(String iconFullPath) {
+		return cache.computeIfAbsent(iconFullPath, this::getIconImpl);
+	}
+
+
+	@Override
+	public Image getImage(String name) {
+
+		ImageIcon icon = getIconAndCache(path + name + "." + extension);
+
+		// JDK 6.0 b74 returns icons with width/height==-1 in certain error
+		// cases (new ImageIcon(url) where url is not resolved?).  We'll
+		// just return null in this case as Swing AbstractButtons throw
+		// exceptions when expected to paint an icon with width or height
+		// is less than 1.
+		if (icon == null || icon.getIconWidth() < 1 || icon.getIconHeight() < 1) {
+			return null;
+		}
+		return icon.getImage();
 	}
 
 
@@ -152,13 +187,13 @@ abstract class AbstractIconGroup implements IconGroup {
 	 * @return The icon.  This method should return {@code null} if an error
 	 *         occurs.
 	 */
-	protected abstract Icon getIconImpl(String iconFullPath);
+	protected abstract ImageIcon getIconImpl(String iconFullPath);
 
 
 	@Override
 	public Icon getLargeIcon(String name) {
 
-		Icon icon = getIconImpl(path + largeIconSubDir + "/" +
+		Icon icon = getIconAndCache(path + largeIconSubDir + "/" +
 			name + "." + extension);
 
 		// JDK 6.0 b74 returns icons with width/height==-1 in certain error
@@ -171,6 +206,24 @@ abstract class AbstractIconGroup implements IconGroup {
 		}
 
 		return icon;
+	}
+
+
+	@Override
+	public Image getLargeImage(String name) {
+
+		ImageIcon icon = getIconAndCache(path + largeIconSubDir + "/" +
+			name + "." + extension);
+
+		// JDK 6.0 b74 returns icons with width/height==-1 in certain error
+		// cases (new ImageIcon(url) where url is not resolved?).  We'll
+		// just return null in this case as Swing AbstractButtons throw
+		// exceptions when expected to paint an icon with width or height
+		// is less than 1.
+		if (icon == null || icon.getIconWidth() < 1 || icon.getIconHeight() < 1) {
+			return null;
+		}
+		return icon.getImage();
 	}
 
 

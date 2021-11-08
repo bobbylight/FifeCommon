@@ -30,7 +30,7 @@ public class SvgIconGroup extends AbstractIconGroup {
 
 
 	@Override
-	protected Icon getIconImpl(String iconFullPath) {
+	protected ImageIcon getIconImpl(String iconFullPath) {
 		try (InputStream svg = new URL("jar:file:///" +
 			jarFile + "!/" + iconFullPath).openStream()) {
 			BufferedImage image = ImageTranscodingUtil.rasterize(

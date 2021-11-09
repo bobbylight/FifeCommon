@@ -30,11 +30,11 @@ public class SvgIconGroup extends AbstractIconGroup {
 
 
 	@Override
-	protected ImageIcon getIconImpl(String iconFullPath) {
+	protected ImageIcon getIconImpl(String iconFullPath, int w, int h) {
 		try (InputStream svg = new URL("jar:file:///" +
 			jarFile + "!/" + iconFullPath).openStream()) {
 			BufferedImage image = ImageTranscodingUtil.rasterize(
-				iconFullPath, svg, 16, 16);
+				iconFullPath, svg, w, h);
 			return new ImageIcon(image);
 		} catch (IOException ioe) {
 			// If an icon doesn't exist in this group, just return no icon.

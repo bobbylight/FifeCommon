@@ -89,7 +89,7 @@ public class RasterImageIconGroup extends AbstractIconGroup {
 
 
 	@Override
-	protected ImageIcon getIconImpl(String iconFullPath) {
+	protected ImageIcon getIconImpl(String iconFullPath, int w, int h) {
 		try {
 			if (jarFile==null) {
 				// First see if it's on our classpath (e.g. an icon in

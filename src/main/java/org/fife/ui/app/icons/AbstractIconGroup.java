@@ -30,6 +30,9 @@ abstract class AbstractIconGroup implements IconGroup {
 
 	private static final String DEFAULT_EXTENSION	= "gif";
 
+	private static final int DEFAULT_IMAGE_SIZE = 16;
+	private static final int DEFAULT_LARGE_IMAGE_SIZE = 32;
+
 
 	/**
 	 * Creates an icon set without "large versions" of the icons.
@@ -130,8 +133,14 @@ abstract class AbstractIconGroup implements IconGroup {
 
 	@Override
 	public Icon getIcon(String name) {
+		return getIcon(name, DEFAULT_IMAGE_SIZE, DEFAULT_IMAGE_SIZE);
+	}
 
-		Icon icon = getIconAndCache(path + name + "." + extension);
+
+	@Override
+	public Icon getIcon(String name, int w, int h) {
+
+		Icon icon = getIconAndCache(path + name + "." + extension, w, h);
 
 		// JDK 6.0 b74 returns icons with width/height==-1 in certain error
 		// cases (new ImageIcon(url) where url is not resolved?).  We'll
@@ -150,27 +159,13 @@ abstract class AbstractIconGroup implements IconGroup {
 	 *
 	 * @param iconFullPath The icon to fetch, loading it into the cache
 	 *        if necessary.
+	 * @param w The icon width.
+	 * @param h The icon height.
 	 * @return The icon, or {@code null} if it does not exist.
 	 */
-	private ImageIcon getIconAndCache(String iconFullPath) {
-		return cache.computeIfAbsent(iconFullPath, this::getIconImpl);
-	}
-
-
-	@Override
-	public Image getImage(String name) {
-
-		ImageIcon icon = getIconAndCache(path + name + "." + extension);
-
-		// JDK 6.0 b74 returns icons with width/height==-1 in certain error
-		// cases (new ImageIcon(url) where url is not resolved?).  We'll
-		// just return null in this case as Swing AbstractButtons throw
-		// exceptions when expected to paint an icon with width or height
-		// is less than 1.
-		if (icon == null || icon.getIconWidth() < 1 || icon.getIconHeight() < 1) {
-			return null;
-		}
-		return icon.getImage();
+	private ImageIcon getIconAndCache(String iconFullPath, int w, int h) {
+		String key = iconFullPath + "-" + w + "-" + h;
+		return cache.computeIfAbsent(key, k -> getIconImpl(iconFullPath, w, h));
 	}
 
 
@@ -184,17 +179,42 @@ abstract class AbstractIconGroup implements IconGroup {
 	 * @param iconFullPath The full path to the icon, either on the local
 	 *        file system or in the Jar file, if this icon group represents
 	 *        icons in a Jar file.
+	 * @param w The icon width.
+	 * @param h The icon height.
 	 * @return The icon.  This method should return {@code null} if an error
 	 *         occurs.
 	 */
-	protected abstract ImageIcon getIconImpl(String iconFullPath);
+	protected abstract ImageIcon getIconImpl(String iconFullPath, int w, int h);
+
+
+	@Override
+	public Image getImage(String name) {
+		return getImage(name, DEFAULT_IMAGE_SIZE, DEFAULT_IMAGE_SIZE);
+	}
+
+
+	@Override
+	public Image getImage(String name, int w, int h) {
+
+		ImageIcon icon = getIconAndCache(path + name + "." + extension, w, h);
+
+		// JDK 6.0 b74 returns icons with width/height==-1 in certain error
+		// cases (new ImageIcon(url) where url is not resolved?).  We'll
+		// just return null in this case as Swing AbstractButtons throw
+		// exceptions when expected to paint an icon with width or height
+		// is less than 1.
+		if (icon == null || icon.getIconWidth() < 1 || icon.getIconHeight() < 1) {
+			return null;
+		}
+		return icon.getImage();
+	}
 
 
 	@Override
 	public Icon getLargeIcon(String name) {
 
 		Icon icon = getIconAndCache(path + largeIconSubDir + "/" +
-			name + "." + extension);
+			name + "." + extension, DEFAULT_LARGE_IMAGE_SIZE, DEFAULT_LARGE_IMAGE_SIZE);
 
 		// JDK 6.0 b74 returns icons with width/height==-1 in certain error
 		// cases (new ImageIcon(url) where url is not resolved?).  We'll
@@ -213,7 +233,7 @@ abstract class AbstractIconGroup implements IconGroup {
 	public Image getLargeImage(String name) {
 
 		ImageIcon icon = getIconAndCache(path + largeIconSubDir + "/" +
-			name + "." + extension);
+			name + "." + extension, DEFAULT_LARGE_IMAGE_SIZE, DEFAULT_LARGE_IMAGE_SIZE);
 
 		// JDK 6.0 b74 returns icons with width/height==-1 in certain error
 		// cases (new ImageIcon(url) where url is not resolved?).  We'll

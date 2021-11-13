@@ -24,12 +24,12 @@ abstract class AbstractIconGroup implements IconGroup {
 	protected String largeIconSubDir;
 	protected String extension;
 	protected String name;
-	protected String jarFile;
 
 	private Map<String, ImageIcon> cache;
 
 	private static final String DEFAULT_EXTENSION	= "gif";
 
+	// TODO: Determine default sizes based on screen resolution
 	private static final int DEFAULT_IMAGE_SIZE = 16;
 	private static final int DEFAULT_LARGE_IMAGE_SIZE = 32;
 
@@ -38,7 +38,9 @@ abstract class AbstractIconGroup implements IconGroup {
 	 * Creates an icon set without "large versions" of the icons.
 	 *
 	 * @param name The name of the icon group.
-	 * @param path The directory containing the icon group.
+	 * @param path The root of the icon resources, or the directory
+	 *        containing the icon files if they're on the local file system
+	 *        instead of in the application classpath.
 	 */
 	AbstractIconGroup(String name, String path) {
 		this(name, path, null);
@@ -49,7 +51,9 @@ abstract class AbstractIconGroup implements IconGroup {
 	 * Constructor.
 	 *
 	 * @param name The name of the icon group.
-	 * @param path The directory containing the icon group.
+	 * @param path The root of the icon resources, or the directory
+	 *        containing the icon files if they're on the local file system
+	 *        instead of in the application classpath.
 	 * @param largeIconSubDir The subdirectory containing "large versions" of
 	 *        the icons.  If no subdirectory exists, pass in <code>null</code>.
 	 */
@@ -58,40 +62,8 @@ abstract class AbstractIconGroup implements IconGroup {
 	}
 
 
-	/**
-	 * Constructor.
-	 *
-	 * @param name The name of the icon group.
-	 * @param path The directory containing the icon group.
-	 * @param largeIconSubDir The subdirectory containing "large versions" of
-	 *        the icons.  If no subdirectory exists, pass in <code>null</code>.
-	 * @param extension The extension of the icons (one of <code>gif</code>,
-	 *        <code>jpg</code>, or <code>png</code>).
-	 */
 	AbstractIconGroup(String name, String path, String largeIconSubDir,
                              String extension) {
-		this(name, path, largeIconSubDir, extension, null);
-	}
-
-
-	/**
-	 * Constructor.
-	 *
-	 * @param name The name of the icon group.
-	 * @param path The directory containing the icon group.
-	 * @param largeIconSubDir The subdirectory containing "large versions" of
-	 *        the icons.  If no subdirectory exists, pass in <code>null</code>.
-	 * @param extension The extension of the icons (one of <code>gif</code>,
-	 *        <code>jpg</code>, or <code>png</code>).
-	 * @param jar The Jar file containing the icons, or <code>null</code> if
-	 *        the icons are on the local file system.  If a Jar is specified,
-	 *        the value of <code>path</code> must be a path in the Jar file.
-	 *        If this is not a valid Jar file, then no Jar file will be used,
-	 *        meaning all icons returned from this icon group will be
-	 *        <code>null</code>.
-	 */
-	AbstractIconGroup(String name, String path, String largeIconSubDir,
-                             String extension, String jar) {
 		this.name = name;
 		this.path = path;
 		if (path!=null && path.length()>0 && !path.endsWith("/")) {
@@ -100,7 +72,6 @@ abstract class AbstractIconGroup implements IconGroup {
 		this.separateLargeIcons = largeIconSubDir != null;
 		this.largeIconSubDir = largeIconSubDir;
 		this.extension = extension!=null ? extension : DEFAULT_EXTENSION;
-		this.jarFile = jar;
 		cache = new HashMap<>();
 	}
 
@@ -176,9 +147,7 @@ abstract class AbstractIconGroup implements IconGroup {
 	 * implementations, for example, adding the ability to load SVG
 	 * icons.
 	 *
-	 * @param iconFullPath The full path to the icon, either on the local
-	 *        file system or in the Jar file, if this icon group represents
-	 *        icons in a Jar file.
+	 * @param iconFullPath The full path of the icon resource.
 	 * @param w The icon width.
 	 * @param h The icon height.
 	 * @return The icon.  This method should return {@code null} if an error

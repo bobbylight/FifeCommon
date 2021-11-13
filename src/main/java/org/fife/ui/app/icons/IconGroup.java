@@ -13,11 +13,10 @@ import java.awt.*;
  * This interface encapsulates the location, properties, etc. of an icon set used
  * throughout an application.  If the location of the icon
  * group is invalid in any way, any attempt to retrieve icons from an icon
- * group will return {@code null}.
+ * group will return {@code null}.<p>
  *
- * An icon group can logically refer to any set of icons.  You will primarily fetch
- * icons via the {@link #getIcon(String)} method, which fetches an icon at the
- * specified path from the icon group's jar.
+ * An icon group can logically refer to any set of icons.  You can fetch them
+ * as either icons or as raw images.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -29,6 +28,9 @@ public interface IconGroup {
 
 	/**
 	 * Returns the icon from this icon group with the specified name.
+	 * The icon returned will be a "standard" size for the current desktop
+	 * environment (e.g. 16x16 for most desktops, or larger for 4k and Retina
+	 * displays).
 	 *
 	 * @param name The name of the icon.  For example, if you want the icon
 	 * specified in <code>new.gif</code>, this value should be
@@ -36,6 +38,7 @@ public interface IconGroup {
 	 * @return The icon, or <code>null</code> if it could not be found or
 	 *         loaded.
 	 * @see #getLargeIcon(String)
+	 * @see #getIcon(String, int, int)
 	 */
 	Icon getIcon(String name);
 
@@ -50,6 +53,7 @@ public interface IconGroup {
 	 * @param h The icon height.
 	 * @return The icon, or <code>null</code> if it could not be found or
 	 *         loaded.
+	 * @see #getIcon(String)
 	 * @see #getLargeIcon(String)
 	 */
 	Icon getIcon(String name, int w, int h);
@@ -57,12 +61,16 @@ public interface IconGroup {
 
 	/**
 	 * Returns the image for an icon from this icon group with the specified name.
+	 * The image returned will be a "standard" size for the current desktop
+	 * environment (e.g. 16x16 for most desktops, or larger for 4k and Retina
+	 * displays).
 	 *
 	 * @param name The name of the icon.  For example, if you want the image
 	 * specified in <code>new.gif</code>, this value should be
 	 * <code>new</code>.
 	 * @return The image, or <code>null</code> if it could not be found or
 	 *         loaded.
+	 * @see #getImage(String, int, int)
 	 * @see #getIcon(String)
 	 * @see #getLargeIcon(String)
 	 */
@@ -79,6 +87,7 @@ public interface IconGroup {
 	 *         loaded.
 	 * @param w The icon width.
 	 * @param h The icon height.
+	 * @see #getImage(String)
 	 * @see #getIcon(String)
 	 * @see #getLargeIcon(String)
 	 */

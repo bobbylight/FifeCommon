@@ -62,54 +62,31 @@ public class RasterImageIconGroup extends AbstractIconGroup {
 	 */
 	public RasterImageIconGroup(String name, String path, String largeIconSubDir,
 								String extension) {
-		this(name, path, largeIconSubDir, extension, null);
-	}
-
-
-	/**
-	 * Constructor.
-	 *
-	 * @param name The name of the icon group.
-	 * @param path The directory containing the icon group.
-	 * @param largeIconSubDir The subdirectory containing "large versions" of
-	 *        the icons.  If no subdirectory exists, pass in <code>null</code>.
-	 * @param extension The extension of the icons (one of <code>gif</code>,
-	 *        <code>jpg</code>, or <code>png</code>).
-	 * @param jar The Jar file containing the icons, or <code>null</code> if
-	 *        the icons are on the local file system.  If a Jar is specified,
-	 *        the value of <code>path</code> must be a path in the Jar file.
-	 *        If this is not a valid Jar file, then no Jar file will be used,
-	 *        meaning all icons returned from this icon group will be
-	 *        <code>null</code>.
-	 */
-	public RasterImageIconGroup(String name, String path, String largeIconSubDir,
-								String extension, String jar) {
-		super(name, path, largeIconSubDir, extension, jar);
+		super(name, path, largeIconSubDir, extension);
 	}
 
 
 	@Override
 	protected ImageIcon getIconImpl(String iconFullPath, int w, int h) {
+
 		try {
-			if (jarFile==null) {
-				// First see if it's on our classpath (e.g. an icon in
-				// RText.jar, so we'd need to use the class loader).
-				URL url = getClass().getClassLoader().
-										getResource(iconFullPath);
-				if (url!=null) {
-					return new ImageIcon(url);
-				}
-				// If not, see if it's a plain file on disk.
-				BufferedImage image = ImageIO.read(new File(iconFullPath));
-				return image!=null ? new ImageIcon(image) : null;
+
+			// First see if it's on our classpath
+			URL url = getClass().getClassLoader().
+									getResource(iconFullPath);
+			if (url!=null) {
+				return new ImageIcon(url);
 			}
-			else { // If it's in a Jar, create a URL and grab it.
-				URL url = new URL("jar:file:///" +
-									jarFile + "!/" + iconFullPath);
-				ImageIcon icon = new ImageIcon(url);
-				// URLs that are valid but simply don't exist can create -1x-1 ImageIcons
-				return icon.getIconWidth() == -1 ? null : icon;
+
+			// If not, see if it's a plain file on disk
+			File file = new File(iconFullPath);
+			if (file.isFile()) {
+				BufferedImage image = ImageIO.read(file);
+				return image != null ? new ImageIcon(image) : null;
 			}
+
+			return null;
+
 		} catch (AccessControlException | IOException ace) {
 			return null;
 		}

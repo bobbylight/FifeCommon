@@ -10,34 +10,52 @@ import org.fife.ui.app.AbstractGUIApplication;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.security.AccessControlException;
 
 
 /**
  * An icon group consisting of SVG icons.
+ *
+ * @author Robert Futrell
+ * @version 1.0
+ * @see RasterImageIconGroup
  */
 public class SvgIconGroup extends AbstractIconGroup {
 
-	private String jarFile;
 
-
-	public SvgIconGroup(AbstractGUIApplication<?> owner, String name, String jarFile) {
-		super(name, "", null, "svg", jarFile);
-		this.jarFile = owner.getInstallLocation() + '/' + jarFile;
+	public SvgIconGroup(AbstractGUIApplication<?> owner, String name, String path) {
+		super(name, path, null, "svg");
 	}
 
 
 	@Override
 	protected ImageIcon getIconImpl(String iconFullPath, int w, int h) {
-		try (InputStream svg = new URL("jar:file:///" +
-			jarFile + "!/" + iconFullPath).openStream()) {
-			BufferedImage image = ImageTranscodingUtil.rasterize(
-				iconFullPath, svg, w, h);
-			return new ImageIcon(image);
-		} catch (IOException ioe) {
-			// If an icon doesn't exist in this group, just return no icon.
+
+		try {
+
+			// First see if it's on our classpath.
+			// If not, see if it's a plain file on disk
+			InputStream in = getClass().getClassLoader().
+				getResourceAsStream(iconFullPath);
+			if (in == null) {
+				File file = new File(iconFullPath);
+				if (file.isFile()) {
+					in = new FileInputStream(file);
+				}
+			}
+
+			if (in != null) {
+				BufferedImage image = ImageTranscodingUtil.rasterize(
+					iconFullPath, in, w, h);
+				return new ImageIcon(image);
+			}
+			return null;
+
+		} catch (AccessControlException | IOException ace) {
 			return null;
 		}
 	}

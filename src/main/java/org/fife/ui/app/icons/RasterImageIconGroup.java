@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.security.AccessControlException;
+import java.util.Locale;
 
 
 /**
@@ -76,6 +77,16 @@ public class RasterImageIconGroup extends AbstractIconGroup {
 									getResource(iconFullPath);
 			if (url!=null) {
 				return new ImageIcon(url);
+			}
+
+			// If not found, always try with PNG (hack)
+			if (!iconFullPath.toLowerCase(Locale.ROOT).endsWith(".png")) {
+				String pngFullPath = iconFullPath.
+					replaceAll("\\." + extension + "$", ".png");
+				url = getClass().getClassLoader().getResource(pngFullPath);
+				if (url!=null) {
+					return new ImageIcon(url);
+				}
 			}
 
 			// If not, see if it's a plain file on disk

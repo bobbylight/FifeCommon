@@ -10,12 +10,7 @@
  */
 package org.fife.ui.app;
 
-import java.awt.BorderLayout;
-import java.awt.ComponentOrientation;
-import java.awt.Container;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.Frame;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
@@ -126,7 +121,10 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 	 * @return The text component.
 	 */
 	protected JTextComponent createTextComponent() {
-		return new JTextArea(12, 25);
+		JTextArea textArea = new JTextArea(12, 25);
+		Font origFont = textArea.getFont();
+		textArea.setFont(new Font(Font.MONOSPACED, origFont.getStyle(), origFont.getSize()));
+		return textArea;
 	}
 
 
@@ -201,7 +199,7 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 			// trying to do stuff like syntax highlight the stack trace and
 			// failing during the attempt...
 			// Can't call createTextComponent as it was likely overridden.
-			textArea = new JTextArea(15, 50);
+			textArea = new JTextArea(15, 25);
 			textArea.setText(stackTraceText.toString());
 		}
 		textArea.setCaretPosition(0);

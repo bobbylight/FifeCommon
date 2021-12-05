@@ -37,8 +37,8 @@ public interface IconGroup {
 	 * <code>new</code>.
 	 * @return The icon, or <code>null</code> if it could not be found or
 	 *         loaded.
-	 * @see #getLargeIcon(String)
 	 * @see #getIcon(String, int, int)
+	 * @see #getNativeIcon(String)
 	 */
 	Icon getIcon(String name);
 
@@ -54,7 +54,7 @@ public interface IconGroup {
 	 * @return The icon, or <code>null</code> if it could not be found or
 	 *         loaded.
 	 * @see #getIcon(String)
-	 * @see #getLargeIcon(String)
+	 * @see #getNativeIcon(String, int, int)
 	 */
 	Icon getIcon(String name, int w, int h);
 
@@ -72,7 +72,7 @@ public interface IconGroup {
 	 *         loaded.
 	 * @see #getImage(String, int, int)
 	 * @see #getIcon(String)
-	 * @see #getLargeIcon(String)
+	 * @see #getNativeImage(String)
 	 */
 	Image getImage(String name);
 
@@ -89,40 +89,9 @@ public interface IconGroup {
 	 * @param h The icon height.
 	 * @see #getImage(String)
 	 * @see #getIcon(String)
-	 * @see #getLargeIcon(String)
+	 * @see #getNativeImage(String, int, int)
 	 */
 	Image getImage(String name, int w, int h);
-
-
-	/**
-	 * Returns the large icon from this icon group with the specified name.
-	 * If this icon group does not have large icons, <code>null</code> is
-	 * returned.
-	 *
-	 * @param name The name of the icon.  For example, if you want the icon
-	 *        specified in <code>new.gif</code>, this value should be
-	 *        <code>new</code>.
-	 * @return The icon, or <code>null</code> if it could not be found or
-	 *         loaded.
-	 * @see #getIcon(String)
-	 */
-	Icon getLargeIcon(String name);
-
-
-	/**
-	 * Returns the large image from this icon group with the specified name.
-	 * If this icon group does not have large images, <code>null</code> is
-	 * returned.
-	 *
-	 * @param name The name of the icon.  For example, if you want the image
-	 *        specified in <code>new.gif</code>, this value should be
-	 *        <code>new</code>.
-	 * @return The image, or <code>null</code> if it could not be found or
-	 *         loaded.
-	 * @see #getImage(String)
-	 * @see #getLargeIcon(String)
-	 */
-	Image getLargeImage(String name);
 
 
 	/**
@@ -134,13 +103,77 @@ public interface IconGroup {
 
 
 	/**
-	 * Returns whether a separate directory for the large icons exists.
+	 * Returns a version of an icon to use in "native" UI components.
+	 * This is primarily used to determine icons in the Mac OS native
+	 * menu bar, since it may not match the application's theme.<p>
 	 *
-	 * @return Whether a directory containing "large versions" of the icons
-	 *         exists.
-	 * @see #getLargeIcon(String)
+	 * Note this may be the same icon as that returned by
+	 * {@code getIcon(String)} if this icon group doesn't have icons
+	 * specifically for native components.
+	 *
+	 * @param name The icon to load.
+	 * @return The icon, or <code>null</code> if it could not be found or
+	 *         loaded.
+	 * @see #getIcon(String)
 	 */
-	boolean hasSeparateLargeIcons();
+	Icon getNativeIcon(String name);
+
+
+	/**
+	 * Returns a version of an icon to use in "native" UI components.
+	 * This is primarily used to determine icons in the Mac OS native
+	 * menu bar, since it may not match the application's theme.<p>
+	 *
+	 * Note this may be the same icon as that returned by
+	 * {@code getIcon(String, int, int)} if this icon group doesn't
+	 * have icons specifically for native components.
+	 *
+	 * @param name The icon to load.
+	 * @param w The width of the icon to load.
+	 * @param h The height of the icon to load.
+	 * @return The icon, or <code>null</code> if it could not be found or
+	 *         loaded.
+	 * @see #getIcon(String, int, int)
+	 */
+	Icon getNativeIcon(String name, int w, int h);
+
+
+
+
+	/**
+	 * Returns a version of an image to use in "native" UI components.
+	 * This is primarily used to determine icons in the Mac OS native
+	 * menu bar, since it may not match the application's theme.<p>
+	 *
+	 * Note this may be the same image as that returned by
+	 * {@code getImage(String)} if this icon group doesn't have icons
+	 * specifically for native components.
+	 *
+	 * @param name The image to load.
+	 * @return The image, or <code>null</code> if it could not be found or
+	 *         loaded.
+	 * @see #getImage(String)
+	 */
+	Image getNativeImage(String name);
+
+
+	/**
+	 * Returns a version of an image to use in "native" UI components.
+	 * This is primarily used to determine icons in the Mac OS native
+	 * menu bar, since it may not match the application's theme.<p>
+	 *
+	 * Note this may be the same image as that returned by
+	 * {@code getImage(String)} if this icon group doesn't have icons
+	 * specifically for native components.
+	 *
+	 * @param name The image to load.
+	 * @param w The width of the image to load.
+	 * @param h The height of the imagae to load.
+	 * @return The image, or <code>null</code> if it could not be found or
+	 *         loaded.
+	 * @see #getImage(String, int, int)
+	 */
+	Image getNativeImage(String name, int w, int h);
 
 
 }

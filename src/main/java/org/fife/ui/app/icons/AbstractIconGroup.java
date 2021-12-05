@@ -20,8 +20,7 @@ import java.util.Map;
 abstract class AbstractIconGroup implements IconGroup {
 
 	protected String path;
-	protected boolean separateLargeIcons;
-	protected String largeIconSubDir;
+	protected String nativePath;
 	protected String extension;
 	protected String name;
 
@@ -31,7 +30,6 @@ abstract class AbstractIconGroup implements IconGroup {
 
 	// TODO: Determine default sizes based on screen resolution
 	private static final int DEFAULT_IMAGE_SIZE = 16;
-	private static final int DEFAULT_LARGE_IMAGE_SIZE = 32;
 
 
 	/**
@@ -41,36 +39,25 @@ abstract class AbstractIconGroup implements IconGroup {
 	 * @param path The root of the icon resources, or the directory
 	 *        containing the icon files if they're on the local file system
 	 *        instead of in the application classpath.
-	 */
-	AbstractIconGroup(String name, String path) {
-		this(name, path, null);
-	}
-
-
-	/**
-	 * Constructor.
-	 *
-	 * @param name The name of the icon group.
-	 * @param path The root of the icon resources, or the directory
+	 * @param nativePath The root of the native icon resources, or the directory
 	 *        containing the icon files if they're on the local file system
 	 *        instead of in the application classpath.
-	 * @param largeIconSubDir The subdirectory containing "large versions" of
-	 *        the icons.  If no subdirectory exists, pass in <code>null</code>.
 	 */
-	AbstractIconGroup(String name, String path, String largeIconSubDir) {
-		this(name, path, largeIconSubDir, DEFAULT_EXTENSION);
+	AbstractIconGroup(String name, String path, String nativePath) {
+		this(name, path, nativePath, null);
 	}
 
 
-	AbstractIconGroup(String name, String path, String largeIconSubDir,
-                             String extension) {
+	AbstractIconGroup(String name, String path, String nativePath, String extension) {
 		this.name = name;
 		this.path = path;
+		this.nativePath = nativePath;
 		if (path!=null && path.length()>0 && !path.endsWith("/")) {
 			this.path += "/";
 		}
-		this.separateLargeIcons = largeIconSubDir != null;
-		this.largeIconSubDir = largeIconSubDir;
+		if (nativePath!=null && nativePath.length()>0 && !nativePath.endsWith("/")) {
+			this.nativePath += "/";
+		}
 		this.extension = extension!=null ? extension : DEFAULT_EXTENSION;
 		cache = new HashMap<>();
 	}
@@ -87,16 +74,9 @@ abstract class AbstractIconGroup implements IconGroup {
 	public boolean equals(Object o2) {
 		if (o2 instanceof AbstractIconGroup) {
 			AbstractIconGroup ig2 = (AbstractIconGroup)o2;
-			if (ig2.getName().equals(getName()) &&
-					separateLargeIcons==ig2.hasSeparateLargeIcons()) {
-				if (separateLargeIcons) {
-					if (!largeIconSubDir.equals(ig2.largeIconSubDir)) {
-						return false;
-					}
-				}
+			if (ig2.getName().equals(getName())) {
 				return path.equals(ig2.path);
 			}
-			// If we got here, separateLargeIcons values weren't equal.
 		}
 		return false;
 	}
@@ -110,18 +90,7 @@ abstract class AbstractIconGroup implements IconGroup {
 
 	@Override
 	public Icon getIcon(String name, int w, int h) {
-
-		Icon icon = getIconAndCache(path + name + "." + extension, w, h);
-
-		// JDK 6.0 b74 returns icons with width/height==-1 in certain error
-		// cases (new ImageIcon(url) where url is not resolved?).  We'll
-		// just return null in this case as Swing AbstractButtons throw
-		// exceptions when expected to paint an icon with width or height
-		// is less than 1.
-		if (icon!=null && (icon.getIconWidth()<1 || icon.getIconHeight()<1)) {
-			icon = null;
-		}
-		return icon;
+		return getIconAndCache(path + name + "." + extension, w, h);
 	}
 
 
@@ -136,7 +105,17 @@ abstract class AbstractIconGroup implements IconGroup {
 	 */
 	private ImageIcon getIconAndCache(String iconFullPath, int w, int h) {
 		String key = iconFullPath + "-" + w + "-" + h;
-		return cache.computeIfAbsent(key, k -> getIconImpl(iconFullPath, w, h));
+		ImageIcon icon =  cache.computeIfAbsent(key, k -> getIconImpl(iconFullPath, w, h));
+
+		// JDK 6.0 b74 returns icons with width/height==-1 in certain error
+		// cases (new ImageIcon(url) where url is not resolved?).  We'll
+		// just return null in this case as Swing AbstractButtons throw
+		// exceptions when expected to paint an icon with width or height
+		// is less than 1.
+		if (icon!=null && (icon.getIconWidth()<1 || icon.getIconHeight()<1)) {
+			icon = null;
+		}
+		return icon;
 	}
 
 
@@ -164,55 +143,8 @@ abstract class AbstractIconGroup implements IconGroup {
 
 	@Override
 	public Image getImage(String name, int w, int h) {
-
 		ImageIcon icon = getIconAndCache(path + name + "." + extension, w, h);
-
-		// JDK 6.0 b74 returns icons with width/height==-1 in certain error
-		// cases (new ImageIcon(url) where url is not resolved?).  We'll
-		// just return null in this case as Swing AbstractButtons throw
-		// exceptions when expected to paint an icon with width or height
-		// is less than 1.
-		if (icon == null || icon.getIconWidth() < 1 || icon.getIconHeight() < 1) {
-			return null;
-		}
-		return icon.getImage();
-	}
-
-
-	@Override
-	public Icon getLargeIcon(String name) {
-
-		Icon icon = getIconAndCache(path + largeIconSubDir + "/" +
-			name + "." + extension, DEFAULT_LARGE_IMAGE_SIZE, DEFAULT_LARGE_IMAGE_SIZE);
-
-		// JDK 6.0 b74 returns icons with width/height==-1 in certain error
-		// cases (new ImageIcon(url) where url is not resolved?).  We'll
-		// just return null in this case as Swing AbstractButtons throw
-		// exceptions when expected to paint an icon with width or height
-		// is less than 1.
-		if (icon!=null && (icon.getIconWidth()<1 || icon.getIconHeight()<1)) {
-			icon = null;
-		}
-
-		return icon;
-	}
-
-
-	@Override
-	public Image getLargeImage(String name) {
-
-		ImageIcon icon = getIconAndCache(path + largeIconSubDir + "/" +
-			name + "." + extension, DEFAULT_LARGE_IMAGE_SIZE, DEFAULT_LARGE_IMAGE_SIZE);
-
-		// JDK 6.0 b74 returns icons with width/height==-1 in certain error
-		// cases (new ImageIcon(url) where url is not resolved?).  We'll
-		// just return null in this case as Swing AbstractButtons throw
-		// exceptions when expected to paint an icon with width or height
-		// is less than 1.
-		if (icon == null || icon.getIconWidth() < 1 || icon.getIconHeight() < 1) {
-			return null;
-		}
-		return icon.getImage();
+		return icon != null ? icon.getImage() : null;
 	}
 
 
@@ -223,8 +155,31 @@ abstract class AbstractIconGroup implements IconGroup {
 
 
 	@Override
-	public boolean hasSeparateLargeIcons() {
-		return separateLargeIcons;
+	public Icon getNativeIcon(String name) {
+		return getNativeIcon(name, DEFAULT_IMAGE_SIZE, DEFAULT_IMAGE_SIZE);
+	}
+
+
+	@Override
+	public Icon getNativeIcon(String name, int w, int h) {
+		// Fall back onto the regular icons if native isn't defined
+		String path = this.nativePath != null ? this.nativePath : this.path;
+		return getIconAndCache(path + name + "." + extension, w, h);
+	}
+
+
+	@Override
+	public Image getNativeImage(String name) {
+		return getNativeImage(name, DEFAULT_IMAGE_SIZE, DEFAULT_IMAGE_SIZE);
+	}
+
+
+	@Override
+	public Image getNativeImage(String name, int w, int h) {
+		// Fall back onto the regular icons if native isn't defined
+		String path = this.nativePath != null ? this.nativePath : this.path;
+		ImageIcon icon = getIconAndCache(path + name + "." + extension, w, h);
+		return icon != null ? icon.getImage() : null;
 	}
 
 

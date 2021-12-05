@@ -32,9 +32,11 @@ public class RasterImageIconGroup extends AbstractIconGroup {
 	 *
 	 * @param name The name of the icon group.
 	 * @param path The directory containing the icon group.
+	 * @param nativePath The directory containing the native icons, or
+	 *        {@code null} if none.
 	 */
-	public RasterImageIconGroup(String name, String path) {
-		this(name, path, null);
+	public RasterImageIconGroup(String name, String path, String nativePath) {
+		this(name, path, nativePath, DEFAULT_EXTENSION);
 	}
 
 
@@ -43,27 +45,14 @@ public class RasterImageIconGroup extends AbstractIconGroup {
 	 *
 	 * @param name The name of the icon group.
 	 * @param path The directory containing the icon group.
-	 * @param largeIconSubDir The subdirectory containing "large versions" of
-	 *        the icons.  If no subdirectory exists, pass in <code>null</code>.
-	 */
-	public RasterImageIconGroup(String name, String path, String largeIconSubDir) {
-		this(name, path, largeIconSubDir, DEFAULT_EXTENSION);
-	}
-
-
-	/**
-	 * Constructor.
-	 *
-	 * @param name The name of the icon group.
-	 * @param path The directory containing the icon group.
-	 * @param largeIconSubDir The subdirectory containing "large versions" of
-	 *        the icons.  If no subdirectory exists, pass in <code>null</code>.
+	 * @param nativePath The directory containing the native icons, or
+	 *        {@code null} if none.
 	 * @param extension The extension of the icons (one of <code>gif</code>,
 	 *        <code>jpg</code>, or <code>png</code>).
 	 */
-	public RasterImageIconGroup(String name, String path, String largeIconSubDir,
+	public RasterImageIconGroup(String name, String path, String nativePath,
 								String extension) {
-		super(name, path, largeIconSubDir, extension);
+		super(name, path, nativePath, extension);
 	}
 
 

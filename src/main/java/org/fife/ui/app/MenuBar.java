@@ -9,7 +9,9 @@
  */
 package org.fife.ui.app;
 
+import org.fife.ui.OS;
 import org.fife.ui.StandardAction;
+import org.fife.ui.app.icons.IconGroup;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,16 +28,35 @@ import javax.swing.KeyStroke;
 /**
  * The menu bar used by instances of <code>GUIApplication</code>.
  *
+ * @param <T> The type of application.
  * @author Robert Futrell
  * @version 0.1
  */
-public class MenuBar extends JMenuBar {
+public class MenuBar<T extends AbstractGUIApplication<?>> extends JMenuBar {
+
+	private T app;
 
 	/**
 	 * Registry of "named" menus, so you can grab a specific menu without
 	 * knowing the order of menus in this menu bar.
 	 */
 	private Map<String, JMenu> namedMenus;
+
+
+	protected MenuBar(T app) {
+
+		this.app = app;
+
+		// On OS's that use a "native" toolbar, ensure this menu
+		// bar uses icons with appropriate contrast there, since
+		// that may not match the theme of this application.
+		if (OS.get() == OS.MAC_OS_X) {
+			app.addPropertyChangeListener(
+				AbstractGUIApplication.ICON_STYLE_PROPERTY, e -> {
+					updateIcons((IconGroup)e.getNewValue());
+			});
+		}
+	}
 
 
 	/**
@@ -200,6 +221,11 @@ public class MenuBar extends JMenuBar {
 	}
 
 
+	protected T getApplication() {
+		return app;
+	}
+
+
 	/**
 	 * Returns the index at which to insert an "extra" menu.
 	 *
@@ -249,6 +275,20 @@ public class MenuBar extends JMenuBar {
 			namedMenus = new HashMap<>();
 		}
 		namedMenus.put(name, menu);
+	}
+
+
+	/**
+	 * A hook that gets called when the application changes icon
+	 * groups.  This is here for applications to use the "native"
+	 * versions of action icons in the menu bar when in OS X.
+	 * This method is only called if using the native versions of
+	 * icons is appropriate.
+	 *
+	 * @param iconGroup The new icon group.
+	 */
+	protected void updateIcons(IconGroup iconGroup) {
+		// Do nothing (comment for Sonar)
 	}
 
 

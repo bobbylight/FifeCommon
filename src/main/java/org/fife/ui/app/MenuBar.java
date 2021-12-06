@@ -32,7 +32,8 @@ import javax.swing.KeyStroke;
  * @author Robert Futrell
  * @version 0.1
  */
-public class MenuBar<T extends AbstractGUIApplication<?>> extends JMenuBar {
+public abstract class MenuBar<T extends AbstractGUIApplication<?>>
+	extends JMenuBar {
 
 	private T app;
 
@@ -47,10 +48,15 @@ public class MenuBar<T extends AbstractGUIApplication<?>> extends JMenuBar {
 
 		this.app = app;
 
+		initializeUI();
+
 		// On OS's that use a "native" toolbar, ensure this menu
 		// bar uses icons with appropriate contrast there, since
 		// that may not match the theme of this application.
 		if (OS.get() == OS.MAC_OS_X) {
+
+			updateIcons(app.getIconGroup());
+
 			app.addPropertyChangeListener(
 				AbstractGUIApplication.ICON_STYLE_PROPERTY, e -> {
 					updateIcons((IconGroup)e.getNewValue());
@@ -67,6 +73,7 @@ public class MenuBar<T extends AbstractGUIApplication<?>> extends JMenuBar {
 	public void addExtraMenu(JMenu menu) {
 		add(menu, getExtraMenuInsertionIndex());
 	}
+
 
 	private static void configureMenuItem(JMenuItem item, String desc) {
 		// Since these menu items are often configured with Actions, we must
@@ -256,6 +263,14 @@ public class MenuBar<T extends AbstractGUIApplication<?>> extends JMenuBar {
 	public JMenu getMenuByName(String name) {
 		return namedMenus!=null ? namedMenus.get(name) : null;
 	}
+
+
+	/**
+	 * Subclasses should override this method and add all of the
+	 * menu items here.  Doing so ensures all other listeners are
+	 * set up properly.
+	 */
+	protected abstract void initializeUI();
 
 
 	/**

@@ -126,11 +126,11 @@ public class SelectableLabel extends JTextPane {
 	 */
 	@Override
 	public void setUI(TextUI ui) {
-		super.setUI(ui);
-		labelize();
 		if (getDocument() instanceof HTMLDocument) {
 			updateDefaultHtmlFont();
 		}
+		super.setUI(ui);
+		labelize();
 	}
 
 
@@ -162,11 +162,15 @@ public class SelectableLabel extends JTextPane {
 						"; color: " + UIUtil.getHTMLFormatForColor(fg) + "; }";
 		doc.getStyleSheet().addRule(bodyRule);
 
-		// If this LaF looks to be light-text-on-dark-background,
-		// use a light color for hyperlinks.
+		// First check for user-defined hyperlink color, then a theme-defined one,
+		// finally guess at one that would look good based on the LookAndFeel.
 		Color linkFG = hyperlinkForeground;
-		if (linkFG==null) {
-			linkFG = UIUtil.getHyperlinkForeground();
+		if (linkFG == null) {
+			// Note AppThemes set this UIDefault color
+			linkFG = UIManager.getColor(Hyperlink.UI_PROPERTY_FOREGROUND);
+			if (linkFG==null) {
+				linkFG = UIUtil.getHyperlinkForeground();
+			}
 		}
 		if (linkFG!=null) {
 			String aRule = "a { color: " +

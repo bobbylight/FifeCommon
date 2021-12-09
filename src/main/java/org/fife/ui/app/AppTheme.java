@@ -5,6 +5,7 @@
  */
 package org.fife.ui.app;
 
+import java.awt.*;
 import java.util.Map;
 
 /**
@@ -24,6 +25,15 @@ public interface AppTheme {
 	 * @return Extra properties.
 	 */
 	Map<String, Object> getExtraUiDefaults();
+
+	/**
+	 * Returns the color to use for hyperlinks.
+	 *
+	 * @return The color to use for hyperlinks.  If this is {@code null},
+	 *         a default value is used.
+	 * @see org.fife.ui.Hyperlink
+	 */
+	Color getHyperlinkForeground();
 
 	/**
 	 * Returns a unique ID for this theme.  This is used for internal purposes.
@@ -47,4 +57,12 @@ public interface AppTheme {
 	 * @see #getId()
 	 */
 	String getName();
+
+
+	/**
+	 * Installs the "extra UI defaults" into {@code UIManager}.
+	 *
+	 * @see #getExtraUiDefaults()
+	 */
+	void installIntoUiDefaults();
 }

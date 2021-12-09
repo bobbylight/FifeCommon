@@ -1369,6 +1369,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 				}
 			}
 
+			newTheme.installIntoUiDefaults(); // Call before updateComponentTreeUI()
 			SwingUtilities.updateComponentTreeUI(this); // Sometimes needed, e.g. FlatLaF => Windows
 			updateLookAndFeel(UIManager.getLookAndFeel());
 			setThemeAdditionalProperties(newTheme);

@@ -5,8 +5,11 @@
  */
 package org.fife.ui.app.themes;
 
+import org.fife.ui.Hyperlink;
 import org.fife.ui.app.AppTheme;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +45,12 @@ public abstract class AbstractAppTheme implements AppTheme {
 
 
 	@Override
+	public Color getHyperlinkForeground() {
+		return (Color)extraUiDefaults.get(Hyperlink.UI_PROPERTY_FOREGROUND);
+	}
+
+
+	@Override
 	public String getId() {
 		return id;
 	}
@@ -56,6 +65,19 @@ public abstract class AbstractAppTheme implements AppTheme {
 	@Override
 	public String getName() {
 		return name;
+	}
+
+
+	@Override
+	public void installIntoUiDefaults() {
+		for (Map.Entry<String, Object> entry : extraUiDefaults.entrySet()) {
+			UIManager.put(entry.getKey(), entry.getValue());
+		}
+	}
+
+
+	public void setHyperlinkForeground(Color foreground) {
+		extraUiDefaults.put(Hyperlink.UI_PROPERTY_FOREGROUND, foreground);
 	}
 
 

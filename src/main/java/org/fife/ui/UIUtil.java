@@ -49,7 +49,7 @@ public final class UIUtil {
 	 * Used for the color of hyperlinks when a LookAndFeel uses light text
 	 * against a dark background.
 	 */
-	private static final Color LIGHT_HYPERLINK_FG = new Color(0xd8ffff);
+	private static final Color LIGHT_HYPERLINK_FG = new Color(0x589df6);
 
 	/**
 	 * A very common border that can be shared across many components.
@@ -647,7 +647,7 @@ public final class UIUtil {
 
 	/**
 	 * Returns the color to use for hyperlink-style components.  This method
-	 * will return <code>Color.blue</code> unless it appears that the current
+	 * will return <code>Color.BLUE</code> unless it appears that the current
 	 * LookAndFeel uses light text on a dark background, in which case a
 	 * brighter alternative is returned.
 	 *
@@ -662,7 +662,7 @@ public final class UIUtil {
 			fg = new JLabel().getForeground();
 		}
 
-		return isLightForeground(fg) ? LIGHT_HYPERLINK_FG : Color.blue;
+		return isLightForeground(fg) ? LIGHT_HYPERLINK_FG : Color.BLUE;
 
 	}
 

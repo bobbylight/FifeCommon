@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.io.Serial;
 import javax.swing.*;
 import javax.swing.plaf.LabelUI;
+import javax.swing.plaf.basic.BasicLabelUI;
 
 
 /**
@@ -26,6 +27,12 @@ public class Hyperlink extends JLabel {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * If this property is set in the UI Defaults to a color, it is used for the
+	 * foreground instead of the default value.
+	 */
+	public static final String UI_PROPERTY_FOREGROUND = "org.fife.ui.Hyperlink.foreground";
 
 	private String text;
 	private String address;
@@ -113,8 +120,6 @@ public class Hyperlink extends JLabel {
 	 */
 	@Override
 	public void setText(String text) {
-		this.text = text;
-		text = "<html><body><u>" + text + "</u>";
 		super.setText(text);
 		setToolTipText(address);
 	}
@@ -122,9 +127,34 @@ public class Hyperlink extends JLabel {
 
 	@Override
 	public void setUI(LabelUI ui) {
-		super.setUI(ui);
-		setForeground(UIUtil.getHyperlinkForeground());
+		super.setUI(new HyperlinkUI());
 	}
 
 
+	class HyperlinkUI extends BasicLabelUI {
+
+		public void paint(Graphics g, JComponent c) {
+
+			JLabel label = (JLabel)c;
+			String text = label.getText();
+
+			Color fg;
+			if (c.isEnabled()) {
+				fg = UIManager.getColor(UI_PROPERTY_FOREGROUND);
+				if (fg == null) {
+					fg = c.getForeground();
+				}
+			}
+			else {
+				fg = UIManager.getColor("Label.disabledForeground");
+			}
+			g.setColor(fg);
+
+			FontMetrics fm = getFontMetrics(g.getFont());
+			int textY = fm.getAscent();
+			g.drawString(text, 0, textY);
+			int width = fm.stringWidth(text);
+			g.drawLine(0, textY + 1, width, textY + 1);
+		}
+	}
 }

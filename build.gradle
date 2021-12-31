@@ -21,11 +21,11 @@ dependencies {
 }
 
 wrapper {
-	gradleVersion = '7.2'
+	gradleVersion = '7.3.3'
 }
 
 checkstyle {
-	toolVersion = '9.0'
+	toolVersion = '9.2.1'
 }
 
 compileJava {

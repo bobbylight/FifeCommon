@@ -32,8 +32,8 @@ import org.fife.ui.StandardAction;
  *
  * <p>
  * For accelerators, the standard syntax for key strokes defined
- * <a href="https://docs.oracle.com/javase/7/docs/api/javax/swing/KeyStroke.html#getKeyStroke(java.lang.String)">here</a>
- * can be used.  In addition, the string literal "default" maps to "ctrl" on
+ * <a href="https://docs.oracle.com/javase/7/docs/api/javax/swing/KeyStroke.html#getKeyStroke(java.lang.String)">
+ * here</a> can be used.  In addition, the string literal "default" maps to "ctrl" on
  * Windows and Linux, and "meta" on OS X.
  * </p>
  *

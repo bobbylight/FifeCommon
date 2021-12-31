@@ -1,3 +1,4 @@
+# FifeCommon
 ![Java Build](https://github.com/bobbylight/FifeCommon/actions/workflows/gradle.yml/badge.svg)
 ![Java Build](https://github.com/bobbylight/FifeCommon/actions/workflows/codeql-analysis.yml/badge.svg)
 
@@ -15,7 +16,7 @@ For a working example of an application built with library, see
 
 Available in the [Maven Central repository](http://search.maven.org/#artifactdetails%7Ccom.fifesoft.rtext%7Cfife.common%7C3.0.1%7Cjar) (`com.fifesoft.rtext:fife.common:XXX`).
 
-# Building
+## Building
 
 FifeCommon uses [Gradle](http://gradle.org/) to build.  To compile, run
 all unit tests, and create the jar, run:

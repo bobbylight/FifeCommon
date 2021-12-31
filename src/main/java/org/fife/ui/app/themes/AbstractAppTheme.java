@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -35,6 +36,13 @@ public abstract class AbstractAppTheme implements AppTheme {
 
 	public void addExtraUiDefault(String key, Object value) {
 		extraUiDefaults.put(key, value);
+	}
+
+
+	@Override
+	public boolean equals(Object other) {
+		return other instanceof AppTheme &&
+			Objects.equals(getId(), ((AppTheme)other).getId());
 	}
 
 
@@ -69,6 +77,12 @@ public abstract class AbstractAppTheme implements AppTheme {
 
 
 	@Override
+	public int hashCode() {
+		return id.hashCode();
+	}
+
+
+	@Override
 	public void installIntoUiDefaults() {
 		for (Map.Entry<String, Object> entry : extraUiDefaults.entrySet()) {
 			UIManager.put(entry.getKey(), entry.getValue());
@@ -83,6 +97,6 @@ public abstract class AbstractAppTheme implements AppTheme {
 
 	@Override
 	public String toString() {
-		return "[AppTheme: name=" + name + "]";
+		return "[AppTheme: id=" + id + ", name=" + name + "]";
 	}
 }

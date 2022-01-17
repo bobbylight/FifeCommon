@@ -198,7 +198,9 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 * @see #setValues(Frame)
 	 */
 	public final void doApply(Frame owner) {
-		doApplyImpl(owner);
+		if (isDirty()) {
+			doApplyImpl(owner);
+		}
 		for (int i=0; i<getChildPanelCount(); i++) {
 			getChildPanel(i).doApply(owner);
 		}
@@ -454,6 +456,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 * @see #doApply(Frame)
 	 */
 	public final void setValues(Frame owner) {
+		// Don't check isDirty() for first-time through
 		setValuesImpl(owner);
 		for (int i=0; i<getChildPanelCount(); i++) {
 			getChildPanel(i).setValues(owner);

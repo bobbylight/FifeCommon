@@ -639,7 +639,8 @@ public class DockableWindowPanel extends JPanel
 
 				int split;
 				double resizeWeight;
-				Component comp1, comp2;
+				Component comp1;
+				Component comp2;
 				switch (dockableWindowsLocation) {
 					case TOP:
 						split = JSplitPane.VERTICAL_SPLIT;

@@ -38,36 +38,72 @@ public final class SubstanceUtil {
 		// Do nothing
 	}
 
+	/**
+	 * Returns the animation speed.
+	 *
+	 * @return The animation speed, in milliseconds.
+	 * @see #setAnimationSpeed(long)
+	 */
 	public static long getAnimationSpeed() {
 		loadSubstanceProps();
 		return props.getAnimationSpeed();
 	}
 
+	/**
+	 * Returns the "dark" color.
+	 *
+	 * @return The color.
+	 */
 	public static Color getDarkColor() {
 		loadSubstanceProps();
 		return props.getDarkColor();
 	}
 
+	/**
+	 * Returns the "extra light" color.
+	 *
+	 * @return The color.
+	 */
 	public static Color getExtraLightColor() {
 		loadSubstanceProps();
 		return props.getExtraLightColor();
 	}
 
+	/**
+	 * Returns the "light" color.
+	 *
+	 * @return The color.
+	 */
 	public static Color getLightColor() {
 		loadSubstanceProps();
 		return props.getLightColor();
 	}
 
+	/**
+	 * Returns the "mid" color.
+	 *
+	 * @return The color.
+	 */
 	public static Color getMidColor() {
 		loadSubstanceProps();
 		return props.getMidColor();
 	}
 
+	/**
+	 * Returns the "ultra dark" color.
+	 *
+	 * @return The color.
+	 */
 	public static Color getUltraDarkColor() {
 		loadSubstanceProps();
 		return props.getUltraDarkColor();
 	}
 
+	/**
+	 * Returns the "ultra light" color.
+	 *
+	 * @return The color.
+	 */
 	public static Color getUltraLightColor() {
 		loadSubstanceProps();
 		return props.getUltraLightColor();
@@ -130,6 +166,12 @@ public final class SubstanceUtil {
 		}
 	}
 
+	/**
+	 * Sets the animation speed to use.
+	 *
+	 * @param millis The animation speed, in milliseconds.
+	 * @see #getAnimationSpeed()
+	 */
 	public static void setAnimationSpeed(long millis) {
 		loadSubstanceProps();
 		props.setAnimationSpeed(millis);

@@ -32,9 +32,9 @@ import org.fife.ui.dockablewindows.DockableWindowPanel;
  * An extension of <code>AbstractGUIApplication</code> adding the ability to
  * add/remove plug-ins.
  *
- * @param <P> The preferences class for this application.
  * @author Robert Futrell
  * @version 0.5
+ * @param <P> The preferences class for this application.
  */
 public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 									extends AbstractGUIApplication<P> {

@@ -134,7 +134,7 @@ final class RootManager {
 	 */
 	private class RootIterator implements Iterator<File> {
 
-		private int i = 0;
+		private int i;
 
 		@Override
 		public boolean hasNext() {

@@ -654,9 +654,9 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 			}
 		}
 
-/*
- * TODO: This is buggy - may be on a "child" panel in the tree.  We need
- * to get the current panel by name and check it that way.
+		/*
+		 * TODO: This is buggy - may be on a "child" panel in the tree.  We need
+		 * to get the current panel by name and check it that way.
 		// Check to see if a text field was edited in the previous
 		// panel (as if they switch Options panels before the text field
 		// loses focus, the Apply button won't get enabled).
@@ -678,7 +678,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		if (currentPanel!=panel) {
 			optionTree.setSelectionRow(panel);
 		}
-*/
+		*/
 	}
 
 

@@ -37,6 +37,7 @@ class IconDesktopManager extends DefaultDesktopManager {
 	 * Removes the frame, and, if necessary, the
 	 * <code>desktopIcon</code>, from its parent.  This method is overridden so
 	 * that the "next internal frame" isn't selected after this one is closed.
+	 *
 	 * @param f the <code>JInternalFrame</code> to be removed
 	 */
 	@Override
@@ -63,8 +64,9 @@ class IconDesktopManager extends DefaultDesktopManager {
 
 	/**
 	 * This will activate <b>f</b> moving it to the front.
-      * @param f the <code>JInternalFrame</code> to be activated
-      */
+	 *
+	 * @param f the <code>JInternalFrame</code> to be activated
+	 */
 	@Override
 	public void activateFrame(JInternalFrame f) {
 		Container p = f.getParent();

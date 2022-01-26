@@ -144,11 +144,11 @@ class TopicsFoundDialog extends JDialog {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String actionCommand = e.getActionCommand();
-			if (actionCommand.equals("Display")) {
+			if ("Display".equals(actionCommand)) {
 				selectedIndex = choicesList.getSelectedIndex();
 				setVisible(false);
 			}
-			else if (actionCommand.equals("Cancel")) {
+			else if ("Cancel".equals(actionCommand)) {
 				selectedIndex = -1;
 				setVisible(false);
 			}

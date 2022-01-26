@@ -333,6 +333,14 @@ public class BreadcrumbBar extends JComponent {
 	}
 
 
+	/**
+	 * Returns whether a given directory is an ancestor of the
+	 * location shown in this breadcrumb bar.
+	 *
+	 * @param loc The location to check.
+	 * @return Whether the file is an ancestor of the location
+	 *         shown in this breadcrumb bar.
+	 */
 	public boolean isAncestorOfShownLocation(File loc) {
 		File f = shownLocation;
 		while (f!=null) {
@@ -417,23 +425,6 @@ public class BreadcrumbBar extends JComponent {
 	}
 
 
-//	private static final void replaceColor(BufferedImage image, Color oldColor,
-//										Color newColor) {
-//
-//		int[] imgArray = ((DataBufferInt)image.getRaster().
-//				getDataBuffer()).getData();
-//		int o = oldColor.getRGB();
-//		int n = newColor.getRGB();
-//
-//		for (int i=0; i<imgArray.length; i++) {
-//			if (imgArray[i]==o) {
-//				imgArray[i] = n;
-//			}
-//		}
-//
-//	}
-
-
 	/**
 	 * Sets the mode for this breadcrumb bar.
 	 *
@@ -511,13 +502,7 @@ public class BreadcrumbBar extends JComponent {
 		// Reset border on LaF changes, since it is LaF-dependent.
 		Border border = UIManager.getBorder("TextField.border");
 		if (border==null) { // e.g. Nimbus
-//			if (tempField==null) {
-//				tempField = new JTextField();
-//			}
-//			border = tempField.getBorder();
-//			if (border==null || border instanceof EmptyBorder) { // WebLaF
-				border = BorderFactory.createLineBorder(Color.BLACK);
-//			}
+			border = BorderFactory.createLineBorder(Color.BLACK);
 		}
 		setBorder(border);
 
@@ -775,18 +760,6 @@ public class BreadcrumbBar extends JComponent {
 			if (rootMenuItems==null) {
 
 				rootMenuItems = new ArrayList<>(5);
-
-//				File[] rootFiles = fsv.getRoots();
-//				if (rootFiles!=null) { // Windows
-//					for (int i=0; i<rootFiles.length; i++) {
-//						String name = getName(rootFiles[i]);
-//						Icon icon = getIcon(rootFiles[i]);
-//						JMenuItem item = createMenuItem(rootFiles[i], name, icon);
-//						item.addActionListener(this);
-//						rootMenuItems.add(item);
-//					}
-//					rootMenuItems.add(new JSeparator());
-//				}
 
 				File[] rootFiles = File.listRoots();
 				for (File rootFile : rootFiles) {

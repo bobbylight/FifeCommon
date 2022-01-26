@@ -29,6 +29,13 @@ import org.fife.util.SubstanceUtil;
 public class KeyStrokeCellRenderer extends DefaultTableCellRenderer {
 
 
+	/**
+	 * Configures this renderer to display a specific keystroke.
+	 *
+	 * @param renderer The renderer to configure.
+	 * @param table The parent table.
+	 * @param ks The keystroke to display.
+	 */
 	public static void configure(DefaultTableCellRenderer renderer,
 			JTable table, KeyStroke ks) {
 		renderer.setText(UIUtil.getPrettyStringFor(ks));

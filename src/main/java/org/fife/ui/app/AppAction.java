@@ -52,9 +52,9 @@ import org.fife.ui.StandardAction;
  * used, otherwise, the OS-agnostic accelerator is used, if defined.
  * </p>
  *
- * @param <T> The parent application's class.
  * @author Robert Futrell
  * @version 0.6
+ * @param <T> The parent application's class.
  * @see org.fife.ui.app.GUIApplication
  */
 public abstract class AppAction<T extends GUIApplication> extends StandardAction {

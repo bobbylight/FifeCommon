@@ -255,7 +255,6 @@ public class FontSelector extends JPanel implements ActionListener {
 	 *        Note that if <code>isUnderlineSelectable()</code>
 	 *        returns <code>false</code>, this parameter will do
 	 *        nothing.
-	 * this method will always return <code>false</code> also.
 	 * @see #getDisplayedFont()
 	 * @see #getUnderline()
 	 */

@@ -15,6 +15,7 @@ import java.awt.event.*;
 import java.io.Serial;
 import java.util.ResourceBundle;
 import java.util.HashSet;
+import java.util.Set;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
@@ -359,7 +360,7 @@ public class FontDialog extends JDialog implements ActionListener,
 		String[] families = GraphicsEnvironment.
 				getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
 
-		HashSet<String> monospacedFontsSet = createMonospacedFontsSet();
+		Set<String> monospacedFontsSet = createMonospacedFontsSet();
 
 		// Add them to a list model.
 		DefaultListModel<FontInfo> listModel = new DefaultListModel<>();
@@ -383,8 +384,8 @@ public class FontDialog extends JDialog implements ActionListener,
 	 * @return The set of common monospaced font names on Windows, OS X, and
 	 *         UNIX.
 	 */
-	private static HashSet<String> createMonospacedFontsSet() {
-		HashSet<String> set = new HashSet<>();
+	private static Set<String> createMonospacedFontsSet() {
+		Set<String> set = new HashSet<>();
 		set.add("Andale Mono");
 		set.add("Andale Mono IPA");
 		set.add("Bitstream Vera Sans Mono");
@@ -617,7 +618,7 @@ public class FontDialog extends JDialog implements ActionListener,
 			}
 		}
 		// setSelectedIndex doesn't always repaint when necessary
-        fontList.repaint();
+		fontList.repaint();
 	}
 
 

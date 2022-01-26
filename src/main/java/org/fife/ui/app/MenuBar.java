@@ -28,9 +28,9 @@ import javax.swing.KeyStroke;
 /**
  * The menu bar used by instances of <code>GUIApplication</code>.
  *
- * @param <T> The type of application.
  * @author Robert Futrell
  * @version 0.1
+ * @param <T> The type of application.
  */
 public abstract class MenuBar<T extends AbstractGUIApplication<?>>
 	extends JMenuBar {

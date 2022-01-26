@@ -178,7 +178,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * Internal stuff.
 	 */
 	private int mode; // So that we don't get an NPE initially.
-	private boolean multiSelectionEnabled	= false;
+	private boolean multiSelectionEnabled;
 	private int fileSelectionMode			= FILES_ONLY;
 	private boolean fileSystemAware;
 	private boolean autoCompleteFileNames;
@@ -2946,39 +2946,6 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		}
 
 	}
-
-
-// NOTE: Too slow to use.  Especially noticeable when files being rendered
-// are on a network mounted drive.
-//	/**
-//	 * Renderer for the dropdown of the "File Name" FSATextField.
-//	 */
-//	private class FileNameFieldListCellRenderer
-//				extends DefaultListCellRenderer {
-//
-//		public Component getListCellRendererComponent(JList list,
-//			Object value, int index, boolean selected, boolean hasFocus) {
-//			super.getListCellRendererComponent(list, value, index, selected,
-//										hasFocus);
-//			if (!selected) {
-//				File file = new File((String)value);
-//				Color fg = null;
-//				FileTypeInfo fti = getFileTypeInfoFor(file);
-//				if (getShowHiddenFiles() && file.isHidden()) {
-//					fg = getHiddenFileColor();
-//				}
-//				else {
-//					fg = fti.labelTextColor;
-//				}
-//				if (fg==null) { // Special care for this case.
-//					fg = UIManager.getColor("List.foreground");
-//				}
-//				setForeground(fg);
-//			}
-//			return this;
-//		}
-//
-//	}
 
 
 	/**

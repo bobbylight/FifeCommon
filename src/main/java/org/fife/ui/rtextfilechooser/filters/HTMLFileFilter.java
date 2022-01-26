@@ -37,9 +37,8 @@ public class HTMLFileFilter extends FileFilter {
 			return true;
 		}
 		String extension = Utilities.getExtension(f.getName());
-		return extension!=null &&
-			(extension.equalsIgnoreCase("htm") ||
-					extension.equalsIgnoreCase("html"));
+		return "htm".equalsIgnoreCase(extension) ||
+					"html".equalsIgnoreCase(extension);
 	}
 
 

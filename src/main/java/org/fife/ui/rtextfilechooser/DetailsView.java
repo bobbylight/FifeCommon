@@ -611,10 +611,6 @@ class DetailsView extends JTable implements RTextFileChooserView {
 				i = max;
 				SwingUtilities.invokeLater(() -> addFileAttributes(batch));
 
-//				try {
-//					Thread.sleep(100);
-//				} catch (Exception e) {}
-
 			}
 
 		}
@@ -699,8 +695,6 @@ class DetailsView extends JTable implements RTextFileChooserView {
 		}
 
 		private Vector<?> getTableObjectVectorForFile(File file) {
-//			boolean isDirectory = file.isDirectory();
-//			long length = isDirectory ? -1 : file.length();
 			String description = chooser.getDescription(file);
 			Vector<Object> temp = new Vector<>(5);
 			temp.add(0, file);

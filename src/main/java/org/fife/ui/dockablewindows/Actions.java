@@ -141,8 +141,8 @@ public final class Actions {
 			JComponent invoker = getOriginalInvoker(source);
 			DockableWindow dwind = (DockableWindow)invoker.
 							getClientProperty("DockableWindow");
-//			dwindPanel.removeDockableWindow(dwind);
-//			dwind.setActive(false);
+			// dwindPanel.removeDockableWindow(dwind);
+			// dwind.setActive(false);
 			dwind.setPosition(location);
 		}
 

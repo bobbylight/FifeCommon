@@ -99,8 +99,6 @@ public class FileExplorerTableModel extends AbstractTableModel {
 
 	private JTable table;
 
-//	private JPopupMenu rightClickMenu;
-
 
 	/**
 	 * Constructor.
@@ -140,33 +138,6 @@ public class FileExplorerTableModel extends AbstractTableModel {
 		sortingStatusChanged();
 	}
 
-
-	/**
-	 * Creates the right-click menu that allows the addition/removal of
-	 * columns in the table.
-	 */
-/*	private void createRightClickMenu() {
-
-		rightClickMenu = new JPopupMenu();
-
-		TableModel model = table.getModel();
-		int numColumns = table.getColumnCount();
-		for (int i=0; i<numColumns; i++) {
-
-			final int j = i;
-			String columnName = model.getColumnName(j);
-			JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(new AbstractAction(columnName) {
-									public void actionPerformed(ActionEvent e) {
-										System.err.println(j);
-									}
-									});
-			rightClickMenu.add(menuItem);
-
-		}
-
-
-	}
-*/
 
 	private void clearSortingState() {
 		viewToModel = null;
@@ -216,6 +187,12 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	}
 
 
+	/**
+	 * Returns the sorting status of a column.
+	 *
+	 * @param column The index of the column to check.
+	 * @return The sorting status of the column.
+	 */
 	public int getSortingStatus(int column) {
 		return getDirective(column).direction;
 	}
@@ -258,16 +235,34 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	}
 
 
+	/**
+	 * Returns whether any column is sorted.
+	 *
+	 * @return Whether any column is sorted.
+	 */
 	public boolean isSorting() {
 		return sortingColumns.size() != 0;
 	}
 
 
+	/**
+	 * Returns the index in the model corresponding to an index
+	 * in the view.
+	 *
+	 * @param viewIndex The index in the view.
+	 * @return Tbe corresponding index in the model.
+	 */
 	public int modelIndex(int viewIndex) {
 		return getViewToModel()[viewIndex].modelIndex;
 	}
 
 
+	/**
+	 * Sets the comparator to use for columns of a specific type.
+	 *
+	 * @param type The data type of the column(s) to change.
+	 * @param comparator The comparator to install on the column.
+	 */
 	public void setColumnComparator(Class<?> type, Comparator<?> comparator) {
 		if (comparator == null)
 			columnComparators.remove(type);
@@ -276,6 +271,12 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	}
 
 
+	/**
+	 * Sets the sorting status of a column.
+	 *
+	 * @param column The column.
+	 * @param status The new sorting status.
+	 */
 	public void setSortingStatus(int column, int status) {
 
 		Directive directive = getDirective(column);
@@ -579,15 +580,6 @@ public class FileExplorerTableModel extends AbstractTableModel {
 					}
 				}
 			}
-/*
-			// Right-clicks bring up the "visible columns" popup menu.
-			else {
-				// Recreate it every time as the programmer may have added/removed columns.
-				// This also keeps us from having to worry about LnF changes.
-				createRightClickMenu();
-				rightClickMenu.show(tableHeader, e.getX(), e.getY());
-			}
-*/
 		}
 
 	}

@@ -27,9 +27,9 @@ import javax.swing.Icon;
  *       status bar.
  * </ul>
  *
- * @param <T> The type of parent application.
  * @author Robert Futrell
  * @version 0.1
+ * @param <T> The type of parent application.
  * @see org.fife.ui.app.GUIApplication
  * @see org.fife.ui.app.GUIPlugin
  * @see org.fife.ui.app.StatusBarPlugin

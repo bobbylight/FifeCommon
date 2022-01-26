@@ -132,7 +132,10 @@ public class LineDividerBorder implements Border, SwingConstants {
 		if (width <= 2*slack)
 			return;
 
-		int x1, y1, x2, y2;
+		int x1;
+		int y1;
+		int x2;
+		int y2;
 
 		switch (location) {
 

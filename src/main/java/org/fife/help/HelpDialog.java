@@ -415,12 +415,12 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 		// If they click on the "List Topics" button on the search tab,
 		// show matching topics.
-		else if (actionCommand.equals("ListTopics")) {
+		else if ("ListTopics".equals(actionCommand)) {
 			searchString = searchField.getText();		// Remember the searched-for text.
 			populateSearchList();
 		}
 
-		else if (actionCommand.equals("Back")) {
+		else if ("Back".equals(actionCommand)) {
 
 			// No, we don't want history updated (we've already seen the
 			// coming page).
@@ -449,7 +449,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 		}
 
-		else if (actionCommand.equals("Forward")) {
+		else if ("Forward".equals(actionCommand)) {
 
 			// No, you don't want history updated (we've already seen the
 			// coming page).
@@ -1435,7 +1435,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 					anchor = url.getRef();
 					try {
 						String protocol = url.getProtocol();
-						if (protocol==null || protocol.equals(""))
+						if (protocol==null || protocol.isEmpty())
 							protocol = "file";
 						String urlString = protocol + "://" + url.getPath();
 						url = new URL(urlString); // No anchor.
@@ -1504,7 +1504,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 				// of Help topics.
 				else if (source.equals(searchField)) {
 					searchString = searchField.getText();	// Remember the searched-for text.
-					if (!searchString.equals(""))
+					if (!searchString.isEmpty())
 						populateSearchList();
 				}
 

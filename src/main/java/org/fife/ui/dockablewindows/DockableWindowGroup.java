@@ -483,13 +483,6 @@ g2d.drawLine(0,bounds.height-1, bounds.width-1,bounds.height-1);
 			}
 			else if (SubstanceUtil.isSubstanceInstalled()) {
 				c = UIManager.getColor("Label.foreground");
-//				try {
-//					c = SubstanceUtil.getSubstanceColor("selectionForegroundColor");
-//				} catch (RuntimeException re) { // FindBugs
-//					throw re;
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
 			}
 			else if (WebLookAndFeelUtils.isWebLookAndFeelInstalled()) {
 				c = new JTableHeader().getForeground();

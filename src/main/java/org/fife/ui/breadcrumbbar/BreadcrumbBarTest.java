@@ -66,6 +66,11 @@ public class BreadcrumbBarTest extends JFrame implements PropertyChangeListener{
 	}
 
 
+	/**
+	 * Entry point for a quick visual test.
+	 *
+	 * @param args Command lines arguments.
+	 */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
 			String substanceClass = SUBSTANCE_PKG + "GraphiteGlassLookAndFeel";

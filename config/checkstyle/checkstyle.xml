@@ -106,7 +106,25 @@
         </module>
         -->
         <module name="JavadocStyle"/>
+        <module name="AtclauseOrder"/>
+        <module name="InvalidJavadocPosition"/>
+        <module name="JavadocBlockTagLocation"/>
+        <module name="JavadocMethod">
+            <property name="accessModifiers" value="public"/>
+        </module>
+        <module name="JavadocMissingLeadingAsterisk"/>
+        <module name="JavadocMissingWhitespaceAfterAsterisk"/>
+        <module name="JavadocTagContinuationIndentation"/>
+        <module name="NonEmptyAtclauseDescription"/>
+        <module name="RequireEmptyLineBeforeBlockTagGroup"/>
+        <module name="MissingJavadocMethod">
+            <property name="allowMissingPropertyJavadoc" value="true"/>
+            <property name="tokens" value="METHOD_DEF, ANNOTATION_FIELD_DEF"/>
+        </module>
+        <module name="MissingJavadocPackage"/>
+        <module name="MissingJavadocType"/>
 
+        <module name="JavadocContentLocationCheck"/>
 
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
@@ -121,6 +139,12 @@
         <module name="StaticVariableName"/>
         <module name="TypeName"/>
 
+        <!-- Checks for annotations.                                      -->
+        <!-- See https://checkstyle.sourceforge.io/config_annotation.html -->
+        <module name="AnnotationLocation"/>
+        <module name="AnnotationUseStyle"/>
+        <module name="MissingDeprecated"/>
+        <module name="MissingOverride"/>
 
         <!-- Checks for imports                              -->
         <!-- See http://checkstyle.sf.net/config_import.html -->
@@ -178,7 +202,9 @@
         <!-- Checks for common coding problems               -->
         <!-- See http://checkstyle.sf.net/config_coding.html -->
         <!--<module name="AvoidInlineConditionals"/>-->
-        <module name="EmptyStatement"/>
+        <module name="EqualsAvoidNull"/>
+        <module name="EqualsHashCode"/>
+        <module name="ExplicitInitialization"/>
         <module name="EqualsHashCode"/>
         <!-- Completely overridden since it's common in Java to do e.g. this.foo = foo;
         <module name="HiddenField">
@@ -186,12 +212,21 @@
             <property name="ignoreConstructorParameter" value="true" />
         </module>
         -->
+<!--        <module name="IllegalCatch"/>-->
         <module name="IllegalInstantiation"/>
+        <module name="IllegalThrows"/>
+        <module name="IllegalType"/>
         <!--<module name="InnerAssignment"/> -->
         <!--<module name="MagicNumber"/> &lt;!&ndash; Unfortunately, too much noise &ndash;&gt;-->
         <!--<module name="MissingSwitchDefault"/>-->
+        <module name="MultipleVariableDeclarations"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
+        <!--        <module name="UnnecessaryParentheses"/>-->
+        <module name="UnnecessarySemicolonAfterOuterTypeDeclaration"/>
+        <module name="UnnecessarySemicolonInEnumeration"/>
+        <module name="UnnecessarySemicolonInTryWithResources"/>
+        <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
 
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
@@ -208,11 +243,22 @@
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
         <module name="ArrayTypeStyle"/>
+        <module name="AvoidEscapedUnicodeCharacters"/>
+        <module name="CommentsIndentation"/>
         <!--<module name="FinalParameters"/>-->
         <!-- <module name="TodoComment"/> -->
         <module name="UpperEll"/>
 
+        <!-- Checks for metrics.                                       -->
+        <!-- See https://checkstyle.sourceforge.io/config_metrics.html -->
+        <!--        <module name="CyclomaticComplexity"/>-->
+
     </module>
+
+    <module name="Translation">
+        <property name="baseName" value="^AutoComplete.*"/>
+    </module>
+    <module name="UniqueProperties"/>
 
     <module name="SuppressionFilter">
 		<property name="file" value="${config_loc}/suppressions.xml"/>

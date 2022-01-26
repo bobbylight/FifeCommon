@@ -144,7 +144,8 @@ public class SplashScreen extends JWindow {
 		private GradientPaint paint;
 		private int percentComplete;
 		private String text;
-		private int textX, textY;
+		private int textX;
+		private int textY;
 
 		ProgressBar(int width, Color background,
 					Color foreground1, Color foreground2,

@@ -21,16 +21,46 @@ public interface SubstanceProps {
 	 */
 	long getAnimationSpeed();
 
+	/**
+	 * Returns the "dark" color.
+	 *
+	 * @return The color.
+	 */
 	Color getDarkColor();
 
+	/**
+	 * Returns the "extra light" color.
+	 *
+	 * @return The color.
+	 */
 	Color getExtraLightColor();
 
+	/**
+	 * Returns the "light" color.
+	 *
+	 * @return The color.
+	 */
 	Color getLightColor();
 
+	/**
+	 * Returns the "mid" color.
+	 *
+	 * @return The color.
+	 */
 	Color getMidColor();
 
+	/**
+	 * Returns the "ultra dark" color.
+	 *
+	 * @return The color.
+	 */
 	Color getUltraDarkColor();
 
+	/**
+	 * Returns the "ultra light" color.
+	 *
+	 * @return The color.
+	 */
 	Color getUltraLightColor();
 
 	/**

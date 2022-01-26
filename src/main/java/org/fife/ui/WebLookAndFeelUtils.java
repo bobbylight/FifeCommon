@@ -201,9 +201,9 @@ public final class WebLookAndFeelUtils {
 			m = clazz.getDeclaredMethod("setDecorateDialogs", boolean.class);
 			m.invoke(null, Boolean.TRUE);
 
-//			clazz = Class.forName(STYLE_CONSTANTS_CLASS, true, cl);
-//			Field rolloverDecoratedOnly = clazz.getDeclaredField("rolloverDecoratedOnly");
-//			rolloverDecoratedOnly.set(null, Boolean.TRUE);
+			//clazz = Class.forName(STYLE_CONSTANTS_CLASS, true, cl);
+			//Field rolloverDecoratedOnly = clazz.getDeclaredField("rolloverDecoratedOnly");
+			//rolloverDecoratedOnly.set(null, Boolean.TRUE);
 
 			if (decorateFrames) {
 				clazz = Class.forName(MENU_BAR_STYLE_CLASS, true, null);

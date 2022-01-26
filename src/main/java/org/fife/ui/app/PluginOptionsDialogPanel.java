@@ -16,9 +16,9 @@ import org.fife.ui.OptionsDialogPanel;
  * Options panel specifically for a plugin.  This subclass is aware of the
  * plugin it represents, and can update it with its values.
  *
- * @param <P> The type of plugin this option panel is configuring.
  * @author Robert Futrell
  * @version 0.6
+ * @param <P> The type of plugin this option panel is configuring.
  */
 public abstract class PluginOptionsDialogPanel<P extends Plugin<?>> extends OptionsDialogPanel {
 

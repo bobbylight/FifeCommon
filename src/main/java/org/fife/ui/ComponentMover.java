@@ -42,7 +42,7 @@ public class ComponentMover extends MouseAdapter {
 	private Insets dragInsets = new Insets(0, 0, 0, 0);
 	private Insets edgeInsets = new Insets(0, 0, 0, 0);
 	private boolean changeCursor = true;
-	private boolean autoLayout = false;
+	private boolean autoLayout;
 
 	private Class<?> destinationClass;
 	private Component destinationComponent;

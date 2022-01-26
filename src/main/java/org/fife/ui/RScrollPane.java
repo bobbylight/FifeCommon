@@ -34,7 +34,8 @@ public class RScrollPane extends JScrollPane implements ActionListener {
 
 	// Mouse position RELATIVE TO THE SCROLLBAR when the user opens a
 	// scrollbar's popup menu.
-	private int mouseX, mouseY;
+	private int mouseX;
+	private int mouseY;
 
 
 	/**

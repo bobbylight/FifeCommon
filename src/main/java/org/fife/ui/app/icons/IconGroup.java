@@ -33,8 +33,8 @@ public interface IconGroup {
 	 * displays).
 	 *
 	 * @param name The name of the icon.  For example, if you want the icon
-	 * specified in <code>new.gif</code>, this value should be
-	 * <code>new</code>.
+	 *        specified in <code>new.gif</code>, this value should be
+	 *        <code>new</code>.
 	 * @return The icon, or <code>null</code> if it could not be found or
 	 *         loaded.
 	 * @see #getIcon(String, int, int)
@@ -47,8 +47,8 @@ public interface IconGroup {
 	 * Returns the icon from this icon group with the specified name.
 	 *
 	 * @param name The name of the icon.  For example, if you want the icon
-	 * specified in <code>new.gif</code>, this value should be
-	 * <code>new</code>.
+	 *        specified in <code>new.gif</code>, this value should be
+	 *        <code>new</code>.
 	 * @param w The icon width.
 	 * @param h The icon height.
 	 * @return The icon, or <code>null</code> if it could not be found or
@@ -66,8 +66,8 @@ public interface IconGroup {
 	 * displays).
 	 *
 	 * @param name The name of the icon.  For example, if you want the image
-	 * specified in <code>new.gif</code>, this value should be
-	 * <code>new</code>.
+	 *        specified in <code>new.gif</code>, this value should be
+	 *        <code>new</code>.
 	 * @return The image, or <code>null</code> if it could not be found or
 	 *         loaded.
 	 * @see #getImage(String, int, int)
@@ -81,12 +81,12 @@ public interface IconGroup {
 	 * Returns the image for an icon from this icon group with the specified name.
 	 *
 	 * @param name The name of the icon.  For example, if you want the image
-	 * specified in <code>new.gif</code>, this value should be
-	 * <code>new</code>.
-	 * @return The image, or <code>null</code> if it could not be found or
-	 *         loaded.
+	 *        specified in <code>new.gif</code>, this value should be
+	 *        <code>new</code>.
 	 * @param w The icon width.
 	 * @param h The icon height.
+	 * @return The image, or <code>null</code> if it could not be found or
+	 *         loaded.
 	 * @see #getImage(String)
 	 * @see #getIcon(String)
 	 * @see #getNativeImage(String, int, int)

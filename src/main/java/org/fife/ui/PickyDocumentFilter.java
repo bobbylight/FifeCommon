@@ -44,7 +44,7 @@ public abstract class PickyDocumentFilter extends DocumentFilter {
 	 * "Cleans" the input text specified by passing it to
 	 * {@link #cleanseImpl(String)}.  If it's "cleansed" in any way, a beep
 	 * is played.
-
+	 *
 	 * @param text The text to possibly insert.
 	 * @return The "cleansed" text to insert.
 	 * @see #cleanseImpl(String)

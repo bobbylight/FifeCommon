@@ -97,7 +97,7 @@ public class ShortcutOptionPanel extends OptionsDialogPanel
 
 		String actionCommand = e.getActionCommand();
 
-		if (actionCommand.equals("RestoreDefaults")) {
+		if ("RestoreDefaults".equals(actionCommand)) {
 			app.restoreDefaultAccelerators(); // Does mainView too.
 			setActions(app);
 		}

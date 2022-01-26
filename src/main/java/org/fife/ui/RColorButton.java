@@ -123,7 +123,8 @@ public class RColorButton extends JButton {
 	protected static class ColorIcon implements Icon {
 
 		Color color;
-		int width, height;
+		int width;
+		int height;
 
 		public ColorIcon(Color color, int width, int height) {
 			this.color = color;

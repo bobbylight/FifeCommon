@@ -156,6 +156,13 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 	}
 
 
+	/**
+	 * Returns all available app themes.  The default implementation
+	 * returns a list containing only the "native" theme. Subclasses
+	 * can override.
+	 *
+	 * @return The list of available themes.
+	 */
 	public List<AppTheme> getAvailableAppThemes() {
 		List<AppTheme> result = new ArrayList<>();
 		result.add(new NativeTheme());

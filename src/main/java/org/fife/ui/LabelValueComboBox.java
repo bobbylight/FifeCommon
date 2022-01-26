@@ -19,10 +19,10 @@ import javax.swing.JComboBox;
  * An extension of <code>JComboBox</code> that renders label/value pairs.
  * The labels are displayed in the combo, and values are returned.
  *
- * @param <L> The label type.
- * @param <V> The value type.
  * @author Robert Futrell
  * @version 0.1
+ * @param <L> The label type.
+ * @param <V> The value type.
  */
 public class LabelValueComboBox<L, V> extends JComboBox<L> {
 

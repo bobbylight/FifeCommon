@@ -438,7 +438,10 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 				}
 
 				int /*tx, ty, tw, */th; // tab area bounds
-				int cx, cy, cw, ch; // content area bounds
+				int cx;
+				int cy;
+				int cw;
+				int ch; // content area bounds
 				Insets contentInsets = getContentBorderInsets(tabPlacement);
 				Rectangle bounds = tabPane.getBounds();
 				int numChildren = tabPane.getComponentCount();

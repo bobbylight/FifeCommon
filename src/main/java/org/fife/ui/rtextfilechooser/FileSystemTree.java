@@ -286,9 +286,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			// NOTE:  We're just putting in a dummy file no matter what
 			// for performance, as any kind of File querying methods in
 			// Java degrade performance.
-			//File[] files = fileSystemView.getFiles(file, false);
-			//if (files!=null && files.length>0)
-				dmtn.add(new FileSystemTreeNode(DUMMY_FILE));
+			dmtn.add(new FileSystemTreeNode(DUMMY_FILE));
 		}
 
 		return dmtn;
@@ -847,8 +845,15 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			super(userObject);
 		}
 
+		/**
+		 * Returns whether the file represented by this tree node is
+		 * the file specified.
+		 *
+		 * @param file The file to check.
+		 * @return Whether this tree node represents that file.
+		 */
 		public boolean containsFile(File file) {
-			return (file!=null && file.equals(userObject));
+			return file!=null && file.equals(userObject);
 		}
 
 		@Override

@@ -520,7 +520,8 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 
 				// Set text to display.
 				String text = file.getName();
-				String beginning, ending;
+				String beginning;
+				String ending;
 				if (chooser.isOpenedFile(file) && chooser.getStyleOpenFiles()) {
 					beginning = "<html><body><center><u>";
 					ending = "</u></center></body></html>";
@@ -537,7 +538,8 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 			else {
 				// Set colors and text to display.
 				label.setForeground(unselectedFG);
-				String beginning, ending;
+				String beginning;
+				String ending;
 				if (chooser.isOpenedFile(file)) {
 					beginning = "";//"<html><u>";
 					ending = "";//"</u></html>";
@@ -569,9 +571,11 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		}
 
 		// _x & _y are the mousePressed location in absolute coordinate system
-		int _x, _y;
+		int _x;
+		int _y;
 		// __x & __y are the mousePressed location in source view's coordinate system
-		int __x, __y;
+		int __x;
+		int __y;
 		Rectangle startingBounds;
 
 		@Override
@@ -666,7 +670,8 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 										e.getX(), e.getY(), null);
 			int deltaX = _x - p.x;
 			int deltaY = _y - p.y;
-			int newX, newY;
+			int newX;
+			int newY;
 			Insets i = getInsets();
 
 			// Move the window.
@@ -676,7 +681,8 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 				return;
 			}
 
-			int pWidth, pHeight;
+			int pWidth;
+			int pHeight;
 			Dimension s = getParent().getSize();
 			pWidth = s.width;
 			pHeight = s.height;

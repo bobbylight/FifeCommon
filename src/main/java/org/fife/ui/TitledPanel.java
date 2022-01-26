@@ -197,7 +197,8 @@ public class TitledPanel extends JPanel {
 
 		private static final Insets INSETS = new Insets(0, 0, 2, 0);
 
-		private Color light, dark;
+		private Color light;
+		private Color dark;
 
 		public BottomBevelBorder() {
 			this(null, null);

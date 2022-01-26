@@ -125,11 +125,7 @@ public final class Utilities {
 			Document doc;
 			try {
 				db = dbf.newDocumentBuilder();
-InputSource is = new InputSource(new FileReader(file));
-//				InputSource is = new InputSource(new UnicodeReader(
-//							new BufferedInputStream(
-//							new FileInputStream(xmlFile)), "UTF-8"));
-//				is.setEncoding("UTF-8");
+				InputSource is = new InputSource(new FileReader(file));
 				doc = db.parse(is);
 			} catch (IOException ioe) {
 				throw ioe;

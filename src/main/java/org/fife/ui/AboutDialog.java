@@ -135,10 +135,10 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String actionCommand = e.getActionCommand();
-		if (actionCommand.equals("OK")) {
+		if ("OK".equals(actionCommand)) {
 			setVisible(false);
 		}
-		else if (actionCommand.equals("License")) {
+		else if ("License".equals(actionCommand)) {
 			JDialog licenseDialog = createLicenseDialog();
 			licenseDialog.setVisible(true);
 		}

@@ -15,9 +15,9 @@ import org.fife.ui.StatusBarPanel;
 /**
  * A plugin representing a component in a status bar.
  *
- * @param <T> The type of parent application.
  * @author Robert Futrell
  * @version 1.0
+ * @param <T> The type of parent application.
  */
 public abstract class StatusBarPlugin<T extends GUIApplication> extends StatusBarPanel implements Plugin<T> {
 

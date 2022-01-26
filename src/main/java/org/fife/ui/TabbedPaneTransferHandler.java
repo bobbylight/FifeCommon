@@ -361,7 +361,7 @@ public class TabbedPaneTransferHandler extends TransferHandler
 	/**
 	 * Transferable representing a tab from a tabbed pane and its contents.
 	 */
-    class TabTransferable implements Transferable {
+	class TabTransferable implements Transferable {
 
 		private TabTransferData transferData;
 

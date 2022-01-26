@@ -72,7 +72,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 	private JWindow popupWindow;
 	private boolean directoriesOnly;
 	private long lastCount = -1;
-	private boolean ignoreDocumentUpdates = false;
+	private boolean ignoreDocumentUpdates;
 
 	private Runnable listValueChangedRunnable;
 
@@ -668,9 +668,7 @@ System.out.println("DEBUG: *** parent is null");
 	@Override
 	public void processFocusEvent(FocusEvent e) {
 		if (e.getID()==FocusEvent.FOCUS_LOST) {
-//			if (!e.isTemporary() && e.getOppositeComponent()!=popupWindow) {
-				setPopupVisible(false);
-//			}
+			setPopupVisible(false);
 		}
 		super.processFocusEvent(e);
 	}

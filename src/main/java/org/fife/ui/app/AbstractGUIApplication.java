@@ -55,9 +55,9 @@ import org.fife.ui.app.themes.NativeTheme;
  *       items, Options/Preferences menu items, etc.).
  * </ul>
  *
- * @param <P> The type of preferences for this application.
  * @author Robert Futrell
  * @version 0.6
+ * @param <P> The type of preferences for this application.
  * @see AbstractPluggableGUIApplication
  */
 public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
@@ -475,7 +475,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 	 * application is loading.
 	 *
 	 * @return The splash screen.  If <code>null</code> is returned, no splash
-	 * screen is displayed.
+	 *         screen is displayed.
 	 */
 	protected abstract SplashScreen createSplashScreen();
 
@@ -1468,43 +1468,43 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 	 *
 	 * @param <T> The parent application class type.
 	 */
-    public static class OptionsAction<T extends AbstractGUIApplication<?>>
-    		extends AppAction<T> {
+	public static class OptionsAction<T extends AbstractGUIApplication<?>>
+			extends AppAction<T> {
 
-    	/**
-    	 * Creates an instance of this action.
-    	 *
+		/**
+		 * Creates an instance of this action.
+		 *
 		 * @param app The application that owns this action.
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
-    	 */
-        public OptionsAction(T app, String nameKey) {
+		 */
+		public OptionsAction(T app, String nameKey) {
             super(app, nameKey);
         }
 
-    	/**
-    	 * Creates an instance of this action.
-    	 *
+		/**
+		 * Creates an instance of this action.
+		 *
 		 * @param app The application that owns this action.
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
 		 * @param icon The name of the icon resource for this action.
-    	 */
-        public OptionsAction(T app, String nameKey, String icon) {
+		 */
+		public OptionsAction(T app, String nameKey, String icon) {
             super(app, nameKey, icon);
         }
 
-    	/**
-    	 * Creates an instance of this action.
-    	 *
+		/**
+		 * Creates an instance of this action.
+		 *
 		 * @param app The application that owns this action.
 		 * @param msg The resource bundle to localize from.
 		 * @param nameKey The key for the name of the action (and the possible
 		 *        root of keys for description, mnemonic, etc.).
-    	 */
-        public OptionsAction(T app, ResourceBundle msg, String nameKey) {
-            super(app, msg, nameKey);
-        }
+		 */
+		public OptionsAction(T app, ResourceBundle msg, String nameKey) {
+			super(app, msg, nameKey);
+		}
 
         @Override
 		public void actionPerformed(ActionEvent e) {

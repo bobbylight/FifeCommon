@@ -51,6 +51,13 @@ public final class TranslucencyUtil {
 		return instance;
 	}
 
+	/**
+	 * Returns the opacity of a window.
+	 *
+	 * @param w The window to check.
+	 * @return The window's opacity, or {@code 1} if it cannot
+	 *         be determined.
+	 */
 	public float getOpacity(Window w) {
 
 		float opacity = 1;
@@ -79,6 +86,13 @@ public final class TranslucencyUtil {
 	}
 
 
+	/**
+	 * Returns whether translucency is supported in this JVM.
+	 *
+	 * @param perPixel Whether to check per-pixel translucency,
+	 *        which is different from whole-window translucency.
+	 * @return Whether that flavor of translucency is supported.
+	 */
 	public boolean isTranslucencySupported(boolean perPixel) {
 
 		GraphicsDevice.WindowTranslucency kind = perPixel ?
@@ -89,6 +103,16 @@ public final class TranslucencyUtil {
 	}
 
 
+	/**
+	 * Sets the opacity of a window.
+	 *
+	 * @param w The window.
+	 * @param value The opacity value to set.
+	 * @return Whether the operation was successful.  This will
+	 *         be {@code false} if opacity is not suppoted
+	 *         in this JVM.
+	 * @see #setOpaque(Window, boolean)
+	 */
 	public boolean setOpacity(Window w, float value) {
 
 		if (isDecorated(w) || !isTranslucencySupported(false)) {
@@ -100,6 +124,17 @@ public final class TranslucencyUtil {
 	}
 
 
+	/**
+	 * Sets the opacity of a window.
+	 *
+	 * @param w The window.
+	 * @param opaque Whether the window should be opaque (e.g.
+	 *        a painted background or a 0-alpha background).
+	 * @return Whether the operation was successful.  This will
+	 *         be {@code false} if opacity is not suppoted
+	 *         in this JVM.
+	 * @see #setOpacity(Window, float)
+	 */
 	public boolean setOpaque(Window w, boolean opaque) {
 		if (isDecorated(w) || (!opaque && !isTranslucencySupported(true))) {
 			return false;

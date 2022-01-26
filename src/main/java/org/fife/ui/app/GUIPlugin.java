@@ -21,9 +21,9 @@ import org.fife.ui.dockablewindows.DockableWindow;
 /**
  * A plugin that includes one or more dockable windows.
  *
- * @param <T> The type of application.
  * @author Robert Futrell
  * @version 0.8
+ * @param <T> The type of application.
  * @see org.fife.ui.app.Plugin
  * @see org.fife.ui.app.AbstractPluggableGUIApplication
  * @see org.fife.ui.dockablewindows.DockableWindow

@@ -34,6 +34,15 @@ public abstract class AbstractAppTheme implements AppTheme {
 	}
 
 
+	/**
+	 * Adds a key/value pair to add to the {@code UIDefaults} table
+	 * when this theme is applied.  This is useful for custom UI
+	 * components, or components with customized painting that want
+	 * to change their look depending on the theme.
+	 *
+	 * @param key The key for the property.
+	 * @param value The value of the property.
+	 */
 	public void addExtraUiDefault(String key, Object value) {
 		extraUiDefaults.put(key, value);
 	}
@@ -90,6 +99,12 @@ public abstract class AbstractAppTheme implements AppTheme {
 	}
 
 
+	/**
+	 * Sets the color to use for hyperlink components.
+	 *
+	 * @param foreground The color to use.
+	 * @see Hyperlink
+	 */
 	public void setHyperlinkForeground(Color foreground) {
 		extraUiDefaults.put(Hyperlink.UI_PROPERTY_FOREGROUND, foreground);
 	}

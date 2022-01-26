@@ -73,6 +73,12 @@ public final class DarculaUtil {
 	}
 
 
+	/**
+	 * Returns whether the given UI is a Darcula UI.
+	 *
+	 * @param ui The UI to check.  This cannot be {@code null}.
+	 * @return Whether the UI is a Darcula UI.
+	 */
 	public static boolean isDarculaUI(ComponentUI ui) {
 		return ui.getClass().getSimpleName().contains("Darcula");
 	}

@@ -218,11 +218,11 @@ public class RDirectoryChooser extends EscapableDialog {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String actionCommand = e.getActionCommand();
-			if (actionCommand.equals("OK")) {
+			if ("OK".equals(actionCommand)) {
 				chosenDirectory = directoryTree.getSelectedFileName();
 				setVisible(false);
 			}
-			else if (actionCommand.equals("Cancel")) {
+			else if ("Cancel".equals(actionCommand)) {
 				escapePressed();
 			}
 		}

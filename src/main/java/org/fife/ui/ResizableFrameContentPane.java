@@ -4,7 +4,7 @@
  * ResizableFrameContentPane.java - A content pane with a size grip that
  * can be used to resize a sizable dialog or frame.
  * Copyright (C) 2006 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

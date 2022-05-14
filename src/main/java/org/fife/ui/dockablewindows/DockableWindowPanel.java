@@ -4,7 +4,7 @@
  * DockedWindowPanel.java - A panel capable of having "windows" docked on any
  * of its four sides, as well as manage floating windows.
  * Copyright (C) 2005 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

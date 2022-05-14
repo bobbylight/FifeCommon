@@ -4,7 +4,7 @@
  * SplashScreen.java - A "splash screen" to display while your Java program
  * is loading.
  * Copyright (C) 2003 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

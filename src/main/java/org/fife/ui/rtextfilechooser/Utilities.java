@@ -3,7 +3,7 @@
  *
  * Utilities.java - Utility methods for dealing with RTextFileChooser.
  * Copyright (C) 2005 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

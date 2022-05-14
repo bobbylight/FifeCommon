@@ -4,7 +4,7 @@
  * StatusBarPanel.java - Panel used by StatusBar; it can have a "shadow" effect
  * displayed at its top and bottom.
  * Copyright (C) 2004 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

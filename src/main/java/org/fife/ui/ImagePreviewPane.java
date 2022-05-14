@@ -4,7 +4,7 @@
  * ImagePreviewPane.java - An accessory for JFileChoosers that displays a
  * preview of image (gif, png or jpg) files.
  * Copyright (C) 2003 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

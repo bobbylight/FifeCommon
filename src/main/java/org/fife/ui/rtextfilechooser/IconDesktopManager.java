@@ -5,7 +5,7 @@
  *    select multiple internal frames simultaneously (when used with a
  *    JDesktopPane that also allows this, such as IconDesktopPane).
  * Copyright (C) 2004 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

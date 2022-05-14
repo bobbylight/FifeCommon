@@ -4,7 +4,7 @@
  * FontSelector.java - A panel allowing the user to select a font
  * (for use in things such as options dialogs).
  * Copyright (C) 2006 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

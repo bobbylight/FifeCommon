@@ -4,7 +4,7 @@
  * ExceptionDialog.java - A dialog for displaying program Exceptions to the
  * user.
  * Copyright (C) 2004 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

@@ -4,7 +4,7 @@
  * ScrollableJPopupMenu.java - A popup menu that will allow the user to scroll
  * through its contents if its contents get too long.
  * Copyright (C) 2009 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

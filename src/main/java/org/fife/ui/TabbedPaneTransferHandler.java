@@ -4,7 +4,7 @@
  * TabbedPaneTransferHandler.java - A transfer handler that can transfer
  * tabs between JTabbedPanes (or in the same tabbed pane).
  * Copyright (C) 2004 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

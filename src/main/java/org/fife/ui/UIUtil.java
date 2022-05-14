@@ -3,7 +3,7 @@
  *
  * UIUtil.java - Utility methods for org.fife.ui classes.
  * Copyright (C) 2005 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */
@@ -442,7 +442,7 @@ public final class UIUtil {
 	 * do this, even though <code>DefaultListCellRenderer</code> and
 	 * <code>DefaultTreeCellRenderer</code> do.<p>
 	 *
-	 * See Sun bug http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6333197
+	 * See Sun bug https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6333197
 	 * for more information.
 	 *
 	 * @param table The table to update.
@@ -1334,7 +1334,7 @@ public final class UIUtil {
 	 * Sets the rendering hints on a graphics object to those closest to the
 	 * system's desktop values.<p>
 	 *
-	 * See <a href="http://download.oracle.com/javase/6/docs/api/java/awt/doc-files/DesktopProperties.html">AWT
+	 * See <a href="https://docs.oracle.com/en/java/javase/14/docs/api/java.desktop/java/awt/doc-files/DesktopProperties.html">AWT
 	 * Desktop Properties</a> for more information.
 	 *
 	 * @param g2d The graphics context.

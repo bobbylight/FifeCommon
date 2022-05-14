@@ -5,7 +5,7 @@
  *                     describe a style used when painting files of a given type
  *                     in an RTextFileChooser.
  * Copyright (C) 2004 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

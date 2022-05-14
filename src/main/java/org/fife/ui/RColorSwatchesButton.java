@@ -4,7 +4,7 @@
  * RColorSwatchesButton.java - A JButton that lets you pick a color via
  * a popup menu.
  * Copyright (C) 2004 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */
@@ -285,7 +285,7 @@ public class RColorSwatchesButton extends RColorButton {
 			// that the LAF doesn't set some properties set in
 			// BasicLookAndFeel that BasicMenuItemUI (and hence its
 			// subclasses) assume are set.  See:
-			// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6634504
+			// https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6634504
 			String prefix = getPropertyPrefix();
 			UIManager.put(prefix + ".borderPainted", Boolean.FALSE);
 		}

@@ -4,7 +4,7 @@
  * DockableWindowConstants.java - Constants pertinent to the dockable windows
  * package.
  * Copyright (C) 2005 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

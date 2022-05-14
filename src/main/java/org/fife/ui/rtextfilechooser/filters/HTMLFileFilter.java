@@ -3,7 +3,7 @@
  *
  * HTMLFileFilter - A FileFilter that filters everything except HTML files.
  * Copyright (C) 2004 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

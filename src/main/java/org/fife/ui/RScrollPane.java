@@ -4,7 +4,7 @@
  * RScrollPane.java - An extension of JScrollPane that adds right-click popup
  * menus on the scrollbars for scrolling.
  * Copyright (C) 2003 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

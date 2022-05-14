@@ -5,7 +5,7 @@
  * choosers, it remembers the current directory only when a file is opened or
  * saved (i.e., only if the dialog is not canceled).
  * Copyright (C) 2003 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

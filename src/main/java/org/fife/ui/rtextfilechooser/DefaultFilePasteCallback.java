@@ -4,7 +4,7 @@
  * DefaultFilePasteCallback - Displays the progress of a file paste operation
  * using a ProgressMonitor.
  * Copyright (C) 2013 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

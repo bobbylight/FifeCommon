@@ -3,7 +3,7 @@
  *
  * MenuButton.java - A button that, when clicked, presents a popup menu.
  * Copyright (C) 2004 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

@@ -3,7 +3,7 @@
  *
  * GUIApplication.java - An interface for a basic GUI application.
  * Copyright (C) 2004 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

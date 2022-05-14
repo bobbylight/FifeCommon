@@ -4,7 +4,7 @@
  * DrawDnDIndicatorTabbedPane.java - A tabbed pane that draws visual cues
  * indicating where a tab will be dropped onto a DnD-enabled tabbed pane.
  * Copyright (C) 2005 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

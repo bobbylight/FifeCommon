@@ -4,7 +4,7 @@
  * AbstractPluggableGUIApplication.java - A GUI application able to be
  * extended by plug-ins.
  * Copyright (C) 2005 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

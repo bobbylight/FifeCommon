@@ -3,7 +3,7 @@
  *
  * Actions.java - Actions used in a file chooser.
  * Copyright (C) 2009 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

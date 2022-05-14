@@ -4,7 +4,7 @@
  * RDirectoryChooser.java - A dialog allowing the user to select a single
  * directory on their system.
  * Copyright (C) 2004 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

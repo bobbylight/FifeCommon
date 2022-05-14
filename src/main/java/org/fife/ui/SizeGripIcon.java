@@ -3,7 +3,7 @@
  *
  * SizeGripIcon.java - An icon that paints a size grip.
  * Copyright (C) 2006 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

@@ -3,7 +3,7 @@
  *
  * ActionRegistry - A registry of actions in a GUI application.
  * Copyright (C) 2013 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

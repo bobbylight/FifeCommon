@@ -4,7 +4,7 @@
  * FileExplorerTableModel.java - A table model that simulates the functionality
  * found in the table used in Windows' "details view" in Windows Explorer.
  * Copyright (C) 2004 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

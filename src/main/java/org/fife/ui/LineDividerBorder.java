@@ -4,7 +4,7 @@
  * LineDividerBorder.java - A border that is really just a line "divider" on
  * one of the component's sides.
  * Copyright (C) 2004 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

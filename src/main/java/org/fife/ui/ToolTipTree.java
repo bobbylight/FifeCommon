@@ -4,7 +4,7 @@
  * ToolTipTree.java - A JTree that displays tooltips for its nodes directly
  * over them, like the file system tree in Windows Explorer.
  * Copyright (C) 2005 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

@@ -4,7 +4,7 @@
  * AbstractPlugin.java - Base class for Plugins that don't need to extend a
  * specific class.
  * Copyright (C) 2011 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

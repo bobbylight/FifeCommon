@@ -4,7 +4,7 @@
  * ImageFileFilter - A FileFilter that filters everything except image files
  * processed by Swing (*.jpg, *.gif, *.png and *.bmp).
  * Copyright (C) 2003 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

@@ -4,7 +4,7 @@
  * FileChooserFavoritesOptionPanel.java - Option panel for managing the
  * file chooser "Favorite Directories" list.
  * Copyright (C) 2008 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

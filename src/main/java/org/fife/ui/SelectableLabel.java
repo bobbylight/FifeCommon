@@ -3,7 +3,7 @@
  *
  * SelectableLabel.java - A label that can have its text selected.
  * Copyright (C) 2009 Robert Futrell
- * http://fifesoft.com/rtext
+ * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */
@@ -138,7 +138,7 @@ public class SelectableLabel extends JTextPane {
 	 * Add a CSS rule to force body tags to use the default label font
 	 * instead of the value in javax.swing.text.html.default.css.  This was
 	 * adapted from:
-	 * http://explodingpixels.wordpress.com/2008/10/28/make-jeditorpane-use-the-system-font/
+	 * https://explodingpixels.wordpress.com/2008/10/28/make-jeditorpane-use-the-system-font/
 	 */
 	private void updateDefaultHtmlFont() {
 

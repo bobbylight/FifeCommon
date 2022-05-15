@@ -1334,8 +1334,10 @@ public final class UIUtil {
 	 * Sets the rendering hints on a graphics object to those closest to the
 	 * system's desktop values.<p>
 	 *
-	 * See <a href="https://docs.oracle.com/en/java/javase/14/docs/api/java.desktop/java/awt/doc-files/DesktopProperties.html">AWT
-	 * Desktop Properties</a> for more information.
+	 * See
+	 * <a
+	 * href="https://docs.oracle.com/en/java/javase/14/docs/api/java.desktop/java/awt/doc-files/DesktopProperties.html">
+	 * AWT Desktop Properties</a> for more information.
 	 *
 	 * @param g2d The graphics context.
 	 * @return The old rendering hints.

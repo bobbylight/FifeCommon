@@ -80,6 +80,11 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 	public static final String STATUS_BAR_VISIBLE_PROPERTY	="statusBarVisible";
 
 	/**
+	 * This property is fired whenever the application theme changes.
+	 */
+	public static final String THEME_PROPERTY = "appTheme";
+
+	/**
 	 * This property is fired whenever the toolbar changes.
 	 */
 	public static final String TOOL_BAR_PROPERTY			= "toolBar";
@@ -1342,7 +1347,8 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
 
 	/**
-	 * Sets the theme used by this application.
+	 * Sets the theme used by this application. This fires a property change
+	 * event of type {@code THEME_PROPERTY}.
 	 *
 	 * @param newTheme The theme to install.  This cannot be {@code null}.
 	 * @see #setThemeAdditionalProperties(AppTheme)
@@ -1354,6 +1360,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
 		if (theme == null || !newTheme.getName().equals(theme.getName())) {
 
+			AppTheme oldTheme = theme;
 			theme = newTheme;
 			String currentLookAndFeel = UIManager.getLookAndFeel().getClass().getName();
 
@@ -1373,6 +1380,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 			SwingUtilities.updateComponentTreeUI(this); // Sometimes needed, e.g. FlatLaF => Windows
 			updateLookAndFeel(UIManager.getLookAndFeel());
 			setThemeAdditionalProperties(newTheme);
+			firePropertyChange(THEME_PROPERTY, oldTheme, theme);
 		}
 	}
 

@@ -20,10 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -39,6 +36,13 @@ import javax.swing.table.TableCellRenderer;
  * @version 1.0
  */
 public final class UIUtil {
+
+	/**
+	 * If a {@code JComponent} has this client property set to {@code Boolean.TRUE},
+	 * {@link #setComponentsEnabled(Container, boolean, Component...)} will ignore
+	 * that component.
+	 */
+	public static final String PROPERTY_ALWAYS_IGNORE = "always.ignore";
 
 	/*
 	 * -1 => Not yet determined, 0 => no, 1 => yes.
@@ -122,6 +126,12 @@ public final class UIUtil {
 				parent.add(pairs[i]);
 			}
 		}
+	}
+
+
+	private static boolean alwaysIgnore(Component component) {
+		return component instanceof JComponent &&
+			Boolean.TRUE.equals(((JComponent)component).getClientProperty(PROPERTY_ALWAYS_IGNORE));
 	}
 
 
@@ -1313,6 +1323,34 @@ public final class UIUtil {
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, InputEvent.CTRL_DOWN_MASK), "nothing");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, InputEvent.CTRL_DOWN_MASK), "nothing");
 
+	}
+
+
+	/**
+	 * Enables or disables a container and all child components. Ignore specific children based on
+	 * both an explicit list specified in the call, as well as any {@code JComponent}s with the
+	 * client property FOO set to {@code Boolean.TRUE}.
+	 *
+	 * @param root The root component to enable or disable.
+	 * @param enabled Whether to enable or disable all components.
+	 * @param ignore An optional list of children to always ignore.
+	 */
+	public static void setComponentsEnabled(Container root, boolean enabled, Component... ignore) {
+		Set<Component> ignoreSet = Set.of(ignore);
+		setComponentsEnabledImpl(root, enabled, ignoreSet);
+	}
+
+
+	private static void setComponentsEnabledImpl(Container container, boolean enabled, Set<Component> ignore) {
+
+		for (Component child : container.getComponents()) {
+			if (!ignore.contains(child) && !alwaysIgnore(child)) {
+				child.setEnabled(enabled);
+				if (child instanceof Container) {
+					setComponentsEnabledImpl((Container)child, enabled, ignore);
+				}
+			}
+		}
 	}
 
 

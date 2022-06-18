@@ -330,12 +330,6 @@ public class FSATextField extends JTextField implements ComponentListener,
 			if (parent.isVisible()) {
 				updatePopupWindowDimensions();
 			}
-			else {
-System.out.println("DEBUG: Parent is not visible");
-			}
-		}
-		else {
-System.out.println("DEBUG: *** parent is null");
 		}
 
 		return parent!=null;

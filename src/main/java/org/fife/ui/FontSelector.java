@@ -41,6 +41,7 @@ public class FontSelector extends JPanel implements ActionListener {
 	private boolean underlineSelectable;
 	private boolean colorSelectable;
 	private Color fontColor;
+	private boolean toggledOn;
 
 	public static final String ENABLED_PROPERTY		= "enabled";
 	public static final String FONT_PROPERTY		= "font";
@@ -96,6 +97,7 @@ public class FontSelector extends JPanel implements ActionListener {
 		add(Box.createHorizontalStrut(5));
 		add(browseButton);
 		add(Box.createHorizontalGlue());
+		toggledOn = true;
 
 	}
 
@@ -149,8 +151,7 @@ public class FontSelector extends JPanel implements ActionListener {
 		else if (e.getSource()==labelComp) {
 			JCheckBox cb = (JCheckBox)labelComp;
 			boolean selected = cb.isSelected();
-			field.setEnabled(selected);
-			browseButton.setEnabled(selected);
+			setToggledOn(selected);
 			firePropertyChange(ENABLED_PROPERTY, !selected, selected);
 		}
 
@@ -207,19 +208,22 @@ public class FontSelector extends JPanel implements ActionListener {
 
 
 	/**
-	 * Returns whether this font selector is "toggled on."  This
-	 * method is unfortunately named because <code>isEnabled()</code>
-	 * is already a method defined by <code>Component</code>.<p>
+	 * Returns whether this font selector is "toggled on;" that is,
+	 * assuming the component is enabled, whether the user can select
+	 * a font. This method will return {@code true} if it is a
+	 * checkbox that is selected, or if it is just a label or unlabelled.
+	 * It will return {@code false} if it is a checkbox and the
+	 * checkbox is not selected.<p>
 	 *
-	 * If this font selector is not togglable, this method always
-	 * returns <code>true</code>.
+	 * This property is completely independent of the component's
+	 * enabled state. Thus it can be toggled on (checked) but not
+	 * enabled.
 	 *
 	 * @return Whether this font selector is toggled on.
 	 * @see #setToggledOn(boolean)
 	 */
 	public boolean isToggledOn() {
-		return labelComp==null || (labelComp instanceof JLabel) ||
-			((JCheckBox)labelComp).isSelected();
+		return toggledOn;
 	}
 
 
@@ -264,6 +268,17 @@ public class FontSelector extends JPanel implements ActionListener {
 	}
 
 
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		if (labelComp != null) {
+			labelComp.setEnabled(enabled);
+		}
+		field.setEnabled(enabled && toggledOn);
+		browseButton.setEnabled(enabled && toggledOn);
+	}
+
+
 	/**
 	 * Sets the font color displayed.  This method will do
 	 * nothing if <code>isColorSelectable()</code> returns
@@ -280,21 +295,23 @@ public class FontSelector extends JPanel implements ActionListener {
 
 
 	/**
-	 * Sets whether this font selector is "toggled on."  This method is
-	 * unfortunately named since <code>setEnabled</code> is already a
-	 * method defined by <code>Component</code>.<p>
+	 * Sets whether this font selector is "toggled on."  See the
+	 * description of {@link #isToggledOn()} for a description of
+	 * this property.
 	 *
-	 * If this font selector is not togglable, this method does nothing.
+	 * If this font selector is not togglable (i.e. is not a
+	 * checkbox), this method does nothing.
 	 *
-	 * @param toggled Whether this font selector should be enabled.
+	 * @param toggled Whether this font selector should be toggled on.
 	 * @see #isToggledOn()
 	 */
 	public void setToggledOn(boolean toggled) {
 		if (labelComp instanceof JCheckBox) {
 			JCheckBox cb = (JCheckBox)labelComp;
 			cb.setSelected(toggled);
-			field.setEnabled(toggled);
-			browseButton.setEnabled(toggled);
+			field.setEnabled(isEnabled() && toggled);
+			browseButton.setEnabled(isEnabled() && toggled);
+			this.toggledOn = toggled;
 		}
 	}
 

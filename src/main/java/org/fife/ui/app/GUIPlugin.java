@@ -85,7 +85,7 @@ public abstract class GUIPlugin<T extends GUIApplication> extends AbstractPlugin
 	 * @param newLaf The new <code>LookAndFeel</code>.
 	 */
 	@Override
-	protected void lookAndFeelChanged(LookAndFeel newLaf) {
+	public void lookAndFeelChanged(LookAndFeel newLaf) {
 		for (DockableWindow dw : windowMap.values()) {
 			if (!dw.isActive()) {
 				SwingUtilities.updateComponentTreeUI(dw);

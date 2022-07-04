@@ -10,6 +10,8 @@
  */
 package org.fife.ui.app;
 
+import org.fife.ui.app.icons.IconGroup;
+
 import javax.swing.*;
 
 
@@ -52,14 +54,13 @@ public abstract class AbstractPlugin<T extends GUIApplication> implements Plugin
 	}
 
 
-	/**
-	 * Called when the LookAndFeel changes.  This is a hook for plugins to
-	 * manually update their popup dialogs.  Subclasses should override if
-	 * necessary, but always call the super implementation.
-	 *
-	 * @param newLaf The new <code>LookAndFeel</code>.
-	 */
-	protected void lookAndFeelChanged(LookAndFeel newLaf) {
+	@Override
+	public void iconGroupChanged(IconGroup iconGroup) {
+	}
+
+
+	@Override
+	public void lookAndFeelChanged(LookAndFeel newLaf) {
 	}
 
 
@@ -75,4 +76,7 @@ public abstract class AbstractPlugin<T extends GUIApplication> implements Plugin
 	}
 
 
+	@Override
+	public void themeChanged(AppTheme newTheme) {
+	}
 }

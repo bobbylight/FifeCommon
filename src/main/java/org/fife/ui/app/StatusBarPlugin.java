@@ -10,6 +10,9 @@
 package org.fife.ui.app;
 
 import org.fife.ui.StatusBarPanel;
+import org.fife.ui.app.icons.IconGroup;
+
+import javax.swing.*;
 
 
 /**
@@ -42,6 +45,16 @@ public abstract class StatusBarPlugin<T extends GUIApplication> extends StatusBa
 	}
 
 
+	@Override
+	public void iconGroupChanged(IconGroup iconGroup) {
+	}
+
+
+	@Override
+	public void lookAndFeelChanged(LookAndFeel newLaf) {
+	}
+
+
 	/**
 	 * Sets the option panel to add this plug-in's option panels to.
 	 *
@@ -51,6 +64,11 @@ public abstract class StatusBarPlugin<T extends GUIApplication> extends StatusBa
 	 */
 	public void setOptionsDialogPanelParentPanelName(String id) {
 		parentOptionPanelID = id;
+	}
+
+
+	@Override
+	public void themeChanged(AppTheme newTheme) {
 	}
 
 

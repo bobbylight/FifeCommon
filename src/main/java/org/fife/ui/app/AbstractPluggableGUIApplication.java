@@ -226,6 +226,19 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 
 
 	/**
+	 * Overridden to update any plugins that the theme has changed.
+	 *
+	 * @param newTheme The new theme.
+	 */
+	@Override
+	protected void postSetTheme(AppTheme newTheme) {
+		if (pluginList != null) {
+			pluginList.forEach(p -> p.themeChanged(newTheme));
+		}
+	}
+
+
+	/**
 	 * This is called in the GUI application's constructor.  It is a chance
 	 * for subclasses to do initialization of stuff that will be needed by
 	 * the application right before it is displayed.<p>
@@ -329,7 +342,7 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 	@Override
 	protected void updateIconsForNewIconGroup(IconGroup iconGroup) {
 		if (pluginList != null) {
-			pluginList.forEach(p -> p.updateIconsForNewIconGroup(iconGroup));
+			pluginList.forEach(p -> p.iconGroupChanged(iconGroup));
 		}
 	}
 

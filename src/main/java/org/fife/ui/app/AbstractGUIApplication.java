@@ -1003,6 +1003,20 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
 
 	/**
+	 * Called after the application theme changes. This gives subclasses a
+	 * chance to do something without listening for {@link #THEME_PROPERTY}
+	 * to be fired.<p>
+	 *
+	 * The default implementation does nothing. Subclasses can override.
+	 *
+	 * @param newTheme The new theme.
+	 */
+	protected void postSetTheme(AppTheme newTheme) {
+		// Do nothing - subclasses can override
+	}
+
+
+	/**
 	 * Called on OS X when the user opens the Options dialog.
 	 */
 	public abstract void preferences();
@@ -1381,6 +1395,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 			updateLookAndFeel(UIManager.getLookAndFeel());
 			setThemeAdditionalProperties(newTheme);
 			firePropertyChange(THEME_PROPERTY, oldTheme, theme);
+			postSetTheme(theme);
 		}
 	}
 

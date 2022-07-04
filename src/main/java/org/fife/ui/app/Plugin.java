@@ -11,7 +11,7 @@ package org.fife.ui.app;
 
 import org.fife.ui.app.icons.IconGroup;
 
-import javax.swing.Icon;
+import javax.swing.*;
 
 
 /**
@@ -101,6 +101,17 @@ public interface Plugin<T extends GUIApplication> {
 
 
 	/**
+	 * Updates any icons used by this plugin for a new icon group.  This is
+	 * called whenever an application's icon group changes.
+	 *
+	 * @param iconGroup The new icon group.
+	 * @see #themeChanged(AppTheme)
+	 * @see #lookAndFeelChanged(LookAndFeel)
+	 */
+	void iconGroupChanged(IconGroup iconGroup);
+
+
+	/**
 	 * Called just after a plugin is added to a GUI application.  If this is
 	 * a <code>GUIPlugin</code>, it has already been added visually.  Plugins
 	 * should use this method to register any listeners to the GUI application
@@ -112,10 +123,32 @@ public interface Plugin<T extends GUIApplication> {
 
 
 	/**
+	 * Called when the LookAndFeel changes.  This is a hook for plugins to
+	 * manually update their popup dialogs.  Subclasses should override if
+	 * necessary, but always call the super implementation.
+	 *
+	 * @param newLaf The new <code>LookAndFeel</code>.
+	 * @see #themeChanged(AppTheme)
+	 * @see #iconGroupChanged(IconGroup)
+	 */
+	void lookAndFeelChanged(LookAndFeel newLaf);
+
+
+	/**
 	 * Called when the GUI application is shutting down.  When this method is
 	 * called, the <code>Plugin</code> should save any preferences.
 	 */
 	void savePreferences();
+
+
+	/**
+	 * Called whenever the application theme changes.
+	 *
+	 * @param newTheme The new application theme.
+	 * @see #iconGroupChanged(IconGroup)
+	 * @see #lookAndFeelChanged(LookAndFeel)
+	 */
+	void themeChanged(AppTheme newTheme);
 
 
 	/**
@@ -128,13 +161,4 @@ public interface Plugin<T extends GUIApplication> {
 	 * @see #install()
 	 */
 	boolean uninstall();
-
-
-	/**
-	 * Updates any icons used by this plugin for a new icon group.  This is
-	 * called whenever an application's icon group changes.
-	 *
-	 * @param iconGroup The new icon group.
-	 */
-	void updateIconsForNewIconGroup(IconGroup iconGroup);
 }

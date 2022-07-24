@@ -25,7 +25,7 @@ wrapper {
 }
 
 checkstyle {
-	toolVersion = '9.2.1'
+	toolVersion = '10.3.1'
 }
 
 compileJava {

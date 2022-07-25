@@ -63,6 +63,12 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	private CardLayout currentOptionPanelLayout;
 	private TitledPanel titledPanel;
 
+	/**
+	 * Whether the dialog is initializing child option panels to reflect
+	 * the state of the application.
+	 */
+	private boolean initializing;
+
 
 	/**
 	 * Creates a new options dialog with no options panels.
@@ -392,7 +398,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 
 		List<OptionsDialogPanel> panels = new ArrayList<>(Arrays.asList(optionsPanels));
 
-		for (OptionsDialogPanel panel : optionsPanels) {
+		for (OptionsDialogPanel panel : panels) {
 			if (id.equals(panel.getId())) {
 				return panel;
 			}
@@ -412,13 +418,20 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 * with their proper states as obtained from the owner of this options
 	 * dialog (as passed into the constructor).  The "Apply" button will be
 	 * disabled as a visual cue that nothing has been modified yet.
+	 *
+	 * @see #isInitializing()
 	 */
 	public void initialize() {
 		Frame owner = (Frame)getParent();
-		for (OptionsDialogPanel panel : optionsPanels) {
-			panel.setValues(owner);
+		initializing = true;
+		try {
+			for (OptionsDialogPanel panel : optionsPanels) {
+				panel.setValues(owner);
+			}
+			setApplyButtonEnabled(false);
+		} finally {
+			initializing = false;
 		}
-		setApplyButtonEnabled(false);
 	}
 
 
@@ -437,6 +450,20 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 			insertOptionPanel(node, childPanel);
 		}
 	}
+
+
+	/**
+	 * Returns whether this dialog is in the process of setting all values
+	 * displayed in it to reflect the state of the application (i.e.,
+	 * {@link #initialize()} is running).
+	 *
+	 * @return Whether {@code initialize()} is running.
+	 * @see #initialize()
+	 */
+	public boolean isInitializing() {
+		return initializing;
+	}
+
 
 	/**
 	 * Listens for a {@code PROPERTY_DIRTY} change in one of the option panels.

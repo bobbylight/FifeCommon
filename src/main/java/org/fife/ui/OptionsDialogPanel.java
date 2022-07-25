@@ -384,6 +384,20 @@ public abstract class OptionsDialogPanel extends JPanel {
 
 
 	/**
+	 * Returns whether this panel is in the process of setting all values
+	 * displayed in it to reflect the state of the application (i.e.,
+	 * the parent dialog is initializing).
+	 *
+	 * @return Whether this panel is initializing.
+	 */
+	protected boolean isInitializing() {
+		// The parent dialog might be null during the very first initialization
+		OptionsDialog dialog = getOptionsDialog();
+		return dialog == null || dialog.isInitializing();
+	}
+
+
+	/**
 	 * Called when an options-related event is broadcasted to all panels in
 	 * the parent options dialog.<p>
 	 * The default implementation simply forwards the event to all of its child
@@ -433,7 +447,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 
 
 	/**
-	 * Sets whether or not the "Unsaved changes" flag for this Options panel
+	 * Sets whether or not the dirty flag for this Options panel
 	 * is set.  You should call this method with a parameter set to
 	 * <code>false</code> before displaying an Options dialog.
 	 *
@@ -441,7 +455,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 * @see #isDirty()
 	 */
 	public void setDirty(boolean dirty) {
-		if (dirty != this.dirty) {
+		if (!isInitializing() && dirty != this.dirty) {
 			this.dirty = dirty;
 			firePropertyChange(PROPERTY_DIRTY, !dirty, dirty);
 		}
@@ -456,13 +470,9 @@ public abstract class OptionsDialogPanel extends JPanel {
 	 * @see #doApply(Frame)
 	 */
 	public final void setValues(Frame owner) {
-		// Don't check isDirty() for first-time through
+		// Don't check isDirty(), since the first-time through it'll be false
 		setValuesImpl(owner);
-		for (int i=0; i<getChildPanelCount(); i++) {
-			getChildPanel(i).setValues(owner);
-		}
-		// Clear the "unsaved changes" flag for the panel.
-		setDirty(false);
+		getChildPanels().forEach(panel -> panel.setValues(owner));
 	}
 
 

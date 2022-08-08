@@ -398,7 +398,9 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 
 		List<OptionsDialogPanel> panels = new ArrayList<>(Arrays.asList(optionsPanels));
 
-		for (OptionsDialogPanel panel : panels) {
+		// Use a regular for-loop since we're appending to the panels array
+		for (int i = 0; i < panels.size(); i++) {
+			OptionsDialogPanel panel = panels.get(i);
 			if (id.equals(panel.getId())) {
 				return panel;
 			}

@@ -423,7 +423,24 @@ public class FSATextField extends JTextField implements ComponentListener,
 		if (text.isEmpty()) {
 			return null;
 		}
-		return new File(text);
+		return new File(handleUnixHomeDirectory(text));
+	}
+
+
+	/**
+	 * If the specified path starts with {@code "~"}, it is converted to
+	 * be the user's home directory.
+	 *
+	 * @param path The path typed by a user.
+	 * @return The samae path, with {@code "~"} replaced with the user's home
+	 *         directory if appropriate.
+	 */
+	private static String handleUnixHomeDirectory(String path) {
+		// Allow (unlikely) relative paths like "~foo/file.txt"
+		if ("~".equals(path) || path.startsWith("~/")) {
+			path = System.getProperty("user.home") + path.substring(1);
+		}
+		return path;
 	}
 
 
@@ -620,10 +637,10 @@ public class FSATextField extends JTextField implements ComponentListener,
 
 
 	/**
-	 * Returns whether or not this text field previews both files and
+	 * Returns whether this text field previews both files and
 	 * directories or just directories.
 	 *
-	 * @return Whether or not this text field shows only directories.
+	 * @return Whether this text field shows only directories.
 	 * @see #setDirectoriesOnly
 	 */
 	public boolean isDirectoriesOnly() {
@@ -896,6 +913,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 		File t2;
 		if (lastSeparator!=0) {
 			String pathPart = text.substring(0, lastSeparator);
+			pathPart = handleUnixHomeDirectory(pathPart);
 			t2 = new File(pathPart);
 			if (!t2.isAbsolute()) {
 				t2 = new File(currentDirectory, pathPart);

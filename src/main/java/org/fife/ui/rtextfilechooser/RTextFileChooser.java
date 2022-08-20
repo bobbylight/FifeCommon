@@ -1323,7 +1323,13 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 			// Create the file.
 			files = new File[1];
-			files[0] = fileSystemView.createFileObject(text);
+			if (text.startsWith("~")) {
+				// FSATextField handles e.g. "~/file.txt" whereas the JDK doesn't
+				files[0] = fileNameTextField.getSelectedFile();
+			}
+			else { // (Possibly) special scenario handled for Windows
+				files[0] = fileSystemView.createFileObject(text);
+			}
 
 			// Make real file name for the "exists" call below.
 			if (!files[0].isAbsolute())

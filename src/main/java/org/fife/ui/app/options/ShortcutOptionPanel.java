@@ -81,7 +81,7 @@ public class ShortcutOptionPanel extends OptionsDialogPanel
 		defButton.setActionCommand("RestoreDefaults");
 		defButton.addActionListener(this);
 		JPanel temp = new JPanel(new BorderLayout());
-		temp.setBorder(BorderFactory.createEmptyBorder(5,0,0,0));
+		temp.setBorder(BorderFactory.createEmptyBorder(COMPONENT_VERTICAL_SPACING,0,0,0));
 		temp.add(defButton, BorderLayout.LINE_START);
 		add(temp, BorderLayout.SOUTH);
 		applyComponentOrientation(orientation);

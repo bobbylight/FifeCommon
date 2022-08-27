@@ -39,6 +39,16 @@ public abstract class OptionsDialogPanel extends JPanel {
 	static final String PROPERTY_DIRTY = "optionPanel.dirty";
 
 	/**
+	 * The amount of space to add between components in an option panel.
+	 */
+	protected static final int COMPONENT_VERTICAL_SPACING = 3;
+
+	/**
+	 * The amount of space to add between sections in an option panel.
+	 */
+	protected static final int SECTION_VERTICAL_SPACING = 5;
+
+	/**
 	 * The name of this options panel to be used in the the options dialog's
 	 * selection tree.
 	 */

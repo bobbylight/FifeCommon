@@ -99,22 +99,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		setBorder(UIUtil.getEmpty5Border());
 		setLayout(new BorderLayout());
 
-		Box temp = Box.createVerticalBox();
-		temp.setBorder(new OptionPanelBorder(msg.getString("General")));
-		hiddenFilesCheckBox = createCheckBox(msg, "HiddenFiles");
-		Container temp2 = createHorizontalBox();
-		hiddenColorButton = new RColorSwatchesButton();
-		temp2.add(hiddenFilesCheckBox);
-		temp2.add(hiddenColorButton);
-		temp2.add(Box.createHorizontalGlue());
-		temp.add(temp2);
-		temp2 = createStyleOpenFilesPanel(msg);
-		temp.add(temp2);
-		offerSuggestionsCB = createCheckBox(msg, "OfferSuggestions");
-		addLeftAligned(temp, offerSuggestionsCB);
-		autoCompleteCheckBox = createCheckBox(msg, "AutoComplete");
-		addLeftAligned(temp, autoCompleteCheckBox, 0, 20);
-		add(temp, BorderLayout.NORTH);
+		add(createGeneralPanel(msg), BorderLayout.NORTH);
 
 		JPanel customColorsPanel = new JPanel(new BorderLayout());
 		customColorsPanel.setBorder(new OptionPanelBorder(
@@ -214,9 +199,34 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	}
 
 
+	private Container createGeneralPanel(ResourceBundle msg) {
+
+		Box generalPanel = Box.createVerticalBox();
+		generalPanel.setBorder(new OptionPanelBorder(msg.getString("General")));
+
+		hiddenFilesCheckBox = createCheckBox(msg, "HiddenFiles");
+		Container temp = createHorizontalBox();
+		hiddenColorButton = new RColorSwatchesButton();
+		temp.add(hiddenFilesCheckBox);
+		temp.add(hiddenColorButton);
+		temp.add(Box.createHorizontalGlue());
+		generalPanel.add(temp);
+		generalPanel.add(Box.createVerticalStrut(COMPONENT_VERTICAL_SPACING));
+
+		addLeftAligned(generalPanel, createStyleOpenFilesPanel(msg), COMPONENT_VERTICAL_SPACING);
+
+		offerSuggestionsCB = createCheckBox(msg, "OfferSuggestions");
+		addLeftAligned(generalPanel, offerSuggestionsCB, COMPONENT_VERTICAL_SPACING);
+		autoCompleteCheckBox = createCheckBox(msg, "AutoComplete");
+		addLeftAligned(generalPanel, autoCompleteCheckBox, SECTION_VERTICAL_SPACING, 20);
+
+		return generalPanel;
+	}
+
+
 	private Box createStyleOpenFilesPanel(ResourceBundle msg) {
 
-		Box panel = createHorizontalBox();
+		Box openFilesPanel = createHorizontalBox();
 
 		openFilesStyleCombo = new LabelValueComboBox<>();
 		UIUtil.fixComboOrientation(openFilesStyleCombo);
@@ -244,14 +254,14 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 						getString("StyleOpenFilesMnemonic").charAt(0));
 		styleOpenFilesCheckBox.setActionCommand("StyleOpenFiles");
 		styleOpenFilesCheckBox.addActionListener(this);
-		panel.add(styleOpenFilesCheckBox);
-		panel.add(openFilesStyleCombo);
+		openFilesPanel.add(styleOpenFilesCheckBox);
+		openFilesPanel.add(openFilesStyleCombo);
 		if (end.length()>0) {
-			panel.add(new JLabel(end));
+			openFilesPanel.add(new JLabel(end));
 		}
-		panel.add(Box.createHorizontalGlue());
+		openFilesPanel.add(Box.createHorizontalGlue());
 
-		return panel;
+		return openFilesPanel;
 
 	}
 

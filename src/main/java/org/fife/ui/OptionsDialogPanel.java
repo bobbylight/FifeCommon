@@ -529,7 +529,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 
 		private String title;
 		private Insets insets;
-		private static final int HEIGHT	= 25;
+		private static final int INSETS_HEIGHT = 30;
 
 		/**
 		 * Constructor.
@@ -538,7 +538,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 		 */
 		public OptionPanelBorder(String title) {
 			this.title = title;
-			insets = new Insets(HEIGHT,8,8,8);
+			insets = new Insets(INSETS_HEIGHT,8,8,8);
 		}
 
 		/**
@@ -548,6 +548,12 @@ public abstract class OptionsDialogPanel extends JPanel {
 		 */
 		@Override
 		public Insets getBorderInsets(Component c) {
+			// Dynamically calculate so this is updated on LaF change.
+			// Reusing the same Insets instance is fine since nobody
+			// mutates it.
+			Font font = OptionPanelBorder.getFont();
+			FontMetrics fm = c.getFontMetrics(font);
+			insets.top = fm.getHeight() + 5;
 			return insets;
 		}
 
@@ -559,6 +565,20 @@ public abstract class OptionsDialogPanel extends JPanel {
 		@Override
 		public boolean isBorderOpaque() {
 			return true;
+		}
+
+		private static Font getFont() {
+			Font font = UIManager.getFont("Label.font");
+			if (font == null) {
+				// This is quite expensive for a repaint, but not sure of any
+				// other way to do this.  All Swing's "standard" LAFs define
+				// the Label.font property, as do all Substance looks, so
+				// usually we won't hit this condition.
+				// TODO: Find a more performant way to do this, but note that
+				// LAF changes at runtime cause changes if you cache anything...
+				font = new JLabel().getFont();
+			}
+			return font;
 		}
 
 		/**
@@ -582,21 +602,11 @@ public abstract class OptionsDialogPanel extends JPanel {
 			RenderingHints old = UIUtil.setNativeRenderingHints(g2d);
 
 			g.setColor(UIUtil.getHyperlinkForeground());
-			//private static final Font font = new Font("dialog", Font.PLAIN, 8);
-			Font font = UIManager.getFont("Label.font");
-			if (font ==null) {
-				// This is quite expensive for a repaint, but not sure of any
-				// other way to do this.  All Swing's "standard" LAFs define
-				// the Label.font property, as do all Substance looks, so
-				// usually we won't hit this condition.
-				// TODO: Find a more performant way to do this, but note that
-				// LAF changes at runtime cause changes if you cache anything...
-				font = new JLabel().getFont();
-			}
+			Font font = OptionPanelBorder.getFont();
 			FontMetrics fm = c.getFontMetrics(font);
 			int titleWidth = fm.stringWidth(title);
-			int middleY = y + HEIGHT/2;
-			int titleY = middleY + fm.getHeight()/2;
+			int titleY = y + fm.getLeading() + fm.getAscent();
+			int lineY = titleY - fm.getAscent() / 2;
 
 			ComponentOrientation orientation = c.getComponentOrientation();
 			boolean isDarkLaf = UIUtil.isLightForeground(c.getForeground());
@@ -605,13 +615,13 @@ public abstract class OptionsDialogPanel extends JPanel {
 			if (orientation.isLeftToRight()) {
 				g.drawString(title, x,titleY);
 				g.setColor(lineColor);
-				g.drawLine(x+titleWidth+5, middleY, x+width, middleY);
+				g.drawLine(x+titleWidth+5, lineY, x+width, lineY);
 			}
 			else {
 				int titleX = x+width-titleWidth-1;
 				g.drawString(title, titleX,titleY);
 				g.setColor(lineColor);
-				g.drawLine(x,middleY, titleX-5,middleY);
+				g.drawLine(x, lineY, titleX-5, lineY);
 			}
 
 			if (old!=null) {

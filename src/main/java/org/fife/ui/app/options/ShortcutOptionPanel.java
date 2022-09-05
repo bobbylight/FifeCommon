@@ -155,10 +155,6 @@ public class ShortcutOptionPanel extends OptionsDialogPanel
 	}
 
 
-	/**
-	 * Returns the <code>JComponent</code> at the "top" of this Options
-	 * panel.
-	 */
 	@Override
 	public JComponent getTopJComponent() {
 		return shortcutTable.getTable();

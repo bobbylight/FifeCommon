@@ -43,7 +43,7 @@ public class FontSelector extends JPanel implements ActionListener {
 	private Color fontColor;
 	private boolean toggledOn;
 
-	public static final String ENABLED_PROPERTY		= "enabled";
+	public static final String TOGGLED_ON_PROPERTY = "toggledOn";
 	public static final String FONT_PROPERTY		= "font";
 	public static final String FONT_COLOR_PROPERTY	= "fontColor";
 
@@ -152,7 +152,7 @@ public class FontSelector extends JPanel implements ActionListener {
 			JCheckBox cb = (JCheckBox)labelComp;
 			boolean selected = cb.isSelected();
 			setToggledOn(selected);
-			firePropertyChange(ENABLED_PROPERTY, !selected, selected);
+			firePropertyChange(TOGGLED_ON_PROPERTY, !selected, selected);
 		}
 
 	}

@@ -23,25 +23,25 @@ public abstract class AbstractConsoleTextArea extends JTextPane {
 
 	public static final Color DEFAULT_LIGHT_PROMPT_FG = new Color(0,192,0);
 
-	public static final Color DEFAULT_LIGHT_STDOUT_FG = Color.blue;
+	public static final Color DEFAULT_LIGHT_STDOUT_FG = new Color(111, 49, 152);
 
 	public static final Color DEFAULT_LIGHT_STDERR_FG = Color.red;
 
-	public static final Color DEFAULT_LIGHT_EXCEPTION_FG = new Color(111, 49, 152);
+	public static final Color DEFAULT_LIGHT_RESULT_FG = Color.blue;
 
-	public static final Color DEFAULT_DARK_PROMPT_FG	= new Color(0x30, 0xff, 0x2f);
+	public static final Color DEFAULT_DARK_PROMPT_FG = new Color(0x30ff2f);
 
-	public static final Color DEFAULT_DARK_STDOUT_FG	= new Color(0, 255, 255);
+	public static final Color DEFAULT_DARK_STDOUT_FG = new Color(0xa0649a);
 
-	public static final Color DEFAULT_DARK_STDERR_FG	= new Color(0xff, 0x80, 0x80);
+	public static final Color DEFAULT_DARK_STDERR_FG = new Color(0xff8080);
 
-	public static final Color DEFAULT_DARK_EXCEPTION_FG = new Color(0xa0649a);
+	public static final Color DEFAULT_DARK_RESULT_FG = new Color(0x00ffff);
 
 	public static final String STYLE_PROMPT			= "prompt";
 	public static final String STYLE_STDIN			= "stdin";
 	public static final String STYLE_STDOUT			= "stdout";
 	public static final String STYLE_STDERR			= "stderr";
-	public static final String STYLE_EXCEPTION		= "exception";
+	public static final String STYLE_RESULT 		= "result";
 
 	private JPopupMenu popup;
 
@@ -113,9 +113,9 @@ public abstract class AbstractConsoleTextArea extends JTextPane {
 		Color stderrColor = isDark ? DEFAULT_DARK_STDERR_FG : DEFAULT_LIGHT_STDERR_FG;
 		StyleConstants.setForeground(stderr, stderrColor);
 
-		Style exception = addStyle(STYLE_EXCEPTION, defaultStyle);
-		Color exceptionColor = isDark ? DEFAULT_DARK_EXCEPTION_FG : DEFAULT_LIGHT_EXCEPTION_FG;
-		StyleConstants.setForeground(exception, exceptionColor);
+		Style result = addStyle(STYLE_RESULT, defaultStyle);
+		Color resultColor = isDark ? DEFAULT_DARK_RESULT_FG : DEFAULT_LIGHT_RESULT_FG;
+		StyleConstants.setForeground(result, resultColor);
 
 	}
 

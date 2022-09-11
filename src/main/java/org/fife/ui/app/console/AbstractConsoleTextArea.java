@@ -31,7 +31,7 @@ public abstract class AbstractConsoleTextArea extends JTextPane {
 
 	public static final Color DEFAULT_DARK_PROMPT_FG = new Color(0x30ff2f);
 
-	public static final Color DEFAULT_DARK_STDOUT_FG = new Color(0xa0649a);
+	public static final Color DEFAULT_DARK_STDOUT_FG = new Color(0xd094ca);
 
 	public static final Color DEFAULT_DARK_STDERR_FG = new Color(0xff8080);
 

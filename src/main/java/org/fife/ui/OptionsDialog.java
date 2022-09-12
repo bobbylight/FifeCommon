@@ -429,6 +429,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		try {
 			for (OptionsDialogPanel panel : optionsPanels) {
 				panel.setValues(owner);
+				clearDirtyFlag(panel);
 			}
 			setApplyButtonEnabled(false);
 		} finally {

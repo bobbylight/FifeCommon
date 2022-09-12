@@ -429,6 +429,9 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		try {
 			for (OptionsDialogPanel panel : optionsPanels) {
 				panel.setValues(owner);
+			}
+			// Must be done after setValues() for all panels!
+			for (OptionsDialogPanel panel : optionsPanels) {
 				clearDirtyFlag(panel);
 			}
 			setApplyButtonEnabled(false);
@@ -470,14 +473,18 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 
 	/**
 	 * Listens for a {@code PROPERTY_DIRTY} change in one of the option panels.
-	 * When an option panel fires that proerty, this method enables the "Apply"
+	 * When an option panel fires that property, this method enables the "Apply"
 	 * button.
 	 *
 	 * @see OptionsDialogPanel#setDirty(boolean)
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
-		if (OptionsDialogPanel.PROPERTY_DIRTY.equals(e.getPropertyName()) && !applyButton.isEnabled()) {
+
+		String propName = e.getPropertyName();
+
+		if (OptionsDialogPanel.PROPERTY_DIRTY.equals(propName) &&
+				Boolean.TRUE.equals(e.getNewValue())) {
 			applyButton.setEnabled(true);
 		}
 	}

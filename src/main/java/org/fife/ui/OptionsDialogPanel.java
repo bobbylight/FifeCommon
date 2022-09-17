@@ -482,6 +482,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 	public final void setValues(Frame owner) {
 		// Don't check isDirty(), since the first-time through it'll be false
 		setValuesImpl(owner);
+		dirty = false;
 		getChildPanels().forEach(panel -> panel.setValues(owner));
 	}
 

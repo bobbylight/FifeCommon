@@ -195,9 +195,9 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 				break;
 
 			case "OK":
-				boolean result = doApply((Frame)getParent());
-				if (result)
+				if (doApply((Frame)getParent())) {
 					this.setVisible(false);
+				}
 				break;
 
 			case "Apply":
@@ -325,7 +325,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		for (OptionsDialogPanel optionsPanel : optionsPanels) {
 			clearDirtyFlag(optionsPanel);
 		}
-		setApplyButtonEnabled(false);
+		applyButton.setEnabled(false);
 		return true;
 
 	}
@@ -430,11 +430,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 			for (OptionsDialogPanel panel : optionsPanels) {
 				panel.setValues(owner);
 			}
-			// Must be done after setValues() for all panels!
-			for (OptionsDialogPanel panel : optionsPanels) {
-				clearDirtyFlag(panel);
-			}
-			setApplyButtonEnabled(false);
+			applyButton.setEnabled(false);
 		} finally {
 			initializing = false;
 		}
@@ -487,17 +483,6 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 				Boolean.TRUE.equals(e.getNewValue())) {
 			applyButton.setEnabled(true);
 		}
-	}
-
-
-
-	/**
-	 * Enables or disables the "Apply" button.
-	 *
-	 * @param enabled Whether or not the Apply button should be enabled.
-	 */
-	public void setApplyButtonEnabled(boolean enabled) {
-		applyButton.setEnabled(enabled);
 	}
 
 
@@ -690,32 +675,6 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 				break;
 			}
 		}
-
-		/*
-		 * TODO: This is buggy - may be on a "child" panel in the tree.  We need
-		 * to get the current panel by name and check it that way.
-		// Check to see if a text field was edited in the previous
-		// panel (as if they switch Options panels before the text field
-		// loses focus, the Apply button won't get enabled).
-		int currentPanel = optionTree.getRowForPath(
-									optionTree.getSelectionPath());
-		if (currentPanel<0) {
-			currentPanel = 0;
-		}
-		if (optionsPanels[currentPanel].hasUnsavedChanges())
-			setApplyButtonEnabled(true);
-
-		// Ensure a valid panel number.
-		if (panel<0)
-			panel = 0;
-		else if (panel>optionsPanels.length)
-			panel = optionsPanels.length-1;
-
-		// Show the next panel.
-		if (currentPanel!=panel) {
-			optionTree.setSelectionRow(panel);
-		}
-		*/
 	}
 
 

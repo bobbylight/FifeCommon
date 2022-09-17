@@ -103,9 +103,9 @@ interface RTextFileChooserView extends FileSelector {
 
 
 	/**
-	 * Sets whether or not this view allows the selection of multiple files.
+	 * Sets whether this view allows the selection of multiple files.
 	 *
-	 * @param enabled Whether or not to allow the selection of multiple
+	 * @param enabled whether to allow the selection of multiple
 	 *        files.
 	 */
 	void setMultiSelectionEnabled(boolean enabled);

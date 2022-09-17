@@ -318,7 +318,7 @@ public class RColorSwatchesButton extends RColorButton {
 			g.fillRect(0,0, bounds.width,bounds.height);
 
 			// Swatches are always enabled, so we only have to check
-			// whether or not they are armed.
+			// whether they are armed.
 			if (model.isArmed()) {
 				g.setColor(armedSwatchSelectionRectColor);
 				g.drawRect(1,1, bounds.width-3,bounds.height-3);

@@ -102,7 +102,7 @@ public class LineDividerBorder implements Border, SwingConstants {
 
 
 	/**
-	 * Returns whether or not the border is opaque.
+	 * Returns whether the border is opaque.
 	 *
 	 * @return This method always returns {@code true}.
 	 */

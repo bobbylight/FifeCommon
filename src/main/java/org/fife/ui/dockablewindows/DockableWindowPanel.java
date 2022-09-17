@@ -84,7 +84,7 @@ public class DockableWindowPanel extends JPanel
 	 * Adds a dockable window.
 	 *
 	 * @param window The window to add.
-	 * @return Whether or not the window was added successfully.
+	 * @return whether the window was added successfully.
 	 * @see #removeDockableWindow
 	 */
 	public boolean addDockableWindow(DockableWindow window) {
@@ -460,7 +460,7 @@ public class DockableWindowPanel extends JPanel
 	 * Removes the content panel (e.g. the stuff that isn't dockable windows).
 	 *
 	 * @param contentPanel The content panel.
-	 * @return Whether or not the removal was successful.
+	 * @return whether the removal was successful.
 	 */
 	public boolean removeContentPanel(Container contentPanel) {
 		// Should only be two.
@@ -479,7 +479,7 @@ public class DockableWindowPanel extends JPanel
 	 * Removes the specified dockable window from this panel's management.
 	 *
 	 * @param window The dockable window to remove.
-	 * @return Whether or not the removal was successful.
+	 * @return whether the removal was successful.
 	 * @see #addDockableWindow
 	 */
 	public boolean removeDockableWindow(DockableWindow window) {
@@ -529,7 +529,7 @@ public class DockableWindowPanel extends JPanel
 	 * Removes a dockable window from the list of managed dockable windows.
 	 *
 	 * @param window The dockable window.
-	 * @return Whether or not the window was successfully removed.
+	 * @return whether the window was successfully removed.
 	 * @see #addDockableWindowToList(DockableWindow)
 	 */
 	private boolean removeDockableWindowFromList(DockableWindow window) {

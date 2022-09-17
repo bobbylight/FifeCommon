@@ -33,7 +33,7 @@ public class StatusBarPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Whether or not the "shadow" effect is on.
+	 * whether the "shadow" effect is on.
 	 */
 	private boolean shadowEnabled;
 
@@ -138,7 +138,7 @@ public class StatusBarPanel extends JPanel {
 
 
 	/**
-	 * Sets whether or not the shadow effect is enabled.
+	 * Sets whether the shadow effect is enabled.
 	 *
 	 * @param enabled Whether the shadow effect should be enabled.
 	 * @see #isShadowEnabled

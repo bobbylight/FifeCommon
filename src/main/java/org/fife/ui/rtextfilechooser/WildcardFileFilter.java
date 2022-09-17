@@ -149,10 +149,10 @@ class WildcardFileFilter extends FileFilter {
 
 
 	/**
-	 * Returns whether or not the sepcified file is matched by this filter.
+	 * Returns whether the sepcified file is matched by this filter.
 	 *
-	 * @param f The file to see whether or not it passes this filter.
-	 * @return Whether or not this filter accepts <code>f</code>.
+	 * @param f The file to see whether it passes this filter.
+	 * @return whether this filter accepts <code>f</code>.
 	 */
 	@Override
 	public boolean accept(File f) {

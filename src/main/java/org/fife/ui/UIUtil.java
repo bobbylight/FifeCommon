@@ -802,10 +802,10 @@ public final class UIUtil {
 
 
 	/**
-	 * Returns whether or not this operating system should use non-opaque
+	 * Returns whether this operating system should use non-opaque
 	 * components in tabbed panes to show off, for example, a gradient effect.
 	 *
-	 * @return Whether or not non-opaque components should be used in tabbed
+	 * @return whether non-opaque components should be used in tabbed
 	 *         panes.
 	 */
 	static synchronized boolean getUseNonOpaqueTabbedPaneComponents() {

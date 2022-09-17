@@ -66,7 +66,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 	private Icon icon;
 
 	/**
-	 * Whether or not this panel has any unsaved changes.  The Options panel
+	 * whether this panel has any unsaved changes.  The Options panel
 	 * should set this whenever an Option value is changed by the user, but
 	 * it doesn't have to clear it (this is done by the parent
 	 * <code>OptionsDialog</code>).
@@ -228,7 +228,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 
 
 	/**
-	 * Checks whether or not all input the user specified on this panel, and
+	 * Checks whether all input the user specified on this panel, and
 	 * any child panels, is valid.
 	 *
 	 * @return <code>null</code> if the panel has all valid inputs, or an
@@ -252,7 +252,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 
 
 	/**
-	 * Checks whether or not all input the user specified on this panel is
+	 * Checks whether all input the user specified on this panel is
 	 * valid.  This should be overridden to check, for example, whether
 	 * text fields have valid values, etc.  This method will be called
 	 * whenever the user clicks "OK" or "Apply" on the options dialog to
@@ -382,7 +382,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 
 
 	/**
-	 * Returns whether or not this Options panel has unsaved changes.  Note
+	 * Returns whether this Options panel has unsaved changes.  Note
 	 * that these changes may or may not be invalid.
 	 *
 	 * @return Whether this panel has any unsaved changes.
@@ -457,11 +457,11 @@ public abstract class OptionsDialogPanel extends JPanel {
 
 
 	/**
-	 * Sets whether or not the dirty flag for this Options panel
+	 * Sets whether the dirty flag for this Options panel
 	 * is set.  You should call this method with a parameter set to
 	 * <code>false</code> before displaying an Options dialog.
 	 *
-	 * @param dirty Whether or not the flag should be set.
+	 * @param dirty whether the flag should be set.
 	 * @see #isDirty()
 	 */
 	public void setDirty(boolean dirty) {
@@ -569,7 +569,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 		}
 
 		/**
-		 * Returns whether or not the border is opaque.
+		 * Returns whether the border is opaque.
 		 *
 		 * @return This method always returns <code>true</code>.
 		 */

@@ -85,7 +85,7 @@ class DockableWindowGroup extends JPanel {
 
 
 	/**
-	 * Returns whether or not the specified dockable window is contained in
+	 * Returns whether the specified dockable window is contained in
 	 * this <code>DWindPanel</code>.
 	 *
 	 * @param window The dockable window to look for.
@@ -207,7 +207,7 @@ class DockableWindowGroup extends JPanel {
 	 * Removes the specified dockable window from this tabbed pane.
 	 *
 	 * @param window The dockable window.
-	 * @return Whether or not the window was successfully removed.
+	 * @return whether the window was successfully removed.
 	 */
 	boolean removeDockableWindow(DockableWindow window) {
 		int index = containsDockableWindow(window);

@@ -683,7 +683,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 * expanded (as if they're not, the size of the window and its widgets
 	 * may be incorrect; not enough room for the tree).
 	 *
-	 * @param visible Whether or not this dialog should be visible.
+	 * @param visible whether this dialog should be visible.
 	 */
 	@Override
 	public void setVisible(boolean visible) {

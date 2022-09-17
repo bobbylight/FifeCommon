@@ -37,7 +37,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Whether or not the underlying OS is case-insensitive.
+	 * whether the underlying OS is case-insensitive.
 	 */
 	private static final boolean IGNORE_CASE = !OS.get().isCaseSensitive();
 
@@ -90,7 +90,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 	private String currentDirectory;
 
 	/**
-	 * Whether or not the text field pops up a list of matching files.
+	 * whether the text field pops up a list of matching files.
 	 */
 	private boolean fileSystemAware;
 
@@ -397,11 +397,11 @@ public class FSATextField extends JTextField implements ComponentListener,
 
 
 	/**
-	 * Returns whether or not this text field is file-system-aware.  If it is,
+	 * Returns whether this text field is file-system-aware.  If it is,
 	 * then the drop-down list expands to display all matching files and
 	 * directories as the user types.
 	 *
-	 * @return Whether or not this text field is file-system aware.
+	 * @return whether this text field is file-system aware.
 	 * @see #setFileSystemAware
 	 */
 	public boolean getFileSystemAware() {
@@ -758,10 +758,10 @@ public class FSATextField extends JTextField implements ComponentListener,
 
 
 	/**
-	 * Sets whether or not this text field previews both files and
+	 * Sets whether this text field previews both files and
 	 * directories or just directories.
 	 *
-	 * @param directoriesOnly Whether or not to preview only directories.
+	 * @param directoriesOnly whether to preview only directories.
 	 * @see #isDirectoriesOnly
 	 */
 	public void setDirectoriesOnly(boolean directoriesOnly) {
@@ -791,12 +791,12 @@ public class FSATextField extends JTextField implements ComponentListener,
 
 
 	/**
-	 * Toggles whether or not this dialog is file-system-aware.  This
+	 * Toggles whether this dialog is file-system-aware.  This
 	 * property should be set to <code>false</code> when programmatically
 	 * inserting text into the text field; otherwise, it has a bad habit of
 	 * stealing the focus from the currently focused component, etc.
 	 *
-	 * @param aware Whether or not this text field should be file-system
+	 * @param aware whether this text field should be file-system
 	 *        aware.
 	 * @see #getFileSystemAware
 	 */
@@ -818,7 +818,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 	/**
 	 * Toggles the display of the drop-down file list.
 	 *
-	 * @param visible Whether or not the file list is to be visible.
+	 * @param visible whether the file list is to be visible.
 	 */
 	private void setPopupVisible(boolean visible) {
 		if (visible) {

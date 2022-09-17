@@ -103,11 +103,11 @@ final class RootManager {
 
 
 	/**
-	 * Returns whether or not the given file is a root (either by
+	 * Returns whether the given file is a root (either by
 	 * <code>File</code> standards or <code>FileSystemView</code> standards).
 	 *
 	 * @param file The file to check.
-	 * @return Whether or not <code>file</code> is a root.
+	 * @return whether <code>file</code> is a root.
 	 */
 	public boolean isRoot(final File file) {
 		for (int i=0; i<rootCount; i++) {

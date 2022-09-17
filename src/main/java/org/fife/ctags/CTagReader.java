@@ -428,7 +428,7 @@ public class CTagReader {
 	 *
 	 * @param entry Will contain the tag read, ??? or <code>null</code> if
 	 *        the read fails ???
-	 * @return Whether or not the read was successful.
+	 * @return Whether the read was successful.
 	 * @throws IOException If an IO error occurs.
 	 */
 	public boolean tagsFirst(TagEntry entry) throws IOException {
@@ -539,7 +539,7 @@ public class CTagReader {
 	 * about the tag file entry.
 	 *
 	 * @param entry The tag entry.
-	 * @return Whether or not another tag matching the name is found.
+	 * @return whether another tag matching the name is found.
 	 * @throws IOException If an IO error occurs.
 	 */
 	public boolean tagsFindNext(TagEntry entry) throws IOException {

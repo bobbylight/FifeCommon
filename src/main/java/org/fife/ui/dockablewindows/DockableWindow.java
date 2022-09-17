@@ -291,7 +291,7 @@ public class DockableWindow extends JPanel {
 
 
 	/**
-	 * Returns whether or not the specified position is valid.
+	 * Returns whether the specified position is valid.
 	 *
 	 * @param pos A position.
 	 * @return Whether the specified position is valid.
@@ -317,7 +317,7 @@ public class DockableWindow extends JPanel {
 
 
 	/**
-	 * Sets whether or not this dockable window should be "active;" i.e.,
+	 * Sets whether this dockable window should be "active;" i.e.,
 	 * visible (I didn't want to use <code>setVisible</code> or
 	 * <code>setEnabled</code> since they're already used for different
 	 * functions by <code>JComponent</code>).

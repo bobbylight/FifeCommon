@@ -1393,7 +1393,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	/**
-	 * Returns whether or not the filename text field is file-system aware.
+	 * Returns whether the filename text field is file-system aware.
 	 *
 	 * @return Whether the filename text field provides possible matches
 	 *        while you are typing in it.
@@ -1818,11 +1818,11 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	/**
-	 * Returns whether or not this filename contains wildcards, depending on
+	 * Returns whether this filename contains wildcards, depending on
 	 * the OS on which we're running.
 	 *
 	 * @param filename The filename to check for wildcards.
-	 * @return Whether or not the file name contained wildcards.
+	 * @return whether the file name contained wildcards.
 	 */
 	private static boolean isGlobPattern(String filename) {
 		return ((File.separatorChar == '\\' && filename.indexOf('*') >= 0) ||
@@ -1833,9 +1833,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	/**
-	 * Returns whether or not multi-selection is enabled.
+	 * Returns whether multi-selection is enabled.
 	 *
-	 * @return Whether or not multi-selection is enabled.
+	 * @return whether multi-selection is enabled.
 	 * @see #setMultiSelectionEnabled
 	 */
 	public final boolean isMultiSelectionEnabled() {
@@ -1844,11 +1844,11 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	/**
-	 * Returns whether or not a file should be underlined when displayed by
+	 * Returns whether a file should be underlined when displayed by
 	 * a view of this file chooser.
 	 *
 	 * @param file A file.
-	 * @return Whether or not <code>file</code> should be underlined by the
+	 * @return whether <code>file</code> should be underlined by the
 	 *         view.
 	 * @see #setOpenedFiles(File[])
 	 */
@@ -1982,7 +1982,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * This should be called with a parameter of <code>true</code> when the
 	 * user types in a wildcard expression for a file name.
 	 *
-	 * @param useGlobFilter Whether or not to use the glob file filter.
+	 * @param useGlobFilter whether to use the glob file filter.
 	 */
 	private void refreshView(boolean useGlobFilter) {
 
@@ -2289,7 +2289,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 *
 	 * @param filter The new current file filter to use.  If this is
 	 *        <code>null</code>, the "all files" filter is selected.
-	 * @param cacheIfGUINotRealized If the GUI isn't created, whether or not
+	 * @param cacheIfGUINotRealized If the GUI isn't created, whether
 	 *        the selected file filter should be set to this filter when it
 	 *        is created.  This parameter is here because
 	 *        <code>addChoosableFileFilter</code> calls this method, but that
@@ -2421,9 +2421,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	/**
-	 * Sets whether or not multi-selection is enabled.
+	 * Sets whether multi-selection is enabled.
 	 *
-	 * @param enabled Whether or not multi-selection is to be enabled.
+	 * @param enabled whether multi-selection is to be enabled.
 	 * @see #isMultiSelectionEnabled
 	 */
 	public void setMultiSelectionEnabled(boolean enabled) {
@@ -2743,7 +2743,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		if (retVal!=RTextFileChooser.APPROVE_OPTION)
 			setCurrentDirectory(oldCurrentDirectory);
 
-		// And return whether or not everything went okay.
+		// And return whether everything went okay.
 		return retVal;
 
 	}

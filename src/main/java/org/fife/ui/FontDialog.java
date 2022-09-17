@@ -84,9 +84,9 @@ public class FontDialog extends JDialog implements ActionListener,
 	 *        <code>owner</code>'s font.
 	 * @param initialColor The color to use for the font initially.  A
 	 *        <code>null</code> value defaults to black.
-	 * @param underlineSelectable Whether or not the user can select
+	 * @param underlineSelectable whether the user can select
 	 *        "underline" as a property for the font being chosen.
-	 * @param colorSelectable Whether or not the user can change the font's
+	 * @param colorSelectable whether the user can change the font's
 	 *        color from here.
 	 */
 	public FontDialog(Dialog owner, String title, Font initialSelection,
@@ -126,9 +126,9 @@ public class FontDialog extends JDialog implements ActionListener,
 	 *        <code>owner</code>'s font.
 	 * @param initialColor The color to use for the font initially.  A
 	 *        <code>null</code> value defaults to black.
-	 * @param underlineSelectable Whether or not the user can select
+	 * @param underlineSelectable whether the user can select
 	 *        "underline" as a property for the font being chosen.
-	 * @param colorSelectable Whether or not the user can change the font's
+	 * @param colorSelectable whether the user can change the font's
 	 *        color from here.
 	 */
 	public FontDialog(Frame owner, String title, Font initialSelection,
@@ -491,11 +491,11 @@ public class FontDialog extends JDialog implements ActionListener,
 
 
 	/**
-	 * Returns whether or not the user checked the "Underline" check box.
+	 * Returns whether the user checked the "Underline" check box.
 	 * Note that if this dialog was created such that "Underline" is not
 	 * selectable, this method will always return <code>false</code>.
 	 *
-	 * @return Whether or not "underline" was selected.
+	 * @return whether "underline" was selected.
 	 * @see #setUnderlineSelected
 	 */
 	public boolean getUnderlineSelected() {
@@ -627,7 +627,7 @@ public class FontDialog extends JDialog implements ActionListener,
 	 * Note that if this dialog was created such that "Underline" is not
 	 * selectable, this method does nothing.
 	 *
-	 * @param underline Whether or not the Underline check box should be
+	 * @param underline whether the Underline check box should be
 	 *        selected.
 	 * @see #getUnderlineSelected
 	 */

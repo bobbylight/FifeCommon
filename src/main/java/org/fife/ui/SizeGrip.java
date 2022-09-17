@@ -41,7 +41,7 @@ class SizeGrip extends StatusBarPanel {
 	private SizeGripIcon sizeGripIcon;
 
 	/**
-	 * Whether or not to paint the grip.  This is set to
+	 * whether to paint the grip.  This is set to
 	 * <code>false</code> when the parent window is maximized.
 	 */
 	private boolean paintGrip;

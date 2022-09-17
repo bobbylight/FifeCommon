@@ -278,7 +278,7 @@ public class TabbedPaneTransferHandler extends TransferHandler
 	 *        <code>JTabbedPane</code>).
 	 * @param t The data being transfered (information about the tab and the
 	 *        component contained by the tab).
-	 * @return Whether or not the import was successful.
+	 * @return whether the import was successful.
 	 */
 	@Override
 	public boolean importData(JComponent c, Transferable t) {

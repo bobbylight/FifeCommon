@@ -245,7 +245,7 @@ public class ExtensionFileFilter extends FileFilter {
 
 
 	/**
-	 * Enumeration describing whether or not to check a file name for
+	 * Enumeration describing whether to check a file name for
 	 * proper casing for the current OS.
 	 */
 	public enum CaseCheck {

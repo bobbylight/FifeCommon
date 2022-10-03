@@ -15,13 +15,13 @@ repositories {
 }
 
 dependencies {
-	api 'org.pushing-pixels:radiance-substance:4.0.0'
-	api 'org.apache.xmlgraphics:batik-rasterizer:1.14'
+	api 'org.pushing-pixels:radiance-substance:4.5.0'
+	api 'org.apache.xmlgraphics:batik-rasterizer:1.15'
 	testImplementation 'junit:junit:4.13.2'
 }
 
 wrapper {
-	gradleVersion = '7.3.3'
+	gradleVersion = '7.5.1'
 }
 
 checkstyle {
@@ -80,7 +80,7 @@ publishing {
 			pom {
 				name = archivesBaseName
 				description = 'Common UI components and utilities for Swing applications.'
-				url = 'http://www.fifesoft.com/rtext/'
+				url = 'https://bobbylight.github.io/RText/'
 				inceptionYear = '2003'
 				packaging = 'jar'
 				licenses {

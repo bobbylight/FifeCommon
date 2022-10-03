@@ -175,9 +175,6 @@ public class FSATextField extends JTextField implements ComponentListener,
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void addNotify() {
 		super.addNotify();
@@ -695,9 +692,6 @@ public class FSATextField extends JTextField implements ComponentListener,
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void removeNotify() {
 		super.removeNotify();

@@ -44,12 +44,12 @@ public class KeyStrokeCellRenderer extends DefaultTableCellRenderer {
 
 
 	/**
-	 * Creates and returns a cell renderer for key strokes.  The returned
+	 * Creates and returns a cell renderer for keystrokes.  The returned
 	 * object may not be of type <code>KeyStrokeCellRenderer</code>; Substance,
 	 * for example, requires you to subclass its own base renderer class.  I
 	 * love how Substance makes custom rendering a pain in the ass!
 	 *
-	 * @return A cell renderer to use for key strokes.
+	 * @return A cell renderer to use for keystrokes.
 	 */
 	public static TableCellRenderer create() {
 		if (SubstanceUtil.isSubstanceInstalled()) {

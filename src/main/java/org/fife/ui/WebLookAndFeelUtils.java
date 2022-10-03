@@ -54,10 +54,10 @@ public final class WebLookAndFeelUtils {
 
 
 	/**
-	 * Sets properties needed for tool bar buttons to look nice in
+	 * Sets properties needed for toolbar buttons to look nice in
 	 * WebLookAndFeel.  Does nothing if WebLookAndFeel is not installed.
 	 *
-	 * @param toolBar The tool bar to update.
+	 * @param toolBar The toolbar to update.
 	 */
 	public static void fixToolbar(JToolBar toolBar) {
 		fixToolbar(toolBar, false);
@@ -65,11 +65,11 @@ public final class WebLookAndFeelUtils {
 
 
 	/**
-	 * Sets properties needed for tool bar buttons to look nice in
+	 * Sets properties needed for toolbar buttons to look nice in
 	 * WebLookAndFeel.  Does nothing if WebLookAndFeel is not installed.
 	 *
-	 * @param toolBar The tool bar to update.
-	 * @param flatten Whether the tool bar should have a "flat" look.
+	 * @param toolBar The toolbar to update.
+	 * @param flatten Whether the toolbar should have a "flat" look.
 	 */
 	public static void fixToolbar(JToolBar toolBar, boolean flatten) {
 		fixToolbar(toolBar, flatten, true);
@@ -77,12 +77,12 @@ public final class WebLookAndFeelUtils {
 
 
 	/**
-	 * Sets properties needed for tool bar buttons to look nice in
+	 * Sets properties needed for toolbar buttons to look nice in
 	 * WebLookAndFeel.  Does nothing if WebLookAndFeel is not installed.
 	 *
-	 * @param toolBar The tool bar to update.
-	 * @param flatten Whether the tool bar should have a "flat" look.
-	 * @param attached Whether the tool bar should have an "attached" look.
+	 * @param toolBar The toolbar to update.
+	 * @param flatten Whether the toolbar should have a "flat" look.
+	 * @param attached Whether the toolbar should have an "attached" look.
 	 */
 	public static void fixToolbar(JToolBar toolBar, boolean flatten,
 			boolean attached) {
@@ -153,7 +153,7 @@ public final class WebLookAndFeelUtils {
 			m.invoke(ui, value);
 
 			// By default, buttons have 4 pixel spacing on their left and
-			// right, which looks ridiculous for tool bar buttons.  WebLaF
+			// right, which looks ridiculous for toolbar buttons.  WebLaF
 			// provides factory methods for icon-only buttons to work around
 			// this, but we are avoiding WebLaF-specific APIs.
 			m = uiClazz.getMethod("setLeftRightSpacing", int.class);

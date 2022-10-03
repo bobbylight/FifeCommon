@@ -98,7 +98,7 @@ public class HelpTreeNode {
 
 		try {
 			url = new File(urlString).toURI().toURL();
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 			// Swallow
 		}
 

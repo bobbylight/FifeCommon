@@ -216,7 +216,7 @@ public class FontSelector extends JPanel implements ActionListener {
 	 * checkbox is not selected.<p>
 	 *
 	 * This property is completely independent of the component's
-	 * enabled state. Thus it can be toggled on (checked) but not
+	 * enabled state. Thus, it can be toggled on (checked) but not
 	 * enabled.
 	 *
 	 * @return Whether this font selector is toggled on.
@@ -298,7 +298,7 @@ public class FontSelector extends JPanel implements ActionListener {
 	 * Sets whether this font selector is "toggled on."  See the
 	 * description of {@link #isToggledOn()} for a description of
 	 * this property.
-	 *
+	 * <p>
 	 * If this font selector is not toggleable (i.e. is not a
 	 * checkbox), this method does nothing.
 	 *

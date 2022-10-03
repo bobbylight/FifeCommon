@@ -972,14 +972,14 @@ public final class UIUtil {
 
 
 	/**
-	 * Returns a check box with the specified text.  If another property is
+	 * Returns a checkbox with the specified text.  If another property is
 	 * defined in the resource bundle with key
 	 * <code>key + ".Mnemonic"</code>, then it will be used for the mnemonic
-	 * of the check box.
+	 * of the checkbox.
 	 *
-	 * @param bundle The resource bundle for localizing the check box.
+	 * @param bundle The resource bundle for localizing the checkbox.
 	 * @param key The key into the bundle containing the string text value.
-	 * @return The check box.
+	 * @return The checkbox.
 	 */
 	public static JCheckBox newCheckBox(ResourceBundle bundle,
 			String key) {

@@ -299,7 +299,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	 */
 	public final boolean doApply(Frame owner) {
 
-		// Ensure that all  changes specified are valid.  If one isn't,
+		// Ensure that all the changes specified are valid.  If one isn't,
 		// scold the user, shift focus to it and bail out.
 		for (OptionsDialogPanel optionsPanel1 : optionsPanels) {
 			OptionsDialogPanel.OptionsPanelCheckResult result =

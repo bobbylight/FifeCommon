@@ -93,7 +93,7 @@ public class CustomizableToolBar extends JToolBar {
 	/**
 	 * Creates a new toolbar.
 	 *
-	 * @param name The name for the tool bar.
+	 * @param name The name for the toolbar.
 	 */
 	public CustomizableToolBar(String name) {
 		super(name);
@@ -103,7 +103,7 @@ public class CustomizableToolBar extends JToolBar {
 	/**
 	 * Creates a new toolbar.
 	 *
-	 * @param name The name for the tool bar.
+	 * @param name The name for the toolbar.
 	 * @param orientation The initial orientation (either
 	 *        {@link SwingConstants#VERTICAL} or
 	 *        {@link SwingConstants#HORIZONTAL}).
@@ -121,7 +121,7 @@ public class CustomizableToolBar extends JToolBar {
 
 
 	/**
-	 * Creates a button to add to this tool bar.
+	 * Creates a button to add to this toolbar.
 	 *
 	 * @param a The action for the button.
 	 * @return The button.

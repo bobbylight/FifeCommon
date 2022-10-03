@@ -112,7 +112,7 @@ class FileChooserIconManager {
 											getSystemIcon(temp);
 				temp.delete();
 			}
-		} catch (Exception e) {}
+		} catch (Exception ignored) {}
 
 		// An (IO)Exception was thrown, or the FilesystemView didn't return
 		// a folder icon.
@@ -171,7 +171,7 @@ class FileChooserIconManager {
 			if (f.exists() || RootManager.getInstance().isRoot(f)) {
 				try {
 					icon = FILE_SYSTEM_VIEW.getSystemIcon(f);
-				} catch (/*FileNotFound*/Exception fnfe) {
+				} catch (/*FileNotFound*/Exception ignored) {
 					// This happens, for example, on Windows when no such
 					// file "f" exists - the FileSystemView must check for
 					// the existence of the icon first.

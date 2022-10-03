@@ -69,7 +69,7 @@ public class ModifiableTable extends JPanel {
 	 * If this system property is set to <code>true</code>, then the panels
 	 * created containing the buttons ("Add", "Modify", "Remove", etc.) will
 	 * be non-opaque.  This is useful on OS's such as Windows XP and Vista,
-	 * where tabbed panes have a gradient background.  By default this is
+	 * where tabbed panes have a gradient background.  By default, this is
 	 * <code>false</code> in case it messes up some other LookAndFeel.
 	 */
 	public static final String PROPERTY_PANELS_NON_OPAQUE =

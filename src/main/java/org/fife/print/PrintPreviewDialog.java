@@ -309,8 +309,8 @@ public class PrintPreviewDialog extends EscapableDialog
 		currentPage--;
 
 		// Move 'backward' one page in all visible pages.  This should
-		// should work even if some of the pages are null (i.e., no
-		// more pages to view), as we'd just be setting stuff to null.
+		// work even if some pages are null (i.e., no more pages to
+		// view), as we'd just be setting stuff to null.
 		// We'll reuse the last page preview to keep from having to
 		// create a new image, etc.
 		PagePreview pp;

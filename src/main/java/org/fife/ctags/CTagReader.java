@@ -46,7 +46,7 @@ public class CTagReader {
 	private int format;				/* format of tag file */
 	private int sortMethod;			/* how is the tag file sorted? */
 	private RandomAccessFile fp;		/* pointer to file structure */
-	private long pos;				/* file position of first character of `line' */
+	private long pos;				/* file position of first character of 'line' */
 	private long size;				/* size of tag file in seekable positions */
 	private String line;			/* last line read */
 	private String name;			/* name of tag in last line read */
@@ -54,7 +54,7 @@ public class CTagReader {
 	// Was "search" struct.
 //	private long searchPos;			/* file position of last match for tag */
 	private String searchName;		/* name of tag last searched for */
-	private boolean searchPartial;	/* peforming partial match */
+	private boolean searchPartial;	/* performing partial match */
 	private boolean searchIgnoreCase;	/* ignoring case */
 
 	// Was "program" struct.
@@ -397,7 +397,7 @@ public class CTagReader {
 			if (pos>0 && result)
 				result = readTagLine();	/* Read complete line. */
 
-		} catch (Exception e) {}
+		} catch (Exception ignored) {}
 
 		return result;
 
@@ -436,10 +436,10 @@ public class CTagReader {
 		if (initialized) {
 
 			// Move to the beginning of the first line containing a
-			// a non-pseudo ctag.
+			// non-pseudo ctag.
 			long startOfLine;
 			fp.seek(0);		// Start at the beginning.
-			// Go until you find the first non-pseudotag line.
+			// Go until you find the first non-pseudo tag line.
 			while (true) {
 				startOfLine = fp.getFilePointer();
 				if (!readTagLine())

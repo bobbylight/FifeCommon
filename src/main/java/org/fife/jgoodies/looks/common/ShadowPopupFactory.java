@@ -80,7 +80,7 @@ public final class ShadowPopupFactory extends PopupFactory {
 
     /**
      * The PopupFactory used before this PopupFactory has been installed
-     * in <code>#install</code>. Used to restored the original state
+     * in <code>#install</code>. Used to restor the original state
      * in <code>#uninstall</code>.
      */
     private final PopupFactory storedFactory;

@@ -50,8 +50,8 @@ class BreadcrumbBarButtonColorSet {
 
 		/*
 		 * From 2D group: 1. black.brighter() should return grey 2. applying
-		 * brighter to blue will always return blue, brighter 3. non pure color
-		 * (non zero rgb) will eventually return white
+		 * brighter to blue will always return blue, brighter 3. non-pure color
+		 * (nonzero rgb) will eventually return white
 		 */
 		int i = (int) (1.0 / BRIGHTNESS_FACTOR);
 		if (r == 0 && g == 0 && b == 0) {

@@ -124,9 +124,6 @@ class ListView extends JList<File> implements RTextFileChooserView {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Color getDefaultFileColor() {
 		return getForeground();
@@ -238,9 +235,6 @@ class ListView extends JList<File> implements RTextFileChooserView {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setDisplayedFiles(List<File> files) {
 		// setListData() replaces our ListModel, with a non-DefaultListModel

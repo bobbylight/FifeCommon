@@ -57,9 +57,6 @@ public class FileListTransferable implements Transferable, ClipboardOwner {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Object getTransferData(DataFlavor flavor)
 									throws UnsupportedFlavorException {
@@ -102,9 +99,6 @@ public class FileListTransferable implements Transferable, ClipboardOwner {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public DataFlavor[] getTransferDataFlavors() {
 
@@ -120,9 +114,6 @@ public class FileListTransferable implements Transferable, ClipboardOwner {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isDataFlavorSupported(DataFlavor flavor) {
 		DataFlavor[] flavors = getTransferDataFlavors();

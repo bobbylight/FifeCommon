@@ -827,7 +827,7 @@ public final class Options {
     /**
      * Returns the class name for a cross-platform <code>LookAndFeel</code>.
      *
-     * @return the name of a cross platform look-and-feel class
+     * @return the name of a cross-platform look-and-feel class
      * @see #getSystemLookAndFeelClassName()
      */
     public static String getCrossPlatformLookAndFeelClassName() {

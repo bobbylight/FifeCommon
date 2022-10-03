@@ -93,7 +93,7 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 			c.fill = GridBagConstraints.BOTH;
 			c.weightx = 0.0;
 			getStatusBar().addStatusBarComponent(
-									(StatusBarPlugin)plugin, 0, c);
+									(StatusBarPlugin<?>)plugin, 0, c);
 		}
 
 		// And we let the plugin register any listeners, etc...
@@ -107,7 +107,7 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 
 	/**
 	 * Creates the panel that contains the main content (via the
-	 * <code>actualContentPane</code>.  The returned panel also contains
+	 * <code>actualContentPane</code>).  The returned panel also contains
 	 * any GUI plug-ins.
 	 *
 	 * @param actualContentPane The panel that will contain the program's
@@ -198,7 +198,7 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 	 * This does not count plug-ins added programmatically via
 	 * {@link #addPlugin(Plugin)}, although that isn't usually done (plug-ins
 	 * are usually all loaded automatically by the
-	 * <code>PluginLoader</code>.
+	 * <code>PluginLoader</code>).
 	 *
 	 * @return Whether the loading of plug-ins is complete.
 	 */

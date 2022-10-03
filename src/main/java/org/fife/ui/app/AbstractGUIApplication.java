@@ -802,7 +802,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 		Date buildDate = null;
 
 		// First check for a 'build-date.txt' file, since the backup code below
-		// doesn't work when an app is wrapped in a a jlink-generated executable
+		// doesn't work when an app is wrapped in a jlink-generated executable
 		InputStream in = getClass().getResourceAsStream(BUILD_DATE_RESOURCE);
 		if (in != null) {
 			try {
@@ -829,7 +829,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 				if (temp != null) {
 					buildDate = Date.from(Instant.parse(temp));
 				}
-			} catch (IOException | DateTimeParseException e) {
+			} catch (IOException | DateTimeParseException ignored) {
 				// Do nothing (comment for Sonar) - we just aren't in a built jar
 			}
 		}
@@ -1287,7 +1287,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
 
 	/**
-	 * Makes the menu bar and tool bar (if defined) drag the entire window around then the user clicks and
+	 * Makes the menu bar and toolbar (if defined) drag the entire window around then the user clicks and
 	 * drags them.
 	 *
 	 * @see ComponentMover

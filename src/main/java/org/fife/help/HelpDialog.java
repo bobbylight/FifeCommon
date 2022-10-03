@@ -801,7 +801,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 		if (childNodes!=null) {
 			int length = childNodes.getLength();
-			// Cache to avoid all  text (whitespace) elements.
+			// Cache to avoid all the text (whitespace) elements.
 			List<String> elements = new ArrayList<>(length / 2);
 			for (int i=0; i<length; i++) {
 				Node node2 = childNodes.item(i);
@@ -999,7 +999,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 	/**
 	 * Called whenever a user selects an index item (through double-
 	 * clicking or the "Display" button).  This function searches through
-	 * all  help HTML for the string selected from the index; if
+	 * all the help HTML for the string selected from the index; if
 	 * only one match is found, that page is displayed, but if more than
 	 * one match is found, the user is prompted to select the desired
 	 * page to display.
@@ -1008,7 +1008,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 		String selected = indexList.getSelectedValue();
 
-		// Search through all  help pages to see where this item is.
+		// Search through all the help pages to see where this item is.
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)tocTree.getModel().getRoot();
 		List<HelpTreeNode> matchNodes = getTreeNodesContaining(root, selected);
 		int size = matchNodes.size();
@@ -1047,7 +1047,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 	}
 
 
-	// Helper method; called whenever a user selects an search item
+	// Helper method; called whenever a user selects a search item
 	// (through double-clicking or the "Display" button).
 	private void loadSelectedHelpPageSearch() {
 
@@ -1073,7 +1073,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 			String selected = searchField.getText();
 
-			// Search through all  help pages to see where this item is.
+			// Search through all the help pages to see where this item is.
 			DefaultMutableTreeNode root = (DefaultMutableTreeNode)tocTree.
 											getModel().getRoot();
 			List<HelpTreeNode> matchNodes = getTreeNodesContaining(root, selected);

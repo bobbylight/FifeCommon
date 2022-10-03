@@ -64,7 +64,7 @@ class BreadcrumbBarButtonUI extends BasicButtonUI {
 		ButtonModel model = b.getModel();
 		int width = b.getWidth();
 		int height1 = b.getHeight() / 2;
-		int height2 = b.getHeight() - height1; // Might be different than height1 if odd height
+		int height2 = b.getHeight() - height1; // Might be different from height1 if odd height
 
 		if (Boolean.TRUE==b.getClientProperty(BreadcrumbBar.ARROW_SELECTED)) {
 			g.setColor(colors.pressedC1);
@@ -107,9 +107,6 @@ class BreadcrumbBarButtonUI extends BasicButtonUI {
 		if (oldHints!=null) {
 			((Graphics2D)g).setRenderingHints(oldHints);
 		}
-
-		// g.setColor(java.awt.Color.BLACK);
-		// g.drawRect(0, 0, c.getWidth()-1, c.getHeight()-1);
 
 	}
 

@@ -2,7 +2,7 @@
  * 01/13/2010
  *
  * GetKeyStrokeDialog.java - A dialog that allows the user to edit a
- * key stroke.
+ * keystroke.
  * Copyright (C) 2010 Robert Futrell
  * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
@@ -29,7 +29,7 @@ import javax.swing.SwingUtilities;
 
 
 /**
- * A dialog for editing a key stroke.
+ * A dialog for editing a keystroke.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -51,7 +51,7 @@ public class GetKeyStrokeDialog extends JDialog {
 	 * Constructor.
 	 *
 	 * @param parent The parent dialog of this dialog.
-	 * @param initial The initial key stroke to display.
+	 * @param initial The initial keystroke to display.
 	 */
 	public GetKeyStrokeDialog(Dialog parent, KeyStroke initial) {
 		super(parent, MSG.getString("Dialog.KeyStroke.Title"));
@@ -63,7 +63,7 @@ public class GetKeyStrokeDialog extends JDialog {
 	 * Constructor.
 	 *
 	 * @param parent The parent frame of this dialog.
-	 * @param initial The initial key stroke to display.
+	 * @param initial The initial keystroke to display.
 	 */
 	public GetKeyStrokeDialog(Frame parent, KeyStroke initial) {
 		super(parent, MSG.getString("Dialog.KeyStroke.Title"));
@@ -130,9 +130,9 @@ public class GetKeyStrokeDialog extends JDialog {
 
 
 	/**
-	 * Returns the key stroke the user entered.
+	 * Returns the keystroke the user entered.
 	 *
-	 * @return The key stroke, or <code>null</code> if the user canceled the
+	 * @return The keystroke, or <code>null</code> if the user canceled the
 	 *         dialog.
 	 * @see #setKeyStroke(KeyStroke)
 	 */
@@ -141,9 +141,9 @@ public class GetKeyStrokeDialog extends JDialog {
 	}
 
 	/**
-	 * Sets the key stroke displayed in this dialog.
+	 * Sets the keystroke displayed in this dialog.
 	 *
-	 * @param stroke The key stroke.
+	 * @param stroke The keystroke.
 	 * @see #getKeyStroke()
 	 */
 	public void setKeyStroke(KeyStroke stroke) {
@@ -152,13 +152,10 @@ public class GetKeyStrokeDialog extends JDialog {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setVisible(boolean visible) {
 		if (visible) {
-			canceled = true; // Default to canceled.
+			canceled = true; // Default to cancel.
 			SwingUtilities.invokeLater(() -> {
 				textField.requestFocusInWindow();
 				textField.selectAll();

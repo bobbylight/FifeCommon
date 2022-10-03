@@ -74,7 +74,7 @@ public abstract class GUIWorkerThread<T> {
 	 * thread was interrupted before a value was produced.
 	 * <p>
 	 * Note that this method could cause deadlock if it is called outside
-	 * of the <code>finished</code> method.
+	 * the <code>finished</code> method.
 	 *
 	 * @return The value created by the <code>construct</code> method.
 	 */

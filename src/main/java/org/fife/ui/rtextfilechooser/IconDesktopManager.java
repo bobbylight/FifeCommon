@@ -46,7 +46,7 @@ class IconDesktopManager extends DefaultDesktopManager {
 		if (f.isSelected()) {
 			try {
 				f.setSelected(false);
-			} catch (PropertyVetoException e2) {
+			} catch (PropertyVetoException ignored) {
 				// Do nothing
 			}
 		}

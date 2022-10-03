@@ -1562,7 +1562,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		else if (value instanceof String) {
 			try {
 				return Integer.parseInt((String)value);
-			} catch (NumberFormatException nfe) { }
+			} catch (NumberFormatException ignored) { }
 		}
 
 		return 0;
@@ -1742,8 +1742,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		actionMap.put("OnPaste", pasteAction);
 
 		// Have Backspace go "up one level."
-		// This causes problems on OS X (action occurs even it back space is
-		// done in a text field - text field processes the key stroke, then the
+		// This causes problems on OS X (action occurs even if backspace is
+		// done in a text field - text field processes the keystroke, then the
 		// dialog does too!).
 		if (System.getProperty("os.name").toLowerCase().indexOf("os x")==1) {
 			ks = (KeyStroke)upOneLevelAction.getValue(Action.ACCELERATOR_KEY);
@@ -1999,7 +1999,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			Vector<File> dirList = new Vector<>();
 			Vector<File> fileList = new Vector<>();
 
-			// First, separate the directories from regular files so we can
+			// First, separate the directories from regular files, so we can
 			// sort them individually.  This part of the code could be made
 			// more compact, but it isn't just for a tad more speed.
 			FileFilter filter = (useGlobFilter ? globFilter : currentFileFilter);
@@ -2645,7 +2645,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	/**
-	 * Does all  dirty-work for <code>showOpenDialog</code> and
+	 * Does all the dirty-work for <code>showOpenDialog</code> and
 	 * <code>showSaveDialog</code> since much of what they do is the same.
 	 *
 	 * @param parent The parent of this open/save dialog.
@@ -2803,7 +2803,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			}
 
 			// We'd like to clear the text from the "Look in" field
-			// but if numSelected==0 and we try to call setText(),
+			// but if numSelected==0, and we try to call setText(),
 			// we get an exception for mutating the document while
 			// in an insertUpdate/removeUpdate call; so we get around
 			// this by first checking that the text field doesn't have

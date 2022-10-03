@@ -20,26 +20,17 @@ package org.fife.ui.rtextfilechooser.extras;
 class x64FileIOExtras extends Win32FileIOExtras {
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void loadNativeLibrary() {
 		System.loadLibrary("x64FileIOExtras");
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected native boolean moveToRecycleBinImpl(long hwnd, String[] files,
 						boolean confirmation, boolean silent);
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected native boolean showFilePropertiesDialogImpl(long hwnd,
 			String file);

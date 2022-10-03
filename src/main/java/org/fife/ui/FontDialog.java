@@ -491,7 +491,7 @@ public class FontDialog extends JDialog implements ActionListener,
 
 
 	/**
-	 * Returns whether the user checked the "Underline" check box.
+	 * Returns whether the user checked the "Underline" checkbox.
 	 * Note that if this dialog was created such that "Underline" is not
 	 * selectable, this method will always return <code>false</code>.
 	 *
@@ -623,11 +623,11 @@ public class FontDialog extends JDialog implements ActionListener,
 
 
 	/**
-	 * Sets or clears the "Underline" check box.
+	 * Sets or clears the "Underline" checkbox.
 	 * Note that if this dialog was created such that "Underline" is not
 	 * selectable, this method does nothing.
 	 *
-	 * @param underline whether the Underline check box should be
+	 * @param underline whether the Underline checkbox should be
 	 *        selected.
 	 * @see #getUnderlineSelected
 	 */

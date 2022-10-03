@@ -34,9 +34,9 @@ public class KeyStrokeField extends JTextField {
 
 
 	/**
-	 * Returns the key stroke they've entered.
+	 * Returns the keystroke they've entered.
 	 *
-	 * @return The key stroke, or <code>null</code> if nothing is
+	 * @return The keystroke, or <code>null</code> if nothing is
 	 *         entered.
 	 * @see #setKeyStroke(KeyStroke)
 	 */
@@ -63,9 +63,9 @@ public class KeyStrokeField extends JTextField {
 
 
 	/**
-	 * Sets the key stroke currently displayed.
+	 * Sets the keystroke currently displayed.
 	 *
-	 * @param ks The key stroke to display.  This may be <code>null</code>.
+	 * @param ks The keystroke to display.  This may be <code>null</code>.
 	 * @see #getKeyStroke()
 	 */
 	public void setKeyStroke(KeyStroke ks) {

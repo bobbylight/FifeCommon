@@ -227,9 +227,6 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Color getDefaultFileColor() {
 		return getForeground();

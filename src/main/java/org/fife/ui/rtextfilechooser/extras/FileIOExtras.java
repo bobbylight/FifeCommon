@@ -76,7 +76,7 @@ public abstract class FileIOExtras {
 	 * @param parent The parent window for the dialog.  This may be
 	 *        <code>null</code>.
 	 * @param files An array of files/directories to move.
-	 * @param confirmation Whether a "Are you sure you want to send XXX to
+	 * @param confirmation Whether an "Are you sure you want to send XXX to
 	 *        the Trash?" should be displayed to the user.
 	 * @param silent If this is <code>true</code>, no progress dialog is
 	 *        displayed to the user.  If this is <code>false</code>, then
@@ -108,7 +108,7 @@ public abstract class FileIOExtras {
 	 *        <code>null</code>.
 	 * @param files The names of the files to move.  These should
 	 *        be absolute paths.
-	 * @param confirmation Whether a "Are you sure you want to send XXX to
+	 * @param confirmation Whether an "Are you sure you want to send XXX to
 	 *        the Trash?" should be displayed to the user.
 	 * @param silent If this is <code>true</code>, no progress dialog is
 	 *        displayed to the user.  If this is <code>false</code>, then

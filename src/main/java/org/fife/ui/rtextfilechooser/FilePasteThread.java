@@ -732,7 +732,7 @@ final class FilePasteThread extends GUIWorkerThread<Object> {
 				}
 			} catch (RuntimeException re) {
 				throw re; // FindBugs
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 				// Swallow; non-Sun JVM, not Windows, or the internal API has
 				// changed.
 			}

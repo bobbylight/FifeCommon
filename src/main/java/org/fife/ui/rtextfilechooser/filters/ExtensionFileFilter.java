@@ -206,7 +206,7 @@ public class ExtensionFileFilter extends FileFilter {
 
 
 	/**
-	 * Returns the final yay or nay as to whether to do case checking.
+	 * Returns whether to do case checking.
 	 *
 	 * @param requestedCheck The requested case checking.  If this value is
 	 *        {@code SYSTEM_CASE_CHECK} or {@code null} we'll figure it out

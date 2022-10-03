@@ -126,9 +126,6 @@ class BreadcrumbButtonLayout implements LayoutManager {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Dimension preferredLayoutSize(Container parent) {
 

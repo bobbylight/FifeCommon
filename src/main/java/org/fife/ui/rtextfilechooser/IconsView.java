@@ -105,7 +105,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		for (JInternalFrame frame : frames) {
 			try {
 				frame.setSelected(false);
-			} catch (PropertyVetoException pve) {
+			} catch (PropertyVetoException ignored) {
 				// Do nothing
 			}
 		}
@@ -123,9 +123,6 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Color getDefaultFileColor() {
 		return getForeground();
@@ -257,14 +254,11 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 			addSelectedFrame(frame);
 			try {
 				frame.setSelected(true);
-			} catch (PropertyVetoException pve) {}
+			} catch (PropertyVetoException ignored) {}
 		}
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setDisplayedFiles(java.util.List<File> files) {
 
@@ -285,7 +279,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 			add(frame);
 			try {
 				frame.setSelected(false);
-			} catch (PropertyVetoException pve) {
+			} catch (PropertyVetoException ignored) {
 				// Do nothing
 			}
 
@@ -321,7 +315,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	public void setMultiSelectionEnabled(boolean enabled) {
 		// This method doesn't do anything; rather, the view actually polls
 		// the file chooser when a new file is selected, to find out whether
-		// or not the user can multi-select.
+		// the user can multi-select.
 	}
 
 
@@ -604,7 +598,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 				// Now, select this newly-clicked on file.
 				try {
 					setSelected(true);
-				} catch (PropertyVetoException e1) { }
+				} catch (PropertyVetoException ignored) { }
 
 				Insets i = getInsets();
 

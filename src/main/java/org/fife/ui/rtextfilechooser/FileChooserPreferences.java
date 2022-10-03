@@ -106,7 +106,7 @@ final class FileChooserPreferences {
 					prefs.getInt(HIDDEN_FILE_COLOR_KEY,
 									DEFAULT_HIDDEN_FILE_COLOR_INT));
 
-			// After we get all  colors, go for the other stuff.
+			// After we get all the colors, go for the other stuff.
 			fprefs.showHiddenFiles	= prefs.getBoolean(
 						SHOW_HIDDEN_FILES_KEY, fprefs.showHiddenFiles);
 			fprefs.fileSystemAware	= prefs.getBoolean(
@@ -146,7 +146,7 @@ final class FileChooserPreferences {
 										RTextFileChooser.class);
 			String[] keys = prefs.keys();
 
-			// all  preferences that are extension => color mappings
+			// all the preferences that are extension => color mappings
 			// share a common prefix that we check for.
 
 			int prefixLength = FTI_PREFIX.length();
@@ -161,7 +161,7 @@ final class FileChooserPreferences {
 
 		} catch (RuntimeException re) {
 			throw re; // Keep FindBugs happy.
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 			// Do nothing.
 		}
 

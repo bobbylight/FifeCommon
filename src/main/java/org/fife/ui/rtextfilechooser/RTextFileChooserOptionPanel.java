@@ -179,7 +179,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		String style = openFilesStyleCombo.getSelectedValue();
 		chooser.setOpenFilesStyle(Integer.parseInt(style));
 
-		// Do all  other colors.
+		// Do all the other colors.
 		int rowCount = colorTableModel.getRowCount();
 		for (int i=1; i<rowCount; i++) {
 			String ext = (String)colorTableModel.getValueAt(i,0);

@@ -57,7 +57,7 @@ import javax.swing.KeyStroke;
  * Common usage should be as follows:  say a class <code>Foo</code> needs to
  * store preferences between runs of the application.  A class could be created
  * for its preferences, say <code>FooPrefs</code>, that extends
- * <code>Prefs</code>.  The <code>Foo</code> instance could then loads its
+ * <code>Prefs</code>.  The <code>Foo</code> instance could then load its
  * preferences like so:
  *
  * <pre>

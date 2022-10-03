@@ -38,9 +38,6 @@ import java.util.ArrayList;
 public class DirectoryTree extends FileSystemTree {
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void configurePopupMenuActions() {
 		super.configurePopupMenuActions();

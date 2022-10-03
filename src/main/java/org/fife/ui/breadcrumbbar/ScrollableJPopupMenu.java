@@ -228,7 +228,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 		ArrowMenuItem(Icon icon) {
 			// We only temporarily set the menu item's standard icon, just so
 			// we can use Swing to get our "disabled" version.  Then we clear
-			// it so we can draw the icon ourselves, in the text area.
+			// it, so we can draw the icon ourselves, in the text area.
 			super(icon);
 			arrowIcon = icon;
 			disabledArrowIcon = getDisabledIcon();

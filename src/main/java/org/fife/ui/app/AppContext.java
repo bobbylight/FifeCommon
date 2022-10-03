@@ -180,7 +180,7 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 	private void initializeAndConfigureTheme(String themeName) {
 
 		// Load the previously-saved theme, defaulting to the first installed
-		// theme if it isn't fo9und for some reason.
+		// theme if it isn't found for some reason.
 		List<AppTheme> availableThemes = getAvailableAppThemes();
 		AppTheme theme = availableThemes.stream()
 			.filter(t -> t.getName().equals(themeName))
@@ -376,7 +376,7 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 
 		// 1.5.2004/pwy: Setting this property makes the menu appear on top
 		// of the screen on Apple Mac OS X systems. It is ignored by all other
-		// other Java implementations.
+		// Java implementations.
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 
 		// 1.5.2004/pwy: Setting this property defines the standard

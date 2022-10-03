@@ -69,9 +69,9 @@ public enum OS {
 
 
 	/**
-	 * Returns whether the OS is case sensitive.
+	 * Returns whether the OS is case-sensitive.
 	 *
-	 * @return Whether the OS is case sensitive.
+	 * @return Whether the OS is case-sensitive.
 	 */
 	public boolean isCaseSensitive() {
 		return caseSensitive;

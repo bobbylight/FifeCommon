@@ -82,7 +82,7 @@ public abstract class MenuBar<T extends AbstractGUIApplication<?>>
 
 
 	/**
-	 * Returns a check box menu item configured from an action.
+	 * Returns a checkbox menu item configured from an action.
 	 *
 	 * @param action The action associated with the menu item.
 	 * @return The menu item.

@@ -206,7 +206,7 @@ public class ComponentMover extends MouseAdapter {
 	}
 
 	/**
-	 * Setup the variables used to control the moving of the component:
+	 * Set up the variables used to control the moving of the component:
 	 * <p>
 	 * source - the source component of the mouse event
 	 * destination - the component that will ultimately be moved

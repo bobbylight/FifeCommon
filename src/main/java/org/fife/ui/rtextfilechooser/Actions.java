@@ -326,7 +326,7 @@ public interface Actions {
 
 		/**
 		 * Sets the enabled state of this action based on whether the system
-		 * clipboard contains a list of files to copy).
+		 * clipboard contains a list of files to copy.
 		 */
 		void checkEnabledState() {
 			setEnabled(Utilities.getClipboardContainsFileList());
@@ -482,17 +482,14 @@ public interface Actions {
 
 			if (desktop.isSupported(method.method)) {
 				try {
-					switch (method.method) {
-						case OPEN:
-							desktop.open(file);
-							success = true;
-							break;
-						default:
-							desktop.edit(file);
-							success = true;
-							break;
+					if (method.method == Desktop.Action.OPEN) {
+						desktop.open(file);
 					}
-				} catch (IOException ioe) {
+					else {
+						desktop.edit(file);
+					}
+					success = true;
+				} catch (IOException ignored) {
 					// Do nothing; success will return false
 				}
 			}

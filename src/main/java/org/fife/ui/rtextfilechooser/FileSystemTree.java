@@ -645,7 +645,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 
 	/**
 	 * Refreshes the children of the specified node (representing a directory)
-	 * to accurately reflect the files inside of it.
+	 * to accurately reflect the files inside it.
 	 *
 	 * @param node The node.  If this is <code>null</code>, the entire tree is
 	 *        refreshed.
@@ -676,7 +676,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	 * Changes the "root" of this tree.
 	 *
 	 * @param rootFile The new root.  If this is <code>null</code>, then all
-	 *        of the file system's roots are used.  If it is a directory, then
+	 *        the file system's roots are used.  If it is a directory, then
 	 *        that directory is used.  If it is a plain file, or does not
 	 *        exist, an {@link IllegalArgumentException} is thrown.
 	 * @see #getRoot()

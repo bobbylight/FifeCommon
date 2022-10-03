@@ -751,22 +751,22 @@ public class DockableWindowPanel extends JPanel
 					collapsedPanel = new CollapsedPanel(dockableWindowsLocation);
 				}
 				switch (dockableWindowsLocation) {
-					case TOP:
+					case TOP -> {
 						add(collapsedPanel, BorderLayout.NORTH);
 						add(splitPane.getBottomComponent());
-						break;
-					case LEFT:
+					}
+					case LEFT -> {
 						add(collapsedPanel, BorderLayout.WEST);
 						add(splitPane.getRightComponent());
-						break;
-					case BOTTOM:
+					}
+					case BOTTOM -> {
 						add(collapsedPanel, BorderLayout.SOUTH);
 						add(splitPane.getTopComponent());
-						break;
-					default: // RIGHT:
+					}
+					default -> { // RIGHT:
 						add(collapsedPanel, BorderLayout.EAST);
 						add(splitPane.getLeftComponent());
-						break;
+					}
 				}
 			}
 			else {
@@ -893,9 +893,7 @@ public class DockableWindowPanel extends JPanel
 					b.setOpaque(false);
 					b.putClientProperty("DockableWindow", dwind);
 					final int index = i;
-					b.addActionListener(e -> {
-						windowPanel.setActiveDockableWindow(index, true);
-					});
+					b.addActionListener(e -> windowPanel.setActiveDockableWindow(index, true));
 					b.addMouseListener(this);
 					toolbar.add(b);
 				}

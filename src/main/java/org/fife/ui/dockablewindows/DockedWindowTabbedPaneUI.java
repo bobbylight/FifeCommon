@@ -394,8 +394,8 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 
 	/**
 	 * Tab layout for a plugin tabbed pane.  All tabs area always in a single
-	 * run (row).  If there is not enough room for all  tabs in one run,
-	 * the space available is divided equally among all  tabs.<p>
+	 * run (row).  If there is not enough room for all tabs in one run,
+	 * the space available is divided equally among all tabs.<p>
 	 *
 	 * Much of this code is stolen from <code>BasicTabbedPaneUI</code>'s
 	 * layout subclasses.
@@ -487,8 +487,6 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 			Dimension size = tabPane.getSize();
 			Insets insets = tabPane.getInsets();
 			Insets tabAreaInsets = getTabAreaInsets(tabPlacement);
-			//int fontHeight = metrics.getHeight();
-			//int selectedIndex = tabPane.getSelectedIndex();
 			boolean leftToRight = tabPane.getComponentOrientation().isLeftToRight();
 
 			// Since we'll only ever have one run of tabs, the tab area's

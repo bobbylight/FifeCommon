@@ -155,7 +155,7 @@ public final class SubstanceUtil {
 					props = (SubstanceProps)Class.forName(SUBSTANCE_PROPS_IMPL_CLASS).getDeclaredConstructor().
 						newInstance();
 				} catch (ClassNotFoundException | NoSuchMethodException | InstantiationException |
-						IllegalAccessException | InvocationTargetException e) {
+						IllegalAccessException | InvocationTargetException ignored) {
 					// Do nothing (comment for Sonar)
 				}
 			}

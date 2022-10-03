@@ -37,7 +37,7 @@ import javax.swing.KeyStroke;
  * </p>
  *
  * <p>
- * For accelerators, the standard syntax for key strokes defined
+ * For accelerators, the standard syntax for keystrokes defined
  * <a href="https://docs.oracle.com/javase/7/docs/api/javax/swing/KeyStroke.html#getKeyStroke(java.lang.String)">
  * here</a> can be used.  In addition, the string literal "default" maps to "ctrl" on
  * Windows and Linux, and "meta" on OS X.
@@ -187,13 +187,13 @@ public abstract class StandardAction extends AbstractAction {
 
 	/**
 	 * If a property is found in a resource bundle, it is assumed to be a string
-	 * representation of a key stroke, and a <code>KeyStroke</code> is made
+	 * representation of a keystroke, and a <code>KeyStroke</code> is made
 	 * from it.
 	 *
 	 * @param msg The resource bundle.
 	 * @param key The key.
-	 * @return The key stroke, or <code>null</code> if the property is not
-	 *         found or the value is not a valid key stroke.
+	 * @return The keystroke, or <code>null</code> if the property is not
+	 *         found or the value is not a valid keystroke.
 	 */
 	private static KeyStroke getKeyStroke(ResourceBundle msg, String key) {
 		KeyStroke ks = null;

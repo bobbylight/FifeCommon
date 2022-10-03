@@ -104,7 +104,7 @@ public interface IconGroup {
 
 	/**
 	 * Returns a version of an icon to use in "native" UI components.
-	 * This is primarily used to determine icons in the Mac OS native
+	 * This is primarily used to determine icons in the macOS native
 	 * menu bar, since it may not match the application's theme.<p>
 	 *
 	 * Note this may be the same icon as that returned by
@@ -121,7 +121,7 @@ public interface IconGroup {
 
 	/**
 	 * Returns a version of an icon to use in "native" UI components.
-	 * This is primarily used to determine icons in the Mac OS native
+	 * This is primarily used to determine icons in the macOS native
 	 * menu bar, since it may not match the application's theme.<p>
 	 *
 	 * Note this may be the same icon as that returned by
@@ -142,7 +142,7 @@ public interface IconGroup {
 
 	/**
 	 * Returns a version of an image to use in "native" UI components.
-	 * This is primarily used to determine icons in the Mac OS native
+	 * This is primarily used to determine icons in the macOS native
 	 * menu bar, since it may not match the application's theme.<p>
 	 *
 	 * Note this may be the same image as that returned by
@@ -159,7 +159,7 @@ public interface IconGroup {
 
 	/**
 	 * Returns a version of an image to use in "native" UI components.
-	 * This is primarily used to determine icons in the Mac OS native
+	 * This is primarily used to determine icons in the macOS native
 	 * menu bar, since it may not match the application's theme.<p>
 	 *
 	 * Note this may be the same image as that returned by

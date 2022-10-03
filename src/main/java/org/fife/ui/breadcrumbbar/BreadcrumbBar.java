@@ -113,9 +113,6 @@ public class BreadcrumbBar extends JComponent {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void applyComponentOrientation(ComponentOrientation o) {
 
@@ -730,7 +727,7 @@ public class BreadcrumbBar extends JComponent {
 			if (dir!=null) {
 				File[] children = dir.listFiles(File::isDirectory);
 				// children can be null e.g. on Windows, when examining an
-				// empty DVD/blu-ray drive
+				// empty DVD/Blu-ray drive
 				int count = children!=null ? children.length : 0;
 				for (int i=0; i<count; i++) {
 					dir = children[i];

@@ -228,7 +228,7 @@ public class ExceptionDialog extends EscapableDialog implements ActionListener {
 	 * Workaround for the fact that, if our SelectableLabel (e.g. JEditorPane)
 	 * is displaying a long line of HTML, the preferred size returned will be
 	 * way too long.  Make us a reasonable width and guess at a height that
-	 * will likely hold all of the text, while still not looking way too tall.
+	 * will likely hold all  text, while still not looking way too tall.
 	 */
 	@Override
 	public void pack() {

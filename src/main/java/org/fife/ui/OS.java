@@ -46,7 +46,7 @@ public enum OS {
 	OTHER(true);
 
 
-	private boolean caseSensitive;
+	private final boolean caseSensitive;
 
 	private static OS os;
 

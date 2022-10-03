@@ -20,7 +20,7 @@ import java.util.Map;
 public interface AppTheme {
 
 	/**
-	 * Retrns extra values to put into the {@code UIManager}.
+	 * Returns extra values to put into the {@code UIManager}.
 	 *
 	 * @return Extra properties.
 	 */

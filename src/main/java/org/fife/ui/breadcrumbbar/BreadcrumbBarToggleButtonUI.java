@@ -77,9 +77,6 @@ public class BreadcrumbBarToggleButtonUI extends BasicToggleButtonUI {
 
 		super.paint(g, c);
 
-		// g.setColor(java.awt.Color.BLACK);
-		// g.drawRect(0, 0, c.getWidth()-1, c.getHeight()-1);
-
 	}
 
 

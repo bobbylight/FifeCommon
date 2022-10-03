@@ -276,7 +276,7 @@ public class TabbedPaneTransferHandler extends TransferHandler
 	 *
 	 * @param c The component receiving the "drop" (the instance of
 	 *        <code>JTabbedPane</code>).
-	 * @param t The data being transfered (information about the tab and the
+	 * @param t The data being transferred (information about the tab and the
 	 *        component contained by the tab).
 	 * @return whether the import was successful.
 	 */

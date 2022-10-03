@@ -292,7 +292,7 @@ public class CTagReader {
 	/**
 	 * Reads all the "pseudo-tags" from the top of the ctag file (author, version,
 	 * etc.).
-	 *
+	 * <p>
 	 * param file The tag file from which to get the pseudotag information.
 	 * @param info The structure in which to place the information.
 	 */

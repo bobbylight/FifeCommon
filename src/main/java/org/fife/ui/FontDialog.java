@@ -334,7 +334,7 @@ public class FontDialog extends JDialog implements ActionListener,
 	/**
 	 * Creates a checkbox for use in this dialog.
 	 *
-	 * @param msg The resouce bundle for localizations.
+	 * @param msg The resource bundle for localizations.
 	 * @param keyRoot The root of the keys in the resource bundle to use
 	 *        when localizing.
 	 * @return The checkbox.
@@ -546,7 +546,7 @@ public class FontDialog extends JDialog implements ActionListener,
 	/**
 	 * Sets the label to use for the font size list.
 	 *
-	 * @param text The label to usefor the font size list.
+	 * @param text The label to use for the font size list.
 	 * @see #getFontSizeLabel
 	 */
 	public void setFontSizeLabel(String text) {

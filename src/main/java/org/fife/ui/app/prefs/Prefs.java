@@ -327,7 +327,7 @@ public abstract class Prefs {
 	 * Parses a value of a given type out of a string representing
 	 * the value.
 	 *
-	 * @param type The type of data reprsented by the string.
+	 * @param type The type of data represented by the string.
 	 * @param name The name of the field whose value is represented.
 	 * @param value The actual value, as a string.
 	 * @param props The properties that field values are getting loaded from.
@@ -384,8 +384,8 @@ public abstract class Prefs {
 	/**
 	 * Since {@code TypeLoader} instances are genericized, when they return
 	 * arrays of primitives they are always boxed.  This method checks
-	 * whether the target field is actually a primitve array (as opposed to a
-	 * boxed array), and if it is, converts the boxed array to a primitve one.
+	 * whether the target field is actually a primitive array (as opposed to a
+	 * boxed array), and if it is, converts the boxed array to a primitive one.
 	 *
 	 * @param type The type of the field whose value will be set.
 	 * @param value The value the field will be set to.

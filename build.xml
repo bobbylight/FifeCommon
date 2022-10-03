@@ -3,7 +3,7 @@
 <!-- 
 
 	This is the Ant build script for org.fife.* classes that might be
-	useful accross applications.  Here is a list of available targets:
+	useful across applications.  Here is a list of available targets:
 	
 		1. create-jni-headers: Creates header files for win32 and x64 versions
 		                       of the FileIOExtras class (native file

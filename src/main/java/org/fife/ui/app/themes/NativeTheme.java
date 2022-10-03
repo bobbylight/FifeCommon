@@ -11,7 +11,7 @@ import javax.swing.*;
 /**
  * An application theme that installs the system default
  * look and feel.  Applications can extend this class
- * to add additinal, app-specific colors and styles for
+ * to add additional, app-specific colors and styles for
  * custom components.
  */
 public class NativeTheme extends AbstractAppTheme {

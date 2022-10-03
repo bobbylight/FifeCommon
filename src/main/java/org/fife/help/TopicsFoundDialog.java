@@ -157,14 +157,14 @@ class TopicsFoundDialog extends JDialog {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			switch (e.getKeyCode()) {
-				case KeyEvent.VK_ENTER:
+				case KeyEvent.VK_ENTER -> {
 					selectedIndex = choicesList.getSelectedIndex();
 					setVisible(false);
-					break;
-				case KeyEvent.VK_ESCAPE:
+				}
+				case KeyEvent.VK_ESCAPE -> {
 					selectedIndex = -1;
 					setVisible(false);
-					break;
+				}
 			}
 		}
 

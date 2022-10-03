@@ -438,8 +438,8 @@ public interface Actions {
 				return this == OPEN ? EDIT : OPEN;
 			}
 
-			private Desktop.Action method;
-			private String localizationKey;
+			private final Desktop.Action method;
+			private final String localizationKey;
 
 		}
 

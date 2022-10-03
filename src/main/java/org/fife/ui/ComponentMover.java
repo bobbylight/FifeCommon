@@ -30,7 +30,7 @@ import javax.swing.*;
  *     ComponentMover mover = new ComponentMover(frame, frame.getJMenuBar());
  *     mover.setChangeCursor(false);
  * </code>
- *
+ * <p>
  * This class was originally written by Rob Camick and is based off of this blog post:
  * https://tips4java.wordpress.com/2009/06/14/moving-windows/
  *

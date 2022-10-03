@@ -432,7 +432,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 	 * be the user's home directory.
 	 *
 	 * @param path The path typed by a user.
-	 * @return The samae path, with {@code "~"} replaced with the user's home
+	 * @return The same path, with {@code "~"} replaced with the user's home
 	 *         directory if appropriate.
 	 */
 	private static String handleUnixHomeDirectory(String path) {
@@ -1075,11 +1075,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 
 		@Override
 		public void run() {
-			//long start = System.currentTimeMillis();
-			//System.out.println("Starting at: " + start);
 			containedFiles = getContainedFiles(dir);
-			//long time = System.currentTimeMillis() - start;
-			//System.out.println("DEBUG: list files completed in: " + (time/1000f) + " seconds");
 		}
 
 	}

@@ -519,7 +519,7 @@ public class DockableWindowPanel extends JPanel
 			}
 		}
 
-		// Getting here means the dockable window was hidden (rignt?).
+		// Getting here means the dockable window was hidden (right?).
 		return false;
 
 	}

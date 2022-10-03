@@ -592,7 +592,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 				_y = p.y;
 				startingBounds = getBounds();
 
-				// If multiselection isn't enabled, or if they don't hold
+				// If multi-selection isn't enabled, or if they don't hold
 				// down shift or control while clicking, we need to clear
 				// the selection.
 				if (!chooser.isMultiSelectionEnabled() ||
@@ -743,16 +743,11 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 		@Override
 		public void processMouseEvent(MouseEvent e) {
 			switch (e.getID()) {
-				case MouseEvent.MOUSE_PRESSED:
-					mousePressed(e);
-					return;
-				case MouseEvent.MOUSE_RELEASED:
-					mouseReleased(e);
-					return;
-				case MouseEvent.MOUSE_CLICKED:
-					mouseClicked(e);
+				case MouseEvent.MOUSE_PRESSED -> mousePressed(e);
+				case MouseEvent.MOUSE_RELEASED -> mouseReleased(e);
+				case MouseEvent.MOUSE_CLICKED -> mouseClicked(e);
+				default -> super.processMouseEvent(e); // Never happens
 			}
-			//super.processMouseEvent(e); // Don't need this...
 		}
 
 		@Override

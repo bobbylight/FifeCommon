@@ -499,7 +499,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 
 	/**
 	 * Returns the name of this options panel, since this is the value
-	 * that is diaplayed in the Options dialog's JList.
+	 * that is displayed in the Options dialog's JList.
 	 */
 	@Override
 	public final String toString() {

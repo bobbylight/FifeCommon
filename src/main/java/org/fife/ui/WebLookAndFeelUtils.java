@@ -190,7 +190,7 @@ public final class WebLookAndFeelUtils {
 			// Decorating frames is disabled as for some reason it sets our
 			// initial size to 0, which breaks RSTA's addNotify() method.
 			// Perhaps it has to do with the frame "fading in"?
-			//WebLookandFeel.setDecorateFrames(true);
+			//WebLookAndFeel.setDecorateFrames(true);
 			//WebLookAndFeel.setDecorateDialogs(true);
 			Class<?> clazz = Class.forName(LAF_CLASS_NAME, true, null);
 			Method m;

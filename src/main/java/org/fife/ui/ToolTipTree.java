@@ -118,7 +118,7 @@ public class ToolTipTree extends JTree {
 									row,
 									false); // hasFocus ???
 				// NOTE:  Since DefaultTreeCellRenderer extends JLabel, and
-				// JLabel provides all of the functionality we need to
+				// JLabel provides all  functionality we need to
 				// compute the tooltip location, and the user may implement
 				// their own TreeCellRenderer and extend JLabel, we just
 				// check for JLabel instances here.

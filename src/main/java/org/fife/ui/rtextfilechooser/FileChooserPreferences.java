@@ -18,7 +18,7 @@ import java.util.prefs.Preferences;
 
 /**
  * Preferences for the file chooser.  These are stored via the Java Preferences
- * API so they are remembered between application invocations.
+ * API, so they are remembered between application invocations.
  *
  * @author Robert Futrell
  * @version 0.7
@@ -106,7 +106,7 @@ final class FileChooserPreferences {
 					prefs.getInt(HIDDEN_FILE_COLOR_KEY,
 									DEFAULT_HIDDEN_FILE_COLOR_INT));
 
-			// After we get all of the colors, go for the other stuff.
+			// After we get all  colors, go for the other stuff.
 			fprefs.showHiddenFiles	= prefs.getBoolean(
 						SHOW_HIDDEN_FILES_KEY, fprefs.showHiddenFiles);
 			fprefs.fileSystemAware	= prefs.getBoolean(
@@ -146,7 +146,7 @@ final class FileChooserPreferences {
 										RTextFileChooser.class);
 			String[] keys = prefs.keys();
 
-			// All of the preferences that are extension => color mappings
+			// all  preferences that are extension => color mappings
 			// share a common prefix that we check for.
 
 			int prefixLength = FTI_PREFIX.length();
@@ -218,7 +218,7 @@ final class FileChooserPreferences {
 	/**
 	 * Sets this preferences instance to contain all default values.
 	 */
-	protected void setDefaults() {
+	private void setDefaults() {
 		showHiddenFiles = false;
 		hiddenFileColor = DEFAULT_HIDDEN_FILE_COLOR;
 		fileSystemAware = true;

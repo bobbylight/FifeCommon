@@ -150,8 +150,7 @@ class BreadcrumbButtonLayout implements LayoutManager {
 			// Don't use width of all directories for preferred width, as
 			// this can cause layout headaches.  Try adding a BreadcrumbBar
 			// showing a long directory path in BorderLayout.NORTH, the panel
-			// will want to be long enough to display the entire directory
-			// path.
+			// will want to be long enough to display the entire directory path.
 			//dim.width += insets.left + insets.right;
 			dim.width = 250 + insets.left + insets.right;
 			dim.height += insets.top + insets.bottom + vgap*2;

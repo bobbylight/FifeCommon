@@ -58,9 +58,7 @@ public abstract class MenuBar<T extends AbstractGUIApplication<?>>
 			updateIcons(app.getIconGroup());
 
 			app.addPropertyChangeListener(
-				AbstractGUIApplication.ICON_STYLE_PROPERTY, e -> {
-					updateIcons((IconGroup)e.getNewValue());
-			});
+				AbstractGUIApplication.ICON_STYLE_PROPERTY, e -> updateIcons((IconGroup)e.getNewValue()));
 		}
 	}
 
@@ -266,7 +264,7 @@ public abstract class MenuBar<T extends AbstractGUIApplication<?>>
 
 
 	/**
-	 * Subclasses should override this method and add all of the
+	 * Subclasses should override this method and add all
 	 * menu items here.  Doing so ensures all other listeners are
 	 * set up properly.
 	 */

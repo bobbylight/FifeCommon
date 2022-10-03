@@ -394,8 +394,8 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 
 	/**
 	 * Tab layout for a plugin tabbed pane.  All tabs area always in a single
-	 * run (row).  If there is not enough room for all of the tabs in one run,
-	 * the space available is divided equally among all of the tabs.<p>
+	 * run (row).  If there is not enough room for all  tabs in one run,
+	 * the space available is divided equally among all  tabs.<p>
 	 *
 	 * Much of this code is stolen from <code>BasicTabbedPaneUI</code>'s
 	 * layout subclasses.

@@ -508,7 +508,7 @@ public class PrintPreviewDialog extends EscapableDialog
 	}
 
 
-	// Called whenever the user changes the value in one of the comboboxes.
+	// Called whenever the user changes the value in one of the combo boxes.
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 

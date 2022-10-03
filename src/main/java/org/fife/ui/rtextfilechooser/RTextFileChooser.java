@@ -734,7 +734,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		selectedFiles = getFilesFromFileNameTextField();
 		if (selectedFiles==null) {
-			// Some views allow you to click outside of all files
+			// Some views allow you to click outside all files
 			// (i.e. IconsView).
 			return;
 		}
@@ -789,7 +789,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 	/**
 	 * Called when the user clicks the Cancel button.  You can also call this
-	 * programatically.  Any file selections are nixed and the dialog closes.
+	 * programmatically.  Any file selections are nixed and the dialog closes.
 	 */
 	public void cancelSelection() {
 		iconManager.clearIconCache(); // To keep cache from growing huge.
@@ -2645,7 +2645,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	/**
-	 * Does all of the dirty-work for <code>showOpenDialog</code> and
+	 * Does all  dirty-work for <code>showOpenDialog</code> and
 	 * <code>showSaveDialog</code> since much of what they do is the same.
 	 *
 	 * @param parent The parent of this open/save dialog.

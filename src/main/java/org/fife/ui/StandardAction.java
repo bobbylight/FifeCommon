@@ -386,20 +386,12 @@ public abstract class StandardAction extends AbstractAction {
 		String suffix = null;
 		if (os != null) {
 			switch (os) {
-				case MAC_OS_X:
-					suffix = ".OSX";
-					break;
-				case LINUX:
-					suffix = ".Linux";
-					break;
-				case WINDOWS:
-					suffix = ".Windows";
-					break;
-				case SOLARIS:
-					suffix = ".Solaris";
-					break;
-				default:
-					break;
+				case MAC_OS_X -> suffix = ".OSX";
+				case LINUX -> suffix = ".Linux";
+				case WINDOWS -> suffix = ".Windows";
+				case SOLARIS -> suffix = ".Solaris";
+				default -> {
+				}
 			}
 		}
 		if (suffix != null) {

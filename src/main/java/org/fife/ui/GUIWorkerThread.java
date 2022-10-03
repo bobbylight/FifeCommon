@@ -72,7 +72,7 @@ public abstract class GUIWorkerThread<T> {
 	 * Return the value created by the <code>construct</code> method.
 	 * Returns null if either the constructing thread or the current
 	 * thread was interrupted before a value was produced.
-	 *
+	 * <p>
 	 * Note that this method could cause deadlock if it is called outside
 	 * of the <code>finished</code> method.
 	 *

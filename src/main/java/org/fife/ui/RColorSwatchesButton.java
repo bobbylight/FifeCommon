@@ -131,13 +131,13 @@ public class RColorSwatchesButton extends RColorButton {
 
 		super.updateUI();
 
-		// We don't just call SwingUtilites.updateComponentTreeUI() because
+		// We don't just call SwingUtilities.updateComponentTreeUI() because
 		// we don't want to update the custom UI on the swatches.
 		if (popup!=null) {
 			//SwingUtilities.updateComponentTreeUI(popup);
 			popup.updateUI();
 			// We only need to update the UI of the last child, as it is the
-			// "More colors..." menu item.  All of the others are swatches,
+			// "More colors..." menu item.  all  others are swatches,
 			// and updating them would get rid of our custom UI.
 			((JComponent)popup.getComponent(popup.getComponentCount()-1)).
 													updateUI();

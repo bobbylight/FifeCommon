@@ -299,7 +299,7 @@ public class FontSelector extends JPanel implements ActionListener {
 	 * description of {@link #isToggledOn()} for a description of
 	 * this property.
 	 *
-	 * If this font selector is not togglable (i.e. is not a
+	 * If this font selector is not toggleable (i.e. is not a
 	 * checkbox), this method does nothing.
 	 *
 	 * @param toggled Whether this font selector should be toggled on.

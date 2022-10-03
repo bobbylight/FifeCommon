@@ -138,35 +138,30 @@ public class LineDividerBorder implements Border, SwingConstants {
 		int y2;
 
 		switch (location) {
-
-			case TOP:
+			case TOP -> {
 				x1 = x + slack;
 				y1 = y;
-				x2 = (x+width-slack) - 2;
+				x2 = (x + width - slack) - 2;
 				y2 = y;
-				break;
-
-			case LEFT:
+			}
+			case LEFT -> {
 				x1 = x;
 				y1 = y + slack;
 				x2 = x;
-				y2 = (y+height-slack) - 2;
-				break;
-
-			case BOTTOM:
+				y2 = (y + height - slack) - 2;
+			}
+			case BOTTOM -> {
 				x1 = x + slack;
 				y1 = y + height - 2;
-				x2 = (x+width-slack) - 2;
+				x2 = (x + width - slack) - 2;
 				y2 = y1;
-				break;
-
-			default: // case RIGHT:
+			}
+			default -> { // case RIGHT:
 				x1 = x + width - 2;
 				y1 = y + slack;
 				x2 = x1;
-				y2 = (y+height-slack) - 2;
-				break;
-
+				y2 = (y + height - slack) - 2;
+			}
 		}
 
 		Color dividerColor = color;

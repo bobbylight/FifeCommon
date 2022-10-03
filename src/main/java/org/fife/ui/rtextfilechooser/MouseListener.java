@@ -1,7 +1,7 @@
 /*
  * 04/15/2009
  *
- * MouseListner.java - Listens for mouse events in the file chooser.
+ * MouseListener.java - Listens for mouse events in the file chooser.
  * Copyright (C) 2009 Robert Futrell
  * https://fifesoft.com/rtext
  * Licensed under a modified BSD license.
@@ -95,7 +95,7 @@ class MouseListener extends MouseAdapter {
 
 			} // End of if (wasButton1 && clickCount==2).
 
-			// If they click in the view outside of any displayed file,
+			// If they click in the view outside any displayed file,
 			// clear the selected files.
 			else if (wasButton1 && clickCount==1) {
 				File file = view.getFileAtPoint(e.getPoint());

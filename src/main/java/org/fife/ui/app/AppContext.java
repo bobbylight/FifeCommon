@@ -39,7 +39,7 @@ import java.util.List;
  * If the directory specified by {@code getPreferencesDir()} doesn't exist,
  * it will get created.  By default, loading and saving application preferences
  * will only load and save the single file named by
- * {@code getPreferencesfileName()}; however, applications can store other
+ * {@code getPreferencesFileName()}; however, applications can store other
  * preferences files in this directory, such as a file containing the
  * application's configurable shortcuts.
  *

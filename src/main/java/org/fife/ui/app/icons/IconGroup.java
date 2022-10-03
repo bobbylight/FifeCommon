@@ -168,7 +168,7 @@ public interface IconGroup {
 	 *
 	 * @param name The image to load.
 	 * @param w The width of the image to load.
-	 * @param h The height of the imagae to load.
+	 * @param h The height of the image to load.
 	 * @return The image, or <code>null</code> if it could not be found or
 	 *         loaded.
 	 * @see #getImage(String, int, int)

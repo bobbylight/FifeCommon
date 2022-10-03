@@ -109,7 +109,7 @@ public final class TranslucencyUtil {
 	 * @param w The window.
 	 * @param value The opacity value to set.
 	 * @return Whether the operation was successful.  This will
-	 *         be {@code false} if opacity is not suppoted
+	 *         be {@code false} if opacity is not supported
 	 *         in this JVM.
 	 * @see #setOpaque(Window, boolean)
 	 */
@@ -131,7 +131,7 @@ public final class TranslucencyUtil {
 	 * @param opaque Whether the window should be opaque (e.g.
 	 *        a painted background or a 0-alpha background).
 	 * @return Whether the operation was successful.  This will
-	 *         be {@code false} if opacity is not suppoted
+	 *         be {@code false} if opacity is not supported
 	 *         in this JVM.
 	 * @see #setOpacity(Window, float)
 	 */

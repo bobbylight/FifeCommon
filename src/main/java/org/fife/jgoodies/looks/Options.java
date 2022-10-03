@@ -296,7 +296,7 @@ public final class Options {
      * A JTextField client property key that specifies the direction
      * how text shall be selected on focus gain - if at all:
      * from start to end vs. end to start.
-     *
+     * <p>
      * If the value is set to Boolean.TRUE, the text is selected
      * from end to start, otherwise it is selected from start to end.<p>
      *

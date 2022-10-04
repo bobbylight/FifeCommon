@@ -286,8 +286,7 @@ public final class UIUtil {
 		}
 
 		// If it's just a single button, size it
-		if (buttons instanceof JButton) {
-			JButton button = (JButton)buttons;
+		if (buttons instanceof JButton button) {
 			Dimension preferredSize = button.getPreferredSize();
 			if (preferredSize.width<DEFAULT_BUTTON_SIZE) {
 				preferredSize.width = DEFAULT_BUTTON_SIZE;
@@ -461,18 +460,15 @@ public final class UIUtil {
 		ComponentOrientation o = ComponentOrientation.
 								getOrientation(table.getLocale());
 		TableCellRenderer r = table.getDefaultRenderer(Object.class);
-		if (r instanceof Component) { // Never null for JTable
-			Component c = (Component)r;
+		if (r instanceof Component c) { // Never null for JTable
 			c.setComponentOrientation(o);
 		}
 		r = table.getDefaultRenderer(Number.class);
-		if (r instanceof Component) { // Never null for JTable
-			Component c = (Component)r;
+		if (r instanceof Component c) { // Never null for JTable
 			c.setComponentOrientation(o);
 		}
 		r = table.getDefaultRenderer(Boolean.class);
-		if (r instanceof Component) { // Never null for JTable
-			Component c = (Component)r;
+		if (r instanceof Component c) { // Never null for JTable
 			c.setComponentOrientation(o);
 		}
 		if (table.getTableHeader()!=null) {

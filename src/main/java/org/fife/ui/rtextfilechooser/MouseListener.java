@@ -51,10 +51,8 @@ class MouseListener extends MouseAdapter {
 		// avoid some problems with views that contain actual components
 		// and not renderers, like the "icon view."
 		Object source = e.getSource();
-		if (!(source instanceof RTextFileChooserView))
+		if (!(source instanceof RTextFileChooserView view))
 			return;
-
-		RTextFileChooserView view = (RTextFileChooserView)source;
 
 		if (view.getDisplayedFileCount()>0) {
 

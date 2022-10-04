@@ -199,8 +199,7 @@ public class DockableWindow extends JPanel {
 		Container parent = getParent();
 		if (parent instanceof JTabbedPane) {
 			parent = parent.getParent();
-			if (parent instanceof DockableWindowGroup) {
-				DockableWindowGroup dwg = (DockableWindowGroup)parent;
+			if (parent instanceof DockableWindowGroup dwg) {
 				for (int i = 0; i < dwg.getDockableWindowCount(); i++) {
 					if (this == dwg.getDockableWindowAt(i)) {
 						dwg.setActiveDockableWindow(i, ensureExpanded);

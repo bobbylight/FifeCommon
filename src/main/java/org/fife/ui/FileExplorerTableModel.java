@@ -296,8 +296,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 			for (int i=0; i<columnCount; i++) {
 				TableColumn col = columnModel.getColumn(table.convertColumnIndexToView(i));
 				TableCellRenderer renderer = col.getCellRenderer();
-				if (renderer instanceof Component) {
-					Component c = (Component)renderer;
+				if (renderer instanceof Component c) {
 					directive = getDirective(i);
 					if (directive.column!=-1 && directive.direction!=NOT_SORTED) {
 						if (sortedColor==null) {
@@ -346,8 +345,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 		if (this.tableHeader != null) {
 			this.tableHeader.removeMouseListener(mouseListener);
 			TableCellRenderer defaultRenderer = this.tableHeader.getDefaultRenderer();
-			if (defaultRenderer instanceof SortableHeaderRenderer) {
-				SortableHeaderRenderer shr = (SortableHeaderRenderer)defaultRenderer;
+			if (defaultRenderer instanceof SortableHeaderRenderer shr) {
 				this.tableHeader.setDefaultRenderer(shr.delegate);
 			}
 		}
@@ -611,8 +609,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 											int column) {
 			Component c = delegate.getTableCellRendererComponent(table,
 									value, isSelected, hasFocus, row, column);
-			if (c instanceof JLabel) {
-				JLabel l = (JLabel) c;
+			if (c instanceof JLabel l) {
 				l.setHorizontalTextPosition(JLabel.LEFT);
 				int modelColumn = table.convertColumnIndexToModel(column);
 				l.setIcon(getHeaderRendererIcon(modelColumn, l.getFont().getSize()));

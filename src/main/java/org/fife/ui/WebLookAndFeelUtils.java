@@ -93,8 +93,7 @@ public final class WebLookAndFeelUtils {
 
 				for (int i=0; i<toolBar.getComponentCount(); i++) {
 					Component comp = toolBar.getComponent(i);
-					if (comp instanceof JButton) {
-						JButton button = (JButton)comp;
+					if (comp instanceof JButton button) {
 						fixToolbarButtonImpl(button);
 					}
 				}

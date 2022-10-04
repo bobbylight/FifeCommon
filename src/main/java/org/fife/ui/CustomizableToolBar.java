@@ -243,8 +243,7 @@ public class CustomizableToolBar extends JToolBar {
 
 		Component[] components = getComponents();
 		for (Component component : components) {
-			if (component instanceof JButton) {
-				final JButton button = (JButton)component;
+			if (component instanceof final JButton button) {
 				String title = button.getText();
 				if (title == null)
 					title = button.getToolTipText();
@@ -285,8 +284,7 @@ public class CustomizableToolBar extends JToolBar {
 		showText = show;
 		for (int i=0; i<getComponentCount(); i++) {
 			Component c = getComponent(i);
-			if (c instanceof JMenuItem) {
-				JMenuItem mi = (JMenuItem)c;
+			if (c instanceof JMenuItem mi) {
 				if (mi.getAction()!=null) {
 					String text = show ?
 						((String)mi.getAction().getValue(Action.NAME)) : null;

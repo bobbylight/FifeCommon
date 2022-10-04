@@ -8,7 +8,7 @@ archivesBaseName = 'fife.common'
 
 ext.isReleaseVersion = !project.version.endsWith('SNAPSHOT')
 
-assert JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_14)
+assert JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)
 
 repositories {
 	mavenCentral()
@@ -25,7 +25,11 @@ wrapper {
 }
 
 checkstyle {
-	toolVersion = '10.3.1'
+	toolVersion = '10.3.4'
+}
+
+tasks.withType(Javadoc) {
+	options.addStringOption('Xdoclint:none', '-quiet')
 }
 
 compileJava {

@@ -487,8 +487,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		TreePath path = getSelectionPath();
 		if (path!=null) {
 			Object comp = path.getLastPathComponent();
-			if (comp instanceof FileSystemTreeNode) {
-				FileSystemTreeNode node = (FileSystemTreeNode)comp;
+			if (comp instanceof FileSystemTreeNode node) {
 				return (File)node.getUserObject();
 			}
 		}
@@ -541,8 +540,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		TreePath path = getPathForLocation(x, y);
 		if (path!=null) {
 			Object comp = path.getLastPathComponent();
-			if (comp instanceof FileSystemTreeNode) {
-				FileSystemTreeNode node = (FileSystemTreeNode)comp;
+			if (comp instanceof FileSystemTreeNode node) {
 				tip = getName((File)node.getUserObject());
 			}
 		}
@@ -924,8 +922,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 			// data such as "Colors" or some junk).  So if we check this, we
 			// don't cast to File before the stuff has changed to File.
 			Object userObj = ((DefaultMutableTreeNode)value).getUserObject();
-			if (userObj instanceof File) {
-				File file = (File)userObj;
+			if (userObj instanceof File file) {
 				setText(FileSystemTree.this.getName(file));
 				setIcon(iconManager.getIcon(file));
 			}

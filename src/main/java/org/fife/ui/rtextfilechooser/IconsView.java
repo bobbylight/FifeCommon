@@ -249,8 +249,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 	public void selectFileAtPoint(Point p) {
 		clearSelection();
 		Component c = getComponentAt(p);
-		if (c instanceof IconInternalFrame) { // could return "this".
-			IconInternalFrame frame = (IconInternalFrame)c;
+		if (c instanceof IconInternalFrame frame) { // could return "this".
 			addSelectedFrame(frame);
 			try {
 				frame.setSelected(true);
@@ -381,8 +380,7 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 			MouseEvent e2 = SwingUtilities.convertMouseEvent(this, e, IconsView.this);
 			Component component = IconsView.this.getComponentAt(e2.getPoint());
 			// Must check class as we can get IconsView...
-			if (component instanceof IconInternalFrame) {
-				IconInternalFrame frame = (IconInternalFrame)component;
+			if (component instanceof IconInternalFrame frame) {
 				File file = frame.getFile();
 				if (file==null || file.isDirectory())
 					return null;

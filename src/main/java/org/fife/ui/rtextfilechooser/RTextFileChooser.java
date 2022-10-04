@@ -2919,8 +2919,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			int count = favoritesButton.getItemCount();
 			while (count>2) { // Remove all but last 2.
 				Component old = favoritesButton.removeItem(0);
-				if (old instanceof JMenuItem) {
-					JMenuItem oldItem = (JMenuItem)old;
+				if (old instanceof JMenuItem oldItem) {
 					oldItem.removeActionListener(RTextFileChooser.this);
 				}
 				count--;

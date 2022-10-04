@@ -1647,9 +1647,8 @@ public class HelpDialog extends JFrame implements ActionListener {
 				// If the document is HTML, ensure that the it uses the
 				// correct base URL so links work.
 				Document document = editorPane.getDocument();
-				if (document instanceof HTMLDocument) {
+				if (document instanceof HTMLDocument htmldoc) {
 
-					HTMLDocument htmldoc = (HTMLDocument)document;
 					htmldoc.setBase(baseURL);
 					StyleSheet sheet = htmldoc.getStyleSheet();
 					sheet.addRule("table { border-width: 0; }");

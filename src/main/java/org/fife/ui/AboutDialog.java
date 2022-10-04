@@ -231,6 +231,12 @@ public class AboutDialog extends EscapableDialog implements ActionListener {
 		@Serial
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Constructor.
+		 *
+		 * @param parent The parent dialog.
+		 * @param licenseText The text content of the license.
+		 */
 		public LicenseDialog(Dialog parent, String licenseText) {
 
 			super(parent);

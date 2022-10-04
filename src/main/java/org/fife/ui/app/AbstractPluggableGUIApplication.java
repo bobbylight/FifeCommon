@@ -83,8 +83,7 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 
 		// If it's a GUI plugin, we'll physically add it to
 		// the GUI for you...
-		if (plugin instanceof GUIPlugin) {
-			GUIPlugin<?> gp = (GUIPlugin<?>)plugin;
+		if (plugin instanceof GUIPlugin<?> gp) {
 			((MainContentPanel)mainContentPanel).addPlugin(gp);
 		}
 		else if (plugin instanceof StatusBarPlugin) {
@@ -271,8 +270,7 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
 		pluginList.remove(plugin);
 
 		// If it's a GUI plugin...
-		if (plugin instanceof GUIPlugin) {
-			GUIPlugin<?> gp = (GUIPlugin<?>)plugin;
+		if (plugin instanceof GUIPlugin<?> gp) {
 			return ((MainContentPanel)mainContentPanel).removePlugin(gp);
 		}
 

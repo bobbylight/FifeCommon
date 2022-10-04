@@ -324,7 +324,7 @@ public interface GUIApplication {
 
 	/**
 	 * Sets the language for this GUI application and all of its dialogs,
-	 * UI widgets, etc.<p>
+	 * UI widgets, etc.
 	 *
 	 * @param language The language to use.  If <code>null</code>,
 	 *        English will be used.

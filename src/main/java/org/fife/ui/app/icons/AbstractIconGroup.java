@@ -72,8 +72,7 @@ abstract class AbstractIconGroup implements IconGroup {
 	 */
 	@Override
 	public boolean equals(Object o2) {
-		if (o2 instanceof AbstractIconGroup) {
-			AbstractIconGroup ig2 = (AbstractIconGroup)o2;
+		if (o2 instanceof AbstractIconGroup ig2) {
 			if (ig2.getName().equals(getName())) {
 				return path.equals(ig2.path);
 			}

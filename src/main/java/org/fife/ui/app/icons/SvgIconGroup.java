@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.AccessControlException;
 
 
 /**
@@ -56,7 +55,7 @@ public class SvgIconGroup extends AbstractIconGroup {
 			}
 			return null;
 
-		} catch (AccessControlException | IOException ace) {
+		} catch (IOException ioe) {
 			return null;
 		}
 	}

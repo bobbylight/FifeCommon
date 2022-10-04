@@ -59,8 +59,7 @@ class SubstanceFileSystemTreeRenderer extends SubstanceDefaultTreeCellRenderer {
 		// data such as "Colors" or some junk).  So if we check this, we
 		// don't cast to File before the stuff has changed to File.
 		Object userObj = ((DefaultMutableTreeNode)value).getUserObject();
-		if (userObj instanceof File) {
-			File file = (File)userObj;
+		if (userObj instanceof File file) {
 			setText(this.tree.getName(file));
 			setIcon(this.tree.iconManager.getIcon(file));
 		}

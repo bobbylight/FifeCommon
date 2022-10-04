@@ -197,8 +197,7 @@ public class ComponentMover extends MouseAdapter {
 
 		if (e.getClickCount() == 2) {
 			Window window = SwingUtilities.getWindowAncestor(e.getComponent());
-			if (window instanceof Frame) {
-				Frame frame = (Frame)window;
+			if (window instanceof Frame frame) {
 				boolean extended = frame.getExtendedState() == Frame.MAXIMIZED_BOTH;
 				frame.setExtendedState(extended ? Frame.NORMAL : Frame.MAXIMIZED_BOTH);
 			}
@@ -254,8 +253,7 @@ public class ComponentMover extends MouseAdapter {
 		// Making sure autoScrolls is false will allow for smoother dragging of
 		// individual components
 
-		if (destination instanceof JComponent) {
-			JComponent jc = (JComponent)destination;
+		if (destination instanceof JComponent jc) {
 			autoScrolls = jc.getAutoscrolls();
 			jc.setAutoscrolls(false);
 		}

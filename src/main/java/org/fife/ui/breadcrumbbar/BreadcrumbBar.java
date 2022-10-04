@@ -130,8 +130,7 @@ public class BreadcrumbBar extends JComponent {
 			backIcon = createBackIcon();
 			for (int i=0; i<buttonPanel.getComponentCount(); i++) {
 				Component c = buttonPanel.getComponent(i);
-				if (c instanceof AbstractButton) {
-					AbstractButton b = (AbstractButton)c;
+				if (c instanceof AbstractButton b) {
 					if (b.getIcon()==oldBackIcon) {
 						b.setIcon(backIcon);
 					}
@@ -507,8 +506,7 @@ public class BreadcrumbBar extends JComponent {
 		backIcon = createBackIcon();
 		for (int i=0; i<buttonPanel.getComponentCount(); i++) {
 			Component c = buttonPanel.getComponent(i);
-			if (c instanceof AbstractButton) {
-				AbstractButton b = (AbstractButton)c;
+			if (c instanceof AbstractButton b) {
 				if (b.getIcon()==oldBackIcon) {
 					b.setIcon(backIcon);
 				}
@@ -699,8 +697,7 @@ public class BreadcrumbBar extends JComponent {
 				}
 			}
 
-			else if (source instanceof JToggleButton) {
-				final JToggleButton tb = (JToggleButton)source;
+			else if (source instanceof final JToggleButton tb) {
 				ScrollableJPopupMenu popup = new ScrollableJPopupMenu();
 				addItemsFor((File)tb.getClientProperty(PROPERTY_LOCATION), popup);
 				popup.applyComponentOrientation(getComponentOrientation());
@@ -708,14 +705,12 @@ public class BreadcrumbBar extends JComponent {
 				displayRelativeTo(popup, tb);
 			}
 
-			else if (source instanceof JButton) {
-				JButton b = (JButton)source;
+			else if (source instanceof JButton b) {
 				File loc = (File)b.getClientProperty(PROPERTY_LOCATION);
 				setShownLocation(loc);
 			}
 
-			else if (source instanceof JMenuItem) {
-				JMenuItem item = (JMenuItem)source;
+			else if (source instanceof JMenuItem item) {
 				File newLoc = (File)item.getClientProperty(PROPERTY_LOCATION);
 				setShownLocation(newLoc);
 			}

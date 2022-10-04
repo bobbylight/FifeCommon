@@ -40,8 +40,7 @@ class SubstanceOptionsDialogTreeRenderer extends SubstanceDefaultTreeCellRendere
 
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
 		Object obj = node.getUserObject();
-		if (obj instanceof OptionsDialogPanel) {
-			OptionsDialogPanel panel = (OptionsDialogPanel) obj;
+		if (obj instanceof OptionsDialogPanel panel) {
 			setIcon(panel.getIcon());
 		} else {
 			setIcon(null);

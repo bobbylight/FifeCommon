@@ -638,8 +638,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		// Be careful and check for nulls as we support branch nodes not
 		// actually containing an option panel.
 		Object obj = node.getUserObject();
-		if (obj instanceof OptionsDialogPanel) {
-			OptionsDialogPanel panel = (OptionsDialogPanel)obj;
+		if (obj instanceof OptionsDialogPanel panel) {
 			if (nameOrId.equals(panel.getName()) || nameOrId.equals(panel.getId())) {
 				setSelectedOptionsPanel(panel, true);
 				return true;
@@ -722,9 +721,8 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 		if (obj==null)
 			return;
 		obj = ((DefaultMutableTreeNode)obj).getUserObject();
-		if (!(obj instanceof OptionsDialogPanel))
+		if (!(obj instanceof OptionsDialogPanel panel))
 			return;
-		OptionsDialogPanel panel = (OptionsDialogPanel)obj;
 
 		setSelectedOptionsPanel(panel, false);
 
@@ -744,8 +742,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 												row, focused);
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
 			Object obj = node.getUserObject();
-			if (obj instanceof OptionsDialogPanel) {
-				OptionsDialogPanel panel = (OptionsDialogPanel)obj;
+			if (obj instanceof OptionsDialogPanel panel) {
 				setIcon(panel.getIcon());
 			}
 			else {

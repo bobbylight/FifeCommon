@@ -306,8 +306,7 @@ public class FontSelector extends JPanel implements ActionListener {
 	 * @see #isToggledOn()
 	 */
 	public void setToggledOn(boolean toggled) {
-		if (labelComp instanceof JCheckBox) {
-			JCheckBox cb = (JCheckBox)labelComp;
+		if (labelComp instanceof JCheckBox cb) {
 			cb.setSelected(toggled);
 			field.setEnabled(isEnabled() && toggled);
 			browseButton.setEnabled(isEnabled() && toggled);

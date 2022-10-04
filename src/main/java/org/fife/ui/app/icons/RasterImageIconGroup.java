@@ -11,7 +11,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.security.AccessControlException;
 import java.util.Locale;
 
 
@@ -87,7 +86,7 @@ public class RasterImageIconGroup extends AbstractIconGroup {
 
 			return null;
 
-		} catch (AccessControlException | IOException ace) {
+		} catch (IOException ioe) {
 			return null;
 		}
 	}

@@ -176,8 +176,7 @@ class FileSystemTreeActions {
 				@Override
 				protected TreeCellEditor createTreeCellEditor() {
 					TreeCellEditor editor = super.createTreeCellEditor();
-					if (editor instanceof DefaultCellEditor) { // Always true
-						DefaultCellEditor dce = (DefaultCellEditor)editor;
+					if (editor instanceof DefaultCellEditor dce) { // Always true
 						dce.getComponent().addFocusListener(new FocusAdapter() {
 							@Override
 							public void focusLost(FocusEvent e) {

@@ -322,9 +322,8 @@ public final class ShadowPopup extends Popup {
                 Graphics g = hShadowBg.createGraphics();
                 g.translate(-RECT.x, -RECT.y);
                 g.setClip(RECT);
-                if (layeredPane instanceof JComponent) {
-                    JComponent c = (JComponent) layeredPane;
-                    boolean doubleBuffered = c.isDoubleBuffered();
+                if (layeredPane instanceof JComponent c) {
+					boolean doubleBuffered = c.isDoubleBuffered();
                     c.setDoubleBuffered(false);
                     c.paintAll(g);
                     c.setDoubleBuffered(doubleBuffered);
@@ -350,9 +349,8 @@ public final class ShadowPopup extends Popup {
                 Graphics g = vShadowBg.createGraphics();
                 g.translate(-RECT.x, -RECT.y);
                 g.setClip(RECT);
-                if (layeredPane instanceof JComponent) {
-                    JComponent c = (JComponent) layeredPane;
-                    boolean doubleBuffered = c.isDoubleBuffered();
+                if (layeredPane instanceof JComponent c) {
+					boolean doubleBuffered = c.isDoubleBuffered();
                     c.setDoubleBuffered(false);
                     c.paintAll(g);
                     c.setDoubleBuffered(doubleBuffered);

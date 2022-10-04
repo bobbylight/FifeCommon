@@ -245,9 +245,8 @@ public class RColorSwatchesButton extends RColorButton {
 
 			Object source = e.getSource();
 
-			if (source instanceof JMenuItem) {
+			if (source instanceof JMenuItem item) {
 
-				JMenuItem item = (JMenuItem)source;
 				Icon icon = item.getIcon();
 
 				// If it has an icon, it must be a swatch.

@@ -31,6 +31,11 @@ public abstract class AbstractPlugin<T extends GUIApplication> implements Plugin
 	private String parentOptionPanelID;
 
 
+	/**
+	 * Constructor.
+	 *
+	 * @param app The parent application.
+	 */
 	protected AbstractPlugin(T app) {
 		this.application = app;
 		UIManager.addPropertyChangeListener(e -> {

@@ -26,6 +26,13 @@ public abstract class AbstractAppTheme implements AppTheme {
 	private final Map<String, Object> extraUiDefaults;
 
 
+	/**
+	 * A base class for application themes.
+	 *
+	 * @param id A unique ID for the theme.
+	 * @param name A display name for the theme.
+	 * @param laf The Look and Feel.
+	 */
 	public AbstractAppTheme(String id, String name, String laf) {
 		this.id = id;
 		this.name = name;

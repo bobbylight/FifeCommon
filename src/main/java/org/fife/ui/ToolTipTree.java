@@ -122,8 +122,7 @@ public class ToolTipTree extends JTree {
 				// compute the tooltip location, and the user may implement
 				// their own TreeCellRenderer and extend JLabel, we just
 				// check for JLabel instances here.
-				if (c instanceof JLabel) {
-					JLabel renderer = (JLabel)c;
+				if (c instanceof JLabel renderer) {
 					Icon icon = renderer.getIcon();
 					int xOffset = icon==null ? 0 :
 						(icon.getIconWidth()+renderer.getIconTextGap());

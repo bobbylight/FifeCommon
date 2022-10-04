@@ -20,7 +20,7 @@ import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.List;
-import java.util.jar.JarInputStream;
+import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import javax.swing.*;
@@ -821,10 +821,8 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 		File file = new File(decodedPath);
 		if (file.isFile()) {
 
-			try (JarInputStream jin = new JarInputStream(new BufferedInputStream(
-				new FileInputStream(file)))) {
-
-				Manifest mf = jin.getManifest();
+			try (JarFile jarFile = new JarFile(file)) {
+				Manifest mf = jarFile.getManifest();
 				String temp = mf.getMainAttributes().getValue("Build-Date");
 				if (temp != null) {
 					buildDate = Date.from(Instant.parse(temp));

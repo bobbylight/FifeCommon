@@ -18,8 +18,6 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.border.*;
-
 
 
 /**
@@ -400,8 +398,6 @@ public class FontDialog extends JDialog implements ActionListener,
 		set.add("Hack");
 		set.add("Inconsolata");
 		set.add("JetBrains Mono");
-		set.add("JetBrains Mono ExtraBold");
-		set.add("JetBrains Mono Medium");
 		set.add("Liberation Mono");
 		set.add("Lucida Console");
 		set.add("Lucida Sans Typewriter");
@@ -534,11 +530,7 @@ public class FontDialog extends JDialog implements ActionListener,
 		sampleLabel = text;
 		samplePanel.setBorder(BorderFactory.createCompoundBorder(
 			UIUtil.getEmpty5Border(),
-			BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(sampleLabel),
-				BorderFactory.createCompoundBorder(
-					UIUtil.getEmpty5Border(),
-					BorderFactory.createBevelBorder(BevelBorder.LOWERED)))));
+			BorderFactory.createTitledBorder(sampleLabel)));
 	}
 
 

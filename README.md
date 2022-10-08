@@ -11,14 +11,16 @@ FifeCommon is a base library for building Java Swing applications.  It handles t
 * File chooser (richer feature set and improved usability over JFileChooser)
 * Dockable windows
 
-For a working example of an application built with library, see
-[RText](https://github.com/bobbylight/RText).
+For a working example of an application built with library, see the following projects:
+* [Edisen](https://github.com/bobbylight/Edisen) - A work-in-progress NES IDE
+* [RText](https://github.com/bobbylight/RText) - A programmer's text editor
 
-Available in the [Maven Central repository](http://search.maven.org/#artifactdetails%7Ccom.fifesoft.rtext%7Cfife.common%7C5.0.0%7Cjar) (`com.fifesoft.rtext:fife.common:XXX`).
+FifeCommon is available in the
+[Maven Central repository](http://search.maven.org/#artifactdetails%7Ccom.fifesoft.rtext%7Cfife.common%7C5.0.0%7Cjar) (`com.fifesoft.rtext:fife.common:XXX`).
 
 ## Building
 
-FifeCommon uses [Gradle](http://gradle.org/) to build.  To compile, run
+FifeCommon uses [Gradle](https://gradle.org/) to build.  To compile, run
 all unit tests, and create the jar, run:
 
     ./gradlew build --warning-mode all

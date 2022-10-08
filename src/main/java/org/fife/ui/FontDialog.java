@@ -354,7 +354,7 @@ public class FontDialog extends JDialog implements ActionListener,
 	 *
 	 * @return The list model.
 	 */
-	private static DefaultListModel<FontInfo> createFontListModel() {
+	private DefaultListModel<FontInfo> createFontListModel() {
 
 		// Get available fonts from the system.
 		String[] families = GraphicsEnvironment.
@@ -376,15 +376,12 @@ public class FontDialog extends JDialog implements ActionListener,
 
 
 	/**
-	 * Creates a hash set containing monospaced font names.  See
-	 * <a href="http://www.codestyle.org/css/font-family/sampler-Monospace.shtml">
-	 * http://www.codestyle.org/css/font-family/sampler-Monospace.shtml</a>
-	 * for more information.
+	 * Creates a set containing monospaced font names. Subclasses can override if
+	 * they want to add more values.
 	 *
-	 * @return The set of common monospaced font names on Windows, OS X, and
-	 *         UNIX.
+	 * @return A set of common monospaced font names.
 	 */
-	private static Set<String> createMonospacedFontsSet() {
+	protected Set<String> createMonospacedFontsSet() {
 		Set<String> set = new HashSet<>();
 		set.add("Andale Mono");
 		set.add("Andale Mono IPA");
@@ -392,21 +389,34 @@ public class FontDialog extends JDialog implements ActionListener,
 		set.add("Consolas");
 		set.add("Courier");
 		set.add("Courier New");
+		set.add("Cousine");
 		set.add("DejaVu Sans Mono");
+		set.add("Droid Sans Mono");
+		set.add("Droid Sans Mono Dotted");
+		set.add("Droid Sans Mono Slashed");
+		set.add("Fira Code");
 		set.add("Fixed");
 		set.add("FreeMono");
+		set.add("Hack");
+		set.add("Inconsolata");
+		set.add("JetBrains Mono");
+		set.add("JetBrains Mono ExtraBold");
+		set.add("JetBrains Mono Medium");
 		set.add("Liberation Mono");
 		set.add("Lucida Console");
 		set.add("Lucida Sans Typewriter");
 		set.add("Lucida Typewriter");
 		set.add("Luxi Mono");
 		set.add("Monaco");
-		set.add("Monospaced"); // Logicak font in Java
+		set.add("Monoid");
+		set.add("Monospaced"); // Logical font in Java
 		set.add("Monotype.com");
 		set.add("Nimbus Mono L");
 		set.add("OCR A Extended");
 		set.add("OCRB");
+		set.add("Source Code Pro");
 		set.add("Terminal");
+		set.add("Ubuntu Mono");
 		set.add("Vera Sans Mono");
 		return set;
 	}

@@ -110,8 +110,8 @@ import javax.swing.KeyStroke;
  *    <li>Object (if the value is actually of type Color or Image)
  * </ul>
  *
- * Support for custom, more complex types can be added.  See the
- * {@link #addTypeLoader(Class, TypeLoader)} method.
+ * Support for enums can be added via {@link EnumLoader}, and support for more
+ * complex types can be added.  See the {@link #addTypeLoader(Class, TypeLoader)} method.
  *
  * @author Robert Futrell
  * @version 2.0
@@ -500,4 +500,6 @@ public abstract class Prefs {
 		}
 		return unboxed;
 	}
+
+
 }

@@ -592,6 +592,17 @@ public abstract class OptionsDialogPanel extends JPanel {
 			return font;
 		}
 
+		private Color getForeground(Component c) {
+			Color fg = null;
+			if (!c.isEnabled()) {
+				fg = UIManager.getColor("Label.disabledForeground");
+			}
+			if (fg == null) {
+				fg = UIUtil.getHyperlinkForeground();
+			}
+			return fg;
+		}
+
 		/**
 		 * Paints the border for the specified component with the specified
 		 * position and size.
@@ -612,7 +623,7 @@ public abstract class OptionsDialogPanel extends JPanel {
 			// Try to use the rendering hint set that is "native".
 			RenderingHints old = UIUtil.setNativeRenderingHints(g2d);
 
-			g.setColor(UIUtil.getHyperlinkForeground());
+			g.setColor(getForeground(c));
 			Font font = OptionPanelBorder.getFont();
 			FontMetrics fm = c.getFontMetrics(font);
 			int titleWidth = fm.stringWidth(title);

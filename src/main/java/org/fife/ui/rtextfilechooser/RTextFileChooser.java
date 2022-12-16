@@ -33,6 +33,7 @@ import javax.swing.filechooser.FileSystemView;
 import org.fife.ui.*;
 import org.fife.ui.breadcrumbbar.BreadcrumbBar;
 import org.fife.ui.rtextfilechooser.filters.AcceptAllFileFilter;
+import org.fife.util.MacOSUtil;
 
 
 /**
@@ -224,6 +225,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 */
 	private int retVal;
 
+	private boolean showTitleBarOnMacOs;
+
 	/**
 	 * The default directory for the file chooser.
 	 */
@@ -385,9 +388,14 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		getIcons();
 
 		setLayout(new BorderLayout());
-		setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		boolean noTitleBar = !showTitleBarOnMacOs && MacOSUtil.isMacOs();
+		int topBorderPadding = noTitleBar ? 3 : 10;
+		setBorder(BorderFactory.createEmptyBorder(topBorderPadding,10,10,10));
 
 		Box topPanel = new Box(BoxLayout.LINE_AXIS);
+		if (noTitleBar) {
+			topPanel.add(Box.createHorizontalStrut(70));
+		}
 		topPanel.setOpaque(true); // Boxes extend JComponent -> not opaque
 
 		JLabel lookInLabel = new JLabel(getString("LookInLabel"));
@@ -893,11 +901,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	protected JDialog createDialog(Window parent) throws HeadlessException {
 
 		Window wind = parent!=null ? parent : JOptionPane.getRootFrame();
-
-		// NOTE: In 1.6, they (finally) added a JDialog(Window, boolean)
-		// constructor that we could use instead of this silly conditional.
-		JDialog dialog = (wind instanceof Frame) ?
-			new JDialog((Frame)wind, true) : new JDialog((JDialog)wind, true);
+		JDialog dialog = new JDialog(wind, Dialog.DEFAULT_MODALITY_TYPE);
 
 		dialog.setContentPane(this);
 		JRootPane rootPane = dialog.getRootPane();
@@ -923,6 +927,12 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		ComponentOrientation o = getComponentOrientation();
 		dialog.applyComponentOrientation(o);
+		if (showTitleBarOnMacOs) {
+			MacOSUtil.setTransparentTitleBar(dialog, true);
+		}
+		else {
+			MacOSUtil.setFullWindowContent(dialog, true);
+		}
 		return dialog;
 
 	}
@@ -2541,6 +2551,19 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 
 	/**
+	 * Toggles whether there should be a title bar on macOS. This should be
+	 * called before any file chooser dialog is displayed, and cannot be
+	 * modified after that (changing this value after showing a file chooser
+	 * dialog will have no effect).
+	 *
+	 * @param show Whether to show the title bar.
+	 */
+	public void setShowTitleBarOnMacOs(boolean show) {
+		this.showTitleBarOnMacOs = show;
+	}
+
+
+	/**
 	 * Sets whether "opened" files should have a special style applied
 	 * to them when they are displayed in this file chooser (for example,
 	 * being underlined).
@@ -2722,17 +2745,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		lookInBreadcrumbBar.setMode(BreadcrumbBar.BREADCRUMB_MODE);
 		fileNameTextField.requestFocusInWindow();
 
-		try {
-			dialog.setVisible(true);
-		} catch (Throwable t) {
-			JOptionPane.showMessageDialog(this,
-				"Exception occurred in RTextFileChooser:\n" + t +
-				"\nPlease report this at https://github.com/bobbylight/RText,\n" +
-				"\nalso noting the number of files that were in the directory you were\n" +
-				"\nin/changing to.",
-				errorDialogTitle, JOptionPane.ERROR_MESSAGE);
-			retVal = ERROR_OPTION;
-		}
+		dialog.setVisible(true);
 
 		lastSize = dialog.getSize();
 		dialog.dispose();

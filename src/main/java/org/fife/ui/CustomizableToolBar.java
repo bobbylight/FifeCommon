@@ -11,23 +11,15 @@
  */
 package org.fife.ui;
 
-import java.awt.Component;
-import java.awt.Point;
+import org.fife.util.MacOSUtil;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.Serial;
 import java.util.ResourceBundle;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JToolBar;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.ToolBarUI;
 import javax.swing.plaf.basic.BasicToolBarUI;
@@ -117,6 +109,22 @@ public class CustomizableToolBar extends JToolBar {
 	public void addNotify() {
 		super.addNotify();
 		WebLookAndFeelUtils.fixToolbar(this, true, false);
+		addNotifyUpdatesForMacOS();
+	}
+
+
+	/**
+	 * Updates this toolbar as necessary if we're running on macOS.
+	 *
+	 * @see #removeNotifyUpdatesForMacOS()
+	 */
+	protected void addNotifyUpdatesForMacOS() {
+		// See MacOSUtil - If the app was configured to effectively not have a title
+		// bar, we need to force space for the close/minimize/maximize buttons.
+		// See https://www.formdev.com/flatlaf/macos/
+		if (getOnMacOSWithNoTitleBar()) {
+			add(Box.createHorizontalStrut(70), 0);
+		}
 	}
 
 
@@ -151,22 +159,41 @@ public class CustomizableToolBar extends JToolBar {
 	private void createPopupMenu() {
 
 		ResourceBundle msg = ResourceBundle.getBundle(MSG);
-
 		popupMenu = new JPopupMenu();
-		String temp = msg.getString("PopupMenu.LockToolbar.txt");
-		AbstractAction lockAction = new LockAction(temp);
-		JCheckBoxMenuItem lockMenuItem = new JCheckBoxMenuItem(lockAction);
-		lockMenuItem.setMnemonic(KeyEvent.VK_L);
-		popupMenu.add(lockMenuItem);
 
-		popupMenu.addSeparator();
+		// Only allow unlocking of this toolbar if it's not integrted
+		// into the title bar
+		if (!getOnMacOSWithNoTitleBar()) {
 
-		temp = msg.getString("PopupMenu.AddRemoveButtons.txt");
+			String temp = msg.getString("PopupMenu.LockToolbar.txt");
+			AbstractAction lockAction = new LockAction(temp);
+			JCheckBoxMenuItem lockMenuItem = new JCheckBoxMenuItem(lockAction);
+			lockMenuItem.setMnemonic(KeyEvent.VK_L);
+			popupMenu.add(lockMenuItem);
+
+			popupMenu.addSeparator();
+		}
+
+		String temp = msg.getString("PopupMenu.AddRemoveButtons.txt");
 		addRemoveMenu = new JMenu(temp);
 		addRemoveMenu.setMnemonic(KeyEvent.VK_A);
 		populateAddRemovePopupMenu(msg);
 		popupMenu.add(addRemoveMenu);
 
+	}
+
+
+	/**
+	 * Returns whether we're on macOS with no title bar. We render ourselves
+	 * slightly differently in that case.
+	 *
+	 * @return Whether we're on macOS and there is no title bar.
+	 * @see #addNotifyUpdatesForMacOS()
+	 */
+	protected boolean getOnMacOSWithNoTitleBar() {
+		// The client property gets set regardless of the OS so we must check it here
+		return OS.get() == OS.MAC_OS_X && getRootPane() != null &&
+			Boolean.TRUE.equals(getRootPane().getClientProperty(MacOSUtil.PROPERTY_FULL_WINDOW_CONTENT));
 	}
 
 
@@ -179,6 +206,13 @@ public class CustomizableToolBar extends JToolBar {
 	 */
 	public boolean getShowText() {
 		return showText;
+	}
+
+
+	@Override
+	public boolean isFloatable() {
+		// Never allow making the toolbar floatable if on macOS
+		return !getOnMacOSWithNoTitleBar() && super.isFloatable();
 	}
 
 
@@ -270,6 +304,25 @@ public class CustomizableToolBar extends JToolBar {
 		ResetAction resetAction = new ResetAction(temp);
 		popupMenu.add(new JMenuItem(resetAction));
 
+	}
+
+
+	@Override
+	public void removeNotify() {
+		super.removeNotify();
+		removeNotifyUpdatesForMacOS();
+	}
+
+
+	/**
+	 * Updates this toolbar as necessary if we're running on macOS.
+	 *
+	 * @see #addNotifyUpdatesForMacOS()
+	 */
+	protected void removeNotifyUpdatesForMacOS() {
+		if (getOnMacOSWithNoTitleBar()) {
+			remove(0);
+		}
 	}
 
 
@@ -386,5 +439,40 @@ public class CustomizableToolBar extends JToolBar {
 
 	}
 
+	/**
+	 * Utility method for testing.
+	 *
+	 * @param args Command line arguments
+	 */
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(() -> {
+			JFrame frame = new JFrame();
+			frame.setLayout(new BorderLayout());
 
+			CustomizableToolBar toolBar = new CustomizableToolBar();
+			JButton button = new JButton("normal");
+			System.out.println(button.getBorder());
+			toolBar.add(button);
+			button = new JButton("noBorderPaint");
+			button.setBorderPainted(false);
+			toolBar.add(button);
+			button = new JButton("noBorderPaintOpaque");
+			button.setBorderPainted(false);
+			button.setOpaque(true);
+			toolBar.add(button);
+			button = new JButton("nullBorder");
+			button.setBorder(null);
+			toolBar.add(button);
+			button = new JButton("nullBorderOpaque");
+			button.setBorder(null);
+			button.setOpaque(true);
+			toolBar.add(button);
+			frame.add(toolBar, BorderLayout.NORTH);
+
+			frame.setLocationByPlatform(true);
+			frame.pack();
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setVisible(true);
+		});
+	}
 }

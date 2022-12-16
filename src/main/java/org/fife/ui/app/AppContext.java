@@ -10,6 +10,7 @@ import org.fife.ui.WebLookAndFeelUtils;
 import org.fife.ui.app.prefs.AppPrefs;
 import org.fife.ui.app.themes.NativeTheme;
 import org.fife.util.DarculaUtil;
+import org.fife.util.MacOSUtil;
 import org.fife.util.SubstanceUtil;
 
 import javax.swing.*;
@@ -374,18 +375,7 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 	 */
 	public T createApplication(String[] args) {
 
-		// 1.5.2004/pwy: Setting this property makes the menu appear on top
-		// of the screen on Apple Mac OS X systems. It is ignored by all other
-		// Java implementations.
-		System.setProperty("apple.laf.useScreenMenuBar", "true");
-
-		// 1.5.2004/pwy: Setting this property defines the standard
-		// Application menu name on Apple Mac OS X systems. It is ignored by
-		// all other Java implementations.
-		// NOTE: Although you can set the useScreenMenuBar property above at
-		// runtime, it appears that for this one, you must set it before
-		// (such as in your *.app definition).
-		//System.setProperty("com.apple.mrj.application.apple.menu.about.name", "RText");
+		MacOSUtil.setUseScreenMenuBar(true);
 
 		P prefs = loadPreferences();
 

@@ -5,9 +5,9 @@
  */
 package org.fife.util;
 
-
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+
 
 /**
  * Utility methods to make FifeCommon mesh better with FlatLaf.

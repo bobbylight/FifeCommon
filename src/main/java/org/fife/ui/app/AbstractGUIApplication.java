@@ -32,6 +32,7 @@ import org.fife.ui.SplashScreen;
 import org.fife.ui.app.icons.IconGroup;
 import org.fife.ui.app.prefs.AppPrefs;
 import org.fife.ui.app.themes.NativeTheme;
+import org.fife.util.MacOSUtil;
 
 
 /**
@@ -247,6 +248,8 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 		Locale.setDefault(locale);
 		JComponent.setDefaultLocale(locale);
 		setLocale(locale);
+
+		possiblyInitializeMacOSProperties(context, prefs);
 
 		// Create the splash screen, if this application has one.
 		final SplashScreen splashScreen = createSplashScreen();
@@ -998,6 +1001,20 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 	 * @param file The file to open.
 	 */
 	public abstract void openFile(File file);
+
+
+	/**
+	 * Sets macOS-specific properties on this application's main window.
+	 * The default implementation does nothing; subclasses can override.
+	 *
+	 * @param context The application context.
+	 * @param prefs The application preferences.
+	 */
+	protected void possiblyInitializeMacOSProperties(AppContext<? extends AbstractGUIApplication<P>, P> context,
+							 P prefs) {
+		MacOSUtil.setTransparentTitleBar(this, true);
+		MacOSUtil.setFullWindowContent(this, true);
+	}
 
 
 	/**

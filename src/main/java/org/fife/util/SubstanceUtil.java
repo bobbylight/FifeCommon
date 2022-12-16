@@ -8,7 +8,6 @@
  */
 package org.fife.util;
 
-
 import org.fife.substance.DummySubstanceProps;
 import org.fife.substance.SubstanceProps;
 

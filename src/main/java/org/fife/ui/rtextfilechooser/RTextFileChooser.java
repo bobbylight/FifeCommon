@@ -99,6 +99,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/*
 	 * The buttons at the top of the dialog.
 	 */
+	private JToolBar topButtons;
 	private JButton upOneLevelButton;
 	private JButton newFolderButton;
 	private MenuButton viewButton;
@@ -450,7 +451,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		topPanel.add(lookInBreadcrumbBar);
 		topPanel.add(Box.createHorizontalStrut(horizStrutSize));
 
-		JToolBar topButtons = new JToolBar();
+		topButtons = new JToolBar();
 		topButtons.setFloatable(false);
 		topButtons.add(upOneLevelButton);
 		topButtons.add(newFolderButton);
@@ -2881,6 +2882,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		}
 
 		super.updateUI();
+		topButtons.setFloatable(false);
 
 		if (popupMenu!=null) {
 			SwingUtilities.updateComponentTreeUI(popupMenu);

@@ -16,18 +16,18 @@ repositories {
 
 dependencies {
 	api 'org.pushing-pixels:radiance-substance:4.5.0'
-	api 'org.apache.xmlgraphics:batik-rasterizer:1.15'
+	api 'org.apache.xmlgraphics:batik-rasterizer:1.16'
 
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
 }
 
 wrapper {
-	gradleVersion = '7.5.1'
+	gradleVersion = '7.6'
 }
 
 checkstyle {
-	toolVersion = '10.3.4'
+	toolVersion = '10.5.0'
 }
 
 tasks.withType(Javadoc) {

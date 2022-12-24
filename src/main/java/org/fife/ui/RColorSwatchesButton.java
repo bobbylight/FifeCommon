@@ -10,6 +10,8 @@
  */
 package org.fife.ui;
 
+import org.fife.util.MacOSUtil;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -337,7 +339,7 @@ public class RColorSwatchesButton extends RColorButton {
 		private static void refreshMenuItemBackground() {
 
 			background = UIManager.getColor("MenuItem.background");
-			if (background==null ||	OS.get() == OS.MAC_OS_X ||
+			if (background==null || MacOSUtil.isMacOs() ||
 					WebLookAndFeelUtils.isWebLookAndFeelInstalled()) {
 				background = new JMenuItem().getBackground();
 			}

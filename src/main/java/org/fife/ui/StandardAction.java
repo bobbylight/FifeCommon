@@ -9,6 +9,8 @@
  */
 package org.fife.ui;
 
+import org.fife.util.MacOSUtil;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
@@ -257,7 +259,7 @@ public abstract class StandardAction extends AbstractAction {
 		int index = accelerator.indexOf(defaultStr);
 
 		if (index>-1) {
-			String replacement = OS.get() == OS.MAC_OS_X ? "meta ":"control ";
+			String replacement = MacOSUtil.isMacOs() ? "meta ":"control ";
 			accelerator = accelerator.substring(0, index) + replacement +
 					accelerator.substring(index + defaultStr.length());
 		}

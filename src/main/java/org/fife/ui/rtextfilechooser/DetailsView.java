@@ -28,7 +28,7 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import org.fife.ui.FileExplorerTableModel;
-import org.fife.ui.OS;
+import org.fife.util.MacOSUtil;
 
 
 /**
@@ -73,7 +73,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 */
 	private static final Object ATTRIBUTES_LOCK = new Object();
 
-	private static final boolean IS_OSX = OS.get() == OS.MAC_OS_X;
+	private static final boolean IS_OSX = MacOSUtil.isMacOs();
 
 	/**
 	 * Creates a details view.

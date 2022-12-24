@@ -9,9 +9,9 @@
  */
 package org.fife.ui.app;
 
-import org.fife.ui.OS;
 import org.fife.ui.StandardAction;
 import org.fife.ui.app.icons.IconGroup;
+import org.fife.util.MacOSUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +53,7 @@ public abstract class MenuBar<T extends AbstractGUIApplication<?>>
 		// On OS's that use a "native" toolbar, ensure this menu
 		// bar uses icons with appropriate contrast there, since
 		// that may not match the theme of this application.
-		if (OS.get() == OS.MAC_OS_X) {
+		if (MacOSUtil.isMacOs()) {
 
 			updateIcons(app.getIconGroup());
 

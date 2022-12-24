@@ -8,7 +8,7 @@ import org.fife.jgoodies.looks.common.ShadowPopupFactory;
 import org.fife.ui.UIUtil;
 import org.fife.ui.WebLookAndFeelUtils;
 import org.fife.ui.app.prefs.AppPrefs;
-import org.fife.ui.app.themes.NativeTheme;
+import org.fife.ui.app.themes.*;
 import org.fife.util.DarculaUtil;
 import org.fife.util.MacOSUtil;
 import org.fife.util.SubstanceUtil;
@@ -48,6 +48,11 @@ import java.util.List;
  * @param <P> The preferences type.
  */
 public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
+
+	/**
+	 * Whether FlatLaF themes should be available for this application.
+	 */
+	private boolean addFlatThemes;
 
 
 	/**
@@ -165,8 +170,20 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 	 * @return The list of available themes.
 	 */
 	public List<AppTheme> getAvailableAppThemes() {
+
 		List<AppTheme> result = new ArrayList<>();
 		result.add(new NativeTheme());
+
+		if (addFlatThemes) {
+			result.add(new FlatLightTheme());
+			if (MacOSUtil.isMacOs()) {
+				result.add(new FlatMacLightTheme());
+			}
+			result.add(new FlatDarkTheme());
+			if (MacOSUtil.isMacOs()) {
+				result.add(new FlatMacDarkTheme());
+			}
+		}
 		return result;
 	}
 
@@ -364,6 +381,18 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 				throw new IOException(e.getMessage(), e);
 			}
 		}
+	}
+
+
+	/**
+	 * Sets whether FlatLaF themes are available for this application.
+	 * This should be called before {@link #createApplication(String[])} to
+	 * taake effect.
+	 *
+	 * @param addFlatThemes Whether flat themes are available.
+	 */
+	public void setAddFlatThemes(boolean addFlatThemes) {
+		this.addFlatThemes = addFlatThemes;
 	}
 
 

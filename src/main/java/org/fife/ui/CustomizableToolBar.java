@@ -192,7 +192,7 @@ public class CustomizableToolBar extends JToolBar {
 	 */
 	protected boolean getOnMacOSWithNoTitleBar() {
 		// The client property gets set regardless of the OS so we must check it here
-		return OS.get() == OS.MAC_OS_X && getRootPane() != null &&
+		return MacOSUtil.isMacOs() && getRootPane() != null &&
 			Boolean.TRUE.equals(getRootPane().getClientProperty(MacOSUtil.PROPERTY_FULL_WINDOW_CONTENT));
 	}
 

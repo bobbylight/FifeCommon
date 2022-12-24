@@ -24,8 +24,8 @@ import javax.swing.border.Border;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.*;
 
-import org.fife.ui.OS;
 import org.fife.ui.ToolTipTree;
+import org.fife.util.MacOSUtil;
 import org.fife.util.SubstanceUtil;
 
 
@@ -99,7 +99,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 		}
 
 		// Java on OS X doesn't sort files case insensitively, as of Java 11
-		fileComparator = OS.get() == OS.MAC_OS_X ? new CaseInsensitiveFileComparator() : null;
+		fileComparator = MacOSUtil.isMacOs() ? new CaseInsensitiveFileComparator() : null;
 
 		init();
 

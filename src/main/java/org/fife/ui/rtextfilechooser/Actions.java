@@ -71,7 +71,7 @@ public interface Actions {
 
 		private FileSelector chooser;
 
-		CopyAction(FileSelector chooser) {
+		public CopyAction(FileSelector chooser) {
 			this.chooser = chooser;
 			putValue(Action.NAME, getString("Copy"));
 			int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
@@ -105,7 +105,7 @@ public interface Actions {
 
 		private FileSelector chooser;
 
-		CopyFullPathAction(FileSelector chooser) {
+		public CopyFullPathAction(FileSelector chooser) {
 			this.chooser = chooser;
 			putValue(Action.NAME, getString("CopyFullPath"));
 			int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
@@ -513,7 +513,7 @@ public interface Actions {
 
 		private FileSelector selector;
 
-		PropertiesAction(FileSelector selector) {
+		public PropertiesAction(FileSelector selector) {
 			putValue(NAME, "Properties");
 			final int alt = InputEvent.ALT_DOWN_MASK;
 			KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, alt);

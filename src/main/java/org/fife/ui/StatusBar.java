@@ -4,7 +4,7 @@
  * StatusBar.java - A generic status bar containing a status message and an
  * optional size grip, similar to those found in Microsoft Windows applications.
  * Copyright (C) 2004 Robert Futrell
- * https://fifesoft.com/rtext
+ * https://bobbylight.github.io/RText/
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

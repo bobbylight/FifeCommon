@@ -3,7 +3,7 @@
  *
  * MouseListener.java - Listens for mouse events in the file chooser.
  * Copyright (C) 2009 Robert Futrell
- * https://fifesoft.com/rtext
+ * https://bobbylight.github.io/RText/
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

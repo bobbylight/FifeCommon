@@ -3,7 +3,7 @@
  *
  * FileIOExtras.java - Adds x64-specific functionality to the file chooser.
  * Copyright (C) 2008 Robert Futrell
- * https://fifesoft.com/rtext
+ * https://bobbylight.github.io/RText/
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

@@ -4,7 +4,7 @@
  * DetailsViewSubstanceFileNameRenderer - Renderer for the "file name" column
  * of the Details view when Substance is installed.
  * Copyright (C) 2013 Robert Futrell
- * https://fifesoft.com/rtext
+ * https://bobbylight.github.io/RText/
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

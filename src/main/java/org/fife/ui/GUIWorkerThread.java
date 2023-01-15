@@ -4,7 +4,7 @@
  * GUIWorkerThread.java - Thread to do non-GUI-related work so an
  * application's GUI remains responsive.
  * Copyright (C) 2006 Robert Futrell
- * https://fifesoft.com/rtext
+ * https://bobbylight.github.io/RText/
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

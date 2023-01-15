@@ -4,7 +4,7 @@
  * DirectoryTree.java - A JTree containing all directories in the local host's
  * file system.
  * Copyright (C) 2004 Robert Futrell
- * https://fifesoft.com/rtext
+ * https://bobbylight.github.io/RText/
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

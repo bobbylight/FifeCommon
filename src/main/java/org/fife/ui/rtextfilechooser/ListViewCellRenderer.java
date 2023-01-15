@@ -4,7 +4,7 @@
  * ListViewCellRenderer - Default renderer for the "list view" of the file
  * chooser.
  * Copyright (C) 2013 Robert Futrell
- * https://fifesoft.com/rtext
+ * https://bobbylight.github.io/RText/
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

@@ -4,7 +4,7 @@
  * RTextFileChooser - A Microsoft Windows-style file chooser for any
  * Look-and-Feel.
  * Copyright (C) 2004 Robert Futrell
- * https://fifesoft.com/rtext
+ * https://bobbylight.github.io/RText/
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

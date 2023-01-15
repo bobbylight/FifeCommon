@@ -4,7 +4,7 @@
  * IconDesktopPane.java - Desktop pane that allows the user to select multiple
  *                        internal frames simultaneously.
  * Copyright (C) 2004 Robert Futrell
- * https://fifesoft.com/rtext
+ * https://bobbylight.github.io/RText/
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

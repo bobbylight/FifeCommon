@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2018 Robert Futrell
- * https://fifesoft.com/rtext
+ * https://bobbylight.github.io/RText/
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

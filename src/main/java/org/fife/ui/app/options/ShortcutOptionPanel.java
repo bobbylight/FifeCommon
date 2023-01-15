@@ -1,7 +1,7 @@
 /*
  * 8/21/2004
  *
- * https://fifesoft.com/rtext
+ * https://bobbylight.github.io/RText/
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

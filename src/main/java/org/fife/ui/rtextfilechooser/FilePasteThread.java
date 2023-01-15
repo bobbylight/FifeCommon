@@ -4,7 +4,7 @@
  * FilePasteThread - Copies one or more files in a separate thread, and allows
  * for progress notifications on the EDT.
  * Copyright (C) 2013 Robert Futrell
- * https://fifesoft.com/rtext
+ * https://bobbylight.github.io/RText/
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

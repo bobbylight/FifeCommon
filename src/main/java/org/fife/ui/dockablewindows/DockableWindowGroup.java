@@ -4,7 +4,7 @@
  * DockableWindowGroup.java - A panel containing a bunch of dockable windows
  * in a tabbed pane.
  * Copyright (C) 2005 Robert Futrell
- * https://fifesoft.com/rtext
+ * https://bobbylight.github.io/RText/
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

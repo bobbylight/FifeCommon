@@ -4,7 +4,7 @@
  * TopicsFoundDialog.java - Dialog used by HelpDialog.  Allows the user to
  * choose exactly one of multiple choices.
  * Copyright (C) 2003 Robert Futrell
- * https://fifesoft.com/rtext
+ * https://bobbylight.github.io/RText/
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

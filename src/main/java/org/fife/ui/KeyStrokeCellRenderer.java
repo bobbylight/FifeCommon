@@ -3,7 +3,7 @@
  *
  * KeyStrokeCellRenderer.java - Renderers Keystrokes in a JTable.
  * Copyright (C) 2009 Robert Futrell
- * https://fifesoft.com/rtext
+ * https://bobbylight.github.io/RText/
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

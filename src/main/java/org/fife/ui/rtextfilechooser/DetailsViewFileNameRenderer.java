@@ -4,7 +4,7 @@
  * DetailsViewFileNameRenderer - Default renderer for the "file name" column
  * of the Details view.
  * Copyright (C) 2013 Robert Futrell
- * https://fifesoft.com/rtext
+ * https://bobbylight.github.io/RText/
  * Licensed under a modified BSD license.
  * See the included license file for details.
  */

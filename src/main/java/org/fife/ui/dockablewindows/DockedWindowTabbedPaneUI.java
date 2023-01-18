@@ -288,8 +288,12 @@ g.drawLine(x+w-1,y, x+w-1,y2);
 					unselectedTabPaint = SubstanceUtil.getUltraLightColor();
 				}
 				if (unselectedTabPaint==null) {
+					Color color2 = UIManager.getColor("TabbedPane.highlight");
+					if (color2 == null) { // DarkLaf
+						color2 = tabPane.getBackground();
+					}
 					unselectedTabPaint = new GradientPaint(0,0, Color.LIGHT_GRAY,
-							0,h/2f, UIManager.getColor("TabbedPane.highlight"));
+							0,h/2f, color2);
 				}
 			}
 			g2d.setPaint(unselectedTabPaint);

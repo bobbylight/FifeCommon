@@ -39,8 +39,8 @@ import javax.swing.KeyStroke;
  * </p>
  *
  * <p>
- * For accelerators, the standard syntax for keystrokes defined
- * <a href="https://docs.oracle.com/javase/7/docs/api/javax/swing/KeyStroke.html#getKeyStroke(java.lang.String)">
+ * For accelerators, the standard syntax for keystrokes defined <a
+ * href="https://docs.oracle.com/en/java/javase/17/docs/api/java.desktop/javax/swing/KeyStroke.html">
  * here</a> can be used.  In addition, the string literal "default" maps to "ctrl" on
  * Windows and Linux, and "meta" on OS X.
  * </p>
@@ -60,9 +60,20 @@ import javax.swing.KeyStroke;
  * used, otherwise, the OS-agnostic accelerator is used, if defined.
  * </p>
  *
+ * <p>
+ * Finally, {@code StandardAction}s also have more properties than standard {@code Action}s do,
+ * and when used in conjunction with {@link StandardMenuItem}, these properties can automatically
+ * be sync'd with the UI. This set currently includes:
+ * </p>
+ *
+ * <ul>
+ *     <li>Rollover icon</li>
+ * </ul>
+ *
  * @author Robert Futrell
- * @version 0.6
+ * @version 0.7
  * @see org.fife.ui.app.GUIApplication
+ * @see StandardMenuItem
  */
 public abstract class StandardAction extends AbstractAction {
 
@@ -83,6 +94,13 @@ public abstract class StandardAction extends AbstractAction {
 	 * The suffix used to look up an optional localized short description by this class's constructor.
 	 */
 	public static final String SHORT_DESC_SUFFIX = ".ShortDesc";
+
+	/**
+	 * Property that defines the rollover icon. This is the rollover
+	 * equivalent to {@link #SMALL_ICON}.
+	 */
+	public static final String ROLLOVER_SMALL_ICON = "SmallRolloverIcon";
+
 
 	/**
 	 * Creates an action with no name, description, shortcut, or other such
@@ -234,6 +252,19 @@ public abstract class StandardAction extends AbstractAction {
 
 
 	/**
+	 * Returns the rollover icon for this action.
+	 *
+	 * @return The rollover icon, or {@code null} if none is defined.
+	 * @see #setRolloverIcon(Icon)
+	 * @see #ROLLOVER_SMALL_ICON
+	 * @see #getIcon()
+	 */
+	public Icon getRolloverIcon() {
+		return (Icon)getValue(ROLLOVER_SMALL_ICON);
+	}
+
+
+	/**
 	 * Returns the short description for this action.
 	 *
 	 * @return The description.
@@ -316,6 +347,7 @@ public abstract class StandardAction extends AbstractAction {
 	 * @see #getIcon()
 	 * @see #setIcon(String)
 	 * @see #setIcon(URL)
+	 * @see #setRolloverIcon(Icon)
 	 */
 	public void setIcon(Icon icon) {
 		putValue(SMALL_ICON, icon);
@@ -369,6 +401,48 @@ public abstract class StandardAction extends AbstractAction {
 	 */
 	public void setName(String name) {
 		putValue(NAME, name);
+	}
+
+
+	/**
+	 * Sets the rollover icon for this action.
+	 *
+	 * @param icon The rollover icon.
+	 * @see #getRolloverIcon()
+	 * @see #setRolloverIcon(String)
+	 * @see #setRolloverIcon(URL)
+	 * @see #ROLLOVER_SMALL_ICON
+	 * @see #setIcon(Icon)
+	 */
+	public void setRolloverIcon(Icon icon) {
+		putValue(ROLLOVER_SMALL_ICON, icon);
+	}
+
+
+	/**
+	 * Sets the rollover icon of this action.  This method is equivalent to:
+	 * <pre>setRolloverIcon(getClass().getResource(res))</pre>.
+	 *
+	 * @param res The resource containing the icon.
+	 * @see #getRolloverIcon()
+	 * @see #setRolloverIcon(URL)
+	 * @see #setRolloverIcon(Icon)
+	 */
+	public void setRolloverIcon(String res) {
+		setRolloverIcon(getClass().getResource(res));
+	}
+
+
+	/**
+	 * Sets the rollover icon of this action.
+	 *
+	 * @param res The resource containing the icon.
+	 * @see #getRolloverIcon()
+	 * @see #setRolloverIcon(String)
+	 * @see #setRolloverIcon(Icon)
+	 */
+	public void setRolloverIcon(URL res) {
+		setRolloverIcon(new ImageIcon(res));
 	}
 
 

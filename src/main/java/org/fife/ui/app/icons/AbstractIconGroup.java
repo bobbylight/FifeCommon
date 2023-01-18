@@ -21,6 +21,7 @@ abstract class AbstractIconGroup implements IconGroup {
 
 	protected String path;
 	protected String nativePath;
+	protected String rolloverPath;
 	protected String extension;
 	protected String name;
 
@@ -50,16 +51,18 @@ abstract class AbstractIconGroup implements IconGroup {
 
 	AbstractIconGroup(String name, String path, String nativePath, String extension) {
 		this.name = name;
-		this.path = path;
-		this.nativePath = nativePath;
-		if (path!=null && path.length()>0 && !path.endsWith("/")) {
-			this.path += "/";
-		}
-		if (nativePath!=null && nativePath.length()>0 && !nativePath.endsWith("/")) {
-			this.nativePath += "/";
-		}
+		this.path = ensureEndsInSlash(path);
+		this.nativePath = ensureEndsInSlash(nativePath);
 		this.extension = extension!=null ? extension : DEFAULT_EXTENSION;
 		cache = new HashMap<>();
+	}
+
+
+	private static String ensureEndsInSlash(String path) {
+		if (path != null && !path.isEmpty() && !path.endsWith("/")) {
+			path += "/";
+		}
+		return path;
 	}
 
 
@@ -89,7 +92,7 @@ abstract class AbstractIconGroup implements IconGroup {
 
 	@Override
 	public Icon getIcon(String name, int w, int h) {
-		return getIconAndCache(path + name + "." + extension, w, h);
+		return getIconAndCache(getResourcePath(path, name), w, h);
 	}
 
 
@@ -142,7 +145,7 @@ abstract class AbstractIconGroup implements IconGroup {
 
 	@Override
 	public Image getImage(String name, int w, int h) {
-		ImageIcon icon = getIconAndCache(path + name + "." + extension, w, h);
+		ImageIcon icon = getIconAndCache(getResourcePath(path, name), w, h);
 		return icon != null ? icon.getImage() : null;
 	}
 
@@ -163,7 +166,7 @@ abstract class AbstractIconGroup implements IconGroup {
 	public Icon getNativeIcon(String name, int w, int h) {
 		// Fall back onto the regular icons if native isn't defined
 		String path = this.nativePath != null ? this.nativePath : this.path;
-		return getIconAndCache(path + name + "." + extension, w, h);
+		return getIconAndCache(getResourcePath(path, name), w, h);
 	}
 
 
@@ -177,14 +180,60 @@ abstract class AbstractIconGroup implements IconGroup {
 	public Image getNativeImage(String name, int w, int h) {
 		// Fall back onto the regular icons if native isn't defined
 		String path = this.nativePath != null ? this.nativePath : this.path;
-		ImageIcon icon = getIconAndCache(path + name + "." + extension, w, h);
+		ImageIcon icon = getIconAndCache(getResourcePath(path, name), w, h);
 		return icon != null ? icon.getImage() : null;
+	}
+
+
+	private String getResourcePath(String path, String name) {
+		return path + name + "." + extension;
+	}
+
+
+	@Override
+	public Icon getRolloverIcon(String name) {
+		return getRolloverIcon(name, DEFAULT_IMAGE_SIZE, DEFAULT_IMAGE_SIZE);
+	}
+
+
+	@Override
+	public Icon getRolloverIcon(String name, int w, int h) {
+		if (rolloverPath != null) {
+			return getIconAndCache(getResourcePath(rolloverPath, name), w, h);
+		}
+		return null;
+	}
+
+
+	@Override
+	public Image getRolloverImage(String name) {
+		return getRolloverImage(name, DEFAULT_IMAGE_SIZE, DEFAULT_IMAGE_SIZE);
+	}
+
+
+	@Override
+	public Image getRolloverImage(String name, int w, int h) {
+		if (rolloverPath != null) {
+			return getIconAndCache(getResourcePath(rolloverPath, name), w, h).getImage();
+		}
+		return null;
 	}
 
 
 	@Override
 	public int hashCode() {
 		return getName().hashCode();
+	}
+
+
+	/**
+	 * Sets the rollover path for this icon group. This should be called before adding
+	 * any icons.
+	 *
+	 * @param rolloverPath The new rollover path.
+	 */
+	public void setRolloverPath(String rolloverPath) {
+		this.rolloverPath = ensureEndsInSlash(rolloverPath);
 	}
 
 

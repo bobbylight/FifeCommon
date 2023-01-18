@@ -10,6 +10,7 @@
 package org.fife.ui.app;
 
 import org.fife.ui.StandardAction;
+import org.fife.ui.StandardMenuItem;
 import org.fife.ui.app.icons.IconGroup;
 import org.fife.util.MacOSUtil;
 
@@ -54,11 +55,9 @@ public abstract class MenuBar<T extends AbstractGUIApplication<?>>
 		// bar uses icons with appropriate contrast there, since
 		// that may not match the theme of this application.
 		if (MacOSUtil.isMacOs()) {
-
-			updateIcons(app.getIconGroup());
-
-			app.addPropertyChangeListener(
-				AbstractGUIApplication.ICON_STYLE_PROPERTY, e -> updateIcons((IconGroup)e.getNewValue()));
+			updateIconsForNativeMenuBar(app.getIconGroup());
+			app.addPropertyChangeListener(AbstractGUIApplication.ICON_STYLE_PROPERTY,
+				e -> updateIconsForNativeMenuBar((IconGroup)e.getNewValue()));
 		}
 	}
 
@@ -175,7 +174,7 @@ public abstract class MenuBar<T extends AbstractGUIApplication<?>>
 	 */
 	protected JMenuItem createMenuItem(Action a, ResourceBundle bundle,
 					String textKey, String mnemonicKey, KeyStroke accelerator) {
-		JMenuItem item = new JMenuItem(a);
+		JMenuItem item = new StandardMenuItem(a);
 		item.setText(bundle.getString(textKey));
 		item.setMnemonic((int)bundle.getString(mnemonicKey).charAt(0));
 		item.setAccelerator(accelerator);
@@ -191,7 +190,7 @@ public abstract class MenuBar<T extends AbstractGUIApplication<?>>
 	 * @return The menu item.
 	 */
 	protected JMenuItem createMenuItem(Action a, String desc) {
-		JMenuItem item = new JMenuItem(a);
+		JMenuItem item = new StandardMenuItem(a);
 		configureMenuItem(item, desc);
 		return item;
 	}
@@ -204,7 +203,7 @@ public abstract class MenuBar<T extends AbstractGUIApplication<?>>
 	 * @return The menu item.
 	 */
 	protected JMenuItem createMenuItem(Action a) {
-		JMenuItem item = new JMenuItem(a);
+		JMenuItem item = new StandardMenuItem(a);
 		String desc = (String)a.getValue(Action.SHORT_DESCRIPTION);
 		configureMenuItem(item, desc);
 		return item;
@@ -300,7 +299,7 @@ public abstract class MenuBar<T extends AbstractGUIApplication<?>>
 	 *
 	 * @param iconGroup The new icon group.
 	 */
-	protected void updateIcons(IconGroup iconGroup) {
+	protected void updateIconsForNativeMenuBar(IconGroup iconGroup) {
 		// Do nothing (comment for Sonar)
 	}
 

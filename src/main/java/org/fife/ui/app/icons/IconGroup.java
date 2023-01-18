@@ -38,6 +38,7 @@ public interface IconGroup {
 	 * @return The icon, or <code>null</code> if it could not be found or
 	 *         loaded.
 	 * @see #getIcon(String, int, int)
+	 * @see #getRolloverIcon(String)
 	 * @see #getNativeIcon(String)
 	 */
 	Icon getIcon(String name);
@@ -54,6 +55,7 @@ public interface IconGroup {
 	 * @return The icon, or <code>null</code> if it could not be found or
 	 *         loaded.
 	 * @see #getIcon(String)
+	 * @see #getRolloverIcon(String, int, int)
 	 * @see #getNativeIcon(String, int, int)
 	 */
 	Icon getIcon(String name, int w, int h);
@@ -71,6 +73,7 @@ public interface IconGroup {
 	 * @return The image, or <code>null</code> if it could not be found or
 	 *         loaded.
 	 * @see #getImage(String, int, int)
+	 * @see #getRolloverImage(String)
 	 * @see #getIcon(String)
 	 * @see #getNativeImage(String)
 	 */
@@ -88,6 +91,7 @@ public interface IconGroup {
 	 * @return The image, or <code>null</code> if it could not be found or
 	 *         loaded.
 	 * @see #getImage(String)
+	 * @see #getRolloverImage(String, int, int)
 	 * @see #getIcon(String)
 	 * @see #getNativeImage(String, int, int)
 	 */
@@ -138,8 +142,6 @@ public interface IconGroup {
 	Icon getNativeIcon(String name, int w, int h);
 
 
-
-
 	/**
 	 * Returns a version of an image to use in "native" UI components.
 	 * This is primarily used to determine icons in the macOS native
@@ -174,6 +176,64 @@ public interface IconGroup {
 	 * @see #getImage(String, int, int)
 	 */
 	Image getNativeImage(String name, int w, int h);
+
+
+	/**
+	 * Returns the rollover icon from this icon group with the specified name.
+	 * The icon returned will be a "standard" size for the current desktop
+	 * environment (e.g. 16x16 for most desktops, or larger for 4k and Retina
+	 * displays).
+	 *
+	 * @param name The name of the icon.  For example, if you want the icon
+	 *        specified in <code>new.gif</code>, this value should be
+	 *        <code>new</code>.
+	 * @return The icon, or <code>null</code> if it could not be found or
+	 *         loaded.
+	 * @see #getRolloverIcon(String, int, int)
+	 */
+	Icon getRolloverIcon(String name);
+
+
+	/**
+	 * Returns the rollover icon from this icon group with the specified name.
+	 *
+	 * @param name The name of the icon.  For example, if you want the icon
+	 *        specified in <code>new.gif</code>, this value should be
+	 *        <code>new</code>.
+	 * @param w The icon width.
+	 * @param h The icon height.
+	 * @return The icon, or <code>null</code> if it could not be found or
+	 *         loaded.
+	 * @see #getRolloverIcon(String)
+	 */
+	Icon getRolloverIcon(String name, int w, int h);
+
+
+	/**
+	 * Returns the image for a rollover icon from this icon group with the specified name.
+	 * The image returned will be a "standard" size for the current desktop
+	 * environment (e.g. 16x16 for most desktops, or larger for 4k and Retina
+	 * displays).
+	 *
+	 * @param name The image to load.
+	 * @return The image, or <code>null</code> if it could not be found or
+	 *         loaded.
+	 * @see #getRolloverImage(String, int, int)
+	 */
+	Image getRolloverImage(String name);
+
+
+	/**
+	 * Returns the image for a rollover icon from this icon group with the specified name.
+	 *
+	 * @param name The image to load.
+	 * @param w The width of the image to load.
+	 * @param h The height of the image to load.
+	 * @return The image, or <code>null</code> if it could not be found or
+	 *         loaded.
+	 * @see #getRolloverImage(String)
+	 */
+	Image getRolloverImage(String name, int w, int h);
 
 
 }

@@ -732,7 +732,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener,
 	/**
 	 * Renderer for the tree view.
 	 */
-	private static class OptionTreeCellRenderer extends DefaultTreeCellRenderer{
+	private static final class OptionTreeCellRenderer extends DefaultTreeCellRenderer{
 
 		@Override
 		public Component getTreeCellRendererComponent(JTree tree, Object value,

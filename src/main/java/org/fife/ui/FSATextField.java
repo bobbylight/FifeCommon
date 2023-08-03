@@ -1081,7 +1081,7 @@ public class FSATextField extends JTextField implements ComponentListener,
 	 * it's only ever executed on the EDT, so it'll only ever be run one
 	 * at a time.
 	 */
-	private class ListValueChangedRunnable implements Runnable {
+	private final class ListValueChangedRunnable implements Runnable {
 
 		@Override
 		public void run() {

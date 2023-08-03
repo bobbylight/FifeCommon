@@ -553,7 +553,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	/**
 	 * Listens for mouse events in this component.
 	 */
-	private class MouseHandler extends MouseAdapter {
+	private final class MouseHandler extends MouseAdapter {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
@@ -635,7 +635,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	/**
 	 * Listens for changes in the table model.
 	 */
-	private class TableModelHandler implements TableModelListener {
+	private final class TableModelHandler implements TableModelListener {
 
 		@Override
 		public void tableChanged(TableModelEvent e) {

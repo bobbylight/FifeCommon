@@ -570,7 +570,7 @@ public class BreadcrumbBar extends JComponent {
 	/**
 	 * A down arrow icon.
 	 */
-	private static class DownArrowIcon implements Icon {
+	private static final class DownArrowIcon implements Icon {
 
 		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
@@ -603,7 +603,7 @@ public class BreadcrumbBar extends JComponent {
 	/**
 	 * A horizontal arrow icon.
 	 */
-	private class HorizArrowIcon implements Icon {
+	private final class HorizArrowIcon implements Icon {
 
 		private int brighten(int component) {
 			return component<230 ? (component+20) : component;
@@ -659,7 +659,7 @@ public class BreadcrumbBar extends JComponent {
 	/**
 	 * Listens for events in the breadcrumb bar.
 	 */
-	private class Listener extends MouseAdapter implements ActionListener,
+	private final class Listener extends MouseAdapter implements ActionListener,
 									KeyListener {
 
 		private List<JMenuItem> rootMenuItems;

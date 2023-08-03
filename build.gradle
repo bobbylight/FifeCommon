@@ -1,10 +1,14 @@
 plugins {
+	id 'base'
 	id 'java-library'
 }
 ['java', 'checkstyle', 'maven-publish', 'signing' ].each { apply plugin: it }
 
 group = 'com.fifesoft.rtext'
-archivesBaseName = 'fife.common'
+
+base {
+	archivesName = 'fife.common'
+}
 
 ext.isReleaseVersion = !project.version.endsWith('SNAPSHOT')
 
@@ -18,16 +22,16 @@ dependencies {
 	api 'org.pushing-pixels:radiance-substance:4.5.0'
 	api 'org.apache.xmlgraphics:batik-rasterizer:1.16'
 
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
 }
 
 wrapper {
-	gradleVersion = '7.6'
+	gradleVersion = '8.2.1'
 }
 
 checkstyle {
-	toolVersion = '10.5.0'
+	toolVersion = '10.12.2'
 }
 
 tasks.withType(Javadoc) {
@@ -39,20 +43,11 @@ test {
 }
 
 compileJava {
-	sourceCompatibility javaVersion.toString()
-	targetCompatibility javaVersion.toString()
+	sourceCompatibility = javaVersion.toString()
+	targetCompatibility = javaVersion.toString()
 	options.debug = true
 	options.debugOptions.debugLevel = 'source,vars,lines'
 	options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
-}
-
-ext.sharedManifest = manifest {
-	attributes(
-		'Specification-Title': 'FifeCommon',
-		'Specification-Version': version,
-		'Implementation-Title': 'org.fife.ui',
-		'Implementation-Version': version)
-
 }
 
 java {
@@ -60,7 +55,14 @@ java {
 	withJavadocJar()
 }
 jar {
-	manifest { from sharedManifest }
+	manifest {
+		attributes(
+			'Specification-Title': 'FifeCommon',
+			'Specification-Version': version,
+			'Implementation-Title': 'org.fife.ui',
+			'Implementation-Version': version)
+
+	}
 }
 
 
@@ -82,13 +84,13 @@ publishing {
 		maven(MavenPublication) {
 
 			groupId = 'com.fifesoft.rtext'
-			artifactId = archivesBaseName
+			artifactId = 'fife.common'
 			version = version
 
 			from components.java
 
 			pom {
-				name = archivesBaseName
+				name = 'fife.common'
 				description = 'Common UI components and utilities for Swing applications.'
 				url = 'https://bobbylight.github.io/RText/'
 				inceptionYear = '2003'

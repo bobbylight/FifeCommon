@@ -305,7 +305,7 @@ class ListView extends JList<File> implements RTextFileChooserView {
 	 * Listens for key events in the list, to allow the user to type the name
 	 * of a file and have it selected.
 	 */
-	private class ViewKeyListener extends KeyAdapter {
+	private final class ViewKeyListener extends KeyAdapter {
 
 		private String typed;
 		private long lastTime;

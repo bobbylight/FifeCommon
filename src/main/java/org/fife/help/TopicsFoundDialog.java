@@ -138,7 +138,7 @@ class TopicsFoundDialog extends JDialog {
 	/**
 	 * Listens for events in this dialog.
 	 */
-	private class TopicsFoundListener extends MouseAdapter
+	private final class TopicsFoundListener extends MouseAdapter
 						implements ActionListener, KeyListener {
 
 		@Override

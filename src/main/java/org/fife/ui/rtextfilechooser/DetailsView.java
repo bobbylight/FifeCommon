@@ -747,7 +747,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * both files or both directories, then it uses <code>File</code>'s
 	 * standard <code>compareTo</code> method.
 	 */
-	private static class FileComparator implements Comparator<File> {
+	private static final class FileComparator implements Comparator<File> {
 
 		@Override
 		public int compare(File f1, File f2) {
@@ -832,7 +832,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	 * Listens for key events in the table, to allow the user to type the name
 	 * of a file and have it selected.
 	 */
-	private class ViewKeyListener extends KeyAdapter {
+	private final class ViewKeyListener extends KeyAdapter {
 
 		private String typed;
 		private long lastTime;

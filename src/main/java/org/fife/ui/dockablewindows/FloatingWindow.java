@@ -66,7 +66,7 @@ class FloatingWindow extends JFrame {
 	/**
 	 * Listens for window events.
 	 */
-	private class Listener extends WindowAdapter {
+	private final class Listener extends WindowAdapter {
 
 		@Override
 		public void windowClosing(WindowEvent e) {

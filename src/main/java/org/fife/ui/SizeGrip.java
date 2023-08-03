@@ -197,7 +197,7 @@ class SizeGrip extends StatusBarPanel {
 	 * @author Robert Futrell
 	 * @version 1.0
 	 */
-	private class MouseHandler extends MouseInputAdapter {
+	private final class MouseHandler extends MouseInputAdapter {
 
 		/*
          * NOTE: We use SwingUtilities.convertPointToScreen() instead of just using

@@ -168,7 +168,7 @@ public class GetKeyStrokeDialog extends JDialog {
 	/**
 	 * Listens for events in this dialog.
 	 */
-	private class Listener implements ActionListener {
+	private final class Listener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {

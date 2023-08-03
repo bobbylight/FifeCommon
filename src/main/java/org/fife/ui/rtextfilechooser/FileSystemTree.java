@@ -893,7 +893,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	/**
 	 * Renderer for the file tree.
 	 */
-	private class FileSystemTreeRenderer extends DefaultTreeCellRenderer {
+	private final class FileSystemTreeRenderer extends DefaultTreeCellRenderer {
 
 		private final Border treeCellBorder = BorderFactory.createEmptyBorder(1, 0, 1, 0);
 
@@ -936,7 +936,7 @@ public class FileSystemTree extends ToolTipTree implements FileSelector {
 	/**
 	 * Transfer handler for copying files from a FileSystemTree.
 	 */
-	private static class TreeTransferHandler extends TransferHandler {
+	private static final class TreeTransferHandler extends TransferHandler {
 
 		@Override
 		public boolean canImport(JComponent comp, DataFlavor[] flavors) {

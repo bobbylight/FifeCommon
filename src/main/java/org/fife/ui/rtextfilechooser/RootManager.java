@@ -132,7 +132,7 @@ final class RootManager {
 	/**
 	 * Iterator for the file system's root nodes.
 	 */
-	private class RootIterator implements Iterator<File> {
+	private final class RootIterator implements Iterator<File> {
 
 		private int i;
 

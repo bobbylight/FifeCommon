@@ -212,7 +212,7 @@ public class MenuButton extends JButton {
 	/**
 	 * Action performed when the menu button is pressed.
 	 */
-	private class ButtonPressedAction extends AbstractAction {
+	private final class ButtonPressedAction extends AbstractAction {
 
 		@Serial
 		private static final long serialVersionUID = 1L;

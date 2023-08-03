@@ -250,7 +250,7 @@ public class ScrollableJPopupMenu extends JPopupMenu {
 	/**
 	 * Listens for mousse events in the menu.
 	 */
-	private static class MenuMouseAdapter extends MouseAdapter {
+	private static final class MenuMouseAdapter extends MouseAdapter {
 
 		@Override
 		public void mouseEntered(MouseEvent e) {

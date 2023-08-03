@@ -235,7 +235,7 @@ public class ShortcutOptionPanel extends OptionsDialogPanel
 	/**
 	 * Handles modification of shortcut table values.
 	 */
-	private class ShortcutTableRowHandler extends AbstractRowHandler {
+	private final class ShortcutTableRowHandler extends AbstractRowHandler {
 
 		private GetKeyStrokeDialog ksDialog;
 

@@ -153,7 +153,7 @@ public class RColorSwatchesButton extends RColorButton {
 	 * Listens for the user to click on the <code>RColorSwatchesButton</code>
 	 * so it can display the popup menu.
 	 */
-	private class SwatchesActionListener implements ActionListener {
+	private final class SwatchesActionListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {

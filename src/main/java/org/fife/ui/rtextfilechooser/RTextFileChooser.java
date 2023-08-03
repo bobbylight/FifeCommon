@@ -2917,7 +2917,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * Populates the "Favorites" popup menu when the "Favorites" menu
 	 * button is clicked.
 	 */
-	private class FavoritesPopupListener implements PopupMenuListener {
+	private final class FavoritesPopupListener implements PopupMenuListener {
 
 		@Override
 		public void popupMenuCanceled(PopupMenuEvent e) {
@@ -2971,7 +2971,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/**
 	 * The item listener for all combo boxes on the file chooser.
 	 */
-	private class RTextFileChooserItemListener implements ItemListener {
+	private final class RTextFileChooserItemListener implements ItemListener {
 
 		@Override
 		public void itemStateChanged(ItemEvent e) {
@@ -3006,7 +3006,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * the combo box doesn't "eat" its first Enter press, as well as other
 	 * stuff.
 	 */
-	private class TextFieldListener extends FocusAdapter
+	private final class TextFieldListener extends FocusAdapter
 									implements DocumentListener {
 
 		@Override

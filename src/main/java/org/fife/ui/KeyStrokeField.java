@@ -77,7 +77,7 @@ public class KeyStrokeField extends JTextField {
 	/**
 	 * Listens for focus events in this component.
 	 */
-	private class FocusHandler extends FocusAdapter {
+	private final class FocusHandler extends FocusAdapter {
 
 		@Override
 		public void focusGained(FocusEvent e) {

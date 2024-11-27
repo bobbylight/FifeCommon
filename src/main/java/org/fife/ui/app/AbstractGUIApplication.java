@@ -237,13 +237,11 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 		String language = getLanguage();
 		int underscore = language.indexOf('_');
 		if (underscore>-1) {
-			// Use Locale(lang, country) constructor.
-			locale = new Locale(language.substring(0,underscore),
+			locale = Locale.of(language.substring(0,underscore),
 						language.substring(underscore+1));
 		}
 		else {
-			// Use Locale(lang) constructor.
-			locale = new Locale(language);
+			locale = Locale.of(language);
 		}
 		Locale.setDefault(locale);
 		JComponent.setDefaultLocale(locale);

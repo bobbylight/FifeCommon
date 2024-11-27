@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -684,8 +683,8 @@ public final class UIUtil {
 	public static Image getImageFromFile(String fileName) {
 		BufferedImage image = null;
 		try {
-			image = ImageIO.read(new URL("file:///" + fileName));
-		} catch (MalformedURLException mue) {
+			image = ImageIO.read(new URI("file:///" + fileName).toURL());
+		} catch (MalformedURLException | URISyntaxException mue) {
 			mue.printStackTrace(); // This is our fault.
 		} catch (IOException e) {
 			// Do nothing.

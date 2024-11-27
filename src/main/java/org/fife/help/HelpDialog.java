@@ -18,6 +18,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.*;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -1425,8 +1427,8 @@ public class HelpDialog extends JFrame implements ActionListener {
 				URL url = e.getURL();
 				if (url==null) {
 					try {
-						url = new URL("file://" + baseURL.getPath() + e.getDescription());
-					} catch (MalformedURLException mue) {
+						url = new URI("file://" + baseURL.getPath() + e.getDescription()).toURL();
+					} catch (MalformedURLException | URISyntaxException mue) {
 						app.displayException(HelpDialog.this, mue);
 					}
 				}
@@ -1438,9 +1440,9 @@ public class HelpDialog extends JFrame implements ActionListener {
 						if (protocol==null || protocol.isEmpty())
 							protocol = "file";
 						String urlString = protocol + "://" + url.getPath();
-						url = new URL(urlString); // No anchor.
-					} catch (MalformedURLException mue) {
-						mue.printStackTrace();
+						url = new URI(urlString).toURL(); // No anchor.
+					} catch (MalformedURLException | URISyntaxException mue) {
+						app.displayException(HelpDialog.this, mue);
 					}
 				}
 				setHelpPageURL(url);

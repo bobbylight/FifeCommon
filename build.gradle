@@ -12,7 +12,7 @@ base {
 
 ext.isReleaseVersion = !project.version.endsWith('SNAPSHOT')
 
-assert JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)
+assert JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)
 
 repositories {
 	mavenCentral()
@@ -27,7 +27,7 @@ dependencies {
 }
 
 wrapper {
-	gradleVersion = '8.2.1'
+	gradleVersion = '8.11.1'
 }
 
 checkstyle {
@@ -43,8 +43,7 @@ test {
 }
 
 compileJava {
-	sourceCompatibility = javaVersion.toString()
-	targetCompatibility = javaVersion.toString()
+	options.release = Integer.parseInt(javaReleaseVersion)
 	options.debug = true
 	options.debugOptions.debugLevel = 'source,vars,lines'
 	options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'

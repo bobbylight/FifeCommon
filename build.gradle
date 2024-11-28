@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
 	api 'org.pushing-pixels:radiance-substance:4.5.0'
-	api 'org.apache.xmlgraphics:batik-rasterizer:1.16'
+	api 'org.apache.xmlgraphics:batik-rasterizer:1.18'
 
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.11.3'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.3'

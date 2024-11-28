@@ -25,4 +25,4 @@ all unit tests, and create the jar, run:
 
     ./gradlew build --warning-mode all
 
-Note that FifeCommon requires Java 17 or later to build.
+Note that FifeCommon requires Java 21 or later to build.

@@ -532,7 +532,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 			// searchString.
 			if (child.getChildCount()>0) {
 				List<HelpTreeNode> temp = getTreeNodesContaining(child, searchString);
-				if (temp.size() > 0)
+				if (!temp.isEmpty())
 					arrayList.addAll(temp);
 			}
 
@@ -1017,7 +1017,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 
 		// If there's only one match, just display it.
 		if (size==1) {
-			HelpTreeNode node = matchNodes.get(0);
+			HelpTreeNode node = matchNodes.getFirst();
 			if (node.getUrl()!=null) {
 				updateHistory = true;
 				highlightSearchString = false;
@@ -1084,7 +1084,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 			searchList.setListData(matchNodes.toArray(new HelpTreeNode[0]));
 
 			// Make sure "Display" button is active or not correctly.
-			if (matchNodes.size() > 0) {
+			if (!matchNodes.isEmpty()) {
 				searchDisplayButton.setEnabled(true);
 				searchList.setSelectedIndex(0);
 			}
@@ -1695,7 +1695,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 					// ahead of the current page and replace them with
 					//this one.
 					while (history.size()-1 > historyPos)
-						history.remove(history.size()-1);
+						history.removeLast();
 					history.add(htn);
 					historyPos++;
 					// The user can definitely go backward and not forward.

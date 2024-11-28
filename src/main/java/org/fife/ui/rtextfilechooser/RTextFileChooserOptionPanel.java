@@ -256,7 +256,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		styleOpenFilesCheckBox.addActionListener(this);
 		openFilesPanel.add(styleOpenFilesCheckBox);
 		openFilesPanel.add(openFilesStyleCombo);
-		if (end.length()>0) {
+		if (!end.isEmpty()) {
 			openFilesPanel.add(new JLabel(end));
 		}
 		openFilesPanel.add(Box.createHorizontalGlue());

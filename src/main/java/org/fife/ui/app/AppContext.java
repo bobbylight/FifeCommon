@@ -203,7 +203,7 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 		AppTheme theme = availableThemes.stream()
 			.filter(t -> t.getName().equals(themeName))
 			.findFirst()
-			.orElse(availableThemes.get(0));
+			.orElse(availableThemes.getFirst());
 		String lafName = theme.getLookAndFeel();
 
 		// Allow Substance to paint window titles, etc.  We don't allow

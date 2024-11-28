@@ -1448,7 +1448,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			// If there's an extension, check for a custom color.
 			String fileName = file.getName();
 			String extension = Utilities.getExtension(fileName);
-			if (extension!=null && extension.length()>0) {
+			if (extension!=null && !extension.isEmpty()) {
 				Color color = getColorForExtension(extension);
 				if (color==null)
 					color = getDefaultFileColor();
@@ -1893,7 +1893,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		try (BufferedReader r = new BufferedReader(new InputStreamReader(
 			new FileInputStream(file), FAVORITES_ENCODING))) {
 			while ((line = r.readLine()) != null) {
-				if (line.length() > 0 && !line.startsWith("#")) {
+				if (!line.isEmpty() && !line.startsWith("#")) {
 					addToFavorites(line);
 					count++;
 				}
@@ -2353,7 +2353,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 						failed = true;
 				}
 				if (failed)
-					setSelectedFiles((fList.size() == 0) ? null :
+					setSelectedFiles((fList.isEmpty()) ? null :
 						fList.toArray(new File[0]));
 			}
 			else if (selectedFiles!=null && selectedFiles.length>0 &&

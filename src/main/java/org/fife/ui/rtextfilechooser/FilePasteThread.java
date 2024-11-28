@@ -98,7 +98,7 @@ final class FilePasteThread extends GUIWorkerThread<Object> {
 	@Override
 	public Object construct() {
 
-		if (files == null || files.size() == 0) {
+		if (files == null || files.isEmpty()) {
 			return null;
 		}
 

@@ -105,19 +105,19 @@ public abstract class RecentFilesMenu extends JMenu {
 			remove(index);
 			insert(menuItem, 0);
 			String temp = fileHistory.remove(index);
-			fileHistory.add(0, temp);
+			fileHistory.addFirst(temp);
 			return;
 		}
 
 		// Add the new file to the top of the file history list.
 		menuItem = new JMenuItem(createOpenAction(fileFullPath));
 		insert(menuItem, 0);
-		fileHistory.add(0, fileFullPath);
+		fileHistory.addFirst(fileFullPath);
 
 		// Too many files?  Oust the file in history added least recently.
 		if (getItemCount()>maxFileHistorySize) {
 			remove(getItemCount()-1);
-			fileHistory.remove(fileHistory.size()-1);
+			fileHistory.removeLast();
 		}
 
 	}
@@ -201,7 +201,7 @@ public abstract class RecentFilesMenu extends JMenu {
 		// If we're bigger than the new max size, trim down
 		while (getItemCount()>maxFileHistorySize) {
 			remove(getItemCount()-1);
-			fileHistory.remove(fileHistory.size()-1);
+			fileHistory.removeLast();
 		}
 
 	}

@@ -60,9 +60,9 @@ class IconDesktopPane extends JDesktopPane {
 	 */
 	@Override
 	public JInternalFrame getSelectedFrame() {
-		if (selectedFrames.size()==0)
+		if (selectedFrames.isEmpty())
 			return null;
-		return selectedFrames.get(0);
+		return selectedFrames.getFirst();
 	}
 
 

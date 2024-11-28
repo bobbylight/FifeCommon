@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.FileSystems;
 import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -556,7 +557,7 @@ public final class UIUtil {
 		// If it's too long, we'll have to trim it down some...
 
 		// Will be '\' for Windows, '/' for Unix and derivatives.
-		String separator = System.getProperty("file.separator");
+		String separator = FileSystems.getDefault().getSeparator();
 
 		// What we will eventually return.
 		String displayString = longPath;
@@ -722,7 +723,7 @@ public final class UIUtil {
 			return "";
 
 		String string = InputEvent.getModifiersExText(keyStroke.getModifiers());
-		if (string!=null && string.length()>0)
+		if (string!=null && !string.isEmpty())
 			string += "+";
 		int keyCode = keyStroke.getKeyCode();
 		if (keyCode!=KeyEvent.VK_SHIFT && keyCode!=KeyEvent.VK_CONTROL &&

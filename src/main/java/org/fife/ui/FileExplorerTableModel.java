@@ -241,7 +241,7 @@ public class FileExplorerTableModel extends AbstractTableModel {
 	 * @return Whether any column is sorted.
 	 */
 	public boolean isSorting() {
-		return sortingColumns.size() != 0;
+		return !sortingColumns.isEmpty();
 	}
 
 

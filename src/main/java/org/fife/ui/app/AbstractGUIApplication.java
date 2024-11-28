@@ -1368,7 +1368,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 		setTheme(getAppThemes().stream()
 			.filter(t -> newTheme.equals(t.getName()))
 			.findFirst()
-			.orElse(getAppThemes().get(0))); // Fall back on something known to exist
+			.orElse(getAppThemes().getFirst())); // Fall back on something known to exist
 	}
 
 

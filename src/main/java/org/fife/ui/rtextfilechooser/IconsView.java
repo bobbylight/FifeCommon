@@ -485,10 +485,10 @@ class IconsView extends IconDesktopPane implements RTextFileChooserView {
 											null, 0);
 				result.append(fileName, 0, br);
 				fileName = fileName.substring(br);
-				if (fileName.length()>0)
+				if (!fileName.isEmpty())
 					result.append("<br>");
 				count++;
-			} while (fileName.length()>0);
+			} while (!fileName.isEmpty());
 
 			// Make sure the icon is big enough to display all the text...
 			setSize(DEFAULT_ICON_WIDTH, defaultHeight+(count-1)*fm.getHeight());

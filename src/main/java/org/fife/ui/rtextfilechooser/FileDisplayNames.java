@@ -87,7 +87,7 @@ public final class FileDisplayNames {
 		if (name!=null)
 			return name;
 		name = FileSystemView.getFileSystemView().getSystemDisplayName(file);
-		if (name!=null && name.length()>0) {
+		if (name!=null && !name.isEmpty()) {
 			return name;
 		}
 		name = file.getAbsolutePath();

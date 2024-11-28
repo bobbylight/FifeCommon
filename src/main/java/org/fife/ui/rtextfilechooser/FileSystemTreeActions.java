@@ -519,7 +519,7 @@ class FileSystemTreeActions {
 							}
 						};
 
-						if (files!=null && files.size()>0) {
+						if (files!=null && !files.isEmpty()) {
 							FilePasteThread.paste(parent,
 										files, destDir, callback);
 							copying = true;

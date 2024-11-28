@@ -48,7 +48,7 @@ class WildcardFileFilter extends FileFilter {
 
 			for (int i=0; i<len; i++) {
 
-				switch(gPat[i]) {
+				switch (gPat[i]) {
 
 					// Change "*" into ".*" for the regex.
 					case '*':
@@ -82,7 +82,7 @@ class WildcardFileFilter extends FileFilter {
 
 			for (int i = 0; i < gpatLength; i++) {
 
-				switch(gPat[i]) {
+				switch (gPat[i]) {
 
 					case '*':
 						if (!inBrackets)

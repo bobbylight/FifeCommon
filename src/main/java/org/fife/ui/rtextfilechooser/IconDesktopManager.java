@@ -50,14 +50,14 @@ class IconDesktopManager extends DefaultDesktopManager {
 				// Do nothing
 			}
 		}
-		if(c != null) {
+		if (c != null) {
 			c.remove(f);
 			c.repaint(f.getX(), f.getY(), f.getWidth(), f.getHeight());
 		}
 		removeIconFor(f);
-		if(f.getNormalBounds() != null)
+		if (f.getNormalBounds() != null)
 			f.setNormalBounds(null);
-		if(wasIcon(f))
+		if (wasIcon(f))
 			setWasIcon(f, null);
 	}
 
@@ -72,7 +72,7 @@ class IconDesktopManager extends DefaultDesktopManager {
 		Container p = f.getParent();
 		IconDesktopPane d = (IconDesktopPane)f.getDesktopPane();
 		// fix for bug: 4162443
-		if(p == null)
+		if (p == null)
 			return;
 		if (d != null)
 			d.addSelectedFrame(f);

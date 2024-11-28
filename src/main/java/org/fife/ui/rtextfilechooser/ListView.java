@@ -273,7 +273,7 @@ class ListView extends JList<File> implements RTextFileChooserView {
 	public void setSelectedFiles(File[] files) {
 
 		int num = files.length;
-		if(num>0) {
+		if (num>0) {
 
 			ListModel<File> model = getModel();
 			int modelSize = model.getSize();

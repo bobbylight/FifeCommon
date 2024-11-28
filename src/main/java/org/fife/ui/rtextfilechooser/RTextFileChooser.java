@@ -2071,7 +2071,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 */
 	public boolean removeChoosableFileFilter(FileFilter f) {
 		if (fileFilters.contains(f)) {
-			if(getFileFilter() == f)
+			if (getFileFilter() == f)
 				setFileFilter(null);
 			fileFilters.removeElement(f);
 			return true;
@@ -2696,7 +2696,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		if (filesToSelect!=null) {
 
 			int num = filesToSelect.length;
-			if(num>0) {
+			if (num>0) {
 				// Set the current directory properly to get the "selected"
 				// files.
 				File file = filesToSelect[0];

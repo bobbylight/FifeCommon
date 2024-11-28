@@ -80,7 +80,7 @@ class SizeGrip extends StatusBarPanel {
 			}
 			public void checkMaximize(boolean resize) {
 				long currTime = System.currentTimeMillis();
-				if((isLastResize!=resize) && (prevTime+100>currTime)) {
+				if ((isLastResize!=resize) && (prevTime+100>currTime)) {
 					paintGrip = getShouldPaintGrip();
 					repaint();
 				}
@@ -133,7 +133,7 @@ class SizeGrip extends StatusBarPanel {
 	private boolean getShouldPaintGrip() {
 		Rectangle rect = window.getBounds();
 		Dimension dim = getToolkit().getScreenSize();
-		if((rect.x == rect.y) && (rect.x <= 0) &&
+		if ((rect.x == rect.y) && (rect.x <= 0) &&
 			(rect.x>-20) && (dim.width-20<rect.width) &&
 			(dim.width +20 > rect.width))
 				return false;

@@ -195,7 +195,7 @@ class FileSystemTreeActions {
 						boolean leaf, int row) {
 					editingIcon = dir ? fst.iconManager.getFolderIcon() :
 										fst.iconManager.fileIcon;
-					if(editingIcon != null) {
+					if (editingIcon != null) {
 						offset = renderer.getIconTextGap() +
 								editingIcon.getIconWidth();
 					}

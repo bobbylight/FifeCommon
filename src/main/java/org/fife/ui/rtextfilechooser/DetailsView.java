@@ -496,7 +496,7 @@ class DetailsView extends JTable implements RTextFileChooserView {
 	@Override
 	public void setSelectedFiles(File[] files) {
 		int num = files.length;
-		if(num>0) {
+		if (num>0) {
 			int[] rows = new int[num];
 			for (int i=0; i<num; i++) {
 				rows[i] = getRowFor(files[i]);

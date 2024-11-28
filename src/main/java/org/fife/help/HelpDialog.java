@@ -1123,8 +1123,8 @@ public class HelpDialog extends JFrame implements ActionListener {
 		// for the document will be removed.
 		while ((nch = in.read(buff, 0, buff.length)) != -1) {
 			last = 0;
-			for(int counter=0; counter<nch; counter++) {
-				switch(buff[counter]) {
+			for (int counter=0; counter<nch; counter++) {
+				switch (buff[counter]) {
 					case '\r':
 						if (lastWasCR) {
 							if (counter == 0) {
@@ -1163,7 +1163,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 				}
 			}
 			if (last < nch) {
-				if(lastWasCR) {
+				if (lastWasCR) {
 					if (last < (nch - 1)) {
 						sb.append(buff, last,nch-last-1);
 					}

@@ -333,17 +333,11 @@ public final class Utilities {
 			Node node2 = attributes.item(i);
 			String nodeName = node2.getNodeName();
 			String nodeValue = node2.getNodeValue();
-			if (NAME.equals(nodeName)) {
-				name = nodeValue;
-			}
-			else if (IGNORE_CASE.equals(nodeName)) {
-				ignoreCase = Boolean.parseBoolean(nodeValue);
-			}
-			else if (SHOW_EXTENSIONS.equals(nodeName)) {
-				showExtensions = Boolean.parseBoolean(nodeValue);
-			}
-			else {
-				throw new IOException("XML error: unknown attribute: '" +
+			switch (nodeName) {
+				case NAME -> name = nodeValue;
+				case IGNORE_CASE -> ignoreCase = Boolean.parseBoolean(nodeValue);
+				case SHOW_EXTENSIONS -> showExtensions = Boolean.parseBoolean(nodeValue);
+				default -> throw new IOException("XML error: unknown attribute: '" +
 					nodeName + "'");
 			}
 		}

@@ -259,8 +259,8 @@ public class MenuButton extends JButton {
 					arrowIcon.getIconWidth();
 		}
 
-		private int paintArrowIcon(Component c, Graphics g, int x, int y) {
-			y = (c.getHeight()-arrowIcon.getIconHeight())/2;
+		private int paintArrowIcon(Component c, Graphics g, int x) {
+			int y = (c.getHeight()-arrowIcon.getIconHeight())/2;
 			Graphics2D g2d = (Graphics2D)g;
 			Object old = g2d.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -282,10 +282,10 @@ public class MenuButton extends JButton {
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			if (c.getComponentOrientation().isLeftToRight()) {
 				x = paintOtherIcon(c, g, x, y);
-				paintArrowIcon(c, g, x, y);
+				paintArrowIcon(c, g, x);
 			}
 			else {
-				x = paintArrowIcon(c, g, x, y);
+				x = paintArrowIcon(c, g, x);
 				paintOtherIcon(c, g, x, y);
 			}
 		}

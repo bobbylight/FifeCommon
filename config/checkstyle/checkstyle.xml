@@ -226,6 +226,7 @@
         <!--<module name="MagicNumber"/> &lt;!&ndash; Unfortunately, too much noise &ndash;&gt;-->
         <!--<module name="MissingSwitchDefault"/>-->
         <module name="MultipleVariableDeclarations"/>
+        <module name="PatternVariableAssignment"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
         <!--        <module name="UnnecessaryParentheses"/>-->

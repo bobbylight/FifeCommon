@@ -40,7 +40,7 @@ import javax.swing.KeyStroke;
  *
  * <p>
  * For accelerators, the standard syntax for keystrokes defined <a
- * href="https://docs.oracle.com/en/java/javase/17/docs/api/java.desktop/javax/swing/KeyStroke.html">
+ * href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/swing/KeyStroke.html">
  * here</a> can be used.  In addition, the string literal "default" maps to "ctrl" on
  * Windows and Linux, and "meta" on OS X.
  * </p>

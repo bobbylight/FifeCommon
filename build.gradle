@@ -1,7 +1,9 @@
 plugins {
 	id 'base'
 	id 'java-library'
+	id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
 }
+apply plugin: 'io.github.gradle-nexus.publish-plugin'
 ['java', 'checkstyle', 'maven-publish', 'signing' ].each { apply plugin: it }
 
 group = 'com.fifesoft.rtext'
@@ -68,18 +70,6 @@ jar {
 
 
 publishing {
-	repositories {
-		maven {
-			def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-			def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
-			url = isReleaseVersion ? releasesRepoUrl : snapshotsRepoUrl
-			credentials { // Credentials usually kept in user's .gradle/gradle.properties
-                // We must defensively check for these properties so CI builds work
-                username = project.hasProperty('ossrhToken') ? ossrhToken : 'unknown'
-                password = project.hasProperty('ossrhTokenPassword') ? ossrhTokenPassword : 'unknown'
-			}
-		}
-	}
 	publications {
 		maven(MavenPublication) {
 
@@ -126,4 +116,16 @@ signing {
 }
 tasks.withType(Sign) {
 	onlyIf { isReleaseVersion }
+}
+
+nexusPublishing {
+	repositories {
+		sonatype {
+			nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
+			snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
+			// We must defensively check for these properties so CI builds work
+			username.set(project.hasProperty('sonatypeUsername') ? sonatypeUsername : 'unknown')
+			password.set(project.hasProperty('sonatypePassword') ? sonatypePassword : 'unknown')
+		}
+	}
 }

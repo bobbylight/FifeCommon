@@ -7,7 +7,7 @@ apply plugin: 'io.github.gradle-nexus.publish-plugin'
 ['java', 'checkstyle', 'maven-publish', 'signing' ].each { apply plugin: it }
 
 group = 'com.fifesoft.rtext'
-// Note: Local JDK 21: /Library/Java/JavaVirtualMachines/jdk-21.0.5+11/Contents/Home
+// Note: Local JDK 25: /Library/Java/JavaVirtualMachines/jdk-25.0.1+8/Contents/Home
 
 base {
 	archivesName = 'fife.common'
@@ -15,7 +15,7 @@ base {
 
 ext.isReleaseVersion = !project.version.endsWith('SNAPSHOT')
 
-assert JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)
+assert JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_25)
 
 repositories {
 	mavenCentral()

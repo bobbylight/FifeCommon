@@ -156,7 +156,7 @@ public abstract class FileIOExtras {
 	 *
 	 * @param args Command line arguments.
 	 */
-	public static void main(String[] args) {
+	static void main(String[] args) {
 
 		if (args.length==0) {
 			System.err.println("Usage: FileIOExtras <absolute-fileName>");

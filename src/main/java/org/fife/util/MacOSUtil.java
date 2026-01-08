@@ -159,7 +159,7 @@ public final class MacOSUtil {
 	 *     https://bugs.openjdk.org/browse/JDK-8211301</a> for more information.
 	 *
 	 * @param rpc The frame or window to modify.
-	 * @param transparent Whether the window's title bar sould be transparent.
+	 * @param transparent Whether the window's title bar should be transparent.
 	 */
 	public static void setTransparentTitleBar(RootPaneContainer rpc, boolean transparent) {
 		rpc.getRootPane().putClientProperty(PROPERTY_TRANSPARENT_TITLE_BAR, transparent);

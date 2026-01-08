@@ -193,10 +193,9 @@ public abstract class Prefs {
 	 *         to be added to the properties.
 	 * @return The string value representing {@code value}.
 	 * @throws IOException If an IO error occurs.
-	 * @throws IllegalAccessException Should never happen in practice.
 	 */
 	private String getStringValue(String name, Class<?> type, Object value,
-				 Properties props) throws IOException, IllegalAccessException {
+				 Properties props) throws IOException {
 
 		String strVal;
 
@@ -390,7 +389,7 @@ public abstract class Prefs {
 	 * @param type The type of the field whose value will be set.
 	 * @param value The value the field will be set to.
 	 * @return The possibly unboxed version of the array.  If {@code type} is
-	 *          not a primitve array, this is {@code value}, unchanged.
+	 *          not a primitive array, this is {@code value}, unchanged.
 	 */
 	private static Object possiblyMakePrimitiveArray(Class<?> type, Object value) {
 

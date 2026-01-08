@@ -161,7 +161,7 @@ public class CustomizableToolBar extends JToolBar {
 		ResourceBundle msg = ResourceBundle.getBundle(MSG);
 		popupMenu = new JPopupMenu();
 
-		// Only allow unlocking of this toolbar if it's not integrted
+		// Only allow unlocking of this toolbar if it's not integrated
 		// into the title bar
 		if (!getOnMacOSWithNoTitleBar()) {
 
@@ -444,7 +444,7 @@ public class CustomizableToolBar extends JToolBar {
 	 *
 	 * @param args Command line arguments
 	 */
-	public static void main(String[] args) {
+	static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
 			JFrame frame = new JFrame();
 			frame.setLayout(new BorderLayout());

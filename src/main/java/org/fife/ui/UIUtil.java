@@ -287,11 +287,7 @@ public final class UIUtil {
 
 		// If it's just a single button, size it
 		if (buttons instanceof JButton button) {
-			Dimension preferredSize = button.getPreferredSize();
-			if (preferredSize.width<DEFAULT_BUTTON_SIZE) {
-				preferredSize.width = DEFAULT_BUTTON_SIZE;
-				button.setPreferredSize(preferredSize);
-			}
+			ensureDefaultButtonWidth(button);
 		}
 
 		JPanel panel = new JPanel(new BorderLayout());

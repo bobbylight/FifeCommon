@@ -933,7 +933,7 @@ final class FilePasteThread extends GUIWorkerThread<Object> {
 	/**
 	 * A simple test application for this class.
 	 */
-	public static void main(String[] args) throws Exception {
+	static void main(String[] args) throws Exception {
 
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 

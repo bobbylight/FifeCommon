@@ -43,6 +43,7 @@ import javax.swing.text.Position;
 import javax.swing.text.html.HTMLDocument;
 import javax.xml.parsers.*;
 
+import org.fife.util.MacOSUtil;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.fife.ui.CleanSplitPaneUI;
@@ -391,6 +392,7 @@ public class HelpDialog extends JFrame implements ActionListener {
 		setTitle(msg.getString("Title"));
 		setIconImage(owner.getIconImage());
 		applyComponentOrientation(orientation);
+		MacOSUtil.setTransparentTitleBar(this, true);
 		pack();
 
 	}

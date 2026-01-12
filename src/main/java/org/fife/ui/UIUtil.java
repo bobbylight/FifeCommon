@@ -877,6 +877,18 @@ public final class UIUtil {
 
 
 	/**
+	 * Returns {@code true} or the boolean value of a system property.
+	 *
+	 * @param propertyName The property to check.
+	 * @return The result value.
+	 */
+	public static boolean isNullOrTrue(String propertyName) {
+		String value = System.getProperty(propertyName);
+		return value == null || Boolean.parseBoolean(value);
+	}
+
+
+	/**
 	 * This method is ripped off from <code>SpringUtilities.java</code> found
 	 * on Sun's Java Tutorial pages.  It takes a component whose layout is
 	 * <code>SpringLayout</code> and organizes the components it contains into

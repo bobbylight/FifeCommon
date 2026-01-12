@@ -5,6 +5,7 @@
 package org.fife.util;
 
 import org.fife.ui.OS;
+import org.fife.ui.UIUtil;
 
 import javax.swing.*;
 
@@ -22,6 +23,13 @@ import javax.swing.*;
  * @version 1.0
  */
 public final class MacOSUtil {
+
+	/**
+	 * By default, {@code GUIApplication}s will create modals with transparent title bars on macOS.
+	 * If you don't want that, set this property to {@code false}.
+	 */
+	public static final String PROPERTY_APP_MODALS_HAVE_TRANSPARENT_TITLE_BAR =
+		"org.fife.mac.appModalsHaveTransparentTitleBar";
 
 	/**
 	 * macOS-specific system property that determines the color to use for window title bars (light,
@@ -69,6 +77,18 @@ public final class MacOSUtil {
 	 */
 	private MacOSUtil() {
 		// Do nothing (comment for Sonar)
+	}
+
+
+	/**
+	 * Applies modal-specific macOS tweaks to a dialog, as defined by system properties.
+	 *
+	 * @param dialog The dialog to update.
+	 */
+	public static void applyMacOsTweaks(JDialog dialog) {
+		if (UIUtil.isNullOrTrue(PROPERTY_APP_MODALS_HAVE_TRANSPARENT_TITLE_BAR)) {
+			setTransparentTitleBar(dialog, true);
+		}
 	}
 
 

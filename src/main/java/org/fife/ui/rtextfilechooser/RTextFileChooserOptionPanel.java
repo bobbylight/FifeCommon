@@ -43,12 +43,9 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import org.fife.ui.OptionsDialogPanel;
-import org.fife.ui.RColorSwatchesButton;
-import org.fife.ui.ResizableFrameContentPane;
-import org.fife.ui.LabelValueComboBox;
-import org.fife.ui.UIUtil;
+import org.fife.ui.*;
 import org.fife.ui.modifiabletable.*;
+import org.fife.util.MacOSUtil;
 import org.fife.util.SubstanceUtil;
 
 
@@ -417,7 +414,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	 * The dialog that allows the user to add or modify an extension/color
 	 * mapping.
 	 */
-	static class ExtensionColorMappingDialog extends JDialog
+	static class ExtensionColorMappingDialog extends EscapableDialog
 			implements ActionListener, ChangeListener, DocumentListener {
 
 		static final int OK		= 0;
@@ -478,6 +475,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 			getRootPane().setDefaultButton(okButton);
 			setModal(true);
 			applyComponentOrientation(orientation);
+			MacOSUtil.applyMacOsTweaks(this);
 			pack();
 
 		}
@@ -528,7 +526,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 		}
 
 		public int showMappingDialog() {
-			rc = CANCEL; // Set here in case they "X" the dialog out.
+			rc = CANCEL; // Set here in case they "X" the dialog out or press Escape.
 			SwingUtilities.invokeLater(() -> {
 				extensionField.requestFocusInWindow();
 				extensionField.selectAll();

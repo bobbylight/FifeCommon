@@ -24,17 +24,13 @@ import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JList;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.BoxLayout;
 import javax.swing.Box;
 
-import org.fife.ui.RListSelectionModel;
-import org.fife.ui.ResizableFrameContentPane;
-import org.fife.ui.RScrollPane;
-import org.fife.ui.UIUtil;
+import org.fife.ui.*;
 
 
 /**
@@ -43,7 +39,7 @@ import org.fife.ui.UIUtil;
  * @author Robert Futrell
  * @version 1.0
  */
-class TopicsFoundDialog extends JDialog {
+class TopicsFoundDialog extends EscapableDialog {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
@@ -124,6 +120,16 @@ class TopicsFoundDialog extends JDialog {
 
 
 	/**
+	 * Overridden to clear any selected index.
+	 */
+	@Override
+	protected void escapePressed() {
+		selectedIndex = -1;
+		super.escapePressed();
+	}
+
+
+	/**
 	 * Returns the index the user selected, or <code>-1</code> if they
 	 * canceled the dialog.
 	 *
@@ -156,15 +162,9 @@ class TopicsFoundDialog extends JDialog {
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-			switch (e.getKeyCode()) {
-				case KeyEvent.VK_ENTER -> {
-					selectedIndex = choicesList.getSelectedIndex();
-					setVisible(false);
-				}
-				case KeyEvent.VK_ESCAPE -> {
-					selectedIndex = -1;
-					setVisible(false);
-				}
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				selectedIndex = choicesList.getSelectedIndex();
+				setVisible(false);
 			}
 		}
 

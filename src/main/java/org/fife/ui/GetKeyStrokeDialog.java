@@ -10,6 +10,8 @@
  */
 package org.fife.ui;
 
+import org.fife.util.MacOSUtil;
+
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Dialog;
@@ -34,6 +36,7 @@ import javax.swing.SwingUtilities;
  * @author Robert Futrell
  * @version 1.0
  */
+// Note: This isn't an EscapableDialog to allow odd shortcuts like Cmd+Escape.
 public class GetKeyStrokeDialog extends JDialog {
 
 	@Serial
@@ -113,6 +116,7 @@ public class GetKeyStrokeDialog extends JDialog {
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		applyComponentOrientation(orientation);
+		MacOSUtil.applyMacOsTweaks(this);
 		pack();
 
 	}

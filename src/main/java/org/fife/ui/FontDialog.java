@@ -10,6 +10,8 @@
  */
 package org.fife.ui;
 
+import org.fife.util.MacOSUtil;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.Serial;
@@ -246,6 +248,7 @@ public class FontDialog extends JDialog implements ActionListener,
 		setResizable(false);
 		setModal(true);
 		applyComponentOrientation(orientation);
+		MacOSUtil.applyMacOsTweaks(this);
 		pack();
 
 

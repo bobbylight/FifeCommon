@@ -4,6 +4,8 @@
  */
 package org.fife.ui;
 
+import org.fife.util.MacOSUtil;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -103,6 +105,7 @@ public class EscapableDialog extends JDialog {
 	 */
 	private void init() {
 		setEscapeClosesDialog(true);
+		MacOSUtil.applyMacOsTweaks(this);
 	}
 
 
